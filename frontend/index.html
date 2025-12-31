@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Topologies Visualizer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Team Topologies Visualizer</h1>
+            <div class="controls">
+                <div class="view-selector">
+                    <label class="radio-label">
+                        <input type="radio" name="view" value="current" id="viewCurrent" checked>
+                        <span>Current State</span>
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="view" value="tt" id="viewTT">
+                        <span>Team Topologies Vision</span>
+                    </label>
+                </div>
+                <button id="addTeamBtn" class="btn btn-primary">+ Add Team</button>
+                <button id="refreshBtn" class="btn">Refresh</button>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <aside class="sidebar">
+                <h3>Teams</h3>
+                <div id="teamList" class="team-list"></div>
+                
+                <div class="legend">
+                    <h4>Team Types</h4>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background: #4A90E2;"></span>
+                        <span>Stream-aligned</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background: #7ED321;"></span>
+                        <span>Platform</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background: #F5A623;"></span>
+                        <span>Enabling</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background: #BD10E0;"></span>
+                        <span>Complicated Subsystem</span>
+                    </div>
+                </div>
+            </aside>
+
+            <main class="canvas-area">
+                <canvas id="teamCanvas"></canvas>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal for adding/editing teams -->
+    <div id="teamModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modalTitle">Add Team</h2>
+            <form id="teamForm">
+                <div class="form-group">
+                    <label for="teamName">Team Name</label>
+                    <input type="text" id="teamName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="teamType">Team Type</label>
+                    <select id="teamType" required>
+                        <option value="stream-aligned">Stream-aligned</option>
+                        <option value="platform">Platform</option>
+                        <option value="enabling">Enabling</option>
+                        <option value="complicated-subsystem">Complicated Subsystem</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="teamDescription">Description</label>
+                    <textarea id="teamDescription" rows="4"></textarea>
+                </div>
+                
+                <div class="form-buttons">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn" id="cancelBtn">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for team details -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content modal-large">
+            <span class="close" id="detailModalClose">&times;</span>
+            <div id="teamDetails">
+                <div class="detail-header">
+                    <h2 id="detailTeamName"></h2>
+                    <span id="detailTeamType" class="team-badge"></span>
+                </div>
+                
+                <div class="detail-section">
+                    <h3>Description</h3>
+                    <div id="detailDescription" class="markdown-content"></div>
+                </div>
+                
+                <div class="detail-grid">
+                    <div class="detail-section">
+                        <h3>Dependencies</h3>
+                        <ul id="detailDependencies" class="detail-list"></ul>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <h3>Interaction Modes</h3>
+                        <ul id="detailInteractions" class="detail-list"></ul>
+                    </div>
+                </div>
+                
+                <div class="detail-section" id="detailMetadataSection">
+                    <h3>Metadata</h3>
+                    <div id="detailMetadata" class="metadata-grid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="app-new.js"></script>
+</body>
+</html>

@@ -1,0 +1,241 @@
+import { test, expect } from '@playwright/test';
+
+const BASE_URL = 'http://127.0.0.1:8000';
+
+test.describe('Team Topologies Visualizer', () => {
+  
+  test('should load the application', async ({ page }) => {
+    await page.goto(`${BASE_URL}/static/index.html`);
+    
+    // Check title
+    await expect(page).toHaveTitle(/Team Topologies Visualizer/);
+    
+    // Check main elements exist
+    await expect(page.locator('h1')).toContainText('Team Topologies Visualizer');
+    await expect(page.locator('#teamCanvas')).toBeVisible();
+    await expect(page.locator('.legend')).toBeVisible();
+  });
+
+  test('should have both view radio buttons', async ({ page }) => {
+    await page.goto(`${BASE_URL}/static/index.html`);
+    
+    const currentStateRadio = page.locator('input[value="current"]');
+    const ttVisionRadio = page.locator('input[value="tt"]');
+    
+    await expect(currentStateRadio).toBeVisible();
+    await expect(ttVisionRadio).toBeVisible();
+    
+    // Current State should be checked by default
+    await expect(currentStateRadio).toBeChecked();
+  });
+
+  test('should load organization hierarchy API', async ({ page }) => {
+    await page.goto(`${BASE_URL}/static/index.html`);
+    
+    // Wait for API calls
+    const hierarchyResponse = await page.waitForResponse(
+      response => response.url().includes('/api/organization-hierarchy') && response.status() === 200
+    );
+    
+    const hierarchyData = await hierarchyResponse.json();
+    
+    // Verify hierarchy structure
+    expect(hierarchyData).toHaveProperty('company');
+    expect(hierarchyData.company).toHaveProperty('children');
+    expect(hierarchyData.company.children.length).toBeGreaterThan(0);
+  });
+
+  test('should load teams API for current view', async ({ page }) => {
+    await page.goto(`${BASE_URL}/static/index.html`);
+    
+    const teamsResponse = await page.waitForResponse(
+      response => response.url().includes('/api/teams?view=current') && response.status() === 200
+    );
+    
+    const teams = await teamsResponse.json();
+    
+    // Verify teams are loaded
+    expect(Array.isArray(teams)).toBe(true);
+    expect(teams.length).toBeGreaterThan(0);
+    
+    // Check team structure
+    if (teams.length > 0) {
+      const firstTeam = teams[0];
+      expect(firstTeam).toHaveProperty('name');
+      expect(firstTeam).toHaveProperty('team_type');
+      expect(firstTeam).toHaveProperty('position');
+    }
+  });
+
+  test('should display teams in sidebar', async ({ page }) => {
+    await page.goto(`${BASE_URL}/static/index.html`);
+    
+    // Wait for teams to load
+    await page.waitForResponse(response => response.url().includes('/api/teams'));
+    
+    // Wait a bit for UI to update
+    await page.waitForTimeout(500);
+    
+    const teamList = page.locator('#teamList');
+    const teamItems = teamList.locator('.team-item');
+    
+    // Should have teams in the list
+    await expect(teamItems.first()).toBeVisible();
+    const count = await teamItems.count();
+    expect(count).toBeGreaterThan(0);
+  });
+
+  test('should switch between Current State and TT Vision', async ({ page }) => {
+    await page.goto(`${BASE_URL}/static/index.html`);
+    
+    // Wait for initial load
+    await page.waitForResponse(response => response.url().includes('/api/teams?view=current'));
+    
+    // Click TT Vision radio button
+    await page.locator('input[value="tt"]').click();
+    
+    // Wait for TT teams to load
+    await page.waitForResponse(response => response.url().includes('/api/teams?view=tt'));
+    
+    // Verify TT Vision is now checked
+    await expect(page.locator('input[value="tt"]')).toBeChecked();
+  });
+
+  test('should have canvas with proper dimensions', async ({ page }) => {
+    await page.goto(`${BASE_URL}/static/index.html`);
+    
+    const canvas = page.locator('#teamCanvas');
+    await expect(canvas).toBeVisible();
+    
+    // Check canvas has dimensions
+    const box = await canvas.boundingBox();
+    expect(box).not.toBeNull();
+    expect(box!.width).toBeGreaterThan(0);
+    expect(box!.height).toBeGreaterThan(0);
+  });
+
+  test('should display legend with team types', async ({ page }) => {
+    await page.goto(`${BASE_URL}/static/index.html`);
+    
+    // Wait for config to load
+    await page.waitForResponse(response => response.url().includes('/api/team-types'));
+    await page.waitForTimeout(500);
+    
+    const legend = page.locator('.legend');
+    const legendItems = legend.locator('.legend-item');
+    
+    // Should have legend items
+    const count = await legendItems.count();
+    expect(count).toBeGreaterThan(0);
+  });
+
+  test('should take screenshot of Current State view for visual verification', async ({ page }) => {
+    await page.goto(`${BASE_URL}/static/index.html`);
+    
+    // Wait for all data to load
+    await page.waitForResponse(response => response.url().includes('/api/organization-hierarchy'));
+    await page.waitForResponse(response => response.url().includes('/api/teams'));
+    await page.waitForTimeout(500); // Minimal wait for rendering
+    
+    // Take screenshot
+    await page.screenshot({ 
+      path: 'tests/screenshots/current-state-view.png', 
+      fullPage: false // Only visible area for speed
+    });
+  });
+
+  test('should take screenshot of TT Vision view for visual verification', async ({ page }) => {
+    await page.goto(`${BASE_URL}/static/index.html`);
+    
+    // Switch to TT Vision
+    await page.locator('input[value="tt"]').click();
+    
+    // Wait for TT data to load
+    await page.waitForResponse(response => response.url().includes('/api/teams?view=tt'));
+    await page.waitForTimeout(500); // Minimal wait for rendering
+    
+    // Take screenshot
+    await page.screenshot({ 
+      path: 'tests/screenshots/tt-vision-view.png', 
+      fullPage: false // Only visible area for speed
+    });
+  });
+
+  test('should handle refresh button', async ({ page }) => {
+    await page.goto(`${BASE_URL}/static/index.html`);
+    
+    // Wait for initial load
+    await page.waitForResponse(response => response.url().includes('/api/teams'));
+    
+    // Click refresh button
+    await page.locator('#refreshBtn').click();
+    
+    // Wait for reload
+    await page.waitForResponse(response => response.url().includes('/api/teams'));
+    
+    // Teams should still be visible
+    const teamItems = page.locator('#teamList .team-item');
+    await expect(teamItems.first()).toBeVisible();
+  });
+
+  test('API endpoints should return valid JSON', async ({ request }) => {
+    // Test team types endpoint
+    const teamTypesResponse = await request.get(`${BASE_URL}/api/team-types?view=current`);
+    expect(teamTypesResponse.ok()).toBeTruthy();
+    const teamTypes = await teamTypesResponse.json();
+    expect(teamTypes).toHaveProperty('team_types');
+    
+    // Test organization hierarchy endpoint
+    const hierarchyResponse = await request.get(`${BASE_URL}/api/organization-hierarchy`);
+    expect(hierarchyResponse.ok()).toBeTruthy();
+    const hierarchy = await hierarchyResponse.json();
+    expect(hierarchy).toHaveProperty('company');
+    
+    // Test teams endpoint
+    const teamsResponse = await request.get(`${BASE_URL}/api/teams?view=current`);
+    expect(teamsResponse.ok()).toBeTruthy();
+    const teams = await teamsResponse.json();
+    expect(Array.isArray(teams)).toBe(true);
+  });
+
+  test('should verify Customer Solutions department has 4 regions', async ({ page }) => {
+    await page.goto(`${BASE_URL}/static/index.html`);
+    
+    const hierarchyResponse = await page.waitForResponse(
+      response => response.url().includes('/api/organization-hierarchy')
+    );
+    
+    const hierarchyData = await hierarchyResponse.json();
+    const customerSolutionsDept = hierarchyData.company.children.find(
+      (dept: any) => dept.id === 'customer-solutions-dept'
+    );
+    
+    expect(customerSolutionsDept).toBeDefined();
+    expect(customerSolutionsDept.regions).toBeDefined();
+    expect(customerSolutionsDept.regions.length).toBe(4);
+    
+    // Verify region names
+    const regionNames = customerSolutionsDept.regions.map((r: any) => r.name);
+    expect(regionNames).toContain('Asia Region');
+    expect(regionNames).toContain('Africa Region');
+    expect(regionNames).toContain('Europe Region');
+    expect(regionNames).toContain('America Region');
+  });
+
+  test('should verify Engineering department has 5 line managers', async ({ page }) => {
+    await page.goto(`${BASE_URL}/static/index.html`);
+    
+    const hierarchyResponse = await page.waitForResponse(
+      response => response.url().includes('/api/organization-hierarchy')
+    );
+    
+    const hierarchyData = await hierarchyResponse.json();
+    const engineeringDept = hierarchyData.company.children.find(
+      (dept: any) => dept.id === 'engineering-dept'
+    );
+    
+    expect(engineeringDept).toBeDefined();
+    expect(engineeringDept.line_managers).toBeDefined();
+    expect(engineeringDept.line_managers.length).toBe(5);
+  });
+});

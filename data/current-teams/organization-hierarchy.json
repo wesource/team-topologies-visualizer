@@ -1,0 +1,134 @@
+{
+  "company": {
+    "id": "company-leadership",
+    "name": "LogiTech Solutions Leadership Team",
+    "type": "leadership",
+    "level": 0,
+    "children": [
+      {
+        "id": "engineering-dept",
+        "name": "Engineering Department",
+        "type": "department",
+        "level": 1,
+        "manager": "VP of Engineering - David Hamilton",
+        "line_managers": [
+          {
+            "id": "lm-rachel-martinez",
+            "name": "Rachel Martinez - Team Lead",
+            "type": "line-manager",
+            "level": 3,
+            "teams": [
+              "Core Product Team",
+              "ML Product Team"
+            ]
+          },
+          {
+            "id": "lm-michael-chen",
+            "name": "Michael Chen - Team Lead",
+            "type": "line-manager",
+            "level": 3,
+            "teams": [
+              "Web Product Team",
+              "Database Platform Team"
+            ]
+          },
+          {
+            "id": "lm-lisa-anderson",
+            "name": "Lisa Anderson - QA Lead",
+            "type": "line-manager",
+            "level": 3,
+            "teams": [
+              "Integration Testing Team"
+            ]
+          },
+          {
+            "id": "lm-jennifer-williams",
+            "name": "Jennifer Williams - Architecture Lead",
+            "type": "line-manager",
+            "level": 3,
+            "teams": [
+              "Enterprise Architecture Team"
+            ]
+          },
+          {
+            "id": "lm-robert-miller",
+            "name": "Robert Miller - DevOps Lead",
+            "type": "line-manager",
+            "level": 3,
+            "teams": [
+              "Build & Integration Team"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "product-management-dept",
+        "name": "Product Management Department",
+        "type": "department",
+        "level": 1
+      },
+      {
+        "id": "infrastructure-ops-dept",
+        "name": "Infrastructure & Operations Department",
+        "type": "department",
+        "level": 1
+      },
+      {
+        "id": "customer-support-dept",
+        "name": "Customer Support Department",
+        "type": "department",
+        "level": 1
+      },
+      {
+        "id": "sales-marketing-dept",
+        "name": "Sales & Marketing Department",
+        "type": "department",
+        "level": 1
+      },
+      {
+        "id": "customer-solutions-dept",
+        "name": "Customer Solutions Department",
+        "type": "department",
+        "level": 1,
+        "manager": "VP of Customer Solutions - Maria Rodriguez",
+        "regions": [
+          {
+            "id": "region-asia",
+            "name": "Asia Region",
+            "type": "region",
+            "level": 3,
+            "teams": []
+          },
+          {
+            "id": "region-africa",
+            "name": "Africa Region",
+            "type": "region",
+            "level": 3,
+            "teams": []
+          },
+          {
+            "id": "region-europe",
+            "name": "Europe Region",
+            "type": "region",
+            "level": 3,
+            "teams": [
+              "European Logistics Solutions Team",
+              "European Retail Solutions Team",
+              "European Transport Solutions Team"
+            ]
+          },
+          {
+            "id": "region-america",
+            "name": "America Region",
+            "type": "region",
+            "level": 3,
+            "teams": [
+              "Americas Supply Chain Solutions Team",
+              "Americas E-commerce Solutions Team"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
