@@ -1,8 +1,8 @@
 # Team Topologies Visualizer
 
-A web application with dual visualization of organizational team structures. Visualize both your **current organizational state** and your **Team Topologies vision** to plan and communicate transformation initiatives.
+A web application with dual visualization of organizational team structures. Visualize both your **current organizational state** and your **TT Design** (Team Topologies target design) to plan and communicate transformation initiatives.
 
-> **Note**: This codebase was generated with AI assistance (GitHub Copilot / Claude Sonnet 4) as a learning project. Python and related technology choices were made as an opportunity to explore and learn these tools hands-on.
+> **Note**: This codebase was generated with AI assistance (GitHub Copilot / Claude Sonnet 4) as a learning project. Python and related technology choices were made as an opportunity to explore and learn these tools hands-on. Building this tool also serves as a way to gain a deeper understanding of Team Topologies concepts through practical application.
 
 ## Quick Start
 
@@ -75,11 +75,15 @@ This tool provides dual visualizations to make these conversations easier.
 ## Key Features
 
 - 📊 **Interactive Canvas** - Drag-and-drop teams, zoom, pan
-- 🔄 **Dual Views** - Toggle between "Current State" and "TT Vision"
+- 🔄 **Dual Views** - Toggle between "Current State" and "TT Design"
 - 📝 **Git-Friendly Storage** - Teams stored as markdown files with YAML front matter (structured metadata at the top of files between `---` delimiters, followed by markdown content)
 - 🎨 **Customizable Team Types** - Define your own team classifications and colors via JSON config
 - 🏢 **Organizational Context** - Line managers, departments, reporting structures with org-chart style visualization
-- ⚡ **Auto-align Teams** - Automatically align teams under their line managers in org-chart layout (Current State view)
+- 📐 **Book-Accurate Team Shapes** (TT Design view) - Stream-aligned and Platform teams render as wide horizontal boxes (~80% of grouping width) matching Team Topologies book visualizations, stacking vertically to show flow alignment
+- ⚡ **Auto-align Teams** - One-click alignment for both views:
+  - **Current State**: Align teams under line managers in org-chart layout
+  - **TT Design**: Organize teams within value stream and platform groupings with book-accurate shapes
+- 🎯 **Fractal Groupings** (TT 2nd edition) - Visual grouping of teams into Value Stream Groupings and Platform Groupings for team-of-teams patterns
 - 🔍 **Team Details** - Double-click for full team information with rendered markdown
 - 📋 **Team API Compatible** - Uses Team Topologies Team API template format
 - 📥 **SVG Export** - Export visualizations to SVG for presentations and documentation
@@ -126,7 +130,10 @@ This tool provides dual visualizations to make these conversations easier.
 │   ├── renderer-common.js     # Shared rendering utilities
 │   ├── renderer-current.js    # Current state rendering
 │   ├── svg-export.js          # SVG export functionality
-│   └── team-alignment.js      # Auto-align functionality
+│   ├── team-alignment.js      # Auto-align for Current State view
+│   ├── tt-design-alignment.js # Auto-align for TT Design view
+│   ├── value-stream-grouping.js # Value stream grouping logic
+│   └── platform-grouping.js   # Platform grouping logic
 ├── data/
 │   ├── current-teams/         # Your current state
 │   │   ├── current-team-types.json    # Team type config
@@ -191,8 +198,12 @@ See [CONCEPTS.md](docs/CONCEPTS.md) for detailed explanation of the example orga
 - **Click teams** in the sidebar to select them
 - **Zoom** using mouse wheel
 - **Connections** between teams show interaction modes with different line styles
-- **Auto-align Teams** (Current State view only) - Click the "⚡ Auto-align Teams" button to automatically position teams under their line managers in an org-chart layout. Positions are saved to team files.
+- **Auto-align Teams** - Click "⚡ Auto-align Teams" button to automatically organize teams:
+  - **Current State view**: Positions teams under their line managers in org-chart layout
+  - **TT Design view**: Arranges teams within value stream and platform groupings in a clean grid
+  - Positions are automatically saved to team markdown files
 - **Show Communication Lines** checkbox - Toggle communication lines on/off in Current State view (hidden by default for cleaner org-chart view)
+- **Groupings Filter** (TT Design view) - Filter teams by value stream or platform grouping to focus on specific areas
 - **Refresh** button - Reload all team markdown files and configurations from disk without losing your zoom/pan position
 
 ### Team Files
@@ -331,6 +342,51 @@ See [CONCEPTS.md](docs/CONCEPTS.md) for detailed explanation of Team Topologies 
 
 ## Future Enhancements
 
+### Value Stream Visualization and Grouping (2nd Edition Focus)
+The 2nd edition emphasizes **value stream grouping** and **platform grouping** as fractal organizational patterns. ✅ **Basic visual grouping is now implemented** - teams can be grouped by value stream (light yellow/orange) and platform grouping (light blue) in the TT Design view. Additional features to further support this mental model:
+
+**Value Stream Mapping**
+- **Value stream identification** - Define and visualize distinct value streams (customer-facing flows of value)
+- **Stream-aligned team grouping** - Group multiple stream-aligned teams serving the same value stream
+- **End-to-end flow visualization** - Show how value flows from customer need to delivered capability
+- **Value stream health indicators** - Lead time, deployment frequency, team cognitive load per value stream
+- **Cross-value-stream dependencies** - Identify and minimize dependencies between value streams
+- **Value stream ownership** - Clearly assign executive ownership/sponsorship to each value stream
+
+**Platform Grouping (Fractal Patterns)**
+- **Platform as a team-of-teams** - Visualize platform groupings containing multiple platform teams working together
+- **Platform capabilities map** - Show what capabilities each platform grouping provides
+- **Platform consumption patterns** - Visualize which stream-aligned teams consume which platforms
+- **Thinnest Viable Platform (TVP) tracking** - Document and visualize platform maturity and scope
+- **Platform team cognitive load** - Monitor if platforms themselves are overloaded
+- **Internal platform dependencies** - Show relationships between platform teams within a platform grouping
+
+**Team-of-Teams Patterns**
+- **Sensing organization view** - Visualize feedback loops and adaptation patterns
+- **Team interaction evolution** - Timeline showing how team relationships change over time (collaboration → X-as-a-Service)
+- **Temporary vs permanent structures** - Distinguish between stable long-term teams and temporary enabling/collaboration patterns
+- **Multi-level groupings** - Support nested groupings (team → value stream grouping → portfolio → organization)
+
+### Cognitive Load Management
+- **Cognitive load assessment** - Visual indicators for team cognitive load (domain, instrinsic, extraneous)
+- **Domain complexity mapping** - Tag teams with their domain complexity level
+- **Responsibility mapping** - List and visualize all team responsibilities to identify overload
+- **Cognitive load heatmap** - Color-code teams by their cognitive load status
+- **Simplification opportunities** - Identify teams that could benefit from platform services or enabling support
+
+### Team API and Boundaries
+- **Team API visualization** - Display team APIs (expectations, dependencies, communication channels) on the canvas
+- **Boundary clarity indicators** - Show how well-defined each team's boundaries are
+- **API contract versioning** - Track evolution of team dependencies and interfaces over time
+- **Expected behaviors documentation** - Link to detailed team working agreements and interaction expectations
+
+### Flow Metrics and Sensing
+- **Flow metrics per team** - Lead time, deployment frequency, MTTR, change fail rate
+- **Bottleneck identification** - Visual highlighting of teams that slow down the value stream
+- **Dependency wait time tracking** - Measure time spent waiting on other teams
+- **Sensing loops** - Document feedback mechanisms teams use to sense environment changes
+- **Team maturity indicators** - Show team capability levels and areas needing enabling support
+
 ### Architecture Visualization with Conway's Law
 Integrate draw.io (or similar) based architecture diagrams to show:
 - **Current technical architecture** alongside current organizational structure
@@ -346,13 +402,16 @@ This would help teams:
 
 ### Additional Ideas
 - **Visibility controls** - Toggle visibility of individual teams and departments in Current State view to focus on specific areas of the organization
+- **Filtering by value stream** - Show only teams belonging to a specific value stream
+- **Interaction mode timeline** - Show how team interaction modes change over time (Collaboration → X-as-a-Service)
+- **Platform maturity progression** - Visualize platform evolution from MVP to mature service
+- **Team stability tracking** - Visualize team membership stability and tenure
+- **Multi-organization portfolio view** - Support visualizing team topologies across multiple companies/business units
 - ASCII art export for documentation and presentations (clearer than trying to explain with words! 😄)
-- Additional visualization layouts (hierarchical tree, circle packing)
-- Team health indicators and metrics
-- Import team data from external sources
-- Timeline view showing evolution over time
-- Cognitive load visualization
-- Integration with real-time data sources
+- Additional visualization layouts (value stream swim lanes, radial platform grouping view)
+- Import team data from external sources (JIRA, Azure DevOps, ServiceNow)
+- Real-time collaboration - Multiple users editing the same visualization
+- Mobile-responsive design for viewing on tablets/phones
 
 ## Contributing
 

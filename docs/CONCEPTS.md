@@ -10,10 +10,57 @@
 - **Enabling** (Orange): Helps stream-aligned teams overcome obstacles and adopt new technologies (e.g., coaching, mentoring, new practices). Temporary collaboration to upskill other teams.
 - **Complicated Subsystem** (Purple): Deals with complex technical domains requiring specialist knowledge (e.g., ML algorithms, video processing, mathematical models). Reduces cognitive load on stream-aligned teams.
 
+### Team Shape Visualization (TT Design View)
+
+Based on the [official Team Topologies Shape Templates](https://github.com/TeamTopologies/Team-Shape-Templates), teams are rendered with different widths to reflect their relationship to the flow of change:
+
+#### Wide Teams (Stream-aligned & Platform)
+- **Visual style**: Wide horizontal boxes (~80% of grouping width) stacked vertically
+- **Rationale**: These teams support the **"whole flow of change"** from idea to production
+  - **Stream-aligned teams** own end-to-end slices of the business domain with no hand-offs
+  - **Platform teams** provide foundational services that accelerate multiple streams
+- **From TT Shape Templates**: "Stream-aligned and Platform teams will typically be re-sized horizontally. They may increase in size vertically to indicate the size of the team relative to others."
+- **Key insight**: The wide shape emphasizes these teams' responsibility for complete, autonomous delivery
+
+#### Narrow Teams (Enabling & Complicated Subsystem)
+- **Visual style**: Standard-width boxes arranged in a grid (3 per row)
+- **Rationale**: These teams have **focused, specialized responsibilities**
+  - **Enabling teams** provide temporary, focused support to specific teams
+  - **Complicated Subsystem teams** handle specific complex domains
+- **Positioning**: Located below wide teams to show their supporting nature
+
+This visualization directly reflects the Team Topologies book's diagrams where stream-aligned teams span horizontally across value streams, while enabling and subsystem teams are positioned around them as needed.
+
 ### The 3 Interaction Modes
 - **Collaboration** (Solid red line): Two teams working together for a defined period (high interaction, discovery phase)
 - **X-as-a-Service** (Dashed teal line): One team provides a service with minimal collaboration (clear API contract)
 - **Facilitating** (Dotted green line): One team helps another team learn or adopt new approaches (enabling team pattern)
+
+### Fractal Organizational Patterns (2nd Edition)
+
+The Team Topologies 2nd edition introduces **fractal organizational patterns** that extend the team-of-teams concept to higher levels:
+
+#### Value Stream Grouping
+- **Definition**: A collection of stream-aligned teams working together to deliver a complete customer-facing flow of value
+- **Purpose**: Organize multiple stream-aligned teams serving the same value stream (e.g., "E-commerce Experience", "Mobile Experience")
+- **Visual representation**: Light yellow/orange background grouping in this tool
+- **Benefits**: 
+  - Clear end-to-end ownership of customer value flows
+  - Reduced cross-value-stream dependencies
+  - Executive sponsorship alignment
+  - Value stream-level metrics (lead time, deployment frequency)
+
+#### Platform Grouping
+- **Definition**: A team-of-teams structure where multiple platform teams collaborate to provide related capabilities
+- **Purpose**: Group platform teams that work together to deliver a cohesive set of services (e.g., "Data Platform Grouping", "Cloud Infrastructure Grouping")
+- **Visual representation**: Very light blue background grouping in this tool
+- **Benefits**:
+  - Clear platform ownership and governance
+  - Coordinated capability evolution
+  - Thinnest Viable Platform (TVP) focus
+  - Internal platform team collaboration patterns
+
+These fractal patterns help organizations scale Team Topologies principles beyond individual teams to higher-level organizational structures.
 
 ### Key Principles
 - **Team Cognitive Load**: Limit the amount of responsibility a single team handles
@@ -77,9 +124,9 @@ For demonstration purposes, this repository includes a fictive company setup:
 - ❌ Unclear team purposes and boundaries
 - ❌ Cognitive overload on some teams
 
-### Team Topologies Vision
+### TT Design (Team Topologies Target Design)
 
-The TT vision (`data/tt-teams/`) shows how these same capabilities could be reorganized according to Team Topologies principles for better flow and autonomy.
+The TT Design view (`data/tt-teams/`) shows how these same capabilities could be reorganized according to Team Topologies principles for better flow and autonomy.
 
 ## Disclaimer
 

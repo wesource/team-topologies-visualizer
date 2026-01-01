@@ -18,14 +18,21 @@
                     </label>
                     <label class="radio-label">
                         <input type="radio" name="view" value="tt" id="viewTT">
-                        <span>Team Topologies Vision</span>
+                        <span>TT Design</span>
                     </label>
                 </div>
                 <label class="radio-label" id="showConnectionsLabel" style="display: none;">
                     <input type="checkbox" id="showConnections">
                     <span>Show Communication Lines</span>
                 </label>
+                <div id="groupingFilterContainer" style="display: none;">
+                    <label for="groupingFilter">Groupings:</label>
+                    <select id="groupingFilter" class="filter-dropdown">
+                        <option value="all">All Teams</option>
+                    </select>
+                </div>
                 <button id="autoAlignBtn" class="btn" style="display: none;">⚡ Auto-align Teams</button>
+                <button id="autoAlignTTBtn" class="btn" style="display: none;">⚡ Auto-align Teams</button>
                 <button id="addTeamBtn" class="btn btn-primary">+ Add Team</button>
                 <button id="exportSVGBtn" class="btn">📥 Export SVG</button>
                 <button id="refreshBtn" class="btn">Refresh</button>

@@ -1,36 +1,43 @@
 ---
-name: Platform Team
+name: AWS Developer Platform Team
 team_type: platform
 dependencies: []
 interaction_modes:
-  Security Team: x-as-a-service
+  Security & Compliance Team: x-as-a-service
 position:
-  x: 507.68303957096725
-  y: 443.20759892741796
+  x: 204.0
+  y: 180.0
 metadata:
-  size: 10
-  focus: Internal platform services
+  size: 8
+  focus: AWS cloud infrastructure and developer experience
+  platform_grouping: Cloud Infrastructure Platform Grouping
 ---
 
-# Platform Team
+# AWS Developer Platform Team
 
-A platform team providing foundational services and infrastructure to stream-aligned teams.
+Provides AWS-based infrastructure and developer tooling as a compelling internal product.
+
+## Platform Grouping
+**Cloud Infrastructure Platform Grouping** - Part of a team-of-teams delivering comprehensive cloud infrastructure capabilities.
 
 ## Responsibilities
-- Authentication and authorization services
-- Data storage and caching
-- API gateway and service mesh
-- Monitoring and observability
-- CI/CD infrastructure
+- AWS account management and governance (AWS Organizations, Control Tower)
+- Infrastructure as Code templates (Terraform, CloudFormation)
+- Developer self-service portal for AWS resources
+- Cost optimization and FinOps practices
+- AWS service abstractions (simplified ECS, Lambda, RDS deployment)
+- Compliance guardrails (AWS Config, Security Hub)
 
 ## Technologies
-- Kubernetes
-- PostgreSQL / Redis
-- Auth0 / OAuth
-- Prometheus / Grafana
+- AWS (ECS, EKS, Lambda, RDS, S3, CloudFront)
+- Terraform / AWS CDK
+- AWS Service Catalog
+- Backstage (developer portal)
+- AWS Cost Explorer, Finout
 
-## Services Provided
-- User authentication API
-- Distributed caching
-- Logging and monitoring dashboards
-- Automated deployment pipelines
+## Services Provided (X-as-a-Service)
+- Self-service AWS resource provisioning
+- Pre-configured CI/CD pipelines (CodePipeline, GitHub Actions)
+- Standardized infrastructure patterns
+- Developer environment provisioning (AWS Cloud9, SSM Session Manager)
+- Automated cost reports and optimization recommendations

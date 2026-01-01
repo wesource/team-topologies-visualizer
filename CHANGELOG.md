@@ -7,7 +7,92 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- **Grouping Label Spacing Optimized**: Reduced `labelHeight` from 50px to 35px for better visual balance between grouping labels and first team in TT Design view
+- **SVG Export Font Sizes Increased**: Team names now use 16px/18px fonts (up from 12px/14px) to match grouping label proportions (16px) for improved readability in exported SVG files
+
 ### Added
+- 📐 **Team Topologies Book-Accurate Team Shapes** (TT Design view):
+  - **Stream-aligned and Platform teams** now render as wide horizontal boxes (~80% of grouping width)
+    - Reflects Team Topologies book visualization: teams supporting "whole flow of change"
+    - Stack vertically within groupings to show flow alignment
+    - Based on official [Team Topologies Shape Templates](https://github.com/TeamTopologies/Team-Shape-Templates)
+  - **Enabling and Complicated Subsystem teams** remain narrow (current size)
+    - Grid layout (3 per row) positioned below wide teams
+  - **Dynamic width calculation**: `getTeamBoxWidth()` in renderer-common.js
+  - **Updated auto-align**: Wide teams stack at 10% margin from left/right, narrow teams in grid below
+  - **Click detection** updated to handle variable widths
+  - **Connections** now use dynamic team centers (wide teams have wider span)
+  - **SVG export** includes value stream and platform groupings as background rectangles
+  - **Documentation**: Added "Team Shape Visualization" section to CONCEPTS.md explaining design rationale
+  - **Design rationale**: "Stream-aligned and Platform teams will typically be re-sized horizontally" (TT Shape Templates guidelines)
+  - 12 unit tests (10 updated + 2 new mixed-team tests) verifying vertical stacking and grid layout
+- 📚 **Realistic Example Platform Teams**:
+  - **Renamed generic teams** for clarity:
+    - "Platform Team" → "AWS Developer Platform Team" (cloud infrastructure, developer tooling)
+    - "Core Platform Team" → "Data Storage Platform Team" (PostgreSQL, Redis, Elasticsearch specialists)
+  - **New platform teams added**:
+    - **Observability Platform Team**: Prometheus, Grafana, OpenTelemetry, distributed tracing
+    - **Feature Management Platform Team**: Feature flags, A/B testing, experimentation (inner platform team)
+    - **API Gateway Platform Team**: Kong, Istio service mesh, traffic management
+  - **New enabling team**:
+    - **Security Engineering Enablement Team**: Threat modeling, secure coding, compliance facilitation
+  - **New complicated subsystem team**:
+    - **Fraud Detection & Risk Modeling Team**: ML-based fraud detection, real-time risk scoring
+  - **Platform grouping**: AWS, Observability, and API Gateway teams form "Cloud Infrastructure Platform Grouping"
+  - All teams include detailed responsibilities, technologies, interaction patterns, and success metrics
+- ⚡ **Auto-align Teams for TT Design View**:
+  - One-click automatic positioning of teams within their groupings
+  - Organizes teams with book-accurate layout: wide teams stacked, narrow teams in grid
+  - Handles ungrouped teams separately in designated area
+  - Groupings positioned in rows (2 per row) on canvas
+  - New button "⚡ Auto-align Teams" visible only in TT Design view
+  - **Implementation**:
+    - New `frontend/tt-design-alignment.js` module with `autoAlignTTDesign()` function
+    - 10 unit tests covering various scenarios (value streams, platform groupings, ungrouped teams, mixed scenarios)
+    - Saves all updated positions to backend via API
+    - Pattern similar to Current State auto-align but optimized for grouping-based layout
+  - **Use case**: Quickly organize overlapping teams after adding grouping metadata to multiple teams
+  - Only realigns teams if position changed >5px (avoids unnecessary API calls)
+- 🎯 **Platform Grouping** (Team Topologies 2nd edition fractal pattern):
+  - Added visual grouping for platform teams working together as a team-of-teams
+  - Very light blue background (rgba(126, 200, 227, 0.15)) to distinguish from individual platform teams
+  - Updated platform team color from light blue (#7EC8E3) to darker blue (#4A9FD8) for better differentiation
+  - **Unified Groupings Filter dropdown**: Renamed from "Value Stream" to "Groupings" - now supports both:
+    - Value Stream filtering (vs:Name format)
+    - Platform Grouping filtering (pg:Name format)
+    - Organized with optgroups for clear categorization
+  - **Legend updated**: "Groupings" section now includes both:
+    - Value Stream Grouping (light yellow/orange) - for stream-aligned teams
+    - Platform Grouping (very light blue) - for platform team-of-teams
+  - **Inner Platform Teams**: Supports platform teams operating within value streams (e.g., Core Platform Team in E-Commerce Experience)
+  - **Example data updated**:
+    - Core Platform Team: Now an inner platform team within E-Commerce Experience value stream
+    - Mobile Platform Team: Now an inner platform team within Mobile Experience value stream
+    - Payment Platform Team + Platform Team: Part of "Financial Services Platform Grouping"
+  - **Conceptual basis**: Platform Grouping represents multiple platform teams collaborating to provide related capabilities (fractal organizational pattern)
+  - New `drawPlatformGroupings()` function in `renderer-common.js` with matching style constants
+  - New `frontend/platform-grouping.js` module with helper functions (getPlatformGroupingNames, filterTeamsByPlatformGrouping)
+  - CSS classes: `.legend-grouping-box.value-stream` and `.legend-grouping-box.platform`
+- 🎯 **Value Stream Visual Grouping** in TT Design view:
+  - Subtle light yellow/orange background rectangles group teams by value stream (e.g., "E-commerce Experience", "Mobile Experience")
+  - Top-center banner-style labels for each value stream grouping
+  - **Value Stream Filter dropdown**: Filter canvas to show only teams from selected value stream
+    - Dropdown automatically populated with available value streams
+    - Only visible in TT Design view
+    - Filters teams, connections, and groupings dynamically
+  - **Design decisions**:
+    - Used subtle light yellow/orange (rgba(255, 245, 215, 0.4)) instead of gray for better visual distinction from platform groupings
+    - Label positioned at top-center per Team Topologies book 2nd edition visualization style
+    - Ungrouped teams (no value_stream metadata) intentionally skip visual grouping to avoid clutter
+  - **Legend updated**: Shows grouping rectangle indicators with explanations in TT Design view
+  - **Implementation**: 
+    - `frontend/value-stream-grouping.js` with helper functions (getValueStreamNames, filterTeamsByValueStream)
+    - 17 unit tests total (grouping calculation + filtering)
+    - `frontend/renderer-value-stream.test.js` with 6 rendering tests
+  - Automatic bounding box calculation with 20px padding around team positions
+  - Only visible in "TT Design" view, not in "Current State" view
+  - **Definition of Done achieved**: ✅ Visual grouping, ✅ Filter by value stream, ✅ Clear visual distinction
 - ⚡ **Auto-align Teams** feature: One-click automatic positioning of teams under line managers in org-chart layout (Current State view only)
 - **Org-chart style visual hierarchy**: Vertical lines from line managers connect to horizontally-aligned teams
 - **team-alignment.js** module with comprehensive test coverage (7 tests)
@@ -26,6 +111,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `frontend/layout-utils.js` - Shared position calculation functions
 
 ### Changed
+- **Team type colors updated** to match Team Topologies book 2nd edition:
+  - Stream-aligned: #4A90E2 (blue) → #FF9E4A (orange)
+  - Platform: #7ED321 (green) → #7EC8E3 (baby-blue) → #4A9FD8 (darker blue for differentiation from Platform Grouping)
+  - Enabling: #F5A623 (orange) → #B57EDC (purple)
+  - Complicated Subsystem: #BD10E0 (purple) → #FF8B8B (light red)
+  - Value stream grouping background: gray → light yellow/orange (rgba(255, 245, 215, 0.4))
 - Team box borders increased from 2px to 3px for better visibility
 - Team box width reduced to 144px (from 180px) for improved spacing in org-chart layout
 - Communication lines now hidden by default in Current State view (toggle to show)

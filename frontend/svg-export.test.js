@@ -171,7 +171,8 @@ describe('SVG Export', () => {
 
             exportModule.exportToSVG(state, null, teams, teamColorMap, 'tt');
 
-            expect(mockLink.download).toMatch(/^team-topology-tt-\d+\.svg$/);
+            // Updated regex to match new European date format: yyyy-mm-dd-HHMM
+            expect(mockLink.download).toMatch(/^team-topology-tt-\d{4}-\d{2}-\d{2}-\d{4}\.svg$/);
             expect(mockLink.click).toHaveBeenCalled();
         });
 

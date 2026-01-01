@@ -48,6 +48,10 @@ npm-debug.log*
 *.bak
 *.orig
 
+# AI context (local machine-specific information)
+.ai-context.md
+.copilot-context.md
+
 # Coverage
 .nyc_output/
 coverage/

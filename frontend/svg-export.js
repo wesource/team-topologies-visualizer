@@ -1,5 +1,7 @@
 import { LAYOUT } from './constants.js';
-import { darkenColor } from './renderer-common.js';
+import { darkenColor, getTeamBoxWidth } from './renderer-common.js';
+import { getValueStreamGroupings } from './value-stream-grouping.js';
+import { getPlatformGroupings } from './platform-grouping.js';
 
 // SVG Export Module - Separated from runtime rendering
 // Converts current visualization state to downloadable SVG
@@ -23,8 +25,8 @@ export function exportToSVG(state, organizationHierarchy, teams, teamColorMap, c
   <defs>
     <style>
       .team-box { stroke-width: 3; }
-      .team-text { font-family: sans-serif; font-size: 12px; fill: #000; text-anchor: middle; }
-      .team-text-bold { font-family: sans-serif; font-size: 14px; font-weight: bold; fill: #fff; text-anchor: middle; }
+      .team-text { font-family: sans-serif; font-size: 16px; fill: #000; text-anchor: middle; }
+      .team-text-bold { font-family: sans-serif; font-size: 18px; font-weight: bold; fill: #fff; text-anchor: middle; }
       .hierarchy-line { stroke: #7f8c8d; stroke-width: 1.5; fill: none; }
       .connection-line { stroke-width: 2; fill: none; }
     </style>
@@ -38,7 +40,17 @@ export function exportToSVG(state, organizationHierarchy, teams, teamColorMap, c
         svg += generateTTVisionSVG(teams, teamColorMap, state.hideConnections);
     }
     svg += '</svg>';
-    downloadSVG(svg, `team-topology-${currentView}-${Date.now()}.svg`);
+    
+    // Generate filename with European date format: yyyy-mm-dd-HHMM
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const timestamp = `${year}-${month}-${day}-${hours}${minutes}`;
+    
+    downloadSVG(svg, `team-topology-${currentView}-${timestamp}.svg`);
 }
 function generateCurrentStateSVG(organizationHierarchy, teams, teamColorMap) {
     let elements = '';
@@ -143,7 +155,40 @@ function generateCurrentStateSVG(organizationHierarchy, teams, teamColorMap) {
 }
 function generateTTVisionSVG(teams, teamColorMap, hideConnections) {
     let elements = '';
-    // Draw connections first (if not hidden)
+    
+    // Draw value stream groupings first (as background)
+    const valueStreamGroupings = getValueStreamGroupings(teams);
+    valueStreamGroupings.forEach(grouping => {
+        if (grouping.name !== '(Ungrouped)') {
+            const bounds = grouping.bounds;
+            elements += drawSVGGrouping(
+                grouping.name,
+                bounds.x,
+                bounds.y,
+                bounds.width,
+                bounds.height,
+                'rgba(255, 245, 215, 0.4)', // Light yellow/orange
+                '#FFD966' // Border color
+            );
+        }
+    });
+    
+    // Draw platform groupings
+    const platformGroupings = getPlatformGroupings(teams);
+    platformGroupings.forEach(grouping => {
+        const bounds = grouping.bounds;
+        elements += drawSVGGrouping(
+            grouping.name,
+            bounds.x,
+            bounds.y,
+            bounds.width,
+            bounds.height,
+            'rgba(126, 200, 227, 0.15)', // Very light blue
+            '#7EC8E3' // Border color
+        );
+    });
+    
+    // Draw connections (if not hidden)
     if (!hideConnections) {
         teams.forEach(team => {
             if (team.dependencies) {
@@ -151,11 +196,13 @@ function generateTTVisionSVG(teams, teamColorMap, hideConnections) {
                     const targetTeam = teams.find(t => t.name === dep.team);
                     if (targetTeam) {
                         const color = getInteractionColor(dep.interaction);
-                        // Center points: team width is 180, height is 80
-                        const fromX = team.position.x + 90;
-                        const fromY = team.position.y + 40;
-                        const toX = targetTeam.position.x + 90;
-                        const toY = targetTeam.position.y + 40;
+                        // Use dynamic team width for center calculation
+                        const fromWidth = getTeamBoxWidth(team, 'tt');
+                        const toWidth = getTeamBoxWidth(targetTeam, 'tt');
+                        const fromX = team.position.x + fromWidth / 2;
+                        const fromY = team.position.y + LAYOUT.TEAM_BOX_HEIGHT / 2;
+                        const toX = targetTeam.position.x + toWidth / 2;
+                        const toY = targetTeam.position.y + LAYOUT.TEAM_BOX_HEIGHT / 2;
                         elements += `<line x1="${fromX}" y1="${fromY}" x2="${toX}" y2="${toY}" class="connection-line" stroke="${color}" stroke-dasharray="${dep.interaction === 'facilitating' ? '5,5' : 'none'}"/>`;
                     }
                 });
@@ -165,12 +212,27 @@ function generateTTVisionSVG(teams, teamColorMap, hideConnections) {
     // Draw teams
     teams.forEach(team => {
         const color = teamColorMap[team.team_type] || '#95a5a6';
-        elements += drawSVGBox(team.name, team.position.x, team.position.y, LAYOUT.TEAM_BOX_WIDTH, LAYOUT.TEAM_BOX_HEIGHT, color, 'white', false);
+        const teamWidth = getTeamBoxWidth(team, 'tt');
+        elements += drawSVGBox(team.name, team.position.x, team.position.y, teamWidth, LAYOUT.TEAM_BOX_HEIGHT, color, 'white', false);
     });
     return elements;
 }
+
+function drawSVGGrouping(label, x, y, width, height, fillColor, borderColor) {
+    const rx = 15; // Rounded corners
+    const labelHeight = 30;
+    const labelY = y + labelHeight / 2;
+    
+    return `
+  <rect x="${x}" y="${y}" width="${width}" height="${height}" 
+        fill="${fillColor}" stroke="${borderColor}" stroke-width="2" rx="${rx}" ry="${rx}"/>
+  <text x="${x + width / 2}" y="${labelY}" 
+        font-family="sans-serif" font-size="16" font-weight="bold" 
+        fill="${borderColor}" text-anchor="middle" dominant-baseline="middle">${label}</text>
+`;
+}
 function drawSVGBox(text, x, y, width, height, bgColor, textColor, isBold) {
-    const fontSize = isBold ? 14 : 12;
+    const fontSize = isBold ? 18 : 16; // Font sizes to match grouping label proportions (16px grouping labels)
     const fontWeight = isBold ? 'bold' : 'normal';
     const borderColor = darkenColor(bgColor, LAYOUT.BORDER_COLOR_DARKEN_FACTOR);
     // Wrap text

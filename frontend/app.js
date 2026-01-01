@@ -1,11 +1,14 @@
 // Main application - refactored with modular structure
 import { loadTeamTypes, loadOrganizationHierarchy, loadTeams, loadTeamDetails, updateTeamPosition } from './api.js';
 import { drawCurrentStateView } from './renderer-current.js';
-import { drawTeam, drawConnections, wrapText, initCanvasPolyfills } from './renderer-common.js';
+import { drawTeam, drawConnections, wrapText, initCanvasPolyfills, drawValueStreamGroupings, drawPlatformGroupings } from './renderer-common.js';
 import { CanvasInteractionHandler } from './canvas-interactions.js';
 import { exportToSVG } from './svg-export.js';
 import { autoAlignTeamsByManager } from './team-alignment.js';
+import { autoAlignTTDesign } from './tt-design-alignment.js';
 import { showError, showSuccess, showInfo, showWarning } from './notifications.js';
+import { getValueStreamGroupings, getValueStreamNames, filterTeamsByValueStream } from './value-stream-grouping.js';
+import { getPlatformGroupings, getPlatformGroupingNames, filterTeamsByPlatformGrouping } from './platform-grouping.js';
 // Application state
 const state = {
     canvas: null,
@@ -19,7 +22,8 @@ const state = {
     teamTypeConfig: { team_types: [] },
     teamColorMap: {},
     onTeamDoubleClick: null,
-    showConnections: false
+    showConnections: false,
+    selectedGrouping: 'all' // Format: 'all', 'vs:ValueStreamName', 'pg:PlatformGroupingName'
 };
 let interactionHandler = null;
 // Initialize
@@ -48,6 +52,9 @@ function init() {
     const autoAlignBtn = document.getElementById('autoAlignBtn');
     if (autoAlignBtn)
         autoAlignBtn.addEventListener('click', handleAutoAlign);
+    const autoAlignTTBtn = document.getElementById('autoAlignTTBtn');
+    if (autoAlignTTBtn)
+        autoAlignTTBtn.addEventListener('click', handleAutoAlignTT);
     const refreshBtn = document.getElementById('refreshBtn');
     if (refreshBtn)
         refreshBtn.addEventListener('click', () => loadAllTeams());
@@ -67,6 +74,13 @@ function init() {
     if (showConnectionsCheckbox) {
         showConnectionsCheckbox.addEventListener('change', (e) => {
             state.showConnections = e.target.checked;
+            draw();
+        });
+    }
+    const groupingFilter = document.getElementById('groupingFilter');
+    if (groupingFilter) {
+        groupingFilter.addEventListener('change', (e) => {
+            state.selectedGrouping = e.target.value;
             draw();
         });
     }
@@ -126,6 +140,7 @@ async function loadAllTeams() {
         });
         updateTeamList();
         updateLegend();
+        updateGroupingFilter();
         draw();
     }
     catch (error) {
@@ -152,6 +167,25 @@ function handleViewChange(e) {
             autoAlignBtnView.style.display = 'inline-block';
         } else {
             autoAlignBtnView.style.display = 'none';
+        }
+    }
+    
+    const autoAlignTTBtnView = document.getElementById('autoAlignTTBtn');
+    if (autoAlignTTBtnView) {
+        if (state.currentView === 'tt') {
+            autoAlignTTBtnView.style.display = 'inline-block';
+        } else {
+            autoAlignTTBtnView.style.display = 'none';
+        }
+    }
+    
+    // Show/hide grouping filter based on view
+    const groupingFilterContainer = document.getElementById('groupingFilterContainer');
+    if (groupingFilterContainer) {
+        if (state.currentView === 'tt') {
+            groupingFilterContainer.style.display = 'flex';
+        } else {
+            groupingFilterContainer.style.display = 'none';
         }
     }
     
@@ -184,7 +218,67 @@ function updateLegend() {
             </div>
         `;
     });
+    
+    // Add grouping explanations in TT Design view (fractal patterns from 2nd edition)
+    if (state.currentView === 'tt') {
+        const valueStreams = getValueStreamNames(state.teams);
+        if (valueStreams.length > 0) {
+            legendHTML += `
+                <h4 style="margin-top: 1.5rem;">Groupings</h4>
+                <div class="legend-item" style="align-items: flex-start;">
+                    <span class="legend-grouping-box value-stream"></span>
+                    <span style="line-height: 1.4;"><strong>Value Stream:</strong> Groups stream-aligned teams serving the same customer flow (e.g., ${valueStreams[0]})</span>
+                </div>
+                <div class="legend-item" style="align-items: flex-start; margin-top: 0.5rem;">
+                    <span class="legend-grouping-box platform"></span>
+                    <span style="line-height: 1.4;"><strong>Platform Grouping:</strong> Team-of-teams providing related capabilities (fractal pattern)</span>
+                </div>
+            `;
+        }
+    }
+    
     legendDiv.innerHTML = legendHTML;
+}
+function updateGroupingFilter() {
+    const filterSelect = document.getElementById('groupingFilter');
+    if (!filterSelect) return;
+    
+    // Get unique value streams and platform groupings from current teams
+    const valueStreams = getValueStreamNames(state.teams);
+    const platformGroupings = getPlatformGroupingNames(state.teams);
+    
+    // Clear existing options
+    filterSelect.innerHTML = '<option value="all">All Teams</option>';
+    
+    // Add value stream options
+    if (valueStreams.length > 0) {
+        const vsOptGroup = document.createElement('optgroup');
+        vsOptGroup.label = 'Value Streams';
+        valueStreams.forEach(vs => {
+            const option = document.createElement('option');
+            option.value = `vs:${vs}`;
+            option.textContent = vs;
+            vsOptGroup.appendChild(option);
+        });
+        filterSelect.appendChild(vsOptGroup);
+    }
+    
+    // Add platform grouping options
+    if (platformGroupings.length > 0) {
+        const pgOptGroup = document.createElement('optgroup');
+        pgOptGroup.label = 'Platform Groupings';
+        platformGroupings.forEach(pg => {
+            const option = document.createElement('option');
+            option.value = `pg:${pg}`;
+            option.textContent = pg;
+            pgOptGroup.appendChild(option);
+        });
+        filterSelect.appendChild(pgOptGroup);
+    }
+    
+    // Reset selection to "all" when updating
+    state.selectedGrouping = 'all';
+    filterSelect.value = 'all';
 }
 function draw() {
     if (!state.ctx || !state.canvas)
@@ -193,16 +287,40 @@ function draw() {
     state.ctx.save();
     state.ctx.translate(state.viewOffset.x, state.viewOffset.y);
     state.ctx.scale(state.scale, state.scale);
+    
+    // Filter teams by selected grouping (only in TT Design view)
+    let teamsToRender = state.teams;
+    if (state.currentView === 'tt' && state.selectedGrouping !== 'all') {
+        if (state.selectedGrouping.startsWith('vs:')) {
+            // Filter by value stream
+            const valueStream = state.selectedGrouping.substring(3);
+            teamsToRender = filterTeamsByValueStream(state.teams, valueStream);
+        } else if (state.selectedGrouping.startsWith('pg:')) {
+            // Filter by platform grouping
+            const platformGrouping = state.selectedGrouping.substring(3);
+            teamsToRender = filterTeamsByPlatformGrouping(state.teams, platformGrouping);
+        }
+    }
+    
     // Draw organization hierarchy if in current view
     if (state.currentView === 'current' && state.organizationHierarchy) {
-        drawCurrentStateView(state.ctx, state.organizationHierarchy, state.teams, (text, maxWidth) => wrapText(state.ctx, text, maxWidth));
+        drawCurrentStateView(state.ctx, state.organizationHierarchy, teamsToRender, (text, maxWidth) => wrapText(state.ctx, text, maxWidth));
+    }
+    // Draw value stream groupings (only in TT Design view)
+    if (state.currentView === 'tt') {
+        const valueStreamGroupings = getValueStreamGroupings(teamsToRender);
+        drawValueStreamGroupings(state.ctx, valueStreamGroupings);
+        
+        // Draw platform groupings
+        const platformGroupings = getPlatformGroupings(teamsToRender);
+        drawPlatformGroupings(state.ctx, platformGroupings);
     }
     // Draw connections first (only if enabled in current view)
     if (!(state.currentView === 'current' && !state.showConnections)) {
-        drawConnections(state.ctx, state.teams);
+        drawConnections(state.ctx, teamsToRender, state.currentView);
     }
     // Draw teams
-    state.teams.forEach(team => drawTeam(state.ctx, team, state.selectedTeam, state.teamColorMap, (text, maxWidth) => wrapText(state.ctx, text, maxWidth)));
+    teamsToRender.forEach(team => drawTeam(state.ctx, team, state.selectedTeam, state.teamColorMap, (text, maxWidth) => wrapText(state.ctx, text, maxWidth), state.currentView));
     state.ctx.restore();
 }
 function selectTeam(team) {
@@ -357,6 +475,33 @@ async function handleAutoAlign() {
         draw();
         
         showSuccess(`Successfully aligned ${realignedTeams.length} team(s) under their line managers.`);
+    } catch (error) {
+        console.error('Failed to save team positions:', error);
+        showError('Failed to save team positions. Please try again.');
+    }
+}
+
+async function handleAutoAlignTT() {
+    // Perform alignment for TT Design view
+    const realignedTeams = autoAlignTTDesign(state.teams);
+    
+    if (realignedTeams.length === 0) {
+        showInfo('No teams needed realignment. Teams are already properly positioned.');
+        return;
+    }
+    
+    // Save all updated positions to backend
+    try {
+        const updatePromises = realignedTeams.map(team => 
+            updateTeamPosition(team.name, team.position.x, team.position.y, state.currentView)
+        );
+        
+        await Promise.all(updatePromises);
+        
+        // Redraw canvas with new positions
+        draw();
+        
+        showSuccess(`Successfully aligned ${realignedTeams.length} team(s) within their groupings.`);
     } catch (error) {
         console.error('Failed to save team positions:', error);
         showError('Failed to save team positions. Please try again.');

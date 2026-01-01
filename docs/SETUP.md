@@ -103,7 +103,7 @@ If the container is already running (see setup above), just open:
 
 Use the radio buttons in the header to switch between:
 - **Current State** - Shows the traditional organizational structure
-- **Team Topologies Vision** - Shows the target TT patterns
+- **TT Design** - Shows the target TT patterns
 
 ### Visualizing Teams
 

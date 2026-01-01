@@ -6,6 +6,28 @@ export const INTERACTION_STYLES = {
     'x-as-a-service': { dash: [10, 5], width: 2, color: '#4ECDC4' },
     'facilitating': { dash: [5, 5], width: 2, color: '#95E1D3' }
 };
+
+// Value stream grouping style
+const VALUE_STREAM_STYLE = {
+    fillColor: 'rgba(255, 245, 215, 0.4)', // Very light yellow/orange background
+    strokeColor: 'rgba(255, 200, 130, 0.5)', // Light orange border
+    strokeWidth: 2,
+    borderRadius: 10,
+    labelFont: 'bold 16px sans-serif',
+    labelColor: '#666',
+    labelPadding: 10
+};
+
+// Platform grouping style (from TT 2nd edition - fractal pattern)
+const PLATFORM_GROUPING_STYLE = {
+    fillColor: 'rgba(126, 200, 227, 0.15)', // Very light blue background (lighter than platform teams)
+    strokeColor: 'rgba(74, 159, 216, 0.4)', // Light blue border
+    strokeWidth: 2,
+    borderRadius: 10,
+    labelFont: 'bold 16px sans-serif',
+    labelColor: '#666',
+    labelPadding: 10
+};
 // Utility to darken a hex color
 export function darkenColor(hex, factor = 0.7) {
     const rgb = parseInt(hex.slice(1), 16);
@@ -14,10 +36,31 @@ export function darkenColor(hex, factor = 0.7) {
     const b = Math.floor((rgb & 255) * factor);
     return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`;
 }
-export function drawTeam(ctx, team, selectedTeam, teamColorMap, wrapText) {
+/**
+ * Calculate team box width based on team type
+ * In TT Design view, stream-aligned and platform teams are wide (spanning flow of change)
+ * @param {Object} team - Team object
+ * @param {string} currentView - Current view ('current' or 'tt')
+ * @returns {number} Width in pixels
+ */
+export function getTeamBoxWidth(team, currentView = 'current') {
+    // In TT Design view, stream-aligned and platform teams are wide
+    if (currentView === 'tt' && (team.team_type === 'stream-aligned' || team.team_type === 'platform')) {
+        // Check if team is in a grouping - if so, make it wide
+        const hasGrouping = team.metadata?.value_stream || team.metadata?.platform_grouping;
+        if (hasGrouping) {
+            // ~80% of grouping width (700px), with 10% margins = ~560px
+            return 560;
+        }
+    }
+    // Default width for all other cases
+    return LAYOUT.TEAM_BOX_WIDTH;
+}
+
+export function drawTeam(ctx, team, selectedTeam, teamColorMap, wrapText, currentView = 'current') {
     const x = team.position.x;
     const y = team.position.y;
-    const width = LAYOUT.TEAM_BOX_WIDTH;
+    const width = getTeamBoxWidth(team, currentView);
     const height = LAYOUT.TEAM_BOX_HEIGHT;
     const radius = 8;
     const fillColor = getTeamColor(team, teamColorMap);
@@ -49,24 +92,28 @@ export function drawTeam(ctx, team, selectedTeam, teamColorMap, wrapText) {
         ctx.fillText(line, x + width / 2, y + height / 2 - (lines.length - 1) * 8 + i * 16);
     });
 }
-export function drawConnections(ctx, teams) {
+export function drawConnections(ctx, teams, currentView = 'current') {
     teams.forEach(team => {
         if (team.interaction_modes) {
             Object.entries(team.interaction_modes).forEach(([targetName, mode]) => {
                 const target = teams.find(t => t.name === targetName);
                 if (target) {
-                    drawConnection(ctx, team, target, mode);
+                    drawConnection(ctx, team, target, mode, currentView);
                 }
             });
         }
     });
 }
-function drawConnection(ctx, from, to, mode) {
+function drawConnection(ctx, from, to, mode, currentView = 'current') {
     const style = INTERACTION_STYLES[mode] || INTERACTION_STYLES['collaboration'];
-    const fromX = from.position.x + 90;
-    const fromY = from.position.y + 40;
-    const toX = to.position.x + 90;
-    const toY = to.position.y + 40;
+    
+    // Calculate center points dynamically based on team box width
+    const fromWidth = getTeamBoxWidth(from, currentView);
+    const toWidth = getTeamBoxWidth(to, currentView);
+    const fromX = from.position.x + fromWidth / 2;
+    const fromY = from.position.y + LAYOUT.TEAM_BOX_HEIGHT / 2;
+    const toX = to.position.x + toWidth / 2;
+    const toY = to.position.y + LAYOUT.TEAM_BOX_HEIGHT / 2;
     ctx.strokeStyle = style.color;
     ctx.lineWidth = style.width;
     ctx.setLineDash(style.dash);
@@ -116,13 +163,16 @@ export function wrapText(ctx, text, maxWidth) {
     lines.push(currentLine);
     return lines;
 }
-export function getTeamAtPosition(teams, x, y, viewOffset, scale) {
+export function getTeamAtPosition(teams, x, y, viewOffset, scale, currentView = 'current') {
     const worldX = (x - viewOffset.x) / scale;
     const worldY = (y - viewOffset.y) / scale;
-    return teams.find(team => worldX >= team.position.x &&
-        worldX <= team.position.x + LAYOUT.TEAM_BOX_WIDTH &&
-        worldY >= team.position.y &&
-        worldY <= team.position.y + LAYOUT.TEAM_BOX_HEIGHT);
+    return teams.find(team => {
+        const teamWidth = getTeamBoxWidth(team, currentView);
+        return worldX >= team.position.x &&
+            worldX <= team.position.x + teamWidth &&
+            worldY >= team.position.y &&
+            worldY <= team.position.y + LAYOUT.TEAM_BOX_HEIGHT;
+    });
 }
 // Polyfill for roundRect (older browsers)
 export function initCanvasPolyfills() {
@@ -143,4 +193,88 @@ export function initCanvasPolyfills() {
             return this;
         };
     }
+}
+
+/**
+ * Draws value stream grouping rectangles behind teams
+ * @param {CanvasRenderingContext2D} ctx - Canvas context
+ * @param {Array} groupings - Array of grouping objects from getValueStreamGroupings
+ */
+export function drawValueStreamGroupings(ctx, groupings) {
+    if (!groupings || groupings.length === 0) {
+        return;
+    }
+
+    groupings.forEach(grouping => {
+        // Skip ungrouped teams (they don't get a visual grouping)
+        if (grouping.name === '(Ungrouped)') {
+            return;
+        }
+
+        const { x, y, width, height } = grouping.bounds;
+
+        // Draw background rectangle
+        ctx.fillStyle = VALUE_STREAM_STYLE.fillColor;
+        ctx.strokeStyle = VALUE_STREAM_STYLE.strokeColor;
+        ctx.lineWidth = VALUE_STREAM_STYLE.strokeWidth;
+        
+        ctx.beginPath();
+        ctx.roundRect(x, y, width, height, VALUE_STREAM_STYLE.borderRadius);
+        ctx.fill();
+        ctx.stroke();
+
+        // Draw label at top-center (banner style)
+        ctx.fillStyle = VALUE_STREAM_STYLE.labelColor;
+        ctx.font = VALUE_STREAM_STYLE.labelFont;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        
+        const labelX = x + width / 2;
+        const labelY = y + VALUE_STREAM_STYLE.labelPadding;
+        
+        ctx.fillText(grouping.name, labelX, labelY);
+    });
+}
+
+/**
+ * Draws platform grouping rectangles behind teams
+ * Platform Grouping is a fractal pattern from TT 2nd edition representing a team-of-teams
+ * structure where multiple platform teams work together to provide capabilities.
+ * @param {CanvasRenderingContext2D} ctx - Canvas context
+ * @param {Array} groupings - Array of grouping objects (similar structure to value stream groupings)
+ */
+export function drawPlatformGroupings(ctx, groupings) {
+    if (!groupings || groupings.length === 0) {
+        return;
+    }
+
+    groupings.forEach(grouping => {
+        // Skip ungrouped teams
+        if (grouping.name === '(Ungrouped)') {
+            return;
+        }
+
+        const { x, y, width, height } = grouping.bounds;
+
+        // Draw background rectangle with platform grouping style
+        ctx.fillStyle = PLATFORM_GROUPING_STYLE.fillColor;
+        ctx.strokeStyle = PLATFORM_GROUPING_STYLE.strokeColor;
+        ctx.lineWidth = PLATFORM_GROUPING_STYLE.strokeWidth;
+        
+        ctx.beginPath();
+        ctx.roundRect(x, y, width, height, PLATFORM_GROUPING_STYLE.borderRadius);
+        ctx.fill();
+        ctx.stroke();
+
+        // Draw label at top-center (banner style)
+        ctx.fillStyle = PLATFORM_GROUPING_STYLE.labelColor;
+        ctx.font = PLATFORM_GROUPING_STYLE.labelFont;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        
+        const labelX = x + width / 2;
+        const labelY = y + PLATFORM_GROUPING_STYLE.labelPadding;
+        
+        ctx.fillText(grouping.name, labelX, labelY);
+    });
 }

@@ -23,7 +23,7 @@ export class CanvasInteractionHandler {
         const rect = this.canvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
-        const team = getTeamAtPosition(this.state.teams, x, y, this.state.viewOffset, this.state.scale);
+        const team = getTeamAtPosition(this.state.teams, x, y, this.state.viewOffset, this.state.scale, this.state.currentView);
         if (team) {
             this.draggedTeam = team;
             this.dragStartPosition = { x: team.position.x, y: team.position.y };
@@ -78,7 +78,7 @@ export class CanvasInteractionHandler {
         const rect = this.canvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
-        const team = getTeamAtPosition(this.state.teams, x, y, this.state.viewOffset, this.state.scale);
+        const team = getTeamAtPosition(this.state.teams, x, y, this.state.viewOffset, this.state.scale, this.state.currentView);
         if (team && this.state.onTeamDoubleClick) {
             this.state.onTeamDoubleClick(team);
         }

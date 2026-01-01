@@ -68,6 +68,32 @@ header h1 {
     color: #4A90E2;
 }
 
+#valueStreamFilterContainer {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+#valueStreamFilterContainer label {
+    font-weight: 500;
+}
+
+.filter-dropdown {
+    padding: 0.4rem 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    background: white;
+    cursor: pointer;
+    min-width: 180px;
+}
+
+.filter-dropdown:focus {
+    outline: none;
+    border-color: #4A90E2;
+}
+
 .btn {
     padding: 0.5rem 1rem;
     border: 1px solid #ddd;
@@ -169,6 +195,27 @@ header h1 {
     height: 20px;
     border-radius: 3px;
     margin-right: 0.5rem;
+    flex-shrink: 0;
+}
+
+.legend-grouping-box {
+    width: 20px;
+    height: 20px;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+
+.legend-grouping-box.value-stream {
+    border: 2px solid rgba(255, 200, 130, 0.5);
+    background: rgba(255, 245, 215, 0.4);
+}
+
+.legend-grouping-box.platform {
+    border: 2px solid rgba(74, 159, 216, 0.4);
+    background: rgba(126, 200, 227, 0.15);
+    border-radius: 3px;
+    margin-right: 0.5rem;
+    flex-shrink: 0;
 }
 
 .canvas-area {
