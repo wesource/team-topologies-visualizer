@@ -312,6 +312,12 @@ header h1 {
     overflow-y: auto;
 }
 
+.modal-medium {
+    max-width: 600px;
+    max-height: 85vh;
+    overflow-y: auto;
+}
+
 .detail-header {
     display: flex;
     align-items: center;

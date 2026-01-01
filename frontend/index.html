@@ -25,6 +25,14 @@
                     <input type="checkbox" id="showConnections">
                     <span>Show Communication Lines</span>
                 </label>
+                <label class="radio-label" id="showInteractionModesLabel" style="display: none;">
+                    <input type="checkbox" id="showInteractionModes" checked>
+                    <span>Show Interaction Modes</span>
+                </label>
+                <label class="radio-label">
+                    <input type="checkbox" id="showCognitiveLoad">
+                    <span>🚦 Cognitive Load</span>
+                </label>
                 <div id="groupingFilterContainer" style="display: none;">
                     <label for="groupingFilter">Groupings:</label>
                     <select id="groupingFilter" class="filter-dropdown">
@@ -137,6 +145,14 @@
                     <div id="detailMetadata" class="metadata-grid"></div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Interaction Mode Info Modals -->
+    <div id="interactionModeModal" class="modal">
+        <div class="modal-content modal-medium">
+            <span class="close" id="interactionModeModalClose">&times;</span>
+            <div id="interactionModeContent"></div>
         </div>
     </div>
 

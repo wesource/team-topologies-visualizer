@@ -2,7 +2,7 @@
  * Unit tests for renderer-common.ts
  */
 import { describe, it, expect, beforeEach } from 'vitest';
-import { wrapText, INTERACTION_STYLES, getTeamAtPosition, initCanvasPolyfills } from './renderer-common';
+import { wrapText, INTERACTION_STYLES, getTeamAtPosition, initCanvasPolyfills, getCognitiveLoadIndicator } from './renderer-common';
 describe('wrapText', () => {
     let mockCtx;
     beforeEach(() => {
@@ -130,5 +130,71 @@ describe('initCanvasPolyfills', () => {
     it('should exist as a function', () => {
         // Just verify the function is exported
         expect(typeof initCanvasPolyfills).toBe('function');
+    });
+});
+
+describe('getCognitiveLoadIndicator', () => {
+    it('should return green indicator for low cognitive load', () => {
+        const indicator = getCognitiveLoadIndicator('low');
+        expect(indicator).toBeDefined();
+        expect(indicator.color).toBe('#4CAF50');
+        expect(indicator.emoji).toBe('🟢');
+    });
+
+    it('should return green indicator for low-medium cognitive load', () => {
+        const indicator = getCognitiveLoadIndicator('low-medium');
+        expect(indicator).toBeDefined();
+        expect(indicator.color).toBe('#8BC34A');
+        expect(indicator.emoji).toBe('🟢');
+    });
+
+    it('should return yellow indicator for medium cognitive load', () => {
+        const indicator = getCognitiveLoadIndicator('medium');
+        expect(indicator).toBeDefined();
+        expect(indicator.color).toBe('#FFC107');
+        expect(indicator.emoji).toBe('🟡');
+    });
+
+    it('should return red indicator for high cognitive load', () => {
+        const indicator = getCognitiveLoadIndicator('high');
+        expect(indicator).toBeDefined();
+        expect(indicator.color).toBe('#FF5722');
+        expect(indicator.emoji).toBe('🔴');
+    });
+
+    it('should return dark red indicator for very-high cognitive load', () => {
+        const indicator = getCognitiveLoadIndicator('very-high');
+        expect(indicator).toBeDefined();
+        expect(indicator.color).toBe('#D32F2F');
+        expect(indicator.emoji).toBe('🔴');
+    });
+
+    it('should return null for undefined cognitive load', () => {
+        const indicator = getCognitiveLoadIndicator(undefined);
+        expect(indicator).toBeNull();
+    });
+
+    it('should return null for null cognitive load', () => {
+        const indicator = getCognitiveLoadIndicator(null);
+        expect(indicator).toBeNull();
+    });
+
+    it('should return null for unknown cognitive load level', () => {
+        const indicator = getCognitiveLoadIndicator('unknown');
+        expect(indicator).toBeNull();
+    });
+
+    it('should handle mixed case cognitive load levels', () => {
+        const indicator = getCognitiveLoadIndicator('HIGH');
+        expect(indicator).toBeDefined();
+        expect(indicator.color).toBe('#FF5722');
+        expect(indicator.emoji).toBe('🔴');
+    });
+
+    it('should handle cognitive load levels with extra whitespace', () => {
+        const indicator = getCognitiveLoadIndicator('  medium  ');
+        expect(indicator).toBeDefined();
+        expect(indicator.color).toBe('#FFC107');
+        expect(indicator.emoji).toBe('🟡');
     });
 });

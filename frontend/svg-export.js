@@ -5,7 +5,7 @@ import { getPlatformGroupings } from './platform-grouping.js';
 
 // SVG Export Module - Separated from runtime rendering
 // Converts current visualization state to downloadable SVG
-export function exportToSVG(state, organizationHierarchy, teams, teamColorMap, currentView) {
+export function exportToSVG(state, organizationHierarchy, teams, teamColorMap, currentView, showInteractionModes = true) {
     let width = 2000;
     let height = 1500;
     let viewBox = `0 0 ${width} ${height}`;
@@ -37,7 +37,7 @@ export function exportToSVG(state, organizationHierarchy, teams, teamColorMap, c
         svg += generateCurrentStateSVG(organizationHierarchy, teams, teamColorMap);
     }
     else {
-        svg += generateTTVisionSVG(teams, teamColorMap, state.hideConnections);
+        svg += generateTTVisionSVG(teams, teamColorMap, showInteractionModes);
     }
     svg += '</svg>';
     
@@ -153,7 +153,7 @@ function generateCurrentStateSVG(organizationHierarchy, teams, teamColorMap) {
     });
     return elements;
 }
-function generateTTVisionSVG(teams, teamColorMap, hideConnections) {
+function generateTTVisionSVG(teams, teamColorMap, showInteractionModes) {
     let elements = '';
     
     // Draw value stream groupings first (as background)
@@ -188,14 +188,15 @@ function generateTTVisionSVG(teams, teamColorMap, hideConnections) {
         );
     });
     
-    // Draw connections (if not hidden)
-    if (!hideConnections) {
+    // Draw interaction modes (if enabled)
+    if (showInteractionModes) {
         teams.forEach(team => {
-            if (team.dependencies) {
-                team.dependencies.forEach((dep) => {
-                    const targetTeam = teams.find(t => t.name === dep.team);
+            if (team.interaction_modes) {
+                Object.entries(team.interaction_modes).forEach(([targetName, mode]) => {
+                    const targetTeam = teams.find(t => t.name === targetName);
                     if (targetTeam) {
-                        const color = getInteractionColor(dep.interaction);
+                        const color = getInteractionColorForSVG(mode);
+                        const dashArray = getInteractionDashForSVG(mode);
                         // Use dynamic team width for center calculation
                         const fromWidth = getTeamBoxWidth(team, 'tt');
                         const toWidth = getTeamBoxWidth(targetTeam, 'tt');
@@ -203,7 +204,7 @@ function generateTTVisionSVG(teams, teamColorMap, hideConnections) {
                         const fromY = team.position.y + LAYOUT.TEAM_BOX_HEIGHT / 2;
                         const toX = targetTeam.position.x + toWidth / 2;
                         const toY = targetTeam.position.y + LAYOUT.TEAM_BOX_HEIGHT / 2;
-                        elements += `<line x1="${fromX}" y1="${fromY}" x2="${toX}" y2="${toY}" class="connection-line" stroke="${color}" stroke-dasharray="${dep.interaction === 'facilitating' ? '5,5' : 'none'}"/>`;
+                        elements += `<line x1="${fromX}" y1="${fromY}" x2="${toX}" y2="${toY}" class="connection-line" stroke="${color}" stroke-dasharray="${dashArray}"/>`;
                     }
                 });
             }
@@ -268,13 +269,23 @@ function drawSVGLine(x1, y1, x2, y2) {
     const midY = (y1 + y2) / 2;
     return `  <path d="M ${x1},${y1} L ${x1},${midY} L ${x2},${midY} L ${x2},${y2}" class="hierarchy-line"/>\n`;
 }
-function getInteractionColor(interaction) {
+// Helper functions for interaction mode styling in SVG
+function getInteractionColorForSVG(mode) {
     const colors = {
-        'collaboration': '#E74C3C',
-        'x-as-a-service': '#3498DB',
-        'facilitating': '#F39C12'
+        'collaboration': '#7a5fa6',      // Purple
+        'x-as-a-service': '#222222',     // Near-black
+        'facilitating': '#6fa98c'        // Green
     };
-    return colors[interaction] || '#95a5a6';
+    return colors[mode] || '#95a5a6';
+}
+
+function getInteractionDashForSVG(mode) {
+    const dashArrays = {
+        'collaboration': 'none',
+        'x-as-a-service': '10,5',
+        'facilitating': '5,5'
+    };
+    return dashArrays[mode] || 'none';
 }
 function escapeXml(text) {
     return text

@@ -1,10 +1,10 @@
 import { LAYOUT } from './constants.js';
 
-// Interaction mode styles
+// Interaction mode styles (colors match Team Topologies book symbols)
 export const INTERACTION_STYLES = {
-    'collaboration': { dash: [], width: 3, color: '#FF6B6B' },
-    'x-as-a-service': { dash: [10, 5], width: 2, color: '#4ECDC4' },
-    'facilitating': { dash: [5, 5], width: 2, color: '#95E1D3' }
+    'collaboration': { dash: [], width: 3, color: '#7a5fa6' },        // Purple (matches cross-hatch symbol)
+    'x-as-a-service': { dash: [10, 5], width: 3, color: '#222222' },  // Near-black (matches bracket symbol)
+    'facilitating': { dash: [5, 5], width: 2, color: '#6fa98c' }      // Green (matches dotted circle symbol)
 };
 
 // Value stream grouping style
@@ -36,6 +36,28 @@ export function darkenColor(hex, factor = 0.7) {
     const b = Math.floor((rgb & 255) * factor);
     return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`;
 }
+
+/**
+ * Get cognitive load indicator color and emoji
+ * @param {string} level - Cognitive load level (low, low-medium, medium, high, very-high)
+ * @returns {Object} { color, emoji } for the cognitive load level
+ */
+export function getCognitiveLoadIndicator(level) {
+    if (!level) return null;
+    
+    const normalized = level.toLowerCase().trim();
+    
+    // Traffic light colors: green (low), yellow (medium), red (high)
+    const indicators = {
+        'low': { color: '#4CAF50', emoji: '🟢' },
+        'low-medium': { color: '#8BC34A', emoji: '🟢' },
+        'medium': { color: '#FFC107', emoji: '🟡' },
+        'high': { color: '#FF5722', emoji: '🔴' },
+        'very-high': { color: '#D32F2F', emoji: '🔴' }
+    };
+    
+    return indicators[normalized] || null;
+}
 /**
  * Calculate team box width based on team type
  * In TT Design view, stream-aligned and platform teams are wide (spanning flow of change)
@@ -57,7 +79,7 @@ export function getTeamBoxWidth(team, currentView = 'current') {
     return LAYOUT.TEAM_BOX_WIDTH;
 }
 
-export function drawTeam(ctx, team, selectedTeam, teamColorMap, wrapText, currentView = 'current') {
+export function drawTeam(ctx, team, selectedTeam, teamColorMap, wrapText, currentView = 'current', showCognitiveLoad = false) {
     const x = team.position.x;
     const y = team.position.y;
     const width = getTeamBoxWidth(team, currentView);
@@ -82,27 +104,67 @@ export function drawTeam(ctx, team, selectedTeam, teamColorMap, wrapText, curren
     ctx.strokeStyle = selectedTeam === team ? '#333' : borderColor;
     ctx.lineWidth = selectedTeam === team ? LAYOUT.BORDER_WIDTH_SELECTED : LAYOUT.BORDER_WIDTH_NORMAL;
     ctx.stroke();
+    
+    // Cognitive load indicator (traffic light in top-right corner)
+    const cognitiveLoad = team.metadata?.cognitive_load;
+    if (showCognitiveLoad && cognitiveLoad) {
+        const indicator = getCognitiveLoadIndicator(cognitiveLoad);
+        if (indicator) {
+            // Draw circular indicator with traffic light color
+            const indicatorSize = 12;
+            const indicatorX = x + width - indicatorSize - 8;
+            const indicatorY = y + indicatorSize + 8;
+            
+            ctx.fillStyle = indicator.color;
+            ctx.beginPath();
+            ctx.arc(indicatorX, indicatorY, indicatorSize / 2, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Optional: Add white border for contrast
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+        }
+    }
+    
     // Team name
     ctx.fillStyle = 'white';
     ctx.font = 'bold 14px sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     const lines = wrapText(team.name, width - 20);
+    
+    // Draw team name lines (centered vertically)
     lines.forEach((line, i) => {
         ctx.fillText(line, x + width / 2, y + height / 2 - (lines.length - 1) * 8 + i * 16);
     });
 }
-export function drawConnections(ctx, teams, currentView = 'current') {
-    teams.forEach(team => {
-        if (team.interaction_modes) {
-            Object.entries(team.interaction_modes).forEach(([targetName, mode]) => {
-                const target = teams.find(t => t.name === targetName);
-                if (target) {
-                    drawConnection(ctx, team, target, mode, currentView);
-                }
-            });
-        }
-    });
+export function drawConnections(ctx, teams, currentView = 'current', showInteractionModes = true) {
+    if (currentView === 'current') {
+        // Current State view: show simple "Actual Comms" from dependencies
+        teams.forEach(team => {
+            if (team.dependencies && Array.isArray(team.dependencies)) {
+                team.dependencies.forEach(targetName => {
+                    const target = teams.find(t => t.name === targetName);
+                    if (target) {
+                        drawActualCommsConnection(ctx, team, target, currentView);
+                    }
+                });
+            }
+        });
+    } else if (showInteractionModes) {
+        // TT Design view: show interaction modes (only if checkbox is enabled)
+        teams.forEach(team => {
+            if (team.interaction_modes) {
+                Object.entries(team.interaction_modes).forEach(([targetName, mode]) => {
+                    const target = teams.find(t => t.name === targetName);
+                    if (target) {
+                        drawConnection(ctx, team, target, mode, currentView);
+                    }
+                });
+            }
+        });
+    }
 }
 function drawConnection(ctx, from, to, mode, currentView = 'current') {
     const style = INTERACTION_STYLES[mode] || INTERACTION_STYLES['collaboration'];
@@ -131,6 +193,62 @@ function drawConnection(ctx, from, to, mode, currentView = 'current') {
     ctx.lineTo(toX - arrowLength * Math.cos(angle + Math.PI / 6), toY - arrowLength * Math.sin(angle + Math.PI / 6));
     ctx.stroke();
     ctx.setLineDash([]);
+}
+
+function drawActualCommsConnection(ctx, from, to, currentView = 'current') {
+    // Current State view: simple bidirectional fat arrow called "Actual Comms"
+    const fromWidth = getTeamBoxWidth(from, currentView);
+    const toWidth = getTeamBoxWidth(to, currentView);
+    const fromX = from.position.x + fromWidth / 2;
+    const fromY = from.position.y + LAYOUT.TEAM_BOX_HEIGHT / 2;
+    const toX = to.position.x + toWidth / 2;
+    const toY = to.position.y + LAYOUT.TEAM_BOX_HEIGHT / 2;
+    
+    const angle = Math.atan2(toY - fromY, toX - fromX);
+    const arrowLength = 20;
+    
+    // Shorten the line so it doesn't overlap with arrows
+    const shortenBy = arrowLength + 2;
+    const lineFromX = fromX + shortenBy * Math.cos(angle);
+    const lineFromY = fromY + shortenBy * Math.sin(angle);
+    const lineToX = toX - shortenBy * Math.cos(angle);
+    const lineToY = toY - shortenBy * Math.sin(angle);
+    
+    ctx.save(); // Save context state
+    
+    // Fat gray line (realistic, not TT-designed)
+    ctx.strokeStyle = '#666666';
+    ctx.lineWidth = 4;
+    ctx.setLineDash([]);
+    ctx.beginPath();
+    ctx.moveTo(lineFromX, lineFromY);
+    ctx.lineTo(lineToX, lineToY);
+    ctx.stroke();
+    
+    // Draw arrows ON TOP of line for visibility
+    ctx.fillStyle = '#666666';
+    ctx.strokeStyle = '#666666';
+    ctx.lineWidth = 1;
+    
+    // Filled arrow triangle at 'to' end
+    ctx.beginPath();
+    ctx.moveTo(toX, toY);
+    ctx.lineTo(toX - arrowLength * Math.cos(angle - Math.PI / 6), toY - arrowLength * Math.sin(angle - Math.PI / 6));
+    ctx.lineTo(toX - arrowLength * Math.cos(angle + Math.PI / 6), toY - arrowLength * Math.sin(angle + Math.PI / 6));
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    
+    // Filled arrow triangle at 'from' end (opposite direction)
+    ctx.beginPath();
+    ctx.moveTo(fromX, fromY);
+    ctx.lineTo(fromX + arrowLength * Math.cos(angle - Math.PI / 6), fromY + arrowLength * Math.sin(angle - Math.PI / 6));
+    ctx.lineTo(fromX + arrowLength * Math.cos(angle + Math.PI / 6), fromY + arrowLength * Math.sin(angle + Math.PI / 6));
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    
+    ctx.restore(); // Restore context state
 }
 function getTeamColor(team, teamColorMap) {
     // Try to get color from team type config
