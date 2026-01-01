@@ -57,13 +57,15 @@ See [SETUP.md](docs/SETUP.md) for detailed installation and configuration instru
 ## Why This Tool?
 
 When adopting Team Topologies, organizations need to:
-- **Consolidate scattered information** - Unify team data from PowerPoints, wikis, Confluence pages, and other scattered sources into one structured, version-controlled format
+- **Consolidate scattered information** - Unify team data from slides, documentation systems, spreadsheets, and other scattered sources into one structured, version-controlled format
 - **Visualize the current state** - Show how teams are currently organized (often by reporting lines, not value streams)
 - **Design the future state** - Plan Team Topologies patterns (stream-aligned, platform, enabling, complicated subsystem)
-- **Communicate the transition** - Help stakeholders understand the "before and after"
+- **Communicate the transition** - Help everyone involved understand and discuss the "before and after"
 - **Track progress** - Document the evolution over time
 
 This tool provides dual visualizations to make these conversations easier.
+
+> **Note**: This tool applies Team Topologies principles developed by Matthew Skelton and Manuel Pais. See [Acknowledgments](#acknowledgments) for proper attribution.
 
 ## Key Features
 
@@ -367,6 +369,7 @@ We are grateful to the Team Topologies community for their thought leadership an
 
 ## References
 
-- [Team Topologies book](https://teamtopologies.com/) by Matthew Skelton and Manuel Pais
-- [Team API Template](https://github.com/TeamTopologies/Team-API-template)
-- [Team Topologies Key Concepts](https://teamtopologies.com/key-concepts)
+**Core Resources:**
+- [Team Topologies book and website](https://teamtopologies.com/) by Matthew Skelton and Manuel Pais - Book information and additional resources
+- [Team API Template](https://github.com/TeamTopologies/Team-API-template) - Template format used for team files
+- [Team Topologies Key Concepts](https://teamtopologies.com/key-concepts) - Overview of fundamental concepts
