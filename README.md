@@ -47,6 +47,11 @@ A web application with dual visualization of organizational team structures. Vis
    # or with Podman
    podman run -p 8000:8000 -v ./data:/app/data:z team-topologies-viz
    ```
+   
+   **Windows PowerShell/Podman**: Use `${PWD}` instead of `./` and omit `:z`:
+   ```powershell
+   podman run -p 8000:8000 -v ${PWD}/data:/app/data team-topologies-viz
+   ```
 
 3. **Open** http://localhost:8000/static/index.html
 
@@ -61,7 +66,7 @@ When adopting Team Topologies, organizations need to:
 - **Visualize the current state** - Show how teams are currently organized (often by reporting lines, not value streams)
 - **Design the future state** - Plan Team Topologies patterns (stream-aligned, platform, enabling, complicated subsystem)
 - **Communicate the transition** - Help everyone involved understand and discuss the "before and after"
-- **Track progress** - Document the evolution over time
+- **Version-controlled history** - Git-friendly format enables tracking evolution over time (via git history)
 
 This tool provides dual visualizations to make these conversations easier.
 
@@ -340,6 +345,7 @@ This would help teams:
 - Visualize the impact of Team Topologies patterns on technical architecture
 
 ### Additional Ideas
+- **Visibility controls** - Toggle visibility of individual teams and departments in Current State view to focus on specific areas of the organization
 - ASCII art export for documentation and presentations (clearer than trying to explain with words! 😄)
 - Additional visualization layouts (hierarchical tree, circle packing)
 - Team health indicators and metrics

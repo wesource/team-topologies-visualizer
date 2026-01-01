@@ -54,11 +54,17 @@
    podman run -p 8000:8000 -v ./data:/app/data:z team-topologies-viz
    ```
    
+   **Windows PowerShell/Podman**: Git Bash may have path conversion issues. Use PowerShell:
+   ```powershell
+   podman run -p 8000:8000 -v ${PWD}/data:/app/data team-topologies-viz
+   ```
+   
    **Volume mount explanation**:
    - `-v ./data:/app/data` mounts your local `data/` directory into the container
    - This allows you to edit team markdown files on your host machine
    - Changes are immediately visible in the running application
    - On Podman with SELinux, add `:z` flag for proper permissions
+   - On Windows, use `${PWD}` in PowerShell instead of `./` and omit `:z`
 
 3. **Stop the container**
    ```bash
