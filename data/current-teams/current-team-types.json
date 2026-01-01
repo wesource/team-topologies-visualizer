@@ -16,13 +16,7 @@
       "id": "support-team",
       "name": "Enabling/Support Team",
       "description": "Teams that support other teams with specialized skills, coaching, or specialist work (e.g., architects, testing specialists, documentation teams).",
-      "color": "#F1C40F"
-    },
-    {
-      "id": "data-ml",
-      "name": "Data & ML Team",
-      "description": "Teams focused on data science, machine learning, and analytics. Often work closely with feature teams to integrate ML capabilities.",
-      "color": "#34495E"
+      "color": "#F4D03F"
     },
     {
       "id": "other",

@@ -1,4 +1,4 @@
-"""Unit tests for main.py backend functions."""
+"""Unit tests for backend modules."""
 import pytest
 import tempfile
 import json
@@ -6,10 +6,11 @@ from pathlib import Path
 import sys
 import os
 
-# Add parent directory to path to import main
+# Add parent directory to path to import backend modules
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from main import parse_team_file, get_data_dir, TeamData
+from backend.models import TeamData
+from backend.services import parse_team_file, get_data_dir
 
 
 @pytest.fixture

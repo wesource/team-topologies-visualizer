@@ -1,9 +1,11 @@
 // Main application - refactored with modular structure
-import { loadTeamTypes, loadOrganizationHierarchy, loadTeams, loadTeamDetails } from './api.js';
+import { loadTeamTypes, loadOrganizationHierarchy, loadTeams, loadTeamDetails, updateTeamPosition } from './api.js';
 import { drawCurrentStateView } from './renderer-current.js';
 import { drawTeam, drawConnections, wrapText, initCanvasPolyfills } from './renderer-common.js';
 import { CanvasInteractionHandler } from './canvas-interactions.js';
 import { exportToSVG } from './svg-export.js';
+import { autoAlignTeamsByManager } from './team-alignment.js';
+import { showError, showSuccess, showInfo, showWarning } from './notifications.js';
 // Application state
 const state = {
     canvas: null,
@@ -17,7 +19,7 @@ const state = {
     teamTypeConfig: { team_types: [] },
     teamColorMap: {},
     onTeamDoubleClick: null,
-    hideConnections: false
+    showConnections: false
 };
 let interactionHandler = null;
 // Initialize
@@ -43,6 +45,9 @@ function init() {
     const exportSVGBtn = document.getElementById('exportSVGBtn');
     if (exportSVGBtn)
         exportSVGBtn.addEventListener('click', handleExportSVG);
+    const autoAlignBtn = document.getElementById('autoAlignBtn');
+    if (autoAlignBtn)
+        autoAlignBtn.addEventListener('click', handleAutoAlign);
     const refreshBtn = document.getElementById('refreshBtn');
     if (refreshBtn)
         refreshBtn.addEventListener('click', () => loadAllTeams());
@@ -58,17 +63,21 @@ function init() {
     const detailModalClose = document.getElementById('detailModalClose');
     if (detailModalClose)
         detailModalClose.addEventListener('click', closeDetailModal);
-    const hideConnectionsCheckbox = document.getElementById('hideConnections');
-    if (hideConnectionsCheckbox) {
-        hideConnectionsCheckbox.addEventListener('change', (e) => {
-            state.hideConnections = e.target.checked;
+    const showConnectionsCheckbox = document.getElementById('showConnections');
+    if (showConnectionsCheckbox) {
+        showConnectionsCheckbox.addEventListener('change', (e) => {
+            state.showConnections = e.target.checked;
             draw();
         });
     }
-    // Show the hide connections checkbox since default view is "current"
-    const hideConnectionsLabel = document.getElementById('hideConnectionsLabel');
-    if (hideConnectionsLabel) {
-        hideConnectionsLabel.style.display = 'flex';
+    // Show the hide connections checkbox and auto-align button since default view is "current"
+    const showConnectionsLabel = document.getElementById('showConnectionsLabel');
+    if (showConnectionsLabel) {
+        showConnectionsLabel.style.display = 'flex';
+    }
+    const autoAlignBtnInit = document.getElementById('autoAlignBtn');
+    if (autoAlignBtnInit) {
+        autoAlignBtnInit.style.display = 'inline-block';
     }
     // Load initial data
     loadAllTeams();
@@ -127,13 +136,22 @@ function handleViewChange(e) {
     const target = e.target;
     state.currentView = target.value;
     
-    // Show/hide the "Hide Communication Lines" checkbox based on view
-    const hideConnectionsLabel = document.getElementById('hideConnectionsLabel');
-    if (hideConnectionsLabel) {
+    // Show/hide the "Show Communication Lines" checkbox and auto-align button based on view
+    const showConnectionsLabel = document.getElementById('showConnectionsLabel');
+    if (showConnectionsLabel) {
         if (state.currentView === 'current') {
-            hideConnectionsLabel.style.display = 'flex';
+            showConnectionsLabel.style.display = 'flex';
         } else {
-            hideConnectionsLabel.style.display = 'none';
+            showConnectionsLabel.style.display = 'none';
+        }
+    }
+    
+    const autoAlignBtnView = document.getElementById('autoAlignBtn');
+    if (autoAlignBtnView) {
+        if (state.currentView === 'current') {
+            autoAlignBtnView.style.display = 'inline-block';
+        } else {
+            autoAlignBtnView.style.display = 'none';
         }
     }
     
@@ -179,8 +197,8 @@ function draw() {
     if (state.currentView === 'current' && state.organizationHierarchy) {
         drawCurrentStateView(state.ctx, state.organizationHierarchy, state.teams, (text, maxWidth) => wrapText(state.ctx, text, maxWidth));
     }
-    // Draw connections first (unless hidden in current view)
-    if (!(state.currentView === 'current' && state.hideConnections)) {
+    // Draw connections first (only if enabled in current view)
+    if (!(state.currentView === 'current' && !state.showConnections)) {
         drawConnections(state.ctx, state.teams);
     }
     // Draw teams
@@ -192,7 +210,7 @@ function selectTeam(team) {
     draw();
 }
 function openAddTeamModal() {
-    alert('This functionality isn\'t implemented yet to keep the solution as simple as possible.\n\nInstead, it\'s recommended to update the .md files under /data/current-teams and /data/tt-teams manually.');
+    showInfo('This functionality isn\'t implemented yet to keep the solution as simple as possible.\n\nInstead, it\'s recommended to update the .md files under /data/current-teams and /data/tt-teams manually.');
 }
 function closeModal() {
     const modal = document.getElementById('teamModal');
@@ -275,7 +293,7 @@ async function showTeamDetails(team) {
     }
     catch (error) {
         console.error('Failed to load team details:', error);
-        alert('Failed to load team details');
+        showError('Failed to load team details');
     }
 }
 function renderMarkdown(text) {
@@ -309,6 +327,38 @@ function renderMarkdown(text) {
 async function handleTeamSubmit(e) {
     e.preventDefault();
     alert('Create team functionality is disabled. Please edit files manually.');
-}function handleExportSVG() {
+}
+function handleExportSVG() {
     exportToSVG(state, state.organizationHierarchy, state.teams, state.teamColorMap, state.currentView);
+}
+async function handleAutoAlign() {
+    if (!state.organizationHierarchy) {
+        showWarning('Organization hierarchy not available. Auto-alignment only works in Current State view.');
+        return;
+    }
+    
+    // Perform alignment
+    const realignedTeams = autoAlignTeamsByManager(state.teams, state.organizationHierarchy);
+    
+    if (realignedTeams.length === 0) {
+        showInfo('No teams needed realignment. Teams are already properly positioned.');
+        return;
+    }
+    
+    // Save all updated positions to backend
+    try {
+        const updatePromises = realignedTeams.map(team => 
+            updateTeamPosition(team.name, team.position.x, team.position.y, state.currentView)
+        );
+        
+        await Promise.all(updatePromises);
+        
+        // Redraw canvas with new positions
+        draw();
+        
+        showSuccess(`Successfully aligned ${realignedTeams.length} team(s) under their line managers.`);
+    } catch (error) {
+        console.error('Failed to save team positions:', error);
+        showError('Failed to save team positions. Please try again.');
+    }
 }

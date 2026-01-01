@@ -6,8 +6,8 @@ dependencies:
 interaction_modes:
   Database Platform Team: collaboration
 position:
-  x: 172.97530546737724
-  y: 1087.305836353221
+  x: 190.0
+  y: 410.0
 metadata:
   size: 6
   department: Engineering

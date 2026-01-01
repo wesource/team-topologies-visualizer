@@ -7,8 +7,8 @@ interaction_modes:
   Platform Team: x-as-a-service
   Data Engineering Team: collaboration
 position:
-  x: 132.74226125530254
-  y: 39.78423709963488
+  x: 75.74226125530254
+  y: 249.78423709963488
 metadata:
   size: 8
   focus: Mobile applications

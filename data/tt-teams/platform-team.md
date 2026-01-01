@@ -5,8 +5,8 @@ dependencies: []
 interaction_modes:
   Security Team: x-as-a-service
 position:
-  x: 651.6830395709673
-  y: 743.207598927418
+  x: 507.68303957096725
+  y: 443.20759892741796
 metadata:
   size: 10
   focus: Internal platform services

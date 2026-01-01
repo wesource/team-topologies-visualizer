@@ -11,7 +11,7 @@ metadata:
 
 # Customer Support Department
 
-First-line customer support, incident management, and customer success for all LogiTech products.
+First-line customer support, incident management, and customer success for all FleetFlow products.
 
 ## Department Goals
 - 🎯 Minimize customer complaints and escalations

@@ -2,15 +2,7 @@
 
 Contributions are welcome! This tool is designed to be extended and customized.
 
-## Ideas for Enhancements
-
-- Additional visualization layouts (hierarchical tree, circle packing)
-- Team health indicators and metrics
-- Export diagrams as images or PDF
-- Import/export team data
-- Timeline view showing evolution over time
-- Cognitive load visualization
-- Integration with architecture diagrams (draw.io or svg) to visualize Conway's Law
+See the **Future Enhancements** section in the [README](README.md) for ideas on what could be built next.
 
 ## Getting Started
 

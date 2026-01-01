@@ -7,8 +7,8 @@ interaction_modes:
   Database Platform Team: x-as-a-service
 line_manager: Robert Miller
 position:
-  x: 450
-  y: 50
+  x: 1070.0
+  y: 410.0
 metadata:
   size: 4
   department: Engineering

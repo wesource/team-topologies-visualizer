@@ -1,15 +1,27 @@
+import { LAYOUT } from './constants.js';
+
 // Interaction mode styles
 export const INTERACTION_STYLES = {
     'collaboration': { dash: [], width: 3, color: '#FF6B6B' },
     'x-as-a-service': { dash: [10, 5], width: 2, color: '#4ECDC4' },
     'facilitating': { dash: [5, 5], width: 2, color: '#95E1D3' }
 };
+// Utility to darken a hex color
+export function darkenColor(hex, factor = 0.7) {
+    const rgb = parseInt(hex.slice(1), 16);
+    const r = Math.floor(((rgb >> 16) & 255) * factor);
+    const g = Math.floor(((rgb >> 8) & 255) * factor);
+    const b = Math.floor((rgb & 255) * factor);
+    return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`;
+}
 export function drawTeam(ctx, team, selectedTeam, teamColorMap, wrapText) {
     const x = team.position.x;
     const y = team.position.y;
-    const width = 180;
-    const height = 80;
+    const width = LAYOUT.TEAM_BOX_WIDTH;
+    const height = LAYOUT.TEAM_BOX_HEIGHT;
     const radius = 8;
+    const fillColor = getTeamColor(team, teamColorMap);
+    const borderColor = darkenColor(fillColor, LAYOUT.BORDER_COLOR_DARKEN_FACTOR);
     // Shadow
     if (selectedTeam === team) {
         ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
@@ -18,17 +30,15 @@ export function drawTeam(ctx, team, selectedTeam, teamColorMap, wrapText) {
         ctx.shadowOffsetY = 4;
     }
     // Background
-    ctx.fillStyle = getTeamColor(team, teamColorMap);
+    ctx.fillStyle = fillColor;
     ctx.beginPath();
     ctx.roundRect(x, y, width, height, radius);
     ctx.fill();
     ctx.shadowColor = 'transparent';
-    // Border for selected team
-    if (selectedTeam === team) {
-        ctx.strokeStyle = '#333';
-        ctx.lineWidth = 3;
-        ctx.stroke();
-    }
+    // Border (darker than fill)
+    ctx.strokeStyle = selectedTeam === team ? '#333' : borderColor;
+    ctx.lineWidth = selectedTeam === team ? LAYOUT.BORDER_WIDTH_SELECTED : LAYOUT.BORDER_WIDTH_NORMAL;
+    ctx.stroke();
     // Team name
     ctx.fillStyle = 'white';
     ctx.font = 'bold 14px sans-serif';
@@ -110,9 +120,9 @@ export function getTeamAtPosition(teams, x, y, viewOffset, scale) {
     const worldX = (x - viewOffset.x) / scale;
     const worldY = (y - viewOffset.y) / scale;
     return teams.find(team => worldX >= team.position.x &&
-        worldX <= team.position.x + 180 &&
+        worldX <= team.position.x + LAYOUT.TEAM_BOX_WIDTH &&
         worldY >= team.position.y &&
-        worldY <= team.position.y + 80);
+        worldY <= team.position.y + LAYOUT.TEAM_BOX_HEIGHT);
 }
 // Polyfill for roundRect (older browsers)
 export function initCanvasPolyfills() {

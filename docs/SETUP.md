@@ -107,6 +107,9 @@ Use the radio buttons in the header to switch between:
 - **Click teams** in the sidebar to select them
 - **Zoom** using mouse wheel
 - **Connections** between teams show interaction modes with different line styles
+- **Auto-align Teams** (Current State view only) - Click the "⚡ Auto-align Teams" button to automatically position teams vertically under their line managers in an org-chart layout. Teams are spaced 120px apart and aligned at a consistent X offset from their manager. Positions are automatically saved to each team's markdown file.
+- **Show Communication Lines** checkbox - Toggle to show communication/dependency lines between teams in Current State view. Hidden by default to provide a cleaner org-chart visualization.
+- **Refresh** button - Reload all team markdown files and configuration from disk. Useful when editing files externally. Preserves your current zoom/pan position on the canvas.
 
 ### Adding Teams
 
@@ -246,12 +249,10 @@ The tool is designed to help facilitate conversations about:
 
 This tool is designed as a **simple, lightweight visualization and documentation tool**. The following limitations are intentional to keep the solution maintainable and encourage proper data management:
 
-- **No automated tests**: The codebase currently lacks unit tests and UI tests
+- **No automated tests**: The codebase currently lacks comprehensive test coverage
 - **No create/update/delete API**: Team management is done by editing markdown files directly, not through the web UI
 - **No authentication**: Not designed for multi-user scenarios or production deployment
 - **No database**: File-based storage keeps things simple but limits scalability
-- **Manual position management**: Team positions on canvas are saved, but there's no automatic layout algorithm
-- **No organizational hierarchy visualization**: Current State view shows teams but not org chart structure (planned future enhancement)
 
 These limitations make the tool ideal for:
 - Small to medium-sized organizations

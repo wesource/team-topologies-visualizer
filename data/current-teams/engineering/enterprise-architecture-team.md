@@ -8,8 +8,8 @@ interaction_modes:
   ML Product Team: facilitating
   Database Platform Team: facilitating
 position:
-  x: 660.0
-  y: 428.0
+  x: 850.0
+  y: 410.0
 metadata:
   size: 3
   department: Engineering

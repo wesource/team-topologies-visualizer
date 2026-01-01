@@ -1,6 +1,6 @@
 ---
 name: ML Product Team
-team_type: data-ml
+team_type: feature-team
 dependencies:
 - Core Product Team
 - Database Platform Team
@@ -8,8 +8,8 @@ interaction_modes:
   Core Product Team: collaboration
   Database Platform Team: x-as-a-service
 position:
-  x: 32.324016009782184
-  y: 791.707463751246
+  x: 190.0
+  y: 530.0
 metadata:
   size: 4
   department: Engineering

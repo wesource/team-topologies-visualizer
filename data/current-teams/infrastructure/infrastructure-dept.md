@@ -11,7 +11,7 @@ metadata:
 
 # Infrastructure & Operations Department
 
-IT operations, hosting, security, and infrastructure management for all LogiTech systems and services.
+IT operations, hosting, security, and infrastructure management for all FleetFlow systems and services.
 
 ## Department Goals
 - 🔒 Security and compliance (SOC2, GDPR, etc.)

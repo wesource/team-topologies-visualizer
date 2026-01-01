@@ -1,7 +1,7 @@
 {
   "company": {
     "id": "company-leadership",
-    "name": "LogiTech Solutions Leadership Team",
+    "name": "FleetFlow Systems Leadership Team",
     "type": "leadership",
     "level": 0,
     "children": [
@@ -29,7 +29,7 @@
             "level": 3,
             "teams": [
               "Web Product Team",
-              "Database Platform Team"
+              "Mobile Product Team"
             ]
           },
           {
@@ -56,7 +56,8 @@
             "type": "line-manager",
             "level": 3,
             "teams": [
-              "Build & Integration Team"
+              "Build & Integration Team",
+              "Database Platform Team"
             ]
           }
         ]

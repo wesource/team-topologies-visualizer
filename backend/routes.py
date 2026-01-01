@@ -1,0 +1,79 @@
+"""API routes for team data management"""
+from fastapi import APIRouter, HTTPException
+from typing import List
+import json
+from pathlib import Path
+from backend.models import TeamData, PositionUpdate
+from backend.services import (
+    get_data_dir, find_all_teams, find_team_by_name, 
+    write_team_file_to_path, CURRENT_TEAMS_DIR
+)
+
+router = APIRouter(prefix="/api", tags=["teams"])
+
+
+@router.get("/team-types")
+async def get_team_types(view: str = "tt"):
+    """Get team type definitions with colors and descriptions for a specific view"""
+    data_dir = get_data_dir(view)
+    config_filename = "tt-team-types.json" if view == "tt" else "current-team-types.json"
+    config_file = data_dir / config_filename
+    
+    if not config_file.exists():
+        raise HTTPException(status_code=404, detail="Team types configuration not found")
+    
+    with open(config_file, 'r', encoding='utf-8') as f:
+        config = json.load(f)
+    
+    return config
+
+
+@router.get("/organization-hierarchy")
+async def get_organization_hierarchy():
+    """Get the organizational hierarchy for current state view"""
+    hierarchy_file = CURRENT_TEAMS_DIR / "organization-hierarchy.json"
+    
+    if not hierarchy_file.exists():
+        raise HTTPException(status_code=404, detail="Organization hierarchy not found")
+    
+    with open(hierarchy_file, 'r', encoding='utf-8') as f:
+        hierarchy = json.load(f)
+    
+    return hierarchy
+
+
+@router.get("/teams", response_model=List[TeamData])
+async def get_teams(view: str = "tt"):
+    """Get all teams for a specific view (tt or current)"""
+    return find_all_teams(view)
+
+
+@router.get("/teams/{team_name}", response_model=TeamData)
+async def get_team(team_name: str, view: str = "tt"):
+    """Get a specific team"""
+    result = find_team_by_name(team_name, view)
+    
+    if result is None:
+        raise HTTPException(status_code=404, detail=f"Team not found: {team_name}")
+    
+    team, _ = result
+    return team
+
+
+@router.patch("/teams/{team_name}/position")
+async def update_team_position(team_name: str, position: PositionUpdate, view: str = "tt"):
+    """Update only the position of a team (for drag-and-drop on canvas)"""
+    result = find_team_by_name(team_name, view)
+    
+    if result is None:
+        raise HTTPException(status_code=404, detail="Team not found")
+    
+    team, file_path = result
+    
+    # Update only the position
+    team.position = {"x": position.x, "y": position.y}
+    
+    # Write back to the same file location
+    write_team_file_to_path(team, file_path)
+    
+    return {"message": "Position updated", "position": team.position}

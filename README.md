@@ -68,13 +68,15 @@ This tool provides dual visualizations to make these conversations easier.
 
 - 📊 **Interactive Canvas** - Drag-and-drop teams, zoom, pan
 - 🔄 **Dual Views** - Toggle between "Current State" and "TT Vision"
-- 📝 **Git-Friendly Storage** - Teams stored as markdown files with YAML front matter
+- 📝 **Git-Friendly Storage** - Teams stored as markdown files with YAML front matter (structured metadata at the top of files between `---` delimiters, followed by markdown content)
 - 🎨 **Customizable Team Types** - Define your own team classifications and colors via JSON config
-- 🏢 **Organizational Context** - Line managers, departments, reporting structures
+- 🏢 **Organizational Context** - Line managers, departments, reporting structures with org-chart style visualization
+- ⚡ **Auto-align Teams** - Automatically align teams under their line managers in org-chart layout (Current State view)
 - 🔍 **Team Details** - Double-click for full team information with rendered markdown
 - 📋 **Team API Compatible** - Uses Team Topologies Team API template format
 - 📥 **SVG Export** - Export visualizations to SVG for presentations and documentation
-- 👁️ **Connection Toggle** - Hide/show communication lines in current state view for clarity
+- 👁️ **Connection Toggle** - Show/hide communication lines for clarity (hidden by default in Current State view)
+- 🔄 **Refresh** - Reload all team files and configurations without losing canvas position
 
 ## Design Philosophy
 
@@ -97,17 +99,26 @@ This tool provides dual visualizations to make these conversations easier.
 
 ```
 .
-├── main.py                     # FastAPI backend
+├── main.py                     # FastAPI app setup (42 lines)
 ├── requirements.txt
+├── backend/                    # Modular backend architecture
+│   ├── models.py              # Pydantic data models
+│   ├── services.py            # File operations & business logic
+│   └── routes.py              # API endpoints
 ├── frontend/                   # HTML5 Canvas + vanilla JS
 │   ├── index.html
 │   ├── styles.css
+│   ├── constants.js           # Shared layout constants
+│   ├── config.js              # API configuration
+│   ├── notifications.js       # Unified notification system
+│   ├── layout-utils.js        # Shared position calculations
 │   ├── api.js                 # API client layer
-│   ├── app.js                 # Main application logic (current view)
-│   ├── app-new.js             # TT vision view logic
+│   ├── app.js                 # Main application logic
 │   ├── canvas-interactions.js # Canvas event handling
 │   ├── renderer-common.js     # Shared rendering utilities
-│   └── renderer-current.js    # Current state rendering
+│   ├── renderer-current.js    # Current state rendering
+│   ├── svg-export.js          # SVG export functionality
+│   └── team-alignment.js      # Auto-align functionality
 ├── data/
 │   ├── current-teams/         # Your current state
 │   │   ├── current-team-types.json    # Team type config
@@ -115,6 +126,11 @@ This tool provides dual visualizations to make these conversations easier.
 │   └── tt-teams/              # Your TT vision
 │       ├── tt-team-types.json         # Team type config
 │       └── *.md               # Team files
+├── tests_backend/             # Backend unit tests (10 tests)
+│   └── test_main.py
+├── tests/                     # E2E tests with Playwright (23 tests)
+│   ├── visualizer.spec.ts
+│   └── backend-validation.spec.ts
 └── docs/
     ├── SETUP.md               # Detailed setup & configuration
     └── CONCEPTS.md            # TT concepts & example explanation
@@ -139,7 +155,6 @@ See [SETUP.md](docs/SETUP.md) for detailed customization instructions.
 - No create/update/delete via UI (intentional - edit markdown files directly)
 - No authentication (single-user tool)
 - No database (file-based storage)
-- No automatic layout algorithm
 
 These limitations keep the tool simple and git-friendly. Perfect for:
 - Small to medium organizations
@@ -147,24 +162,9 @@ These limitations keep the tool simple and git-friendly. Perfect for:
 - Version-controlled team data
 - Local exploration of Team Topologies
 
-## Future Enhancements
-
-### Architecture Visualization with Conway's Law
-Integrate draw.io (or similar) based architecture diagrams to show:
-- **Current technical architecture** alongside current organizational structure
-- **Future technical architecture** alongside Team Topologies vision
-- **Conway's Law relationships** - visual connections showing how team boundaries align (or misalign) with system boundaries
-- **Transformation roadmap** - how organizational changes enable architectural changes and vice versa
-
-This would help teams:
-- Identify Conway's Law violations (team boundaries cutting across system boundaries)
-- Plan aligned organizational and architectural transformations
-- Communicate the relationship between team structure and system design
-- Visualize the impact of Team Topologies patterns on technical architecture
-
 ## Example Data
 
-The repository includes a **fictitious organization** (LogiTech Solutions) for demonstration:
+The repository includes a **fictitious organization** (FleetFlow Systems) for demonstration:
 - 7 teams in traditional structure (Current State)
 - SAFe/LeSS-inspired team classifications
 - TT vision showing reorganized structure
@@ -172,13 +172,6 @@ The repository includes a **fictitious organization** (LogiTech Solutions) for d
 **Disclaimer**: All example data is entirely fictitious. The author has never worked in the logistics software industry. Technical details are made up for realistic demonstration purposes.
 
 See [CONCEPTS.md](docs/CONCEPTS.md) for detailed explanation of the example organization and Team Topologies concepts.
-
-## Technologies
-
-- **Backend**: Python 3.8+, FastAPI, uvicorn
-- **Frontend**: HTML5 Canvas, vanilla JavaScript, CSS
-- **Data**: Markdown files with YAML front matter
-- **No database required**
 
 ## Usage
 
@@ -190,6 +183,9 @@ See [CONCEPTS.md](docs/CONCEPTS.md) for detailed explanation of the example orga
 - **Click teams** in the sidebar to select them
 - **Zoom** using mouse wheel
 - **Connections** between teams show interaction modes with different line styles
+- **Auto-align Teams** (Current State view only) - Click the "⚡ Auto-align Teams" button to automatically position teams under their line managers in an org-chart layout. Positions are saved to team files.
+- **Show Communication Lines** checkbox - Toggle communication lines on/off in Current State view (hidden by default for cleaner org-chart view)
+- **Refresh** button - Reload all team markdown files and configurations from disk without losing your zoom/pan position
 
 ### Team Files
 
@@ -344,7 +340,7 @@ For frontend changes, simply refresh your browser (hard refresh with Ctrl+Shift+
 
 ## Example Data
 
-The repository includes a **fictitious organization** (LogiTech Solutions) for demonstration:
+The repository includes a **fictitious organization** (FleetFlow Systems) for demonstration:
 - Current state with traditional team structure (7 teams)
 - Team Topologies vision showing reorganization
 - SAFe/LeSS-inspired classifications in current state
@@ -363,9 +359,17 @@ See [CONCEPTS.md](docs/CONCEPTS.md) for detailed explanation of Team Topologies 
 
 **Python/FastAPI** was chosen for the backend primarily as a **learning exercise** and for its quick setup. FastAPI provides:
 - Easy to get up and running quickly
-- Automatic API documentation
+- Automatic API documentation (via Pydantic models)
+- Type hints for better code quality
 - Simple file handling for markdown storage
 - Great for prototyping and iteration
+
+**Vanilla JavaScript** was chosen over TypeScript for the frontend:
+- **No build step required** - Simplicity was prioritized for this relatively straightforward visualization app
+- **Direct browser execution** - Edit and refresh workflow without compilation delays
+- **Learning curve** - Easier for contributors familiar with basic JavaScript
+- **TypeScript was evaluated** early in development but added more complexity than value for this project's scope
+- For larger, team-based projects, TypeScript would be recommended, but for a single-maintainer learning project, vanilla JS proved more practical
 
 **Note**: The implementation may evolve in the future. The architecture is designed to be flexible, and the backend could be replaced with other technologies (Node.js, Go, etc.) while keeping the same file-based storage approach.
 
@@ -375,6 +379,30 @@ See [CONCEPTS.md](docs/CONCEPTS.md) for detailed explanation of Team Topologies 
 - No database setup required
 - Compatible with Team API template format
 
+## Future Enhancements
+
+### Architecture Visualization with Conway's Law
+Integrate draw.io (or similar) based architecture diagrams to show:
+- **Current technical architecture** alongside current organizational structure
+- **Future technical architecture** alongside Team Topologies vision
+- **Conway's Law relationships** - visual connections showing how team boundaries align (or misalign) with system boundaries
+- **Transformation roadmap** - how organizational changes enable architectural changes and vice versa
+
+This would help teams:
+- Identify Conway's Law violations (team boundaries cutting across system boundaries)
+- Plan aligned organizational and architectural transformations
+- Communicate the relationship between team structure and system design
+- Visualize the impact of Team Topologies patterns on technical architecture
+
+### Additional Ideas
+- ASCII art export for documentation and presentations (clearer than trying to explain with words! 😄)
+- Additional visualization layouts (hierarchical tree, circle packing)
+- Team health indicators and metrics
+- Import team data from external sources
+- Timeline view showing evolution over time
+- Cognitive load visualization
+- Integration with real-time data sources
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to contribute to this project.
@@ -382,6 +410,17 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to contribute to th
 ## License
 
 MIT - see [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+This project implements concepts from **Team Topologies** by Matthew Skelton and Manuel Pais. The visualization tool is built to help organizations apply Team Topologies principles to their team structures.
+
+**Key attributions:**
+- **Team Topologies concepts** (4 team types, 3 interaction modes) © Matthew Skelton and Manuel Pais
+- **Team API template format** based on [TeamTopologies/Team-API-template](https://github.com/TeamTopologies/Team-API-template) (CC BY-SA 4.0)
+- This software implementation is original work released under MIT License
+
+We are grateful to the Team Topologies community for their thought leadership and openly shared resources that inspired this visualization tool.
 
 ## References
 

@@ -1,5 +1,5 @@
 ---
-name: LogiTech Solutions Leadership
+name: FleetFlow Systems Leadership
 type: executive
 line_manager: Board of Directors
 metadata:
@@ -9,7 +9,7 @@ metadata:
 
 # Company Leadership
 
-Executive leadership team of LogiTech Solutions, responsible for overall company strategy, financial performance, and organizational direction.
+Executive leadership team of FleetFlow Systems, responsible for overall company strategy, financial performance, and organizational direction.
 
 ## Leadership Structure
 - CEO: Jennifer Williams

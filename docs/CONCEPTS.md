@@ -81,7 +81,7 @@ The TT vision (`data/tt-teams/`) shows how these same capabilities could be reor
 
 ## Disclaimer
 
-**Important**: The example data in this repository (LogiTech Solutions, RouteOptix product, team structures, technical details, etc.) is entirely fictitious and created for demonstration purposes only. The author has never worked in the logistics software industry or domain represented in these examples. All technical details, responsibilities, team sizes, technology stacks, and organizational patterns are made up to provide realistic working examples for learning Team Topologies concepts.
+**Important**: The example data in this repository (FleetFlow Systems, RouteOptix product, team structures, technical details, etc.) is entirely fictitious and created for demonstration purposes only. The author has never worked in the logistics software industry or domain represented in these examples. All technical details, responsibilities, team sizes, technology stacks, and organizational patterns are made up to provide realistic working examples for learning Team Topologies concepts.
 
 If you recognize patterns similar to your organization, it's because many companies face common organizational challenges - not because this data represents any specific real-world company.
 

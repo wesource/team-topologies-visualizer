@@ -1,3 +1,6 @@
+import { LAYOUT } from './constants.js';
+import { darkenColor } from './renderer-common.js';
+
 // SVG Export Module - Separated from runtime rendering
 // Converts current visualization state to downloadable SVG
 export function exportToSVG(state, organizationHierarchy, teams, teamColorMap, currentView) {
@@ -9,8 +12,8 @@ export function exportToSVG(state, organizationHierarchy, teams, teamColorMap, c
         const padding = 100;
         const minX = Math.min(...teams.map(t => t.position.x)) - padding;
         const minY = Math.min(...teams.map(t => t.position.y)) - padding;
-        const maxX = Math.max(...teams.map(t => t.position.x + 180)) + padding;
-        const maxY = Math.max(...teams.map(t => t.position.y + 80)) + padding;
+        const maxX = Math.max(...teams.map(t => t.position.x + LAYOUT.TEAM_BOX_WIDTH)) + padding;
+        const maxY = Math.max(...teams.map(t => t.position.y + LAYOUT.TEAM_BOX_HEIGHT)) + padding;
         width = maxX - minX;
         height = maxY - minY;
         viewBox = `${minX} ${minY} ${width} ${height}`;
@@ -19,7 +22,7 @@ export function exportToSVG(state, organizationHierarchy, teams, teamColorMap, c
 <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="${viewBox}">
   <defs>
     <style>
-      .team-box { stroke: #333; stroke-width: 2; }
+      .team-box { stroke-width: 3; }
       .team-text { font-family: sans-serif; font-size: 12px; fill: #000; text-anchor: middle; }
       .team-text-bold { font-family: sans-serif; font-size: 14px; font-weight: bold; fill: #fff; text-anchor: middle; }
       .hierarchy-line { stroke: #7f8c8d; stroke-width: 1.5; fill: none; }
@@ -40,15 +43,15 @@ export function exportToSVG(state, organizationHierarchy, teams, teamColorMap, c
 function generateCurrentStateSVG(organizationHierarchy, teams, teamColorMap) {
     let elements = '';
     const startX = 500;
-    const startY = 50;
-    const levelHeight = 120;
-    const boxWidth = 200;
-    const boxHeight = 60;
+    const startY = LAYOUT.COMPANY_Y;
+    const levelHeight = LAYOUT.LEVEL_HEIGHT;
+    const boxWidth = LAYOUT.DEPT_BOX_WIDTH;
+    const boxHeight = LAYOUT.DEPT_BOX_HEIGHT;
     // Draw company leadership
     const company = organizationHierarchy.company;
-    elements += drawSVGBox(company.name, startX + 400, startY, boxWidth + 100, boxHeight, '#34495e', 'white', true);
+    elements += drawSVGBox(company.name, startX + 400, startY, boxWidth + 100, boxHeight, '#5D6D7E', 'white', true);
     // Draw departments
-    const deptSpacing = 250;
+    const deptSpacing = LAYOUT.DEPT_SPACING;
     const deptStartX = startX + 50;
     if (!company.children)
         return elements;
@@ -58,11 +61,11 @@ function generateCurrentStateSVG(organizationHierarchy, teams, teamColorMap) {
         // Line from company to department
         elements += drawSVGLine(startX + 400 + (boxWidth + 100) / 2, startY + boxHeight, deptX + boxWidth / 2, deptY);
         // Department box
-        elements += drawSVGBox(dept.name, deptX, deptY, boxWidth, boxHeight, '#2c3e50', 'white', false);
+        elements += drawSVGBox(dept.name, deptX, deptY, boxWidth, boxHeight, '#566573', 'white', false);
         // Engineering department with line managers
         if (dept.id === 'engineering-dept' && dept.line_managers) {
             const lmCount = dept.line_managers.length;
-            const lmSpacing = 220;
+            const lmSpacing = LAYOUT.LINE_MANAGER_SPACING;
             const lmStartX = deptX - ((lmCount - 1) * lmSpacing) / 2;
             const lmY = deptY + levelHeight;
             dept.line_managers.forEach((lm, lmIndex) => {
@@ -71,17 +74,30 @@ function generateCurrentStateSVG(organizationHierarchy, teams, teamColorMap) {
                 elements += drawSVGLine(deptX + boxWidth / 2, deptY + boxHeight, lmX + boxWidth / 2, lmY);
                 // Line manager box
                 elements += drawSVGBox(lm.name, lmX, lmY, boxWidth, boxHeight - 10, '#27ae60', 'white', false);
-                // Teams under line manager
-                lm.teams.forEach((teamName, teamIndex) => {
-                    const team = teams.find(t => t.name === teamName);
-                    if (team) {
-                        const teamX = lmX - 50 + teamIndex * 100;
-                        const teamY = lmY + levelHeight - 20;
-                        elements += drawSVGLine(lmX + boxWidth / 2, lmY + boxHeight - 10, teamX + 40, teamY);
+                // Teams under line manager with org-chart style
+                const teamsUnderManager = lm.teams
+                    .map(teamName => teams.find(t => t.name === teamName))
+                    .filter(t => t !== undefined);
+                
+                if (teamsUnderManager.length > 0) {
+                    // Vertical line position at 1/5 from left of line manager box
+                    const verticalLineX = lmX + (boxWidth * LAYOUT.ORG_CHART_VERTICAL_LINE_OFFSET);
+                    const verticalLineStartY = lmY + boxHeight - 10;
+                    
+                    // Find the lowest team position for vertical line
+                    const lowestTeamY = Math.max(...teamsUnderManager.map(t => t.position.y + 40));
+                    
+                    // Draw main vertical line
+                    elements += drawSVGLine(verticalLineX, verticalLineStartY, verticalLineX, lowestTeamY);
+                    
+                    // Draw horizontal connectors and team boxes
+                    teamsUnderManager.forEach(team => {
+                        const teamMidLeftY = team.position.y + 40;
+                        elements += drawSVGLine(verticalLineX, teamMidLeftY, team.position.x, teamMidLeftY);
                         const color = teamColorMap[team.team_type] || '#95a5a6';
-                        elements += drawSVGBox(team.name, teamX, teamY, 80, 40, color, 'white', false);
-                    }
-                });
+                        elements += drawSVGBox(team.name, team.position.x, team.position.y, LAYOUT.TEAM_BOX_WIDTH, LAYOUT.TEAM_BOX_HEIGHT, color, 'white', false);
+                    });
+                }
             });
         }
         // Other departments
@@ -94,16 +110,32 @@ function generateCurrentStateSVG(organizationHierarchy, teams, teamColorMap) {
                 const regionX = regionStartX + regionIndex * regionSpacing;
                 elements += drawSVGLine(deptX + boxWidth / 2, deptY + boxHeight, regionX + boxWidth / 2, regionY);
                 elements += drawSVGBox(region.name, regionX, regionY, boxWidth, boxHeight - 10, '#3498db', 'white', false);
-                region.teams.forEach((teamName, teamIndex) => {
-                    const team = teams.find(t => t.name === teamName);
-                    if (team) {
-                        const teamX = regionX - 30 + teamIndex * 80;
-                        const teamY = regionY + levelHeight - 30;
-                        elements += drawSVGLine(regionX + boxWidth / 2, regionY + boxHeight - 10, teamX + 40, teamY);
-                        const color = teamColorMap[team.team_type] || '#95a5a6';
-                        elements += drawSVGBox(team.name, teamX, teamY, 80, 40, color, 'white', false);
+                // Teams under region with org-chart style
+                if (region.teams && region.teams.length > 0) {
+                    const teamsUnderRegion = region.teams
+                        .map(teamName => teams.find(t => t.name === teamName))
+                        .filter(t => t !== undefined);
+                    
+                    if (teamsUnderRegion.length > 0) {
+                        // Vertical line position at 1/5 from left of region box
+                        const verticalLineX = regionX + (boxWidth * LAYOUT.ORG_CHART_VERTICAL_LINE_OFFSET);
+                        const verticalLineStartY = regionY + boxHeight - 10;
+                        
+                        // Find the lowest team position for vertical line
+                        const lowestTeamY = Math.max(...teamsUnderRegion.map(t => t.position.y + 40));
+                        
+                        // Draw main vertical line
+                        elements += drawSVGLine(verticalLineX, verticalLineStartY, verticalLineX, lowestTeamY);
+                        
+                        // Draw horizontal connectors and team boxes
+                        teamsUnderRegion.forEach(team => {
+                            const teamMidLeftY = team.position.y + 40;
+                            elements += drawSVGLine(verticalLineX, teamMidLeftY, team.position.x, teamMidLeftY);
+                            const color = teamColorMap[team.team_type] || '#95a5a6';
+                            elements += drawSVGBox(team.name, team.position.x, team.position.y, LAYOUT.TEAM_BOX_WIDTH, LAYOUT.TEAM_BOX_HEIGHT, color, 'white', false);
+                        });
                     }
-                });
+                }
             });
         }
     });
@@ -130,16 +162,17 @@ function generateTTVisionSVG(teams, teamColorMap, hideConnections) {
             }
         });
     }
-    // Draw teams (180x80 to match canvas)
+    // Draw teams
     teams.forEach(team => {
         const color = teamColorMap[team.team_type] || '#95a5a6';
-        elements += drawSVGBox(team.name, team.position.x, team.position.y, 180, 80, color, 'white', false);
+        elements += drawSVGBox(team.name, team.position.x, team.position.y, LAYOUT.TEAM_BOX_WIDTH, LAYOUT.TEAM_BOX_HEIGHT, color, 'white', false);
     });
     return elements;
 }
 function drawSVGBox(text, x, y, width, height, bgColor, textColor, isBold) {
     const fontSize = isBold ? 14 : 12;
     const fontWeight = isBold ? 'bold' : 'normal';
+    const borderColor = darkenColor(bgColor, LAYOUT.BORDER_COLOR_DARKEN_FACTOR);
     // Wrap text
     const words = text.split(' ');
     const lines = [];
@@ -158,7 +191,7 @@ function drawSVGBox(text, x, y, width, height, bgColor, textColor, isBold) {
     if (currentLine)
         lines.push(currentLine);
     let box = `<g>
-    <rect x="${x}" y="${y}" width="${width}" height="${height}" rx="5" fill="${bgColor}" class="team-box"/>`;
+    <rect x="${x}" y="${y}" width="${width}" height="${height}" rx="5" fill="${bgColor}" stroke="${borderColor}" class="team-box"/>`;
     // Add text lines
     const lineHeight = 14;
     const startY = y + height / 2 - (lines.length - 1) * lineHeight / 2;

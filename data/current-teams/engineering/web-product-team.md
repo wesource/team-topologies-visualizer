@@ -6,8 +6,8 @@ dependencies:
 interaction_modes:
   Core Product Team: collaboration
 position:
-  x: 404.5421983083241
-  y: 888.098237425803
+  x: 410.0
+  y: 410.0
 metadata:
   size: 3
   department: Engineering

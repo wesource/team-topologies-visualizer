@@ -4,8 +4,8 @@ team_type: feature-team
 dependencies: []
 interaction_modes: {}
 position:
-  x: 1240.0
-  y: 599.0
+  x: 2210.0
+  y: 530.0
 metadata:
   size: 5
   department: Customer Solutions
