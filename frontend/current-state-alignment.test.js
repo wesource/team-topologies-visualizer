@@ -1,6 +1,6 @@
 // Tests for team alignment functionality
 import { describe, it, expect } from 'vitest';
-import { autoAlignTeamsByManager } from './team-alignment.js';
+import { autoAlignTeamsByManager } from './current-state-alignment.js';
 
 describe('autoAlignTeamsByManager', () => {
     it('should align teams vertically under the same line manager', () => {

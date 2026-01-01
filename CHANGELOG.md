@@ -95,7 +95,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Definition of Done achieved**: ✅ Visual grouping, ✅ Filter by value stream, ✅ Clear visual distinction
 - ⚡ **Auto-align Teams** feature: One-click automatic positioning of teams under line managers in org-chart layout (Current State view only)
 - **Org-chart style visual hierarchy**: Vertical lines from line managers connect to horizontally-aligned teams
-- **team-alignment.js** module with comprehensive test coverage (7 tests)
+- **current-state-alignment.js** module with comprehensive test coverage (7 tests)
 - **Show Communication Lines** checkbox to toggle dependency lines (hidden by default for cleaner org charts)
 - **Refresh button** documentation clarification
 - Lighter department box colors for better visual hierarchy (#5D6D7E for company, #566573 for departments)

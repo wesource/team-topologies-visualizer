@@ -4,7 +4,7 @@ import { drawCurrentStateView } from './renderer-current.js';
 import { drawTeam, drawConnections, wrapText, initCanvasPolyfills, drawValueStreamGroupings, drawPlatformGroupings } from './renderer-common.js';
 import { CanvasInteractionHandler } from './canvas-interactions.js';
 import { exportToSVG } from './svg-export.js';
-import { autoAlignTeamsByManager } from './team-alignment.js';
+import { autoAlignTeamsByManager } from './current-state-alignment.js';
 import { autoAlignTTDesign } from './tt-design-alignment.js';
 import { showError, showSuccess, showInfo, showWarning } from './notifications.js';
 import { getValueStreamGroupings, getValueStreamNames, filterTeamsByValueStream } from './value-stream-grouping.js';

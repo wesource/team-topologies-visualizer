@@ -81,7 +81,7 @@ Tests JavaScript modules (wrapText, API functions, rendering utilities) in isola
 
 **Location**: `frontend/`  
 **Framework**: Vitest  
-**Coverage**: 40 tests covering renderer-common.js, api.js, team-alignment.js, svg-export.js  
+**Coverage**: 40 tests covering renderer-common.js, api.js, current-state-alignment.js, svg-export.js  
 **Speed**: ~1.3s  
 **Linting**: ESLint catches syntax errors, formatting issues, unused variables
 

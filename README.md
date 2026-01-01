@@ -130,9 +130,9 @@ This tool provides dual visualizations to make these conversations easier.
 │   ├── renderer-common.js     # Shared rendering utilities
 │   ├── renderer-current.js    # Current state rendering
 │   ├── svg-export.js          # SVG export functionality
-│   ├── team-alignment.js      # Auto-align for Current State view
-│   ├── tt-design-alignment.js # Auto-align for TT Design view
-│   ├── value-stream-grouping.js # Value stream grouping logic
+│   ├── current-state-alignment.js # Auto-align for Current State view
+│   ├── tt-design-alignment.js     # Auto-align for TT Design view
+│   ├── value-stream-grouping.js   # Value stream grouping logic
 │   └── platform-grouping.js   # Platform grouping logic
 ├── data/
 │   ├── current-teams/         # Your current state
