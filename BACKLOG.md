@@ -16,7 +16,9 @@ This backlog tracks enhancements for iterative development. Items are organized 
 ✅ **Auto-align for Current State** - Org-chart layout under line managers  
 ✅ **Example Platform Teams** - Realistic platform teams with capabilities and consumers  
 ✅ **Unified Groupings Filter** - Single dropdown for both value stream and platform grouping filtering  
-✅ **"TT Design" Naming** - Changed from "Team Topologies Vision" to "TT Design"
+✅ **"TT Design" Naming** - Changed from "Team Topologies Vision" to "TT Design"  
+✅ **Cognitive Load Indicators** - Traffic light visualization (🟢🟡🔴) with toggle control, detailed breakdown in team modal  
+✅ **Team Interaction Mode Visual System** - Book-accurate colors, SVG legend symbols, view-specific connection rendering
 
 ---
 
@@ -24,26 +26,73 @@ This backlog tracks enhancements for iterative development. Items are organized 
 
 These are the immediate priorities to improve visualization usability and align with Team Topologies 2nd edition.
 
-### 1. Cognitive Load Indicators ⭐ HIGH PRIORITY
-**Goal**: Make cognitive load visible on the canvas
+### 1. Book-Accurate Team Shapes in Canvas & SVG Export ⭐ HIGH PRIORITY
+**Goal**: Render Enabling and Complicated-Subsystem teams with authentic Team Topologies 2nd edition shapes
+
+**Context**: 
+- Info modals now display book-accurate SVG shapes for all 4 team types
+- Canvas rendering still uses simple rectangles for all teams
+- Book specifies: Enabling = vertical rectangle (80×120), Complicated-Subsystem = octagon
+- Reference SVG files in `docs/svgs/`: `enabling-team.svg`, `complicated-subsystem-team.svg`
 
 **Tasks**:
-- [ ] Add traffic light indicator (🟢🟡🔴) to each team card
-- [ ] Show cognitive load level on team card (Low/Medium/High)
-- [ ] Add tooltip showing breakdown (domain/intrinsic/extraneous)
-- [ ] Highlight overloaded teams (red indicator)
-- [ ] Add cognitive load to team detail modal
+- [ ] Update `renderer-common.js` `drawTeamBox()` to support team type shapes
+  - Enabling: Vertical rounded rectangle (80×120 proportions)
+  - Complicated-Subsystem: Octagon path (multi-sided = internal complexity)
+  - Stream-aligned: Keep current horizontal (200×30 proportions)
+  - Platform: Keep current horizontal (200×60 proportions)
+- [ ] Update connection anchor points for new shapes
+  - Octagon needs 8 anchor points (one per side)
+  - Vertical rectangles need adjusted anchor calculations
+- [ ] Update `svg-export.js` to generate shape-specific SVG elements
+  - Enabling: `<rect>` with vertical dimensions
+  - Complicated-Subsystem: `<path>` with octagon geometry
+- [ ] Update hit detection in `canvas-interactions.js` for octagon shape
+- [ ] Add visual tests comparing rendered shapes to book diagrams
+- [ ] Update CHANGELOG with book-accurate canvas rendering
 
-**Sample data ready**: Teams have `metadata.cognitive_load` and detailed breakdown
+**Technical Notes**:
+- Enabling SVG: `<rect x="30" y="30" width="80" height="120" rx="14" fill="#b7a6d9" stroke="#7a5fa6"/>`
+- Complicated-Subsystem SVG: `<path d="M40 20 H100 L120 40 V100 L100 120 H40 L20 100 V40 Z" fill="#f4b183" stroke="#c97a2b"/>`
+- Consider text wrapping adjustments for narrow Enabling teams
+- Octagon may need larger canvas footprint than current rectangles
 
 **Definition of Done**:
-- Visual indicator on each team showing cognitive load
-- Easy to spot overloaded teams at a glance
-- Detailed breakdown available on click/hover
+- Enabling teams render as vertical rectangles on canvas
+- Complicated-Subsystem teams render as octagons on canvas
+- Exported SVG files show correct team shapes
+- Connection lines properly anchor to new shapes
+- Drag-and-drop works correctly with new shapes
+- All existing tests pass, new visual tests added
 
 ---
 
-### 2. Platform Capabilities Display ⭐ MEDIUM PRIORITY
+### 2. Review Team Topologies Official Interaction Modeling Content ⭐ LOW PRIORITY
+**Goal**: Ensure visualizer aligns with latest official Team Topologies guidance
+
+**Reference**: https://teamtopologies.com/key-concepts-content/team-interaction-modeling-with-team-topologies
+
+**Tasks**:
+- [ ] Review official page for terminology updates
+  - Check if both "platform team" and "platform group" should be used in descriptions
+  - Verify if platform grouping (team-of-teams) has specific guidance
+- [ ] Check for alternative interaction mode symbols
+  - Verify if 2nd edition introduces new or updated visual symbols
+  - Compare current SVG symbols with any official diagrams
+  - Assess if modal info content needs updates
+- [ ] Update documentation if needed
+  - Align terminology with official guidance
+  - Update visual symbols if alternatives are recommended
+  - Ensure consistency across modals, legend, and docs
+
+**Definition of Done**:
+- Official content reviewed and documented
+- Any terminology/symbol discrepancies identified
+- Updates applied if needed, or backlog item closed as "aligned"
+
+---
+
+### 3. Platform Capabilities Display ⭐ MEDIUM PRIORITY
 **Goal**: Show what services platforms provide
 
 **Tasks**:
@@ -59,25 +108,6 @@ These are the immediate priorities to improve visualization usability and align 
 - Platform teams show 2-3 key capabilities on card
 - Full capability list in detail modal
 - Visual distinction for platform grouping membership
-
----
-
-### 3. Team Interaction Mode Labels ⭐ MEDIUM PRIORITY
-**Goal**: Make interaction modes more obvious
-
-**Tasks**:
-- [ ] Add interaction mode labels to connection lines
-- [ ] Different line styles already exist, add text labels
-- [ ] Show temporary collaborations differently (dashed + "TEMP")
-- [ ] Add time duration for collaboration interactions
-- [ ] Update legend with interaction mode explanations
-
-**Sample data ready**: Teams have interaction_modes defined
-
-**Definition of Done**:
-- Connection lines clearly labeled (Collaboration, X-as-a-Service, Facilitation)
-- Temporary collaborations visually distinct
-- Easy to understand at a glance
 
 ---
 
@@ -120,6 +150,56 @@ These are the immediate priorities to improve visualization usability and align 
 - [ ] Add value stream executive sponsor/owner
 - [ ] Show on canvas or in detail view
 - [ ] Accountability for value stream health
+
+---
+
+#### Value Stream / SAFe Train Grouping in Current State View
+**Priority**: High
+**Effort**: Medium
+
+**Context**: Organizations often organize around value streams or SAFe Agile Release Trains (ARTs) rather than traditional org-chart hierarchies. Current State view currently groups teams by line manager (org-chart structure), but this may not reflect the actual value delivery structure.
+
+**Goal**: Provide alternative grouping option for Current State view based on value stream/train membership rather than org-chart hierarchy.
+
+**Tasks**:
+- [ ] Add `value_stream` or `train` metadata to team YAML files
+  - Support multiple trains per team (some teams serve multiple value streams)
+- [ ] Add view mode toggle or layout option for Current State view
+  - "Org Chart" (current default - by line manager)
+  - "Value Streams" (group by train/value stream)
+- [ ] Design visual representation for value stream grouping
+  - Horizontal swim lanes per value stream?
+  - Vertical columns per train?
+  - Colored backgrounds similar to TT Design view?
+  - Department labels vs Train labels
+- [ ] Update auto-align logic to position teams within train groupings
+- [ ] Consider cross-train team visualization (teams in multiple trains)
+- [ ] Add filter dropdown for specific trains (similar to current grouping filter)
+
+**Visual Design Questions**:
+- Should trains be visualized as swim lanes (horizontal bands)?
+- Should department structure still be visible within trains?
+- How to show teams that span multiple trains?
+- Should "Actual Comms" lines cross train boundaries differently?
+
+**Sample Data Needed**:
+```yaml
+# Example team metadata additions
+metadata:
+  value_stream: "E-commerce Platform"  # or SAFe train name
+  # OR support multiple:
+  value_streams:
+    - "E-commerce Platform"
+    - "Customer Experience"
+```
+
+**Definition of Done**:
+- Teams can be tagged with value stream/train membership
+- Current State view has toggle between "Org Chart" and "Value Streams" layouts
+- Auto-align works for train-based grouping
+- Visual distinction between trains (swim lanes, colors, or labels)
+- Documentation updated with value stream grouping explanation
+- Sample data demonstrates multi-train organization
 
 ---
 
@@ -415,6 +495,46 @@ These are the immediate priorities to improve visualization usability and align 
 - [ ] Improve test coverage (currently basic)
 - [ ] Add E2E tests for new features
 - [ ] Refactor large components
+
+### Known Issues
+
+#### Current State Connection Arrows Not Visible 🐛
+**Priority**: Low (UX/Nice-to-have)
+**Effort**: Medium (needs investigation)
+
+**Problem**: Bidirectional arrow triangles at ends of "Actual Comms" lines in Current State view are not rendering on canvas, despite working perfectly in legend SVG.
+
+**Symptoms**:
+- Legend shows arrows correctly (70px SVG with triangles at both ends)
+- Canvas only shows fat gray line without arrow triangles
+- Code appears correct: `ctx.fill()` with proper triangle geometry
+
+**Attempted Fixes**:
+1. ✗ Reordered drawing (arrows after line) to avoid overlap
+2. ✗ Shortened line by arrow length to prevent covering
+3. ✗ Increased arrow size from 10px → 16px → 20px
+4. ✗ Changed from stroke to fill with `ctx.fill()` + `ctx.stroke()`
+5. ✗ Added `ctx.save()`/`ctx.restore()` for context isolation
+6. ✗ Set explicit `fillStyle` and `strokeStyle` for arrows
+7. ✗ Reduced line width to 1px (debugging) - still no arrows visible
+8. ✗ Changed angle from π/7 to π/6 for wider triangles
+
+**Code Location**: `frontend/renderer-common.js` - `drawActualCommsConnection()` function (lines ~197-255)
+
+**Hypotheses to Explore**:
+- Canvas z-index or layering issue (team boxes drawn after connections?)
+- Global canvas transform/clip affecting arrow rendering
+- Arrow coordinates landing outside visible canvas area
+- Browser rendering quirk with canvas fill operations
+- Need to call `ctx.beginPath()` before each triangle separately
+
+**Workaround**: Legend clearly shows the connection type, so functionality is not impaired.
+
+**Next Steps**:
+- Add console.log to verify arrow coordinates are reasonable
+- Try drawing test rectangles at arrow positions to verify visibility
+- Check if team boxes or other elements are obscuring arrows
+- Review canvas rendering order in renderer-current.js
 
 ### Performance
 - [ ] Optimize canvas rendering for 50+ teams
