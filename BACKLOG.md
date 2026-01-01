@@ -26,7 +26,76 @@ This backlog tracks enhancements for iterative development. Items are organized 
 
 These are the immediate priorities to improve visualization usability and align with Team Topologies 2nd edition.
 
-### 1. Book-Accurate Team Shapes in Canvas & SVG Export ⭐ HIGH PRIORITY
+### 1. Fix Platform Grouping Bounding Box on Refresh 🐛 BUG
+**Goal**: Prevent "Cloud Infrastructure Platform Grouping" box from becoming too large on refresh/view switch
+
+**Context**: 
+- After auto-aligning teams in TT Design view, everything looks correct
+- Clicking refresh or switching to Current State and back causes platform grouping boxes to recalculate incorrectly
+- "Cloud Infrastructure Platform Grouping" box overlaps "E-commerce Experience" and "Enterprise Sales" value streams
+- Issue likely in `platform-grouping.js` `calculateGroupingBoundingBox()` function
+
+**Tasks**:
+- [ ] Debug bounding box calculation in `platform-grouping.js`
+- [ ] Check if team positions are cached correctly between view switches
+- [ ] Verify grouping bounds don't expand incorrectly on recalculation
+- [ ] Test refresh and view switching thoroughly
+- [ ] Consider caching grouping bounds after auto-align
+
+**Steps to Reproduce**:
+1. Go to TT Design view
+2. Click "Auto-Align Teams"
+3. Click "Refresh" button OR switch to Current State and back to TT Design
+4. Observe "Cloud Infrastructure Platform Grouping" box is too large
+
+**Definition of Done**:
+- Platform grouping boxes maintain correct size on refresh
+- View switching doesn't cause bounding box recalculation issues
+- No overlap between groupings after refresh or view changes
+
+---
+
+### 2. Multi-Select Groupings Filter ⭐ USABILITY
+**Goal**: Allow selecting multiple value streams and/or platform groupings simultaneously in TT Design view
+
+**Context**:
+- Current groupings dropdown only allows "All" or one specific grouping
+- Users want to focus on subset of groupings without showing everything
+- Example: Show only "E-commerce Experience" + "Enterprise Sales" value streams
+- Example: Show "Cloud Infrastructure" + "Data Platform" groupings together
+
+**Tasks**:
+- [ ] Replace single-select dropdown with multi-select UI component
+  - Consider checkbox list or multi-select dropdown
+  - Maintain "All" option for convenience
+  - Show selected count in collapsed state (e.g., "3 groupings selected")
+- [ ] Update `filters.js` `getFilteredTeams()` to handle array of selected groupings
+  - Currently checks `selectedGrouping.startsWith('vs:')` or `'pg:'`
+  - Update to check if team's value stream or platform grouping is in selection array
+- [ ] Update `legend.js` `updateGroupingFilter()` to populate multi-select component
+- [ ] Update state management in `state-management.js`
+  - Change `selectedGrouping` from string to array
+  - Handle backwards compatibility for saved positions
+- [ ] Ensure legend updates correctly when multiple groupings selected
+- [ ] Update URL persistence if implemented (for sharing filtered views)
+
+**UI Considerations**:
+- Keep interface simple and intuitive
+- Preserve "All" as quick reset option
+- Show visual feedback of selection count
+- Consider "None" option to hide all teams temporarily
+
+**Definition of Done**:
+- Can select multiple value streams simultaneously
+- Can select multiple platform groupings simultaneously
+- Can mix value streams and platform groupings in selection
+- Filtering works correctly with multiple selections
+- Legend reflects current selection
+- "All" option clears selection and shows everything
+
+---
+
+### 3. Book-Accurate Team Shapes in Canvas & SVG Export ⭐ HIGH PRIORITY
 **Goal**: Render Enabling and Complicated-Subsystem teams with authentic Team Topologies 2nd edition shapes
 
 **Context**: 

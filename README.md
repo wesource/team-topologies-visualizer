@@ -97,10 +97,16 @@ This tool provides dual visualizations to make these conversations easier.
   - **Current State**: Align teams under line managers in org-chart layout
   - **TT Design**: Organize teams within value stream and platform groupings with book-accurate shapes
 - 🎯 **Fractal Groupings** (TT 2nd edition) - Visual grouping of teams into Value Stream Groupings and Platform Groupings for team-of-teams patterns
-- 🔍 **Team Details** - Double-click for full team information with rendered markdown
+- � **Cognitive Load Indicators** - Optional traffic light visualization (🟢🟡🔴) showing team cognitive load levels
+  - Toggle on/off to reduce visual clutter
+  - Identify overloaded teams at a glance
+  - Detailed breakdown of domain, intrinsic, and extraneous complexity
+- �🔍 **Team Details** - Double-click for full team information with rendered markdown
 - 📋 **Team API Compatible** - Uses Team Topologies Team API template format
-- 📥 **SVG Export** - Export visualizations to SVG for presentations and documentation
-- 👁️ **Connection Toggle** - Show/hide communication lines for clarity (hidden by default in Current State view)
+- 📥 **SVG Export** - Export visualizations to SVG for presentations and documentation (respects connection visibility settings)
+- 👁️ **Connection Toggles** - Control visual complexity:
+  - **Current State**: Show/hide communication lines (hidden by default for cleaner org-chart view)
+  - **TT Design**: Show/hide interaction mode lines (shown by default, toggle off to reduce clutter)
 - 🔄 **Refresh** - Reload all team files and configurations without losing canvas position
 
 ## Design Philosophy
@@ -130,15 +136,21 @@ This tool provides dual visualizations to make these conversations easier.
 │   ├── models.py              # Pydantic data models
 │   ├── services.py            # File operations & business logic
 │   └── routes.py              # API endpoints
-├── frontend/                   # HTML5 Canvas + vanilla JS
+├── frontend/                   # HTML5 Canvas + vanilla JS (modular architecture)
 │   ├── index.html
 │   ├── styles.css
+│   ├── app.js                 # Application coordinator (94 lines)
+│   ├── state-management.js    # Centralized state management
+│   ├── modals.js              # Modal dialogs & TT educational content
+│   ├── legend.js              # Dynamic legend & filters
+│   ├── ui-handlers.js         # UI event handling & controls
+│   ├── filters.js             # Team filtering logic
+│   ├── renderer.js            # Canvas rendering coordination
 │   ├── constants.js           # Shared layout constants
 │   ├── config.js              # API configuration
 │   ├── notifications.js       # Unified notification system
 │   ├── layout-utils.js        # Shared position calculations
 │   ├── api.js                 # API client layer
-│   ├── app.js                 # Main application logic
 │   ├── canvas-interactions.js # Canvas event handling
 │   ├── renderer-common.js     # Shared rendering utilities
 │   ├── renderer-current.js    # Current state rendering
@@ -217,7 +229,14 @@ See [CONCEPTS.md](docs/CONCEPTS.md) for detailed explanation of the example orga
   - **Current State view**: Positions teams under their line managers in org-chart layout
   - **TT Design view**: Arranges teams within value stream and platform groupings in a clean grid
   - Positions are automatically saved to team markdown files
-- **Show Communication Lines** checkbox - Toggle communication lines on/off in Current State view (hidden by default for cleaner org-chart view)
+- **Show Communication Lines** checkbox (Current State view) - Toggle communication lines on/off (hidden by default for cleaner org-chart view)
+- **Show Interaction Modes** checkbox (TT Design view) - Toggle interaction mode lines (collaboration, X-as-a-Service, facilitating) on/off to reduce visual clutter when focusing on team structure
+- **Interactive Legend** (TT Design view) - Click the ℹ️ icon next to any team type, interaction mode, or grouping in the legend to see educational modals explaining Team Topologies concepts
+- **Cognitive Load Toggle** - Use the 🚦 **Cognitive Load** checkbox in the toolbar to show/hide cognitive load indicators:
+  - Colored circle (🟢🟡🔴) appears in top-right corner of each team
+  - Quickly identify overloaded teams at a glance
+  - Double-click teams to see detailed breakdown (domain, intrinsic, extraneous complexity)
+  - See [CONCEPTS.md](docs/CONCEPTS.md#cognitive-load-management) for detailed explanation
 - **Groupings Filter** (TT Design view) - Filter teams by value stream or platform grouping to focus on specific areas
 - **Refresh** button - Reload all team markdown files and configurations from disk without losing your zoom/pan position
 
