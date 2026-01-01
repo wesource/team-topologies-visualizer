@@ -180,9 +180,11 @@ These limitations keep the tool simple and git-friendly. Perfect for:
 ## Example Data
 
 The repository includes a **fictitious organization** (FleetFlow Systems) for demonstration:
-- 7 teams in traditional structure (Current State)
+- Traditional team structure in Current State view
 - SAFe/LeSS-inspired team classifications
-- TT vision showing reorganized structure
+- Team Topologies reorganization in TT Design view
+
+**Note**: The example data shows **representative teams** to demonstrate core concepts, not a complete organization. In real transformations, team structures may change significantly (consolidation, splitting, new teams), and the number of teams before/after may differ.
 
 **Disclaimer**: All example data is entirely fictitious. The author has never worked in the logistics software industry. Technical details are made up for realistic demonstration purposes.
 
@@ -302,7 +304,7 @@ See [DEVELOPMENT.md](DEVELOPMENT.md) for full development guide including testin
 ## Example Data
 
 The repository includes a **fictitious organization** (FleetFlow Systems) for demonstration:
-- Current state with traditional team structure (7 teams)
+- Current state with traditional team structure
 - Team Topologies vision showing reorganization
 - SAFe/LeSS-inspired classifications in current state
 
