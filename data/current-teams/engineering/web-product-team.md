@@ -2,18 +2,18 @@
 name: Web Product Team
 team_type: feature-team
 dependencies:
-  - Core Product Team
+- Core Product Team
 interaction_modes:
   Core Product Team: collaboration
-line_manager: Marcus Thompson
 position:
-  x: 600
-  y: 200
+  x: 404.5421983083241
+  y: 888.098237425803
 metadata:
   size: 3
   department: Engineering
   product: RouteOptix
   established: 2022-03
+line_manager: Marcus Thompson
 ---
 
 # Web Product Team

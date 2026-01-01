@@ -4,8 +4,8 @@ team_type: platform-team
 dependencies: []
 interaction_modes: {}
 position:
-  x: 350.0
-  y: 410.0
+  x: 740.7039359608713
+  y: 783.9962018572813
 metadata:
   size: 3
   department: Engineering

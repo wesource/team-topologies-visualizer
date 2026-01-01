@@ -73,6 +73,8 @@ This tool provides dual visualizations to make these conversations easier.
 - 🏢 **Organizational Context** - Line managers, departments, reporting structures
 - 🔍 **Team Details** - Double-click for full team information with rendered markdown
 - 📋 **Team API Compatible** - Uses Team Topologies Team API template format
+- 📥 **SVG Export** - Export visualizations to SVG for presentations and documentation
+- 👁️ **Connection Toggle** - Hide/show communication lines in current state view for clarity
 
 ## Design Philosophy
 
@@ -138,7 +140,6 @@ See [SETUP.md](docs/SETUP.md) for detailed customization instructions.
 - No authentication (single-user tool)
 - No database (file-based storage)
 - No automatic layout algorithm
-- Limited unit test coverage (UI tests with Playwright in progress)
 
 These limitations keep the tool simple and git-friendly. Perfect for:
 - Small to medium organizations
@@ -179,15 +180,7 @@ See [CONCEPTS.md](docs/CONCEPTS.md) for detailed explanation of the example orga
 - **Data**: Markdown files with YAML front matter
 - **No database required**
 
-## License
-
-MIT
-
-## References
-
-- [Team Topologies book](https://teamtopologies.com/) by Matthew Skelton and Manuel Pais
-- [Team API Template](https://github.com/TeamTopologies/Team-API-template)
-- [Scaled Agile Framework (SAFe)](https://scaledagileframework.com/)
+## Usage
 
 ### Visualizing Teams
 
@@ -197,15 +190,6 @@ MIT
 - **Click teams** in the sidebar to select them
 - **Zoom** using mouse wheel
 - **Connections** between teams show interaction modes with different line styles
-
-### Adding Teams
-
-1. Click the **"+ Add Team"** button
-2. Fill in team details:
-   - Name
-   - Team Type
-   - Description
-3. Click **Save**
 
 ### Team Files
 
@@ -283,21 +267,6 @@ The API provides **read-only endpoints** for visualization purposes:
 
 **Note**: Create, update, and delete operations for team data are intentionally not implemented via API. Teams should be managed by editing the markdown files directly in `data/current-teams/` and `data/tt-teams/` folders. The PATCH position endpoint is the only write operation and only updates the x/y coordinates for canvas positioning.
 
-## Current Limitations
-
-This tool is designed as a **simple, lightweight visualization and documentation tool**. The following limitations are intentional to keep the solution maintainable and encourage proper data management:
-
-- **No create/update/delete API**: Team management is done by editing markdown files directly, not through the web UI
-- **No authentication**: Not designed for multi-user scenarios or production deployment
-- **No database**: File-based storage keeps things simple but limits scalability
-- **Manual position management**: Team positions on canvas are saved, but there's no automatic layout algorithm
-
-These limitations make the tool ideal for:
-- Small to medium-sized organizations
-- Single-user or small team documentation efforts
-- Version-controlled team data (Git-friendly markdown files)
-- Local development and exploration of Team Topologies concepts
-
 ## Testing
 
 The project includes three layers of automated tests to ensure quality during development:
@@ -367,163 +336,20 @@ npx playwright test backend-validation.spec.ts
 - **E2E tests**: Run before commits, ensure full system works (~5s)
 - Focus on fast feedback - unit tests are optimized for speed
 
-## Team Topologies Concepts
+## Development
 
-### The 4 Fundamental Team Types
-- **Stream-aligned** (Blue): Aligned to a single, valuable stream of work (e.g., a specific user journey, product, or feature set)
-- **Platform** (Green): Provides internal services to reduce cognitive load of stream-aligned teams (e.g., APIs, infrastructure)
-- **Enabling** (Orange): Helps stream-aligned teams overcome obstacles and adopt new technologies (e.g., coaching, mentoring)
-- **Complicated Subsystem** (Purple): Deals with complex technical domains requiring specialist knowledge (e.g., ML, video processing)
+The server runs with hot-reload enabled, so changes to Python files will automatically restart the server.
 
-### The 3 Interaction Modes
-- **Collaboration** (Solid red line): Two teams working together for a defined period (high interaction, discovery phase)
-- **X-as-a-Service** (Dashed teal line): One team provides a service with minimal collaboration (clear API contract)
-- **Facilitating** (Dotted green line): One team helps another team learn or adopt new approaches (enabling team pattern)
+For frontend changes, simply refresh your browser (hard refresh with Ctrl+Shift+R to bypass cache).
 
-### Key Principles
-- **Team Cognitive Load**: Limit the amount of responsibility a single team handles
-- **Team API**: Clear interfaces between teams (dependencies, communication patterns, responsibilities)
-- **Fast Flow**: Optimize for rapid delivery of value to customers
-- **Team-first Approach**: Teams are the fundamental unit of delivery, not individuals
+## Example Data
 
-## About the Example Data
+The repository includes a **fictitious organization** (LogiTech Solutions) for demonstration:
+- Current state with traditional team structure (7 teams)
+- Team Topologies vision showing reorganization
+- SAFe/LeSS-inspired classifications in current state
 
-### Current State: Traditional Team Classifications
-The included example (`data/current-teams/`) represents a **fictive traditional organization** that uses common team classification patterns found in scaled agile frameworks like **LeSS (Large-Scale Scrum)**, **SAFe (Scaled Agile Framework)**, and **Spotify model**.
-
-#### Background: De-facto Team Types in Industry
-Many organizations classify their engineering teams using patterns like:
-
-- **Feature Teams** (LeSS/Scrum at Scale): Small, cross-functional teams that own and deliver complete product features end-to-end
-- **Platform Teams** (SAFe/Spotify): Teams that own shared/core components and maintain the common foundation other teams build on
-- **Enabling/Support Teams** (various frameworks): Teams that support other teams with specialized skills, coaching, or specialist work (e.g., architects, testing specialists, documentation)
-
-**Your Current State Should Reflect Your Reality**: The tool is designed to be flexible. Document whatever team classification and organizational structure you currently have, whether it follows SAFe, LeSS, Spotify, or your own custom approach. The value is in visualizing your actual starting point before designing the Team Topologies vision.
-
-#### Example Organization: LogiTech Solutions
-For demonstration purposes, this repository includes a fictive company setup:
-
-- **Context**: LogiTech Solutions, a logistics software company
-- **Product**: RouteOptix (route optimization and delivery planning)
-- **Setup**: Originally structured around 2 Agile Release Trains (ARTs) with SAFe influence
-- **Pattern**: "Dual Operating Model" concept (operational hierarchy + agile ways of working)
-
-**Team Type Mapping** (fictional company naming):
-
-| Generic Classification | This Example Uses | Common Alternatives |
-|----------------------|------------------|-------------------|
-| Feature Team | "Product Team" (Core Product, Web Product, ML Product) | Development Team, Scrum Team, Delivery Team |
-| Platform Team | "Platform Team" (Database Platform, Build & Integration) | Shared Services, Foundation Team, Infrastructure Team |
-| Enabling/Support Team | "Architecture Team", "Testing Team" | Enablement Team, Center of Excellence, Guild, Chapter |
-
-**Current Issues in Example**:
-- ❌ Component teams organized by technology layer (backend, frontend, ML, QA)
-- ❌ Heavy dependencies and coordination overhead between teams
-- ❌ Handoffs between teams (dev → QA)
-- ❌ Unclear team purposes and boundaries
-- ❌ Cognitive overload on some teams
-
-**7 Teams in Current State:**
-1. Core Product Team (6) - Backend monolith (C++/Python) - *Feature Team*
-2. Web Product Team (3) - Frontend (Angular) - *Feature Team*
-3. ML Product Team (4) - Data science & ML - *Feature Team*
-4. Integration Testing Team (5) - QA - *Enabling/Support Team*
-5. Database Platform Team (3) - Oracle/ORM/Flyway - *Platform Team*
-6. Build & Integration Team (4) - CI/CD & infrastructure - *Platform Team*
-7. Enterprise Architecture Team (3) - Governance & strategy - *Enabling/Support Team*
-
-**Characteristics of this setup:**
-- ❌ Teams organized by function, not value stream
-- ❌ Heavy dependencies and coordination overhead
-- ❌ Handoffs between teams (dev → QA)
-- ❌ Unclear team purposes and boundaries
-- ❌ Cognitive overload on some teams
-
-### Team Topologies Vision
-The TT vision (`data/tt-teams/`) shows how these same capabilities could be reorganized according to Team Topologies principles for better flow and autonomy.
-
-## Disclaimer
-
-**Important**: The example data in this repository (LogiTech Solutions, RouteOptix product, team structures, technical details, etc.) is entirely fictitious and created for demonstration purposes only. The author has never worked in the logistics software industry or domain represented in these examples. All technical details, responsibilities, team sizes, technology stacks, and organizational patterns are made up to provide realistic working examples for learning Team Topologies concepts.
-
-If you recognize patterns similar to your organization, it's because many companies face common organizational challenges - not because this data represents any specific real-world company.
-
-## Customizing for Your Organization
-
-This is a **generic example** suitable for learning and demonstration. To use this for your own organization:
-
-1. **Fork/clone this repository**
-2. **Customize team type classifications**: Edit `data/current-teams/current-team-types.json` to match your organization's team categories
-   - Define your own team type IDs (e.g., "feature-team", "platform-team", "support-team")
-   - Set colors that make sense for your context
-   - Write descriptions that reflect your organizational language
-3. **Document current state**: Replace team markdown files in `data/current-teams/`
-   - Use your actual team names and structures
-   - Document reporting lines (line_manager field)
-   - Capture real dependencies
-4. **Design TT vision**: Customize `data/tt-teams/tt-team-types.json` if needed (default uses standard TT colors)
-   - Create target team structures in `data/tt-teams/`
-   - Define interaction modes between teams
-5. **Iterate**: Use the visualization to communicate and refine the transformation
-
-### Customizing Team Types
-
-Both views support customizable team type definitions via JSON configuration:
-
-**File**: `data/current-teams/current-team-types.json` or `data/tt-teams/tt-team-types.json`
-
-```json
-{
-  "team_types": [
-    {
-      "id": "your-team-type-id",
-      "name": "Display Name",
-      "description": "What this team type means in your context",
-      "color": "#hexcolor"
-    }
-  ]
-}
-```
-
-- **id**: Used in team markdown files (`team_type: your-team-type-id`)
-- **name**: Displayed in the legend
-- **description**: Shown as tooltip on hover
-- **color**: Hex color for the team boxes on canvas
-
-The tool is designed to help facilitate conversations about:
-- Where are our current bottlenecks?
-- Which teams have too much cognitive load?
-- How can we reduce dependencies?
-- What team types do we need?
-- How should teams interact?
-
-## Use Cases
-
-### Organizational Assessment & Discovery
-This tool supports the **"sensing organization"** approach from Team Topologies:
-
-- **Consolidate fragmented information** - Gather team data scattered across PowerPoints, wikis, SharePoint, etc. into one coherent view
-- **Create single source of truth** - Document current team structures, dependencies, and interaction patterns
-- **Facilitate informed discussions** - Use visualization to align stakeholder understanding
-- **Identify pain points** - Make bottlenecks, handoffs, and cognitive overload visible
-
-### Team Topologies Adoption Pattern
-Follows the recommended **incremental adoption approach**:
-
-1. **Start with one value stream** - Document and optimize one product area first
-2. **Document current reality** - Understand "as-is" before designing "to-be"
-3. **Design TT vision** - Collaborate with architects, product managers, and teams
-4. **Identify platform needs** - Determine what shared capabilities are needed
-5. **Prove the concept** - Show value in one area before expanding
-6. **Scale gradually** - Extend patterns to other value streams
-
-This approach is recommended by the Team Topologies authors as a way to reduce risk and build organizational buy-in through demonstrated success.
-
-### Transformation Planning
-- Plan incremental changes rather than big-bang reorganizations
-- Visualize both current and future states to communicate the journey
-- Track progress over time as teams evolve
-- Identify which platform services are needed to enable stream-aligned teams
+See [CONCEPTS.md](docs/CONCEPTS.md) for detailed explanation of Team Topologies fundamentals and the example organization.
 
 ## Technologies
 
@@ -549,75 +375,16 @@ This approach is recommended by the Team Topologies authors as a way to reduce r
 - No database setup required
 - Compatible with Team API template format
 
-## Current Limitations & Roadmap
-
-### Not Yet Implemented
-
-**Hierarchical Visualization for Current State**
-- The current view should show an **org chart style** with reporting lines to managers
-- Similar to the "actual lines of communication" diagram in the Team Topologies book
-- Should visually group teams by line manager
-- Currently shows team dependencies but not organizational hierarchy
-
-**Manager Groupings**
-- Marcus Thompson manages 3 product teams (Core, Web, ML)
-- Robert Miller manages 2 platform teams (Database, Build & Integration)
-- Visual indication of these reporting structures needs to be added
-
-**Additional Features Planned**
-- Timeline/history view showing organizational evolution
-- Export diagrams as PNG/SVG
-- Cognitive load indicators per team
-- Team health metrics visualization
-
-### Known Issues
-- Some team markdown files may have naming inconsistencies
-- SAFe context (2 ARTs, dual operating model) is mentioned but not fully detailed
-- Current state visualization treats dependencies like TT interactions (should show hierarchy instead)
-
-## Development
-
-The server runs with hot-reload enabled, so changes to Python files will automatically restart the server.
-
-For frontend changes, simply refresh your browser (hard refresh with Ctrl+Shift+R to bypass cache).
-
 ## Contributing
 
-Contributions are welcome! This tool is designed to be extended and customized. Ideas for enhancements:
-- Additional visualization layouts (hierarchical tree, circle packing)
-- Team health indicators and metrics
-- Export diagrams as images or PDF
-- Import/export team data
-- Timeline view showing evolution over time
-- Cognitive load visualization
-
-## References
-
-### Team Topologies Resources
-- [Team Topologies book](https://teamtopologies.com/) by Matthew Skelton and Manuel Pais
-- [Team API Template](https://github.com/TeamTopologies/Team-API-template)
-- [Team Topologies adoption guidance](https://teamtopologies.com/key-concepts) - Recommends starting with one value stream
-- [Sensing Organizations](https://teamtopologies.com/blog) - Understanding current state before transformation
-
-### Related Frameworks
-- [Scaled Agile Framework (SAFe)](https://scaledagileframework.com/)
-
-### Key Blog Posts & Talks
-- Matthew Skelton: "Start with sensing the organization" - assess current state first
-- Manuel Pais: "Team-first thinking" - teams as fundamental units of delivery
-- Team Topologies community: Incremental adoption patterns and case studies
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to contribute to this project.
 
 ## License
 
-This project is open source and available under the MIT License.
-
----
-
-**Note**: This is a generic example with fictive data. The "Current State" represents a SAFe-inspired organization structure for demonstration purposes. Adapt the data to your own organization's context for real-world use.
-
-This project is open source and available under the MIT License.
+MIT - see [LICENSE](LICENSE) file for details.
 
 ## References
 
-- [Team Topologies book](https://teamtopologies.com/)
+- [Team Topologies book](https://teamtopologies.com/) by Matthew Skelton and Manuel Pais
 - [Team API Template](https://github.com/TeamTopologies/Team-API-template)
+- [Team Topologies Key Concepts](https://teamtopologies.com/key-concepts)

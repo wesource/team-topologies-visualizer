@@ -7,8 +7,8 @@ interaction_modes:
   Platform Team: x-as-a-service
   ML Team: collaboration
 position:
-  x: 468.01721186130044
-  y: 211.37611415596314
+  x: 830.446520877635
+  y: 366.8865623509152
 metadata:
   size: 6
   focus: Data pipelines and analytics

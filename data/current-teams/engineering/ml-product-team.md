@@ -8,8 +8,8 @@ interaction_modes:
   Core Product Team: collaboration
   Database Platform Team: x-as-a-service
 position:
-  x: 247.0
-  y: 708.0
+  x: 32.324016009782184
+  y: 791.707463751246
 metadata:
   size: 4
   department: Engineering

@@ -2,18 +2,18 @@
 name: Core Product Team
 team_type: feature-team
 dependencies:
-  - Database Platform Team
+- Database Platform Team
 interaction_modes:
   Database Platform Team: collaboration
-line_manager: Marcus Thompson
 position:
-  x: 300
-  y: 200
+  x: 172.97530546737724
+  y: 1087.305836353221
 metadata:
   size: 6
   department: Engineering
   product: RouteOptix
   established: 2020-03
+line_manager: Marcus Thompson
 ---
 
 # Core Product Team
