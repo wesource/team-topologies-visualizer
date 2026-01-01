@@ -7,40 +7,24 @@ This backlog tracks enhancements for iterative development. Items are organized 
 
 ---
 
-## 🎯 Current Sprint - Quick Wins
+## � Recently Completed (v1.0)
 
-These are the immediate priorities to improve TT Design view usability.
-
-### ✅ DONE
-- [x] Change "Team Topologies Vision" to "TT Design" in UI
-- [x] Create comprehensive sample teams with value stream and cognitive load metadata
-- [x] Setup backlog for iterative development
-- [x] Value Stream Visual Grouping (rectangles, labels, filter, legend)
-
-### 🚀 In Progress / Next Up
-
-#### 1. Value Stream Visual Grouping ⭐ HIGH PRIORITY ✅ COMPLETE
-**Goal**: Show which teams belong to which value stream
-
-**Tasks**:
-- [x] Add visual grouping rectangles around teams in same value stream
-- [x] Color-code or label value stream groupings
-- [x] Update legend to explain value stream groupings
-- [x] Add filter dropdown to show only one value stream at a time
-
-**Sample data ready**: Teams tagged with `metadata.value_stream`
-- E-commerce Experience (2 teams)
-- Mobile Experience (1 team)
-- Enterprise Sales (1 team)
-
-**Definition of Done**:
-- Teams with same value stream are visually grouped
-- User can filter view by value stream
-- Clear visual distinction between value streams
+✅ **Value Stream Visual Grouping** - Subtle visual grouping rectangles, filter dropdown, legend  
+✅ **Platform Grouping Visualization** - Team-of-teams pattern with very light blue background  
+✅ **Book-Accurate Team Shapes** - Wide horizontal boxes for stream-aligned and platform teams  
+✅ **Auto-align for TT Design** - One-click positioning within groupings with book-accurate layout  
+✅ **Auto-align for Current State** - Org-chart layout under line managers  
+✅ **Example Platform Teams** - Realistic platform teams with capabilities and consumers  
+✅ **Unified Groupings Filter** - Single dropdown for both value stream and platform grouping filtering  
+✅ **"TT Design" Naming** - Changed from "Team Topologies Vision" to "TT Design"
 
 ---
 
-#### 2. Cognitive Load Indicators ⭐ HIGH PRIORITY
+## 🚀 Current Sprint - Quick Wins
+
+These are the immediate priorities to improve visualization usability and align with Team Topologies 2nd edition.
+
+### 1. Cognitive Load Indicators ⭐ HIGH PRIORITY
 **Goal**: Make cognitive load visible on the canvas
 
 **Tasks**:
@@ -59,7 +43,7 @@ These are the immediate priorities to improve TT Design view usability.
 
 ---
 
-#### 3. Platform Capabilities Display ⭐ MEDIUM PRIORITY
+### 2. Platform Capabilities Display ⭐ MEDIUM PRIORITY
 **Goal**: Show what services platforms provide
 
 **Tasks**:
@@ -78,7 +62,7 @@ These are the immediate priorities to improve TT Design view usability.
 
 ---
 
-#### 4. Team Interaction Mode Labels ⭐ MEDIUM PRIORITY
+### 3. Team Interaction Mode Labels ⭐ MEDIUM PRIORITY
 **Goal**: Make interaction modes more obvious
 
 **Tasks**:
@@ -94,27 +78,6 @@ These are the immediate priorities to improve TT Design view usability.
 - Connection lines clearly labeled (Collaboration, X-as-a-Service, Facilitation)
 - Temporary collaborations visually distinct
 - Easy to understand at a glance
-
----
-
-#### 5. Platform Grouping Visualization ⭐ LOW PRIORITY
-**Goal**: Show platform groupings as team-of-teams
-
-**Tasks**:
-- [ ] Add larger grouping rectangle around platform teams in same grouping
-- [ ] Label groupings (e.g., "Core Platform Grouping", "Data Platform Grouping")
-- [ ] Different visual style from value stream groupings
-- [ ] Show grouping in team metadata
-
-**Sample data ready**: Platform teams tagged with `metadata.platform_grouping`
-- Core Platform Grouping (3 teams)
-- Data Platform Grouping (3 teams)  
-- Mobile Platform Grouping (1 team)
-
-**Definition of Done**:
-- Platform groupings visually distinct from value stream groupings
-- Clear labeling
-- Hierarchical visual structure (team → grouping)
 
 ---
 
@@ -350,6 +313,27 @@ These are the immediate priorities to improve TT Design view usability.
 
 ---
 
+#### High-Resolution Display Support
+**Priority**: Medium
+**Effort**: Medium
+
+**Known Limitation**: Canvas scaling and visualization need review for high-resolution displays (40+ inch monitors, 4K/5K displays)
+
+**Issues**:
+- [ ] Canvas may not scale properly on very large/high-DPI displays
+- [ ] Scroll bars behavior on large screens
+- [ ] Viewport sizing and initial zoom level for different display sizes
+- [ ] Team box sizes and text readability at different resolutions
+- [ ] Auto-align calculations for different canvas dimensions
+
+**Possible Solutions**:
+- Detect display size and adjust initial zoom/scale
+- Implement responsive canvas sizing based on viewport
+- Add min/max zoom limits appropriate for display size
+- Consider CSS-based scaling alternatives to manual canvas calculations
+
+---
+
 #### Multiple Layout Options
 **Priority**: Low
 **Effort**: Large
@@ -462,11 +446,14 @@ These are the immediate priorities to improve TT Design view usability.
 
 Must-haves for v1.0:
 - [x] Change to "TT Design" naming
-- [ ] Value stream visual grouping
+- [x] Value stream visual grouping
+- [x] Platform grouping visualization
+- [x] Book-accurate team shapes
+- [x] Auto-align for both views
 - [ ] Cognitive load indicators
 - [ ] Platform capabilities display
-- [ ] Comprehensive sample data
-- [ ] User documentation
+- [x] Comprehensive sample data
+- [ ] User documentation improvements
 - [ ] Demo video
 - [ ] GitHub release notes
 

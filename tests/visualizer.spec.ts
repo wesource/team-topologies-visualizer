@@ -145,6 +145,9 @@ test.describe('Team Topologies Visualizer', () => {
   });
 
   test('should take screenshot of TT Vision view for visual verification', async ({ page }) => {
+    // Set larger viewport for better screenshot quality
+    await page.setViewportSize({ width: 1920, height: 1080 });
+    
     await page.goto(`${BASE_URL}/static/index.html`);
     
     // Switch to TT Vision
@@ -154,10 +157,15 @@ test.describe('Team Topologies Visualizer', () => {
     await page.waitForResponse(response => response.url().includes('/api/teams?view=tt'));
     await page.waitForTimeout(500); // Minimal wait for rendering
     
-    // Take screenshot
+    // Click auto-align button for clean layout
+    await page.locator('#autoAlignBtn').click();
+    await page.waitForTimeout(1500); // Wait longer for alignment animation and API calls
+    
+    // Take high-quality screenshot
     await page.screenshot({ 
       path: 'tests/screenshots/tt-vision-view.png', 
-      fullPage: false // Only visible area for speed
+      fullPage: true, // Capture entire page including scrollable areas
+      scale: 'device' // Use device pixel ratio for higher quality
     });
   });
 

@@ -2,7 +2,20 @@
 
 A web application with dual visualization of organizational team structures. Visualize both your **current organizational state** and your **TT Design** (Team Topologies target design) to plan and communicate transformation initiatives.
 
-> **Note**: This codebase was generated with AI assistance (GitHub Copilot / Claude Sonnet 4) as a learning project. Python and related technology choices were made as an opportunity to explore and learn these tools hands-on. Building this tool also serves as a way to gain a deeper understanding of Team Topologies concepts through practical application.
+> **Note**: This codebase was generated with AI assistance (GitHub Copilot / Claude Sonnet 4) as a learning project. Python and related technology choices were made as an opportunity to explore and learn these tools hands-on. Building this tool also serves as a way for the creator to gain deeper understanding of Team Topologies concepts through practical application.
+
+## Screenshots
+
+<div align="center">
+  <a href="tests/tests/screenshots/current-state-view.png">
+    <img src="tests/tests/screenshots/current-state-view.png" alt="Current State View" width="45%" />
+  </a>
+  <a href="tests/tests/screenshots/tt-vision-view.png">
+    <img src="tests/tests/screenshots/tt-vision-view.png" alt="TT Design View" width="45%" />
+  </a>
+  <br/>
+  <em>Current State (org hierarchy) and TT Design (value streams & platform groupings)</em>
+</div>
 
 ## Quick Start
 
@@ -186,7 +199,7 @@ The repository includes a **fictitious organization** (FleetFlow Systems) for de
 
 **Note**: The example data shows **representative teams** to demonstrate core concepts, not a complete organization. In real transformations, team structures may change significantly (consolidation, splitting, new teams), and the number of teams before/after may differ.
 
-**Disclaimer**: All example data is entirely fictitious. The author has never worked in the logistics software industry. Technical details are made up for realistic demonstration purposes.
+**Disclaimer**: All example data is entirely fictitious. The creator has never worked in the logistics software industry. Technical details are made up for realistic demonstration purposes.
 
 See [CONCEPTS.md](docs/CONCEPTS.md) for detailed explanation of the example organization and Team Topologies concepts.
 
@@ -286,29 +299,20 @@ The API provides **read-only endpoints** for visualization purposes:
 
 ## Testing
 
-The project includes comprehensive automated testing (72 tests total across 3 layers: backend unit, frontend unit, and E2E tests).
+The project includes comprehensive automated testing (~95 tests total across 3 layers: backend unit, frontend unit, and E2E tests).
 
 See [DEVELOPMENT.md](DEVELOPMENT.md) for detailed testing instructions, development workflow, and technical decisions.
 
 **Quick summary**:
-- Backend: 10 tests with pytest (~0.5s)
-- Frontend: 40 tests with Vitest (~1.3s) 
-- E2E: 23 tests with Playwright (~3-5s)
+- Backend: ~10 tests with pytest (~0.5s)
+- Frontend: ~62 tests with Vitest (~1.3s) 
+- E2E: ~23 tests with Playwright (~3-5s)
 
 ## Development
 
 The server runs with hot-reload enabled for Python changes. For frontend changes, refresh your browser (Ctrl+Shift+R for hard refresh).
 
 See [DEVELOPMENT.md](DEVELOPMENT.md) for full development guide including testing, debugging tips, and architecture decisions.
-
-## Example Data
-
-The repository includes a **fictitious organization** (FleetFlow Systems) for demonstration:
-- Current state with traditional team structure
-- Team Topologies vision showing reorganization
-- SAFe/LeSS-inspired classifications in current state
-
-See [CONCEPTS.md](docs/CONCEPTS.md) for detailed explanation of Team Topologies fundamentals and the example organization.
 
 ## Technologies
 
