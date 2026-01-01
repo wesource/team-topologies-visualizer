@@ -1,6 +1,6 @@
 # Team Topologies Visualizer
 
-A web application for visualizing and comparing organizational team structures. Visualize both your **current organizational state** and your **Team Topologies vision** side-by-side to plan and communicate transformation initiatives.
+A web application with dual visualization of organizational team structures. Visualize both your **current organizational state** and your **Team Topologies vision** to plan and communicate transformation initiatives.
 
 > **Note**: This codebase was generated with AI assistance (GitHub Copilot / Claude Sonnet 4) as a learning project. Python and related technology choices were made as an opportunity to explore and learn these tools hands-on.
 
@@ -57,6 +57,7 @@ See [SETUP.md](docs/SETUP.md) for detailed installation and configuration instru
 ## Why This Tool?
 
 When adopting Team Topologies, organizations need to:
+- **Consolidate scattered information** - Unify team data from PowerPoints, wikis, Confluence pages, and other scattered sources into one structured, version-controlled format
 - **Visualize the current state** - Show how teams are currently organized (often by reporting lines, not value streams)
 - **Design the future state** - Plan Team Topologies patterns (stream-aligned, platform, enabling, complicated subsystem)
 - **Communicate the transition** - Help stakeholders understand the "before and after"
