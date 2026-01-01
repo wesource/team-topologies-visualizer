@@ -111,10 +111,6 @@ Use the radio buttons in the header to switch between:
 - **Show Communication Lines** checkbox - Toggle to show communication/dependency lines between teams in Current State view. Hidden by default to provide a cleaner org-chart visualization.
 - **Refresh** button - Reload all team markdown files and configuration from disk. Useful when editing files externally. Preserves your current zoom/pan position on the canvas.
 
-### Adding Teams
-
-The "+ Add Team" button shows a message directing you to edit markdown files directly. This keeps the tool simple and git-friendly.
-
 ## Team Files
 
 Teams are stored as markdown files with YAML front matter. Team types, colors, and descriptions are defined in prefixed configuration files within each view directory.
@@ -244,18 +240,3 @@ The tool is designed to help facilitate conversations about:
 - How can we reduce dependencies?
 - What team types do we need?
 - How should teams interact?
-
-## Current Limitations
-
-This tool is designed as a **simple, lightweight visualization and documentation tool**. The following limitations are intentional to keep the solution maintainable and encourage proper data management:
-
-- **No automated tests**: The codebase currently lacks comprehensive test coverage
-- **No create/update/delete API**: Team management is done by editing markdown files directly, not through the web UI
-- **No authentication**: Not designed for multi-user scenarios or production deployment
-- **No database**: File-based storage keeps things simple but limits scalability
-
-These limitations make the tool ideal for:
-- Small to medium-sized organizations
-- Single-user or small team documentation efforts
-- Version-controlled team data (Git-friendly markdown files)
-- Local development and exploration of Team Topologies concepts

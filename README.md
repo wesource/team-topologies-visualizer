@@ -265,78 +265,20 @@ The API provides **read-only endpoints** for visualization purposes:
 
 ## Testing
 
-The project includes three layers of automated tests to ensure quality during development:
+The project includes comprehensive automated testing (72 tests total across 3 layers: backend unit, frontend unit, and E2E tests).
 
-### Backend Unit Tests (Fast)
-Tests core Python functions in isolation. Run these frequently during backend development.
+See [DEVELOPMENT.md](DEVELOPMENT.md) for detailed testing instructions, development workflow, and technical decisions.
 
-```bash
-# Run all backend unit tests (with activated venv)
-pytest tests_backend/ -v
-
-# Or Windows direct path
-.\venv\Scripts\python.exe -m pytest tests_backend/ -v
-
-# With coverage
-pytest tests_backend/ --cov=main
-```
-
-**Coverage**: 10 tests covering parse_team_file(), get_data_dir(), and data validation
-**Speed**: ~0.5s
-
-### Frontend Unit Tests (Fast)
-Tests JavaScript modules (wrapText, API functions, etc.) in isolation. Run these during frontend development.
-
-```bash
-# From frontend directory
-cd frontend
-npm test
-
-# Watch mode (re-runs on file changes)
-npm run test:watch
-
-# Lint JavaScript files (catches syntax errors)
-npm run lint
-
-# Auto-fix linting issues
-npm run lint:fix
-```
-
-**Coverage**: 23 tests covering renderer-common.js, api.js
-**Speed**: ~1.7s
-**Linting**: ESLint catches syntax errors, formatting issues, unused variables
-
-### End-to-End Tests (Slow, Comprehensive)
-Full application tests using Playwright. Run these before commits to verify everything works together.
-
-```bash
-# From tests directory - requires server running on localhost:8000
-cd tests
-npm test
-
-# Run with UI for debugging
-npm run test:ui
-
-# Run specific test file
-npx playwright test visualizer.spec.ts
-npx playwright test backend-validation.spec.ts
-```
-
-**Coverage**: 
-- 14 UI/integration tests (application load, view switching, canvas, API integration)
-- 9 backend validation tests (data structure, hierarchy validation, API responses)
-**Speed**: ~3-5s (23 tests total)
-
-### Test Strategy
-- **Unit tests** (backend + frontend): Run frequently, catch issues early (~2s total)
-- **E2E tests**: Run before commits, ensure full system works (~5s)
-- Focus on fast feedback - unit tests are optimized for speed
+**Quick summary**:
+- Backend: 10 tests with pytest (~0.5s)
+- Frontend: 40 tests with Vitest (~1.3s) 
+- E2E: 23 tests with Playwright (~3-5s)
 
 ## Development
 
-The server runs with hot-reload enabled, so changes to Python files will automatically restart the server.
+The server runs with hot-reload enabled for Python changes. For frontend changes, refresh your browser (Ctrl+Shift+R for hard refresh).
 
-For frontend changes, simply refresh your browser (hard refresh with Ctrl+Shift+R to bypass cache).
+See [DEVELOPMENT.md](DEVELOPMENT.md) for full development guide including testing, debugging tips, and architecture decisions.
 
 ## Example Data
 
@@ -351,7 +293,7 @@ See [CONCEPTS.md](docs/CONCEPTS.md) for detailed explanation of Team Topologies 
 
 - **Backend**: FastAPI (Python)
 - **Frontend**: HTML5 Canvas, Vanilla JavaScript
-- **Data Storage**: Markdown files with YAML front matter
+- **Data Storage**: Markdown files with [YAML front matter](https://jekyllrb.com/docs/front-matter/) (structured metadata between `---` delimiters at the top of files)
 - **Visualization**: Interactive canvas with drag-and-drop
 - **Dependencies**: uvicorn, pyyaml, markdown
 

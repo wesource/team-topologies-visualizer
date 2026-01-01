@@ -2,6 +2,8 @@
 
 ## Team Topologies Fundamentals
 
+> **Note**: This section provides a brief overview of Team Topologies concepts. For comprehensive details and authoritative definitions, see the [Team Topologies book](https://teamtopologies.com/) by Matthew Skelton and Manuel Pais. Additional resources and references are available at the [bottom of this document](#references).
+
 ### The 4 Fundamental Team Types
 - **Stream-aligned** (Blue): Aligned to a single, valuable stream of work (e.g., a specific user journey, product, or feature set). Primary team type that delivers value directly to customers.
 - **Platform** (Green): Provides internal services to reduce cognitive load of stream-aligned teams (e.g., APIs, infrastructure, deployment pipelines). Enables stream-aligned teams to deliver faster.
@@ -120,15 +122,20 @@ Use the dual visualization to:
 ## References
 
 ### Team Topologies Resources
-- [Team Topologies book](https://teamtopologies.com/) by Matthew Skelton and Manuel Pais
+- [Team Topologies book and website](https://teamtopologies.com/) by Matthew Skelton and Manuel Pais - Book information and additional resources
 - [Team API Template](https://github.com/TeamTopologies/Team-API-template)
-- [Team Topologies adoption guidance](https://teamtopologies.com/key-concepts) - Recommends starting with one value stream
-- [Sensing Organizations](https://teamtopologies.com/blog) - Understanding current state before transformation
+- [Team Topologies Key Concepts](https://teamtopologies.com/key-concepts) - Core principles and patterns
+- [Team Topologies Blog](https://teamtopologies.com/blog) - Latest insights and case studies
 
 ### Related Frameworks
 - [Scaled Agile Framework (SAFe)](https://scaledagileframework.com/)
+- [Large-Scale Scrum (LeSS)](https://less.works/) - Scaling Scrum while keeping simplicity
+- [Spotify Engineering Culture](https://engineering.atspotify.com/2014/03/spotify-engineering-culture-part-1/) - Squads, tribes, chapters, and guilds model
 
 ### Key Blog Posts & Talks
-- Matthew Skelton: "Start with sensing the organization" - assess current state first
-- Manuel Pais: "Team-first thinking" - teams as fundamental units of delivery
-- Team Topologies community: Incremental adoption patterns and case studies
+- [Sensing Organizations](https://teamtopologies.com/blog/2019/09/17/what-is-a-sensing-organization) by Matthew Skelton - Understanding current state before transformation
+- [Team Cognitive Load](https://teamtopologies.com/key-concepts-content/what-is-cognitive-load) - Managing team complexity and responsibility
+- [The Four Fundamental Team Types](https://teamtopologies.com/key-concepts-content/what-are-the-four-fundamental-team-types) - Deep dive into stream-aligned, platform, enabling, and complicated subsystem teams
+- [Team Interaction Modes](https://teamtopologies.com/key-concepts-content/what-are-the-three-team-interaction-modes) - Collaboration, X-as-a-Service, and Facilitating explained
+- [Henrik Kniberg: Spotify Engineering Culture (Video)](https://www.youtube.com/watch?v=4GK1NDTWbkY) - Part 1 of the original Spotify model presentation
+- [Conway's Law](https://martinfowler.com/bliki/ConwaysLaw.html) by Martin Fowler - How organizational structure influences system architecture
