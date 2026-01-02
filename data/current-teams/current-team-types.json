@@ -19,10 +19,10 @@
       "color": "#F4D03F"
     },
     {
-      "id": "other",
-      "name": "Other/Unclassified",
-      "description": "Teams or organizational units that don't fit the standard classifications. May include leadership, departments, or transitional structures.",
-      "color": "#95a5a6"
+      "id": "undefined",
+      "name": "Undefined",
+      "description": "Teams not yet classified into organizational team types. Used during organizational assessment or transition periods.",
+      "color": "#E8E8E8"
     }
   ]
 }

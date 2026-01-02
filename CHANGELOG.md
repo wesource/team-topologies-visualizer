@@ -8,7 +8,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- 📐 **Book-Accurate Team Shapes in Canvas & SVG Export** (TT Design view):
+- � **"Undefined" Team Type for Both Views**:
+  - Added shared "undefined" team type for teams not yet classified/designed
+  - **TT Design view**: Teams not yet designed into one of the 4 fundamental team types (stream-aligned, platform, enabling, complicated-subsystem)
+  - **Pre-TT view**: Teams not yet classified into organizational team types
+  - Based on official Team Topologies guidance for transformation planning
+  - Visual styling:
+    - Light gray fill color (`#E8E8E8`) for neutral/uncertain state
+    - **Dashed border** (8px dash, 4px gap) with medium gray (`#666666`) - book-accurate
+    - Rounded corners (8px radius) matching other team shapes
+    - Darker gray border (`#333333`) when selected (no red - maintains neutral appearance)
+  - Works in both canvas and SVG export
+  - Auto-align treats undefined teams as narrow/ungrouped teams (like enabling and complicated-subsystem)
+  - Example teams: `data/current-teams/example-undefined-team.md` and `data/tt-teams/example-undefined-team.md`
+  - Use cases: Initial TT assessment, gradual classification during transformation, progress tracking
+
+- �📐 **Book-Accurate Team Shapes in Canvas & SVG Export** (TT Design view):
   - **Enabling teams**: Now render as vertical rounded rectangles (80×120px, tall and narrow orientation)
   - **Complicated-Subsystem teams**: Now render as octagons (8-sided polygon representing internal complexity)
   - Stream-aligned and Platform teams continue using wide horizontal boxes
@@ -22,6 +37,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - Complicated-Subsystem: `<path>` element with octagon geometry
     - Connection anchor points automatically adjust to team shape dimensions
   - Pre-TT view continues using standard rectangles for all team types
+  - **Dimension refinements** (based on book accuracy and readability testing):
+    - Enabling teams: Final dimensions 60×140px (width ~2× stream-aligned height for book accuracy)
+    - Complicated-Subsystem teams: Final dimensions 100×100px (compact octagon)
+    - Text color: Changed to dark gray (`#222222`) for better readability on lighter team colors
+    - Iterative refinement process validated visual accuracy against Team Topologies book
 
 ### Changed
 - 🎯 **TT Design View Now Default**:
@@ -44,6 +64,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Prepares codebase for future subfolder organization
 
 ### Fixed
+- 🐛 **Platform Grouping Bounding Box with Variable Team Heights**:
+  - Fixed platform grouping boxes cutting off taller teams (enabling 140px, complicated-subsystem 100px)
+  - Updated `calculateGroupingBoundingBox()` to use actual team height via `getTeamBoxHeight()` instead of fixed 30px
+  - Ensures proper spacing below all team types regardless of their dimensions
+
+- 🐛 **Auto-Align Button Visibility on Startup**:
+  - Fixed TT Design auto-align button not appearing on initial load (was showing Pre-TT button instead)
+  - Updated initialization in `ui-handlers.js` to match new default view (TT Design)
+  - Correct controls now shown on startup: TT auto-align button, interaction modes checkbox, grouping filter
+
 - 🐛 **Platform Grouping Bounding Box Overflow**:
   - Fixed issue where platform grouping boxes became oversized after refresh or view switching
   - Root cause: Teams had stale position data from disk (spread 1200+ pixels apart vertically)

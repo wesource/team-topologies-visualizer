@@ -23,6 +23,12 @@
       "name": "Complicated Subsystem",
       "description": "Deals with complex technical domains requiring specialist knowledge (e.g., ML algorithms, video processing, mathematical models). Reduces cognitive load on stream-aligned teams.",
       "color": "#F4B183"
+    },
+    {
+      "id": "undefined",
+      "name": "Undefined",
+      "description": "Teams not yet designed into one of the 4 fundamental team types (stream-aligned, platform, enabling, complicated-subsystem). Used during Team Topologies transformation planning.",
+      "color": "#E8E8E8"
     }
   ]
 }

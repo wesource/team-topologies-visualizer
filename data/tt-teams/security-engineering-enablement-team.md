@@ -6,8 +6,8 @@ interaction_modes:
   API Gateway Platform Team: facilitating
   AWS Developer Platform Team: facilitating
 position:
-  x: 1800.0
-  y: 600.0
+  x: 1808.0
+  y: 635.0
 metadata:
   size: 4
   focus: Security practices, threat modeling, secure coding

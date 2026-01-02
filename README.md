@@ -77,7 +77,7 @@ See [SETUP.md](docs/SETUP.md) for detailed installation and configuration instru
 When adopting Team Topologies, organizations need to:
 - **Consolidate scattered information** - Unify team data from slides, documentation systems, spreadsheets, and other scattered sources into one structured, version-controlled format
 - **Visualize the baseline** - Show how teams are currently organized (often by reporting lines, not value streams)
-- **Design the future state** - Plan Team Topologies patterns (stream-aligned, platform, enabling, complicated subsystem)
+- **Design the future state** - Plan Team Topologies patterns (stream-aligned, platform, enabling, complicated subsystem, and undefined for teams in transition)
 - **Communicate the transition** - Help everyone involved understand and discuss the "before and after"
 - **Version-controlled history** - Git-friendly format enables tracking evolution over time (via git history)
 

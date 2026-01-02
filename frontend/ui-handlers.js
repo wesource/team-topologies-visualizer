@@ -202,14 +202,29 @@ export function setupUIEventListeners(loadAllTeams, draw, openAddTeamModal, clos
         });
     }
     
-    // Show the hide connections checkbox and auto-align button since default view is "current"
+    // Show the correct controls for default view (TT Design)
     const showConnectionsLabel = document.getElementById('showConnectionsLabel');
     if (showConnectionsLabel) {
-        showConnectionsLabel.style.display = 'flex';
+        showConnectionsLabel.style.display = 'none'; // Hidden in TT view
+    }
+    
+    const showInteractionModesLabelInit = document.getElementById('showInteractionModesLabel');
+    if (showInteractionModesLabelInit) {
+        showInteractionModesLabelInit.style.display = 'flex'; // Shown in TT view
     }
     
     const autoAlignBtnInit = document.getElementById('autoAlignBtn');
     if (autoAlignBtnInit) {
-        autoAlignBtnInit.style.display = 'inline-block';
+        autoAlignBtnInit.style.display = 'none'; // Hidden in TT view
+    }
+    
+    const autoAlignTTBtnInit = document.getElementById('autoAlignTTBtn');
+    if (autoAlignTTBtnInit) {
+        autoAlignTTBtnInit.style.display = 'inline-block'; // Shown in TT view
+    }
+    
+    const groupingFilterContainerInit = document.getElementById('groupingFilterContainer');
+    if (groupingFilterContainerInit) {
+        groupingFilterContainerInit.style.display = 'flex'; // Shown in TT view
     }
 }

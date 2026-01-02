@@ -217,7 +217,8 @@ function generateTTVisionSVG(teams, teamColorMap, showInteractionModes) {
         const color = teamColorMap[team.team_type] || '#95a5a6';
         const teamWidth = getTeamBoxWidth(team, 'tt');
         const teamHeight = getTeamBoxHeight(team, 'tt');
-        elements += drawSVGBox(team.name, team.position.x, team.position.y, teamWidth, teamHeight, color, 'white', false, team.team_type, 'tt');
+        const textColor = '#222222'; // Dark gray for readability
+        elements += drawSVGBox(team.name, team.position.x, team.position.y, teamWidth, teamHeight, color, textColor, false, team.team_type, 'tt');
     });
     return elements;
 }
@@ -247,6 +248,9 @@ function drawSVGBox(text, x, y, width, height, bgColor, textColor, isBold, teamT
         }
         if (teamType === 'complicated-subsystem') {
             return drawSVGComplicatedSubsystem(text, x, y, width, height, bgColor, textColor, fontSize, fontWeight, borderColor);
+        }
+        if (teamType === 'undefined') {
+            return drawSVGUndefinedTeam(text, x, y, width, height, bgColor, textColor, fontSize, fontWeight);
         }
     }
     
@@ -278,6 +282,41 @@ function drawSVGDefaultBox(text, x, y, width, height, bgColor, textColor, fontSi
     let box = `<g>
     <rect x="${x}" y="${y}" width="${width}" height="${height}" rx="8" fill="${bgColor}" stroke="${borderColor}" stroke-width="2" class="team-box"/>`;
     // Add text lines
+    const lineHeight = 14;
+    const startY = y + height / 2 - (lines.length - 1) * lineHeight / 2;
+    lines.forEach((line, i) => {
+        box += `
+    <text x="${x + width / 2}" y="${startY + i * lineHeight}" fill="${textColor}" font-size="${fontSize}" font-weight="${fontWeight}" text-anchor="middle" dominant-baseline="middle">${escapeXml(line)}</text>`;
+    });
+    box += '\n  </g>';
+    return box;
+}
+
+/**
+ * Draw undefined team with dashed border
+ */
+function drawSVGUndefinedTeam(text, x, y, width, height, bgColor, textColor, fontSize, fontWeight) {
+    // Wrap text
+    const words = text.split(' ');
+    const lines = [];
+    let currentLine = '';
+    const maxChars = Math.floor(width / (fontSize * 0.5));
+    words.forEach(word => {
+        const testLine = currentLine + (currentLine ? ' ' : '') + word;
+        if (testLine.length > maxChars && currentLine) {
+            lines.push(currentLine);
+            currentLine = word;
+        } else {
+            currentLine = testLine;
+        }
+    });
+    if (currentLine) lines.push(currentLine);
+    
+    let box = `
+  <g>
+    <rect x="${x}" y="${y}" width="${width}" height="${height}" rx="8" fill="${bgColor}" stroke="#666666" stroke-width="2" stroke-dasharray="8,4" />`;
+    
+    // Render text lines
     const lineHeight = 14;
     const startY = y + height / 2 - (lines.length - 1) * lineHeight / 2;
     lines.forEach((line, i) => {

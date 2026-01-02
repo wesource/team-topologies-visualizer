@@ -38,6 +38,16 @@ export function autoAlignTTDesign(teams) {
     
     const ungroupedTeams = teams.filter(team => !groupedTeamNames.has(team.name));
     
+    // Separate ungrouped teams into wide and narrow
+    // Wide: stream-aligned and platform teams in TT view
+    // Narrow: enabling, complicated-subsystem, and undefined teams
+    const wideUngrouped = ungroupedTeams.filter(team => 
+        team.team_type === 'stream-aligned' || team.team_type === 'platform'
+    );
+    const narrowUngrouped = ungroupedTeams.filter(team => 
+        team.team_type === 'enabling' || team.team_type === 'complicated-subsystem' || team.team_type === 'undefined'
+    );
+    
     // Layout configuration
     const startX = 100;
     const startY = 100;
@@ -64,6 +74,8 @@ export function autoAlignTTDesign(teams) {
      * Stream-aligned and Platform teams span the flow of change
      */
     function isWideTeamType(teamType) {
+        // Wide teams: stream-aligned and platform
+        // Narrow teams: enabling, complicated-subsystem, undefined
         return teamType === 'stream-aligned' || teamType === 'platform';
     }
     

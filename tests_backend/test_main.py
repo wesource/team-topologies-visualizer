@@ -174,8 +174,8 @@ class TestFilenameConsistency:
         
         mismatches = []
         for file_path in TT_TEAMS_DIR.rglob("*.md"):
-            # Skip config files
-            if file_path.name in ['tt-team-types.json']:
+            # Skip config files and example files
+            if file_path.name in ['tt-team-types.json', 'example-undefined-team.md']:
                 continue
                 
             try:
@@ -217,7 +217,9 @@ class TestFilenameConsistency:
         skip_files = {
             'company-leadership.md',  # Leadership structure file
             'organization-hierarchy.json',
-            'current-team-types.json'
+            'current-team-types.json',
+            'README.md',  # Documentation file
+            'example-undefined-team.md'  # Example file for undefined team type
         }
         # Also skip files ending with -dept.md as they're department/hierarchy files
         

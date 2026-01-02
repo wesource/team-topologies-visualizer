@@ -69,13 +69,13 @@ export function getCognitiveLoadIndicator(level) {
 export function getTeamBoxWidth(team, currentView = 'current') {
     // In TT Design view, use team-type-specific shapes
     if (currentView === 'tt') {
-        // Enabling teams: vertical (narrow)
+        // Enabling teams: vertical (narrow, width ~ 2× stream-aligned height)
         if (team.team_type === 'enabling') {
-            return 80;
+            return 60;
         }
-        // Complicated-Subsystem teams: octagon (balanced dimensions)
+        // Complicated-Subsystem teams: octagon (compact)
         if (team.team_type === 'complicated-subsystem') {
-            return 120;
+            return 100;
         }
         // Stream-aligned and platform teams: wide horizontal
         if (team.team_type === 'stream-aligned' || team.team_type === 'platform') {
@@ -100,11 +100,11 @@ export function getTeamBoxWidth(team, currentView = 'current') {
 export function getTeamBoxHeight(team, currentView = 'current') {
     // In TT Design view, enabling teams are tall (vertical orientation)
     if (currentView === 'tt' && team.team_type === 'enabling') {
-        return 120;
+        return 140;
     }
-    // Complicated-subsystem teams: taller for octagon shape
+    // Complicated-subsystem teams: compact square for octagon
     if (currentView === 'tt' && team.team_type === 'complicated-subsystem') {
-        return 120;
+        return 100;
     }
     // Default height
     return LAYOUT.TEAM_BOX_HEIGHT;
@@ -124,6 +124,10 @@ export function drawTeam(ctx, team, selectedTeam, teamColorMap, wrapText, curren
         }
         if (team.team_type === 'complicated-subsystem') {
             drawComplicatedSubsystemTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad);
+            return;
+        }
+        if (team.team_type === 'undefined') {
+            drawUndefinedTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad);
             return;
         }
     }
@@ -247,6 +251,56 @@ function drawComplicatedSubsystemTeam(ctx, team, x, y, width, height, selectedTe
 }
 
 /**
+ * Draw undefined team with dashed border (TT Design view only)
+ */
+function drawUndefinedTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad) {
+    const fillColor = getTeamColor(team, teamColorMap);
+    const radius = 8;
+    
+    // Fill with team color (rounded rectangle)
+    ctx.fillStyle = fillColor;
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.lineTo(x + width - radius, y);
+    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+    ctx.lineTo(x + width, y + height - radius);
+    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+    ctx.lineTo(x + radius, y + height);
+    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+    ctx.lineTo(x, y + radius);
+    ctx.quadraticCurveTo(x, y, x + radius, y);
+    ctx.closePath();
+    ctx.fill();
+    
+    // Dashed border for undefined teams (always gray to indicate neutral/uncertain state)
+    ctx.save();
+    ctx.setLineDash([8, 4]); // 8px dash, 4px gap
+    ctx.strokeStyle = selectedTeam === team ? '#333333' : '#666666'; // Darker gray when selected
+    ctx.lineWidth = selectedTeam === team ? 3 : 2;
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.lineTo(x + width - radius, y);
+    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+    ctx.lineTo(x + width, y + height - radius);
+    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+    ctx.lineTo(x + radius, y + height);
+    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+    ctx.lineTo(x, y + radius);
+    ctx.quadraticCurveTo(x, y, x + radius, y);
+    ctx.closePath();
+    ctx.stroke();
+    ctx.restore(); // Reset dash pattern
+    
+    // Draw cognitive load indicator if enabled
+    if (showCognitiveLoad) {
+        drawCognitiveLoadIndicator(ctx, team, x, y, width, showCognitiveLoad);
+    }
+    
+    // Draw team name
+    drawTeamName(ctx, team, x, y, width, height, wrapText);
+}
+
+/**
  * Helper: Draw cognitive load indicator in top-right corner
  */
 function drawCognitiveLoadIndicator(ctx, team, x, y, width, showCognitiveLoad) {
@@ -274,7 +328,7 @@ function drawCognitiveLoadIndicator(ctx, team, x, y, width, showCognitiveLoad) {
  * Helper: Draw team name with text wrapping
  */
 function drawTeamName(ctx, team, x, y, width, height, wrapText) {
-    ctx.fillStyle = 'white';
+    ctx.fillStyle = '#222222'; // Dark gray text for better readability
     ctx.font = 'bold 14px sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';

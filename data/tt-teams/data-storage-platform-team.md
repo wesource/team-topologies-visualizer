@@ -4,8 +4,8 @@ team_type: platform
 dependencies: []
 interaction_modes: {}
 position:
-  x: 204.0
-  y: 165.0
+  x: -41.0
+  y: 112.0
 metadata:
   size: 7
   value_stream: E-Commerce Experience

@@ -2,7 +2,7 @@
 // Handles grouping platform teams by platform_grouping metadata
 
 import { LAYOUT } from './constants.js';
-import { getTeamBoxWidth } from './renderer-common.js';
+import { getTeamBoxWidth, getTeamBoxHeight } from './renderer-common.js';
 
 /**
  * Groups platform teams by their platform grouping
@@ -130,19 +130,21 @@ export function calculateGroupingBoundingBox(teams, teamBoxHeight, padding, curr
         const x = team.position?.x || 0;
         const y = team.position?.y || 0;
         const teamWidth = getTeamBoxWidth(team, currentView);
+        const teamHeight = getTeamBoxHeight(team, currentView); // Use actual team height
 
         minX = Math.min(minX, x);
         minY = Math.min(minY, y);
         maxX = Math.max(maxX, x + teamWidth);
-        maxY = Math.max(maxY, y + teamBoxHeight);
+        maxY = Math.max(maxY, y + teamHeight); // Use actual height
 
         // Collect details for debugging
         teamDetails.push({
             name: team.name,
             x, y,
             teamWidth,
+            teamHeight,
             rightEdge: x + teamWidth,
-            bottomEdge: y + teamBoxHeight
+            bottomEdge: y + teamHeight
         });
     });
 
