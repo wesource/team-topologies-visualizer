@@ -33,7 +33,7 @@ npm test
 ✅ Application loads correctly
 ✅ Canvas element is rendered
 ✅ API endpoints return valid data
-✅ View switching (Current State ↔ TT Vision)
+✅ View switching (Pre-TT ↔ TT Design)
 ✅ Team sidebar displays teams
 ✅ Organization hierarchy structure (6 departments)
 ✅ Customer Solutions has 4 regions

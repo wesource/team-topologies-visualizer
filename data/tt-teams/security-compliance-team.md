@@ -6,8 +6,8 @@ interaction_modes:
   Payment Platform Team: facilitation
   Core Platform Team: facilitation
 position:
-  x: 2271.677277821931
-  y: 982.5267386423582
+  x: 2120.0
+  y: 480.0
 metadata:
   size: 3
   cognitive_load: medium

@@ -6,7 +6,7 @@ interaction_modes:
   Security & Compliance Team: x-as-a-service
 position:
   x: 204.0
-  y: 180.0
+  y: 1355.0
 metadata:
   size: 8
   focus: AWS cloud infrastructure and developer experience

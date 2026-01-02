@@ -10,6 +10,10 @@ metadata:
   size: 3
   department: Engineering
   established: 2019-06
+  cognitive_load: medium
+  cognitive_load_domain: medium
+  cognitive_load_intrinsic: medium
+  cognitive_load_extraneous: low
 line_manager: Robert Miller
 ---
 

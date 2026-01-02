@@ -8,6 +8,115 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- 🎯 **TT Design View Now Default**:
+  - Application now opens in "TT Design" view instead of "Pre-TT" (formerly "Current State")
+  - Reflects the tool's primary focus on Team Topologies design patterns
+  - Users can still toggle to Pre-TT view to see org-chart baseline
+
+- 📝 **View Naming: "Current State" → "Pre-TT"**:
+  - Renamed view to better represent baseline before TT transformation
+  - Acknowledges that transformation happens over time
+  - More accurate for organizations mid-transformation journey
+  - Opens door for future variants (SAFe trains, value streams, etc.)
+
+- 🗂️ **File Organization - TT-Prefixed Files**:
+  - Renamed TT Design-specific files with `tt-` prefix for clarity:
+    - `value-stream-grouping.js` → `tt-value-stream-grouping.js`
+    - `platform-grouping.js` → `tt-platform-grouping.js`
+    - `value-stream-grouping.test.js` → `tt-value-stream-grouping.test.js`
+  - Makes it immediately clear which files are specific to TT Design view
+  - Prepares codebase for future subfolder organization
+
+### Fixed
+- 🐛 **Platform Grouping Bounding Box Overflow**:
+  - Fixed issue where platform grouping boxes became oversized after refresh or view switching
+  - Root cause: Teams had stale position data from disk (spread 1200+ pixels apart vertically)
+  - Solution: Detect vertical spread > 800px and skip rendering until teams properly aligned
+  - Prevents visual overlap between groupings
+  - Teams positions now correctly recalculated after auto-align
+
+- 🔍 **Backend: Content-Based Team Name Search**:
+  - Fixed 404 errors when updating team positions via drag-and-drop
+  - Old implementation searched by filename, failed when filenames didn't match team names
+  - New implementation parses all team files and matches by `name` field in YAML front matter
+  - More resilient to filename variations and manual editing
+
+- 📛 **Filename Consistency**:
+  - Fixed 4 team files where filename didn't match team name convention:
+    - `platform-team.md` → `aws-developer-platform-team.md`
+    - `core-platform-team.md` → `data-storage-platform-team.md`
+    - `fraud-detection-risk-modeling-team.md` → `fraud-detection-and-risk-modeling-team.md`
+    - `build-integration-team.md` → `build-and-integration-team.md`
+  - Added backend tests to enforce naming convention going forward
+  - Prevents future 404 errors and improves file discoverability
+
+### Added
+- 👁️ **Show Interaction Modes Toggle** (TT Design view):
+  - New checkbox to show/hide interaction mode lines (collaboration, X-as-a-Service, facilitating)
+  - Default: enabled (lines visible)
+  - Allows users to focus on team structure without visual clutter from connection lines
+  - Mirrors "Show Communication Lines" checkbox functionality from Current State view
+  - SVG export respects toggle state - exported diagrams only include interaction lines if checkbox is enabled
+  - Provides consistent UX pattern across both visualization views
+
+### Fixed
+- 🎨 **Current State Legend Display**:
+  - Restored colored boxes for team types in Current State view legend (were missing)
+  - Team type info modals now work correctly in Current State view (click ℹ️ icon)
+  - TT Design view continues using book-accurate SVG shapes
+  - Current State view uses simple colored boxes with borders matching their team colors
+  
+- 🎨 **Book-Accurate Team Type Colors** (both views):
+  - Updated all team type colors to match Team Topologies book exactly
+  - **Stream-aligned**: `#F9E2A0` (light yellow) with `#E3B23C` border
+  - **Platform**: `#9ED3E6` (light blue) with `#5BA8C9` border
+  - **Complicated Subsystem**: `#F4B183` (light orange) with `#D97A2B` border
+  - **Enabling**: `#C5B3E6` (light purple) with `#7A5FA8` border
+  - Colors extracted from official Team Topologies 2nd edition materials
+- 🔗 **Interaction Mode Legend with Book-Accurate Symbols** (TT Design view):
+  - Added visual legend showing 3 interaction modes with book-accurate SVG symbols
+  - **Collaboration**: Cross-hatched purple rounded rectangle (lavender `#b7a6d9` with `#7a5fa6` pattern)
+  - **X-as-a-Service**: Mirrored bracket glyph (near-black `#222222`, stroke-only)
+  - **Facilitating**: Dotted green circle (mint `#9fd0b5` with `#6fa98c` polka dots)
+  - SVG symbols embedded inline in HTML legend, scaled for compact display
+  - Line colors updated to match interaction mode symbols
+  - **Line type visualization**: Each legend item shows actual connection line style beside symbol
+    - Collaboration: Solid purple line with arrow
+    - X-as-a-Service: Dashed black line with arrow
+    - Facilitating: Dotted green line with arrow
+  - **Interactive info modals**: Click any interaction mode (ℹ️ icon) to open detailed modal with:
+    - Large version of the symbol
+    - Full connection line example
+    - Team Topologies book description
+    - Key characteristics
+    - When to use guidelines
+  - Hover effects on legend items for better discoverability
+- 📚 **Educational Info Modals for All Legend Items**:
+  - **Team Types** (4 types): Click any team type in legend to learn:
+    - Stream-Aligned: Primary value delivery teams
+    - Platform: Internal service providers reducing cognitive load
+    - Enabling: Coaching teams that build capabilities
+    - Complicated Subsystem: Specialist teams for high-complexity domains
+    - Each modal includes: color square, description, characteristics, when to use, examples
+  - **Groupings** (2 types): Click any grouping in legend to learn:
+    - Value Stream: Groups teams serving same customer journey
+    - Platform Grouping: Team-of-teams fractal pattern (TT 2nd edition)
+    - Each modal includes: visual representation, TT 2nd edition concepts, examples
+  - **Cleaner legend**: Grouping section simplified to just symbol + name + ℹ️
+  - **Unified modal system**: All info modals use same clean, consistent design
+  - **Learning tool**: Users discover Team Topologies concepts by exploring the legend
+- 🔄 **Current State "Actual Comms" Connections**:
+  - Current State view now shows simple bidirectional fat arrows from `dependencies` field
+  - Gray (`#666666`) 4px lines with arrows on both ends
+  - Represents realistic communication patterns, not designed TT interaction modes
+  - Separate from TT Design view which shows designed interaction modes
+- 🎯 **View-Specific Connection Rendering**:
+  - `drawConnections()` now distinguishes between Current State and TT Design views
+  - Current State: uses `dependencies` array → "Actual Comms" style
+  - TT Design: uses `interaction_modes` object → book-accurate mode styles
+  - Implementation keeps concerns separated and data models clear
+
+### Changed
 - **Grouping Label Spacing Optimized**: Reduced `labelHeight` from 50px to 35px for better visual balance between grouping labels and first team in TT Design view
 - **SVG Export Font Sizes Increased**: Team names now use 16px/18px fonts (up from 12px/14px) to match grouping label proportions (16px) for improved readability in exported SVG files
 

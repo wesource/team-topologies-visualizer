@@ -13,6 +13,10 @@ metadata:
   department: Engineering
   product: RouteOptix
   established: 2020-03
+  cognitive_load: very-high
+  cognitive_load_domain: very-high
+  cognitive_load_intrinsic: high
+  cognitive_load_extraneous: high
 line_manager: Marcus Thompson
 ---
 

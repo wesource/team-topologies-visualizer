@@ -1,6 +1,6 @@
 // Tests for value stream grouping utilities
 import { describe, it, expect } from 'vitest';
-import { getValueStreamGroupings, calculateGroupingBoundingBox, getValueStreamNames, filterTeamsByValueStream } from './value-stream-grouping.js';
+import { getValueStreamGroupings, calculateGroupingBoundingBox, getValueStreamNames, filterTeamsByValueStream } from './tt-value-stream-grouping.js';
 
 describe('Value Stream Grouping', () => {
     describe('getValueStreamGroupings', () => {

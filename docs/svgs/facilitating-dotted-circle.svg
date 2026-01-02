@@ -1,0 +1,15 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+
+  <!-- Dot pattern -->
+  <defs>
+    <pattern id="dotPattern" width="8" height="8" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.5" fill="#6fa98c"></circle>
+    </pattern>
+  </defs>
+
+  <!-- Circle base -->
+  <circle cx="60" cy="60" r="45" fill="#9fd0b5" stroke="#6fa98c" stroke-width="2"></circle>
+
+  <!-- Pattern overlay -->
+  <circle cx="60" cy="60" r="45" fill="url(#dotPattern)"></circle>
+</svg>

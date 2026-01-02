@@ -112,13 +112,37 @@ def find_all_teams(view: str = "tt") -> List[TeamData]:
 
 
 def find_team_by_name(team_name: str, view: str = "tt") -> tuple[TeamData, Path] | None:
-    """Find a team by name and return the team data and file path"""
-    data_dir = get_data_dir(view)
-    file_name = f"{team_name.lower().replace(' ', '-')}.md"
+    """Find a team by name and return the team data and file path
     
-    # Search recursively for the team file (supports nested folder structure)
-    for file_path in data_dir.rglob(file_name):
-        team = parse_team_file(file_path)
-        return team, file_path
+    Searches by actual team name in file content, not by filename.
+    This handles cases where filename doesn't match team name.
+    """
+    data_dir = get_data_dir(view)
+    
+    # Files to exclude (hierarchy/department files)
+    exclude_files = {
+        'company-leadership.md',
+        'engineering-dept.md',
+        'customer-solutions-dept.md',
+        'product-management-dept.md',
+        'infrastructure-dept.md',
+        'support-dept.md',
+        'organization-hierarchy.json',
+        'current-team-types.json',
+        'tt-team-types.json'
+    }
+    
+    # Search through all .md files and match by team name in content
+    for file_path in data_dir.rglob("*.md"):
+        # Skip excluded files
+        if file_path.name in exclude_files:
+            continue
+            
+        try:
+            team = parse_team_file(file_path)
+            if team.name == team_name:
+                return team, file_path
+        except Exception as e:
+            print(f"Error parsing {file_path} while searching for {team_name}: {e}")
     
     return None

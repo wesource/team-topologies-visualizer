@@ -6,7 +6,7 @@ interaction_modes:
   DevOps Enablement Team: facilitating
 position:
   x: 204.0
-  y: 1400.0
+  y: 1535.0
 metadata:
   size: 6
   focus: Monitoring, logging, tracing, and alerting infrastructure

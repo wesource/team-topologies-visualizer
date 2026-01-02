@@ -9,7 +9,7 @@ interaction_modes:
   Core Platform Team: x-as-a-service
 position:
   x: 1054.0
-  y: 180.0
+  y: 165.0
 metadata:
   size: 7
   value_stream: E-commerce Experience

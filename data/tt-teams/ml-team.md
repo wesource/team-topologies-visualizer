@@ -8,8 +8,8 @@ interaction_modes:
   Data Engineering Team: collaboration
   Platform Team: x-as-a-service
 position:
-  x: 1832.8362216240373
-  y: 1174.0384530639885
+  x: 1960.0
+  y: 480.0
 metadata:
   size: 5
   focus: Machine learning models

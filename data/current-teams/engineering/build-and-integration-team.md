@@ -13,7 +13,10 @@ metadata:
   size: 4
   department: Engineering
   established: 2018-09
----
+  cognitive_load: low
+  cognitive_load_domain: low
+  cognitive_load_intrinsic: low-medium
+  cognitive_load_extraneous: low---
 
 # Build & Integration Team
 

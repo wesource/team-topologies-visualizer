@@ -60,6 +60,21 @@ async function loadAllTeams() {
         }
         // Load teams
         state.teams = await loadTeams(state.currentView);
+        
+        // Debug: Log Cloud Infrastructure Platform Grouping teams when loaded
+        const cloudInfraTeams = state.teams.filter(t => 
+            t.metadata?.platform_grouping === 'Cloud Infrastructure Platform Grouping'
+        );
+        if (cloudInfraTeams.length > 0) {
+            console.log('🔄 Teams loaded (Cloud Infrastructure Platform Grouping):', 
+                cloudInfraTeams.map(t => ({ 
+                    name: t.name, 
+                    x: t.position?.x, 
+                    y: t.position?.y 
+                }))
+            );
+        }
+        
         // Assign random positions if not set
         state.teams.forEach((team, index) => {
             if (!team.position || (team.position.x === 0 && team.position.y === 0)) {

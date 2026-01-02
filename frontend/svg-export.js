@@ -1,7 +1,7 @@
 import { LAYOUT } from './constants.js';
 import { darkenColor, getTeamBoxWidth } from './renderer-common.js';
-import { getValueStreamGroupings } from './value-stream-grouping.js';
-import { getPlatformGroupings } from './platform-grouping.js';
+import { getValueStreamGroupings } from './tt-value-stream-grouping.js';
+import { getPlatformGroupings } from './tt-platform-grouping.js';
 
 // SVG Export Module - Separated from runtime rendering
 // Converts current visualization state to downloadable SVG

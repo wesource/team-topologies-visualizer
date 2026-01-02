@@ -5,7 +5,7 @@ dependencies: []
 interaction_modes: {}
 position:
   x: 204.0
-  y: 180.0
+  y: 165.0
 metadata:
   size: 7
   value_stream: E-Commerce Experience

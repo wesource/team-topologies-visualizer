@@ -10,7 +10,7 @@ interaction_modes:
   ML Recommendations Team: collaboration
 position:
   x: 1054.0
-  y: 360.0
+  y: 345.0
 metadata:
   size: 6
   value_stream: E-commerce Experience

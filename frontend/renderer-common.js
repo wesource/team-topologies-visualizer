@@ -372,6 +372,11 @@ export function drawPlatformGroupings(ctx, groupings) {
             return;
         }
 
+        // Skip groupings with stale positions (teams too spread out)
+        if (grouping.bounds.stale || grouping.bounds.width === 0 || grouping.bounds.height === 0) {
+            return;
+        }
+
         const { x, y, width, height } = grouping.bounds;
 
         // Draw background rectangle with platform grouping style

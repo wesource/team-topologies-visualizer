@@ -1,6 +1,6 @@
 import { LAYOUT } from './constants.js';
-import { getValueStreamGroupings } from './value-stream-grouping.js';
-import { getPlatformGroupings } from './platform-grouping.js';
+import { getValueStreamGroupings } from './tt-value-stream-grouping.js';
+import { getPlatformGroupings } from './tt-platform-grouping.js';
 
 // TT Design view alignment utilities for auto-organizing teams within groupings
 

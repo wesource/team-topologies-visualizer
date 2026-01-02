@@ -5,8 +5,8 @@ dependencies: []
 interaction_modes:
   Security & Compliance Team: collaboration
 position:
-  x: 204.0
-  y: 1220.0
+  x: 88.7736625514404
+  y: 906.1385459533608
 metadata:
   size: 6
   focus: API gateway, service mesh, traffic management

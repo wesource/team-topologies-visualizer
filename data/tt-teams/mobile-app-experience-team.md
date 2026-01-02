@@ -9,7 +9,7 @@ interaction_modes:
   Core Platform Team: x-as-a-service
 position:
   x: 1054.0
-  y: 700.0
+  y: 670.0
 metadata:
   size: 8
   value_stream: Mobile Experience

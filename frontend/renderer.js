@@ -1,8 +1,8 @@
 // Canvas rendering coordination
 import { drawCurrentStateView } from './renderer-current.js';
 import { drawTeam, drawConnections, wrapText, drawValueStreamGroupings, drawPlatformGroupings } from './renderer-common.js';
-import { getValueStreamGroupings } from './value-stream-grouping.js';
-import { getPlatformGroupings } from './platform-grouping.js';
+import { getValueStreamGroupings } from './tt-value-stream-grouping.js';
+import { getPlatformGroupings } from './tt-platform-grouping.js';
 import { getFilteredTeams } from './filters.js';
 
 /**

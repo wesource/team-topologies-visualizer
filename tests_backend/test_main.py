@@ -163,3 +163,95 @@ Content
         assert isinstance(result.position['y'], (int, float))
         assert result.position['x'] >= 0
         assert result.position['y'] >= 0
+
+
+class TestFilenameConsistency:
+    """Test that filenames match team names in files."""
+    
+    def test_tt_teams_filenames_match_team_names(self):
+        """All tt-teams filenames should match team names (lowercase, spaces->hyphens)."""
+        from backend.services import TT_TEAMS_DIR
+        
+        mismatches = []
+        for file_path in TT_TEAMS_DIR.rglob("*.md"):
+            # Skip config files
+            if file_path.name in ['tt-team-types.json']:
+                continue
+                
+            try:
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                
+                # Extract team name from YAML
+                if content.startswith('---'):
+                    parts = content.split('---', 2)
+                    if len(parts) >= 3:
+                        import yaml
+                        data = yaml.safe_load(parts[1])
+                        if data and 'name' in data:
+                            team_name = data['name']
+                            expected_filename = team_name.lower().replace(' ', '-').replace('&', 'and')
+                            actual_filename = file_path.stem
+                            
+                            if actual_filename != expected_filename:
+                                mismatches.append({
+                                    'file': file_path.name,
+                                    'team_name': team_name,
+                                    'expected': f"{expected_filename}.md"
+                                })
+            except Exception as e:
+                pytest.fail(f"Error parsing {file_path}: {e}")
+        
+        if mismatches:
+            error_msg = "Filename mismatches found:\n"
+            for m in mismatches:
+                error_msg += f"  {m['file']} -> Team: '{m['team_name']}' (expected: {m['expected']})\n"
+            pytest.fail(error_msg)
+    
+    def test_current_teams_filenames_match_team_names(self):
+        """All current-teams filenames should match team names (lowercase, spaces->hyphens)."""
+        from backend.services import CURRENT_TEAMS_DIR
+        
+        mismatches = []
+        # Files that are intentionally different (hierarchy/dept files)
+        skip_files = {
+            'company-leadership.md',  # Leadership structure file
+            'organization-hierarchy.json',
+            'current-team-types.json'
+        }
+        # Also skip files ending with -dept.md as they're department/hierarchy files
+        
+        for file_path in CURRENT_TEAMS_DIR.rglob("*.md"):
+            # Skip known hierarchy files
+            if file_path.name in skip_files or file_path.name.endswith('-dept.md'):
+                continue
+                
+            try:
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                
+                # Extract team name from YAML
+                if content.startswith('---'):
+                    parts = content.split('---', 2)
+                    if len(parts) >= 3:
+                        import yaml
+                        data = yaml.safe_load(parts[1])
+                        if data and 'name' in data:
+                            team_name = data['name']
+                            expected_filename = team_name.lower().replace(' ', '-').replace('&', 'and')
+                            actual_filename = file_path.stem
+                            
+                            if actual_filename != expected_filename:
+                                mismatches.append({
+                                    'file': file_path.name,
+                                    'team_name': team_name,
+                                    'expected': f"{expected_filename}.md"
+                                })
+            except Exception as e:
+                pytest.fail(f"Error parsing {file_path}: {e}")
+        
+        if mismatches:
+            error_msg = "Filename mismatches found:\n"
+            for m in mismatches:
+                error_msg += f"  {m['file']} -> Team: '{m['team_name']}' (expected: {m['expected']})\n"
+            pytest.fail(error_msg)

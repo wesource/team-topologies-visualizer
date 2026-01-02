@@ -6,8 +6,8 @@ interaction_modes:
   Mobile App Team: facilitating
   Data Engineering Team: facilitating
 position:
-  x: 589.6459648552958
-  y: 743.5201190441634
+  x: 1800.0
+  y: 480.0
 metadata:
   size: 4
   focus: DevOps practices and tooling

@@ -12,7 +12,7 @@ export const state = {
     selectedTeam: null,
     viewOffset: { x: 0, y: 0 },
     scale: 1,
-    currentView: 'current',
+    currentView: 'tt',
     teamTypeConfig: { team_types: [] },
     teamColorMap: {},
     onTeamDoubleClick: null,
@@ -38,14 +38,14 @@ export function getFilteredTeams() {
     // Value stream filter
     if (state.selectedGrouping.startsWith('vs:')) {
         const valueStreamName = state.selectedGrouping.substring(3);
-        const { filterTeamsByValueStream } = require('./value-stream-grouping.js');
+        const { filterTeamsByValueStream } = require('./tt-value-stream-grouping.js');
         return filterTeamsByValueStream(state.teams, valueStreamName);
     }
     
     // Platform grouping filter
     if (state.selectedGrouping.startsWith('pg:')) {
         const platformGroupingName = state.selectedGrouping.substring(3);
-        const { filterTeamsByPlatformGrouping } = require('./platform-grouping.js');
+        const { filterTeamsByPlatformGrouping } = require('./tt-platform-grouping.js');
         return filterTeamsByPlatformGrouping(state.teams, platformGroupingName);
     }
     

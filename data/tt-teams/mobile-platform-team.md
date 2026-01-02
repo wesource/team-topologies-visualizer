@@ -5,7 +5,7 @@ dependencies: []
 interaction_modes: {}
 position:
   x: 1054.0
-  y: 880.0
+  y: 850.0
 metadata:
   size: 4
   value_stream: Mobile Experience

@@ -85,7 +85,7 @@ test.describe('Team Topologies Visualizer', () => {
     expect(count).toBeGreaterThan(0);
   });
 
-  test('should switch between Current State and TT Vision', async ({ page }) => {
+  test('should switch between Pre-TT and TT Design', async ({ page }) => {
     await page.goto(`${BASE_URL}/static/index.html`);
     
     // Wait for initial load
@@ -129,7 +129,7 @@ test.describe('Team Topologies Visualizer', () => {
     expect(count).toBeGreaterThan(0);
   });
 
-  test('should take screenshot of Current State view for visual verification', async ({ page }) => {
+  test('should take screenshot of Pre-TT view for visual verification', async ({ page }) => {
     await page.goto(`${BASE_URL}/static/index.html`);
     
     // Wait for all data to load
@@ -157,8 +157,8 @@ test.describe('Team Topologies Visualizer', () => {
     await page.waitForResponse(response => response.url().includes('/api/teams?view=tt'));
     await page.waitForTimeout(500); // Minimal wait for rendering
     
-    // Click auto-align button for clean layout
-    await page.locator('#autoAlignBtn').click();
+    // Click auto-align button for TT Design view (separate button from Pre-TT)
+    await page.locator('#autoAlignTTBtn').click();
     await page.waitForTimeout(1500); // Wait longer for alignment animation and API calls
     
     // Take high-quality screenshot

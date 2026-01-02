@@ -1,6 +1,6 @@
 // Team filtering utilities
-import { filterTeamsByValueStream } from './value-stream-grouping.js';
-import { filterTeamsByPlatformGrouping } from './platform-grouping.js';
+import { filterTeamsByValueStream } from './tt-value-stream-grouping.js';
+import { filterTeamsByPlatformGrouping } from './tt-platform-grouping.js';
 
 /**
  * Get filtered teams based on current view and selected grouping

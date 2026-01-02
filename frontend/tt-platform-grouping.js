@@ -41,6 +41,21 @@ export function getPlatformGroupings(teams) {
             'tt' // View context for dynamic width calculation
         );
 
+        // Debug logging for Cloud Infrastructure Platform Grouping
+        if (name === 'Cloud Infrastructure Platform Grouping') {
+            console.log('🔍 Platform Grouping Debug:', {
+                name,
+                teamCount: teamsInGroup.length,
+                teams: teamsInGroup.map(t => ({ 
+                    name: t.name, 
+                    x: t.position?.x, 
+                    y: t.position?.y,
+                    teamType: t.team_type 
+                })),
+                bounds
+            });
+        }
+
         groupings.push({
             name,
             teams: teamsInGroup,
@@ -109,6 +124,8 @@ export function calculateGroupingBoundingBox(teams, teamBoxHeight, padding, curr
     let maxX = -Infinity;
     let maxY = -Infinity;
 
+    const teamDetails = []; // For debugging
+
     teams.forEach(team => {
         const x = team.position?.x || 0;
         const y = team.position?.y || 0;
@@ -118,12 +135,47 @@ export function calculateGroupingBoundingBox(teams, teamBoxHeight, padding, curr
         minY = Math.min(minY, y);
         maxX = Math.max(maxX, x + teamWidth);
         maxY = Math.max(maxY, y + teamBoxHeight);
+
+        // Collect details for debugging
+        teamDetails.push({
+            name: team.name,
+            x, y,
+            teamWidth,
+            rightEdge: x + teamWidth,
+            bottomEdge: y + teamBoxHeight
+        });
     });
 
-    return {
+    // Check if teams are too spread out vertically (likely stale positions)
+    const verticalSpread = maxY - minY;
+    const maxReasonableSpread = 800; // If teams span more than this vertically, positions are likely stale
+    
+    if (verticalSpread > maxReasonableSpread) {
+        // Teams are too spread out - likely have stale positions from before auto-align
+        // Return a minimal bounding box around just the first team to avoid huge boxes
+        console.warn(`⚠️ Platform grouping "${teams[0]?.metadata?.platform_grouping}" has stale positions (spread: ${verticalSpread}px). Skipping bounding box until auto-align.`);
+        return { x: 0, y: 0, width: 0, height: 0, stale: true };
+    }
+
+    const result = {
         x: minX - padding,
         y: minY - padding - labelAreaHeight, // Extra space for label at top
         width: (maxX - minX) + (padding * 2),
         height: (maxY - minY) + (padding * 2) + labelAreaHeight // Include label area in height
     };
+
+    // Debug logging for specific groupings
+    const groupingName = teams[0]?.metadata?.platform_grouping;
+    if (groupingName === 'Cloud Infrastructure Platform Grouping') {
+        console.log('📐 Bounding Box Calculation:', {
+            groupingName,
+            teamCount: teams.length,
+            minX, minY, maxX, maxY,
+            verticalSpread,
+            result,
+            teamDetails
+        });
+    }
+
+    return result;
 }

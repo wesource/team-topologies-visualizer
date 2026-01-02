@@ -8,13 +8,13 @@ A web application with dual visualization of organizational team structures. Vis
 
 <div align="center">
   <a href="tests/tests/screenshots/current-state-view.png">
-    <img src="tests/tests/screenshots/current-state-view.png" alt="Current State View" width="45%" />
+    <img src="tests/tests/screenshots/current-state-view.png" alt="Pre-TT View" width="45%" />
   </a>
   <a href="tests/tests/screenshots/tt-vision-view.png">
     <img src="tests/tests/screenshots/tt-vision-view.png" alt="TT Design View" width="45%" />
   </a>
   <br/>
-  <em>Current State (org hierarchy) and TT Design (value streams & platform groupings)</em>
+  <em>Pre-TT (org hierarchy) and TT Design (value streams & platform groupings)</em>
 </div>
 
 ## Quick Start
@@ -76,7 +76,7 @@ See [SETUP.md](docs/SETUP.md) for detailed installation and configuration instru
 
 When adopting Team Topologies, organizations need to:
 - **Consolidate scattered information** - Unify team data from slides, documentation systems, spreadsheets, and other scattered sources into one structured, version-controlled format
-- **Visualize the current state** - Show how teams are currently organized (often by reporting lines, not value streams)
+- **Visualize the baseline** - Show how teams are currently organized (often by reporting lines, not value streams)
 - **Design the future state** - Plan Team Topologies patterns (stream-aligned, platform, enabling, complicated subsystem)
 - **Communicate the transition** - Help everyone involved understand and discuss the "before and after"
 - **Version-controlled history** - Git-friendly format enables tracking evolution over time (via git history)
@@ -88,14 +88,14 @@ This tool provides dual visualizations to make these conversations easier.
 ## Key Features
 
 - 📊 **Interactive Canvas** - Drag-and-drop teams, zoom, pan
-- 🔄 **Dual Views** - Toggle between "Current State" and "TT Design"
+- 🔄 **Dual Views** - Toggle between "Pre-TT" and "TT Design" (TT Design is default)
 - 📝 **Git-Friendly Storage** - Teams stored as markdown files with YAML front matter (structured metadata at the top of files between `---` delimiters, followed by markdown content)
 - 🎨 **Customizable Team Types** - Define your own team classifications and colors via JSON config
 - 🏢 **Organizational Context** - Line managers, departments, reporting structures with org-chart style visualization
 - 📐 **Book-Accurate Team Shapes** (TT Design view) - Stream-aligned and Platform teams render as wide horizontal boxes (~80% of grouping width) matching Team Topologies book visualizations, stacking vertically to show flow alignment
 - ⚡ **Auto-align Teams** - One-click alignment for both views:
-  - **Current State**: Align teams under line managers in org-chart layout
   - **TT Design**: Organize teams within value stream and platform groupings with book-accurate shapes
+  - **Pre-TT**: Align teams under line managers in org-chart layout
 - 🎯 **Fractal Groupings** (TT 2nd edition) - Visual grouping of teams into Value Stream Groupings and Platform Groupings for team-of-teams patterns
 - � **Cognitive Load Indicators** - Optional traffic light visualization (🟢🟡🔴) showing team cognitive load levels
   - Toggle on/off to reduce visual clutter
@@ -105,8 +105,8 @@ This tool provides dual visualizations to make these conversations easier.
 - 📋 **Team API Compatible** - Uses Team Topologies Team API template format
 - 📥 **SVG Export** - Export visualizations to SVG for presentations and documentation (respects connection visibility settings)
 - 👁️ **Connection Toggles** - Control visual complexity:
-  - **Current State**: Show/hide communication lines (hidden by default for cleaner org-chart view)
   - **TT Design**: Show/hide interaction mode lines (shown by default, toggle off to reduce clutter)
+  - **Pre-TT**: Show/hide communication lines (hidden by default for cleaner org-chart view)
 - 🔄 **Refresh** - Reload all team files and configurations without losing canvas position
 
 ## Design Philosophy
@@ -153,17 +153,17 @@ This tool provides dual visualizations to make these conversations easier.
 │   ├── api.js                 # API client layer
 │   ├── canvas-interactions.js # Canvas event handling
 │   ├── renderer-common.js     # Shared rendering utilities
-│   ├── renderer-current.js    # Current state rendering
+│   ├── renderer-current.js    # Pre-TT state rendering
 │   ├── svg-export.js          # SVG export functionality
-│   ├── current-state-alignment.js # Auto-align for Current State view
+│   ├── current-state-alignment.js # Auto-align for Pre-TT view
 │   ├── tt-design-alignment.js     # Auto-align for TT Design view
-│   ├── value-stream-grouping.js   # Value stream grouping logic
-│   └── platform-grouping.js   # Platform grouping logic
+│   ├── tt-value-stream-grouping.js   # Value stream grouping logic
+│   └── tt-platform-grouping.js   # Platform grouping logic
 ├── data/
-│   ├── current-teams/         # Your current state
+│   ├── current-teams/         # Your pre-TT baseline state
 │   │   ├── current-team-types.json    # Team type config
 │   │   └── *.md               # Team files
-│   └── tt-teams/              # Your TT vision
+│   └── tt-teams/              # Your TT Design vision
 │       ├── tt-team-types.json         # Team type config
 │       └── *.md               # Team files
 ├── tests_backend/             # Backend unit tests (10 tests)

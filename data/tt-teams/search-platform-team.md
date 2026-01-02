@@ -5,7 +5,7 @@ dependencies: []
 interaction_modes: {}
 position:
   x: 1054.0
-  y: 1220.0
+  y: 1175.0
 metadata:
   size: 5
   platform_grouping: Data Platform Grouping

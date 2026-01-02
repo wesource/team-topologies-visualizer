@@ -5,10 +5,13 @@
 > **Note**: This section provides a brief overview of Team Topologies concepts. For comprehensive details and authoritative definitions, see the [Team Topologies book](https://teamtopologies.com/) by Matthew Skelton and Manuel Pais. Additional resources and references are available at the [bottom of this document](#references).
 
 ### The 4 Fundamental Team Types
-- **Stream-aligned** (Blue): Aligned to a single, valuable stream of work (e.g., a specific user journey, product, or feature set). Primary team type that delivers value directly to customers.
-- **Platform** (Green): Provides internal services to reduce cognitive load of stream-aligned teams (e.g., APIs, infrastructure, deployment pipelines). Enables stream-aligned teams to deliver faster.
-- **Enabling** (Orange): Helps stream-aligned teams overcome obstacles and adopt new technologies (e.g., coaching, mentoring, new practices). Temporary collaboration to upskill other teams.
-- **Complicated Subsystem** (Purple): Deals with complex technical domains requiring specialist knowledge (e.g., ML algorithms, video processing, mathematical models). Reduces cognitive load on stream-aligned teams.
+
+> **Note**: Team type colors in this tool align with Team Topologies book 2nd edition visualizations.
+
+- **Stream-aligned** (Orange): Aligned to a single, valuable stream of work (e.g., a specific user journey, product, or feature set). Primary team type that delivers value directly to customers.
+- **Platform** (Blue): Provides internal services to reduce cognitive load of stream-aligned teams (e.g., APIs, infrastructure, deployment pipelines). Enables stream-aligned teams to deliver faster.
+- **Enabling** (Purple): Helps stream-aligned teams overcome obstacles and adopt new technologies (e.g., coaching, mentoring, new practices). Temporary collaboration to upskill other teams.
+- **Complicated Subsystem** (Light Red): Deals with complex technical domains requiring specialist knowledge (e.g., ML algorithms, video processing, mathematical models). Reduces cognitive load on stream-aligned teams.
 
 ### Team Shape Visualization (TT Design View)
 
@@ -32,9 +35,46 @@ Based on the [official Team Topologies Shape Templates](https://github.com/TeamT
 This visualization directly reflects the Team Topologies book's diagrams where stream-aligned teams span horizontally across value streams, while enabling and subsystem teams are positioned around them as needed.
 
 ### The 3 Interaction Modes
-- **Collaboration** (Solid red line): Two teams working together for a defined period (high interaction, discovery phase)
-- **X-as-a-Service** (Dashed teal line): One team provides a service with minimal collaboration (clear API contract)
-- **Facilitating** (Dotted green line): One team helps another team learn or adopt new approaches (enabling team pattern)
+
+Team interaction modes define **how teams work together** and evolve over time. Each mode has specific characteristics and use cases:
+
+#### Collaboration
+- **Visual**: Solid purple line in this tool
+- **Definition**: Two teams working closely together for a defined period with high interaction and joint responsibility
+- **When to use**: 
+  - Discovery and rapid learning phases
+  - Building new systems or capabilities together
+  - Exploring uncertain or complex problem spaces
+  - Teams need to build shared understanding
+- **Expected behaviors**: Daily communication, joint planning, shared goals, overlapping responsibilities
+- **Evolution**: Should be **temporary** - transition to X-as-a-Service once interfaces stabilize
+- **Warning signs**: If collaboration becomes permanent, it may indicate unclear boundaries or excessive coupling
+
+#### X-as-a-Service
+- **Visual**: Dashed near-black line in this tool
+- **Definition**: One team consumes services from another with minimal collaboration through clear, well-defined APIs
+- **When to use**:
+  - Stable, well-understood interfaces exist
+  - Provider team has mature capability
+  - Consumer team needs autonomy
+  - Clear service-level expectations
+- **Expected behaviors**: Self-service consumption, minimal direct communication, versioned APIs, SLAs/documentation
+- **Target state**: Most team interactions should **evolve toward this mode** for fast flow
+- **Platform teams**: Typically interact via X-as-a-Service with stream-aligned teams
+
+#### Facilitating
+- **Visual**: Dotted green line in this tool
+- **Definition**: One team (usually Enabling) helps another team adopt new practices, tools, or capabilities
+- **When to use**:
+  - Helping teams learn new technologies or practices
+  - Reducing capability gaps
+  - Upskilling teams
+  - Temporary support during transitions
+- **Expected behaviors**: Coaching, pairing, workshops, temporary embedded support, knowledge transfer
+- **Duration**: **Always temporary** - enabling team moves on once capability is transferred
+- **Enabling team pattern**: This is the primary mode for Enabling teams
+
+**Key insight**: Interaction modes should **evolve over time**. Start with Collaboration for discovery, transition to X-as-a-Service for stable operations, with Facilitating used for targeted capability building.
 
 ### Fractal Organizational Patterns (2nd Edition)
 
@@ -68,6 +108,52 @@ These fractal patterns help organizations scale Team Topologies principles beyon
 - **Fast Flow**: Optimize for rapid delivery of value to customers
 - **Team-first Approach**: Teams are the fundamental unit of delivery, not individuals
 
+### Cognitive Load Management
+
+One of the foundational principles in Team Topologies is limiting **team cognitive load** - the total mental effort required by a team to operate and deliver value. When teams are overloaded, they slow down, make more mistakes, and struggle to innovate.
+
+#### The 3 Types of Cognitive Load
+
+Team Topologies identifies three distinct types of cognitive load (based on research by cognitive psychologist John Sweller):
+
+1. **Intrinsic Complexity** - The fundamental complexity inherent to the problem domain itself
+   - Example: Understanding complex ML algorithms, financial regulations, or distributed systems concepts
+   - This is unavoidable - the domain is naturally complex
+
+2. **Extraneous Load** - Unnecessary complexity imposed by how teams work, tools, processes, and organizational structure
+   - Example: Unclear requirements, complex deployment processes, poorly designed tools, excessive meetings, organizational silos
+   - This should be minimized - it's waste that can be eliminated
+
+3. **Domain Complexity** - The specific business domain knowledge required
+   - Example: Understanding e-commerce checkout flows, logistics optimization, healthcare workflows
+   - This is necessary but should be bounded - teams should focus on specific domains
+
+#### Cognitive Load Visualization in This Tool
+
+This tool helps make cognitive load visible through a **traffic light indicator system**:
+
+- **🟢 Green (Low)** - Team has manageable load, capacity for growth and innovation
+- **🟡 Yellow (Medium)** - Team is approaching capacity, monitor carefully
+- **🔴 Red (High/Very-High)** - Team is overloaded, at risk of slowdown or burnout
+
+**How to use it:**
+1. Enable cognitive load display using the **🚦 Cognitive Load** checkbox in the toolbar (disabled by default to reduce visual clutter)
+2. Each team card shows:
+   - Colored circle in top-right corner (traffic light indicator)
+   - "Load: [Level]" text below team name
+3. Double-click any team to see detailed breakdown:
+   - Overall cognitive load level
+   - Domain complexity rating
+   - Intrinsic complexity rating
+   - Extraneous load rating
+
+**Common patterns to identify:**
+- **Overloaded stream-aligned teams** (red indicators) - May need to split responsibilities, move work to platforms, or reduce scope
+- **High extraneous load** - Indicates organizational friction that can be reduced (processes, tools, handoffs)
+- **Very high intrinsic complexity** - May warrant a dedicated Complicated Subsystem team to handle this specialized work
+
+This visualization helps organizations have data-driven conversations about team capacity and where to focus improvement efforts.
+
 ## About the Example Data
 
 ### Current State: Traditional Team Classifications
@@ -84,11 +170,11 @@ Many organizations classify their engineering teams using patterns like:
 
 **Your Current State Should Reflect Your Reality**: The tool is designed to be flexible. Document whatever team classification and organizational structure you currently have, whether it follows SAFe, LeSS, Spotify, or your own custom approach. The value is in visualizing your actual starting point before designing the Team Topologies vision.
 
-#### Example Organization: LogiTech Solutions
+#### Example Organization: FleetFlow Systems
 
 For demonstration purposes, this repository includes a fictive company setup:
 
-- **Context**: LogiTech Solutions, a logistics software company
+- **Context**: FleetFlow Systems, a logistics software company
 - **Product**: RouteOptix (route optimization and delivery planning)
 - **Setup**: Originally structured around 2 Agile Release Trains (ARTs) with SAFe influence
 - **Pattern**: "Dual Operating Model" concept (operational hierarchy + agile ways of working)
@@ -108,14 +194,16 @@ For demonstration purposes, this repository includes a fictive company setup:
 - ❌ Unclear team purposes and boundaries
 - ❌ Cognitive overload on some teams
 
-**7 Teams in Current State:**
-1. Core Product Team (6) - Backend monolith (C++/Python) - *Feature Team*
-2. Web Product Team (3) - Frontend (Angular) - *Feature Team*
-3. ML Product Team (4) - Data science & ML - *Feature Team*
-4. Integration Testing Team (5) - QA - *Enabling/Support Team*
-5. Database Platform Team (3) - Oracle/ORM/Flyway - *Platform Team*
-6. Build & Integration Team (4) - CI/CD & infrastructure - *Platform Team*
-7. Enterprise Architecture Team (3) - Governance & strategy - *Enabling/Support Team*
+**Representative Teams in Current State** (demonstrating common patterns):
+1. Core Product Team - Backend monolith (C++/Python) - *Feature Team*
+2. Web Product Team - Frontend (Angular) - *Feature Team*
+3. ML Product Team - Data science & ML - *Feature Team*
+4. Integration Testing Team - QA - *Enabling/Support Team*
+5. Database Platform Team - Oracle/ORM/Flyway - *Platform Team*
+6. Build & Integration Team - CI/CD & infrastructure - *Platform Team*
+7. Enterprise Architecture Team - Governance & strategy - *Enabling/Support Team*
+
+**Note**: The example data shows representative teams to demonstrate core concepts, not a complete organization. Real transformations may involve different numbers of teams before and after reorganization.
 
 **Characteristics of this setup:**
 - ❌ Teams organized by function, not value stream
@@ -161,10 +249,10 @@ This approach minimizes disruption and builds organizational capability incremen
 ### Transformation Planning
 
 Use the dual visualization to:
-- **Compare before/after** - Side-by-side view of current vs future state
-- **Plan the transition** - Identify which teams need to evolve and how
-- **Communicate change** - Show stakeholders the rationale for reorganization
-- **Track progress** - Version control the markdown files to see evolution over time
+- **Document your current organization** - Capture current team structures, dependencies, and pain points
+- **Design the future state** - Plan Team Topologies patterns (stream-aligned, platform, enabling, complicated subsystem)
+- **Communicate the transition** - Help everyone involved understand and discuss the "before and after"
+- **Version-controlled history** - Git-friendly format enables tracking evolution over time (via git history)
 
 ## References
 

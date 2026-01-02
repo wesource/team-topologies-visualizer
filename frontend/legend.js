@@ -2,8 +2,8 @@
 import { state } from './state-management.js';
 import { showInfoModal } from './modals.js';
 import { darkenColor } from './renderer-common.js';
-import { getValueStreamNames, filterTeamsByValueStream } from './value-stream-grouping.js';
-import { getPlatformGroupingNames, filterTeamsByPlatformGrouping } from './platform-grouping.js';
+import { getValueStreamNames, filterTeamsByValueStream } from './tt-value-stream-grouping.js';
+import { getPlatformGroupingNames, filterTeamsByPlatformGrouping } from './tt-platform-grouping.js';
 
 export function updateLegend() {
     const legendDiv = document.querySelector('.legend');
