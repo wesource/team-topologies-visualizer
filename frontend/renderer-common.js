@@ -61,32 +61,85 @@ export function getCognitiveLoadIndicator(level) {
 /**
  * Calculate team box width based on team type
  * In TT Design view, stream-aligned and platform teams are wide (spanning flow of change)
+ * Enabling teams are vertical (narrow), complicated-subsystem teams are octagonal
  * @param {Object} team - Team object
  * @param {string} currentView - Current view ('current' or 'tt')
  * @returns {number} Width in pixels
  */
 export function getTeamBoxWidth(team, currentView = 'current') {
-    // In TT Design view, stream-aligned and platform teams are wide
-    if (currentView === 'tt' && (team.team_type === 'stream-aligned' || team.team_type === 'platform')) {
-        // Check if team is in a grouping - if so, make it wide
-        const hasGrouping = team.metadata?.value_stream || team.metadata?.platform_grouping;
-        if (hasGrouping) {
-            // ~80% of grouping width (700px), with 10% margins = ~560px
-            return 560;
+    // In TT Design view, use team-type-specific shapes
+    if (currentView === 'tt') {
+        // Enabling teams: vertical (narrow)
+        if (team.team_type === 'enabling') {
+            return 80;
+        }
+        // Complicated-Subsystem teams: octagon (balanced dimensions)
+        if (team.team_type === 'complicated-subsystem') {
+            return 120;
+        }
+        // Stream-aligned and platform teams: wide horizontal
+        if (team.team_type === 'stream-aligned' || team.team_type === 'platform') {
+            // Check if team is in a grouping - if so, make it wide
+            const hasGrouping = team.metadata?.value_stream || team.metadata?.platform_grouping;
+            if (hasGrouping) {
+                // ~80% of grouping width (700px), with 10% margins = ~560px
+                return 560;
+            }
         }
     }
     // Default width for all other cases
     return LAYOUT.TEAM_BOX_WIDTH;
 }
 
+/**
+ * Calculate team box height based on team type
+ * @param {Object} team - Team object
+ * @param {string} currentView - Current view ('current' or 'tt')
+ * @returns {number} Height in pixels
+ */
+export function getTeamBoxHeight(team, currentView = 'current') {
+    // In TT Design view, enabling teams are tall (vertical orientation)
+    if (currentView === 'tt' && team.team_type === 'enabling') {
+        return 120;
+    }
+    // Complicated-subsystem teams: taller for octagon shape
+    if (currentView === 'tt' && team.team_type === 'complicated-subsystem') {
+        return 120;
+    }
+    // Default height
+    return LAYOUT.TEAM_BOX_HEIGHT;
+}
+
 export function drawTeam(ctx, team, selectedTeam, teamColorMap, wrapText, currentView = 'current', showCognitiveLoad = false) {
     const x = team.position.x;
     const y = team.position.y;
     const width = getTeamBoxWidth(team, currentView);
-    const height = LAYOUT.TEAM_BOX_HEIGHT;
+    const height = getTeamBoxHeight(team, currentView);
+    
+    // Use shape-specific drawing in TT Design view
+    if (currentView === 'tt') {
+        if (team.team_type === 'enabling') {
+            drawEnablingTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad);
+            return;
+        }
+        if (team.team_type === 'complicated-subsystem') {
+            drawComplicatedSubsystemTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad);
+            return;
+        }
+    }
+    
+    // Default: draw as rounded rectangle
+    drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad);
+}
+
+/**
+ * Draw team as default rounded rectangle (for stream-aligned, platform, and Pre-TT view)
+ */
+function drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad) {
     const radius = 8;
     const fillColor = getTeamColor(team, teamColorMap);
     const borderColor = darkenColor(fillColor, LAYOUT.BORDER_COLOR_DARKEN_FACTOR);
+    
     // Shadow
     if (selectedTeam === team) {
         ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
@@ -105,12 +158,102 @@ export function drawTeam(ctx, team, selectedTeam, teamColorMap, wrapText, curren
     ctx.lineWidth = selectedTeam === team ? LAYOUT.BORDER_WIDTH_SELECTED : LAYOUT.BORDER_WIDTH_NORMAL;
     ctx.stroke();
     
-    // Cognitive load indicator (traffic light in top-right corner)
+    // Cognitive load indicator
+    drawCognitiveLoadIndicator(ctx, team, x, y, width, showCognitiveLoad);
+    
+    // Team name
+    drawTeamName(ctx, team, x, y, width, height, wrapText);
+}
+
+/**
+ * Draw enabling team as vertical rounded rectangle
+ * Shape: 80×120 vertical orientation (tall and narrow)
+ */
+function drawEnablingTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad) {
+    const radius = 14; // Larger radius for enabling teams (matches SVG)
+    const fillColor = getTeamColor(team, teamColorMap);
+    const borderColor = darkenColor(fillColor, LAYOUT.BORDER_COLOR_DARKEN_FACTOR);
+    
+    // Shadow
+    if (selectedTeam === team) {
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+        ctx.shadowBlur = 10;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 4;
+    }
+    // Background
+    ctx.fillStyle = fillColor;
+    ctx.beginPath();
+    ctx.roundRect(x, y, width, height, radius);
+    ctx.fill();
+    ctx.shadowColor = 'transparent';
+    // Border
+    ctx.strokeStyle = selectedTeam === team ? '#333' : borderColor;
+    ctx.lineWidth = selectedTeam === team ? LAYOUT.BORDER_WIDTH_SELECTED : LAYOUT.BORDER_WIDTH_NORMAL;
+    ctx.stroke();
+    
+    // Cognitive load indicator
+    drawCognitiveLoadIndicator(ctx, team, x, y, width, showCognitiveLoad);
+    
+    // Team name (vertical text wrapping for narrow box)
+    drawTeamName(ctx, team, x, y, width, height, wrapText);
+}
+
+/**
+ * Draw complicated-subsystem team as octagon
+ * Shape: 8-sided polygon representing internal complexity
+ */
+function drawComplicatedSubsystemTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad) {
+    const fillColor = getTeamColor(team, teamColorMap);
+    const borderColor = darkenColor(fillColor, LAYOUT.BORDER_COLOR_DARKEN_FACTOR);
+    
+    // Octagon dimensions (based on SVG: M40 20, H100, L120 40, V100, L100 120, H40, L20 100, V40, Z)
+    // Scaled to fit width×height box
+    const cornerSize = width * 0.167; // ~20px for 120px width
+    
+    // Shadow
+    if (selectedTeam === team) {
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+        ctx.shadowBlur = 10;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 4;
+    }
+    
+    // Draw octagon path
+    ctx.fillStyle = fillColor;
+    ctx.beginPath();
+    ctx.moveTo(x + cornerSize, y); // Top-left corner
+    ctx.lineTo(x + width - cornerSize, y); // Top edge
+    ctx.lineTo(x + width, y + cornerSize); // Top-right corner
+    ctx.lineTo(x + width, y + height - cornerSize); // Right edge
+    ctx.lineTo(x + width - cornerSize, y + height); // Bottom-right corner
+    ctx.lineTo(x + cornerSize, y + height); // Bottom edge
+    ctx.lineTo(x, y + height - cornerSize); // Bottom-left corner
+    ctx.lineTo(x, y + cornerSize); // Left edge
+    ctx.closePath();
+    ctx.fill();
+    ctx.shadowColor = 'transparent';
+    
+    // Border
+    ctx.strokeStyle = selectedTeam === team ? '#333' : borderColor;
+    ctx.lineWidth = selectedTeam === team ? LAYOUT.BORDER_WIDTH_SELECTED : LAYOUT.BORDER_WIDTH_NORMAL;
+    ctx.stroke();
+    
+    // Cognitive load indicator
+    drawCognitiveLoadIndicator(ctx, team, x, y, width, showCognitiveLoad);
+    
+    // Team name
+    drawTeamName(ctx, team, x, y, width, height, wrapText);
+}
+
+/**
+ * Helper: Draw cognitive load indicator in top-right corner
+ */
+function drawCognitiveLoadIndicator(ctx, team, x, y, width, showCognitiveLoad) {
     const cognitiveLoad = team.metadata?.cognitive_load;
     if (showCognitiveLoad && cognitiveLoad) {
         const indicator = getCognitiveLoadIndicator(cognitiveLoad);
         if (indicator) {
-            // Draw circular indicator with traffic light color
             const indicatorSize = 12;
             const indicatorX = x + width - indicatorSize - 8;
             const indicatorY = y + indicatorSize + 8;
@@ -120,14 +263,17 @@ export function drawTeam(ctx, team, selectedTeam, teamColorMap, wrapText, curren
             ctx.arc(indicatorX, indicatorY, indicatorSize / 2, 0, Math.PI * 2);
             ctx.fill();
             
-            // Optional: Add white border for contrast
             ctx.strokeStyle = 'white';
             ctx.lineWidth = 1.5;
             ctx.stroke();
         }
     }
-    
-    // Team name
+}
+
+/**
+ * Helper: Draw team name with text wrapping
+ */
+function drawTeamName(ctx, team, x, y, width, height, wrapText) {
     ctx.fillStyle = 'white';
     ctx.font = 'bold 14px sans-serif';
     ctx.textAlign = 'center';
@@ -286,11 +432,69 @@ export function getTeamAtPosition(teams, x, y, viewOffset, scale, currentView = 
     const worldY = (y - viewOffset.y) / scale;
     return teams.find(team => {
         const teamWidth = getTeamBoxWidth(team, currentView);
+        const teamHeight = getTeamBoxHeight(team, currentView);
+        
+        // Special hit detection for complicated-subsystem (octagon) in TT Design view
+        if (currentView === 'tt' && team.team_type === 'complicated-subsystem') {
+            return isPointInOctagon(worldX, worldY, team.position.x, team.position.y, teamWidth, teamHeight);
+        }
+        
+        // Default: rectangular hit detection
         return worldX >= team.position.x &&
             worldX <= team.position.x + teamWidth &&
             worldY >= team.position.y &&
-            worldY <= team.position.y + LAYOUT.TEAM_BOX_HEIGHT;
+            worldY <= team.position.y + teamHeight;
     });
+}
+
+/**
+ * Check if point is inside an octagon
+ * Uses simplified approach: check if point is in bounding box minus corner triangles
+ */
+function isPointInOctagon(px, py, x, y, width, height) {
+    const cornerSize = width * 0.167;
+    
+    // First check: must be in bounding box
+    if (px < x || px > x + width || py < y || py > y + height) {
+        return false;
+    }
+    
+    // Check if point is in one of the cut-off corners
+    // Top-left corner
+    if (px < x + cornerSize && py < y + cornerSize) {
+        // Check if below the diagonal line from (x, y+cornerSize) to (x+cornerSize, y)
+        const relX = px - x;
+        const relY = py - y;
+        if (relX + relY < cornerSize) {
+            return false;
+        }
+    }
+    // Top-right corner
+    if (px > x + width - cornerSize && py < y + cornerSize) {
+        const relX = (x + width) - px;
+        const relY = py - y;
+        if (relX + relY < cornerSize) {
+            return false;
+        }
+    }
+    // Bottom-right corner
+    if (px > x + width - cornerSize && py > y + height - cornerSize) {
+        const relX = (x + width) - px;
+        const relY = (y + height) - py;
+        if (relX + relY < cornerSize) {
+            return false;
+        }
+    }
+    // Bottom-left corner
+    if (px < x + cornerSize && py > y + height - cornerSize) {
+        const relX = px - x;
+        const relY = (y + height) - py;
+        if (relX + relY < cornerSize) {
+            return false;
+        }
+    }
+    
+    return true;
 }
 // Polyfill for roundRect (older browsers)
 export function initCanvasPolyfills() {

@@ -1,5 +1,5 @@
 import { LAYOUT } from './constants.js';
-import { darkenColor, getTeamBoxWidth } from './renderer-common.js';
+import { darkenColor, getTeamBoxWidth, getTeamBoxHeight } from './renderer-common.js';
 import { getValueStreamGroupings } from './tt-value-stream-grouping.js';
 import { getPlatformGroupings } from './tt-platform-grouping.js';
 
@@ -197,13 +197,15 @@ function generateTTVisionSVG(teams, teamColorMap, showInteractionModes) {
                     if (targetTeam) {
                         const color = getInteractionColorForSVG(mode);
                         const dashArray = getInteractionDashForSVG(mode);
-                        // Use dynamic team width for center calculation
+                        // Use dynamic team width and height for center calculation
                         const fromWidth = getTeamBoxWidth(team, 'tt');
+                        const fromHeight = getTeamBoxHeight(team, 'tt');
                         const toWidth = getTeamBoxWidth(targetTeam, 'tt');
+                        const toHeight = getTeamBoxHeight(targetTeam, 'tt');
                         const fromX = team.position.x + fromWidth / 2;
-                        const fromY = team.position.y + LAYOUT.TEAM_BOX_HEIGHT / 2;
+                        const fromY = team.position.y + fromHeight / 2;
                         const toX = targetTeam.position.x + toWidth / 2;
-                        const toY = targetTeam.position.y + LAYOUT.TEAM_BOX_HEIGHT / 2;
+                        const toY = targetTeam.position.y + toHeight / 2;
                         elements += `<line x1="${fromX}" y1="${fromY}" x2="${toX}" y2="${toY}" class="connection-line" stroke="${color}" stroke-dasharray="${dashArray}"/>`;
                     }
                 });
@@ -214,7 +216,8 @@ function generateTTVisionSVG(teams, teamColorMap, showInteractionModes) {
     teams.forEach(team => {
         const color = teamColorMap[team.team_type] || '#95a5a6';
         const teamWidth = getTeamBoxWidth(team, 'tt');
-        elements += drawSVGBox(team.name, team.position.x, team.position.y, teamWidth, LAYOUT.TEAM_BOX_HEIGHT, color, 'white', false);
+        const teamHeight = getTeamBoxHeight(team, 'tt');
+        elements += drawSVGBox(team.name, team.position.x, team.position.y, teamWidth, teamHeight, color, 'white', false, team.team_type, 'tt');
     });
     return elements;
 }
@@ -232,10 +235,29 @@ function drawSVGGrouping(label, x, y, width, height, fillColor, borderColor) {
         fill="${borderColor}" text-anchor="middle" dominant-baseline="middle">${label}</text>
 `;
 }
-function drawSVGBox(text, x, y, width, height, bgColor, textColor, isBold) {
+function drawSVGBox(text, x, y, width, height, bgColor, textColor, isBold, teamType = null, currentView = 'current') {
     const fontSize = isBold ? 18 : 16; // Font sizes to match grouping label proportions (16px grouping labels)
     const fontWeight = isBold ? 'bold' : 'normal';
     const borderColor = darkenColor(bgColor, LAYOUT.BORDER_COLOR_DARKEN_FACTOR);
+    
+    // Use shape-specific drawing in TT Design view
+    if (currentView === 'tt') {
+        if (teamType === 'enabling') {
+            return drawSVGEnablingTeam(text, x, y, width, height, bgColor, textColor, fontSize, fontWeight, borderColor);
+        }
+        if (teamType === 'complicated-subsystem') {
+            return drawSVGComplicatedSubsystem(text, x, y, width, height, bgColor, textColor, fontSize, fontWeight, borderColor);
+        }
+    }
+    
+    // Default: rounded rectangle
+    return drawSVGDefaultBox(text, x, y, width, height, bgColor, textColor, fontSize, fontWeight, borderColor);
+}
+
+/**
+ * Draw default team box as rounded rectangle (for stream-aligned, platform, and Pre-TT view)
+ */
+function drawSVGDefaultBox(text, x, y, width, height, bgColor, textColor, fontSize, fontWeight, borderColor) {
     // Wrap text
     const words = text.split(' ');
     const lines = [];
@@ -254,7 +276,91 @@ function drawSVGBox(text, x, y, width, height, bgColor, textColor, isBold) {
     if (currentLine)
         lines.push(currentLine);
     let box = `<g>
-    <rect x="${x}" y="${y}" width="${width}" height="${height}" rx="5" fill="${bgColor}" stroke="${borderColor}" class="team-box"/>`;
+    <rect x="${x}" y="${y}" width="${width}" height="${height}" rx="8" fill="${bgColor}" stroke="${borderColor}" stroke-width="2" class="team-box"/>`;
+    // Add text lines
+    const lineHeight = 14;
+    const startY = y + height / 2 - (lines.length - 1) * lineHeight / 2;
+    lines.forEach((line, i) => {
+        box += `
+    <text x="${x + width / 2}" y="${startY + i * lineHeight}" fill="${textColor}" font-size="${fontSize}" font-weight="${fontWeight}" text-anchor="middle" dominant-baseline="middle">${escapeXml(line)}</text>`;
+    });
+    box += '\n  </g>';
+    return box;
+}
+
+/**
+ * Draw enabling team as vertical rounded rectangle
+ */
+function drawSVGEnablingTeam(text, x, y, width, height, bgColor, textColor, fontSize, fontWeight, borderColor) {
+    const rx = 14; // Larger radius for enabling teams
+    
+    // Wrap text (narrower width requires more wrapping)
+    const words = text.split(' ');
+    const lines = [];
+    let currentLine = '';
+    const maxChars = Math.floor(width / (fontSize * 0.5)); // Adjusted for narrower box
+    words.forEach(word => {
+        if ((currentLine + word).length <= maxChars) {
+            currentLine += (currentLine ? ' ' : '') + word;
+        }
+        else {
+            if (currentLine)
+                lines.push(currentLine);
+            currentLine = word;
+        }
+    });
+    if (currentLine)
+        lines.push(currentLine);
+    
+    let box = `<g>
+    <rect x="${x}" y="${y}" width="${width}" height="${height}" rx="${rx}" fill="${bgColor}" stroke="${borderColor}" stroke-width="2" class="team-box"/>`;
+    // Add text lines
+    const lineHeight = 14;
+    const startY = y + height / 2 - (lines.length - 1) * lineHeight / 2;
+    lines.forEach((line, i) => {
+        box += `
+    <text x="${x + width / 2}" y="${startY + i * lineHeight}" fill="${textColor}" font-size="${fontSize}" font-weight="${fontWeight}" text-anchor="middle" dominant-baseline="middle">${escapeXml(line)}</text>`;
+    });
+    box += '\n  </g>';
+    return box;
+}
+
+/**
+ * Draw complicated-subsystem team as octagon
+ */
+function drawSVGComplicatedSubsystem(text, x, y, width, height, bgColor, textColor, fontSize, fontWeight, borderColor) {
+    const cornerSize = width * 0.167;
+    
+    // Create octagon path
+    const path = `M ${x + cornerSize} ${y} ` +
+                 `L ${x + width - cornerSize} ${y} ` +
+                 `L ${x + width} ${y + cornerSize} ` +
+                 `L ${x + width} ${y + height - cornerSize} ` +
+                 `L ${x + width - cornerSize} ${y + height} ` +
+                 `L ${x + cornerSize} ${y + height} ` +
+                 `L ${x} ${y + height - cornerSize} ` +
+                 `L ${x} ${y + cornerSize} Z`;
+    
+    // Wrap text
+    const words = text.split(' ');
+    const lines = [];
+    let currentLine = '';
+    const maxChars = Math.floor(width / (fontSize * 0.6));
+    words.forEach(word => {
+        if ((currentLine + word).length <= maxChars) {
+            currentLine += (currentLine ? ' ' : '') + word;
+        }
+        else {
+            if (currentLine)
+                lines.push(currentLine);
+            currentLine = word;
+        }
+    });
+    if (currentLine)
+        lines.push(currentLine);
+    
+    let box = `<g>
+    <path d="${path}" fill="${bgColor}" stroke="${borderColor}" stroke-width="2" class="team-box"/>`;
     // Add text lines
     const lineHeight = 14;
     const startY = y + height / 2 - (lines.length - 1) * lineHeight / 2;

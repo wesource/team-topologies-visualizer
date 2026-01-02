@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- 📐 **Book-Accurate Team Shapes in Canvas & SVG Export** (TT Design view):
+  - **Enabling teams**: Now render as vertical rounded rectangles (80×120px, tall and narrow orientation)
+  - **Complicated-Subsystem teams**: Now render as octagons (8-sided polygon representing internal complexity)
+  - Stream-aligned and Platform teams continue using wide horizontal boxes
+  - Matches authentic Team Topologies 2nd edition book visualizations
+  - Canvas rendering:
+    - Enabling: Vertical rectangle with 14px corner radius
+    - Complicated-Subsystem: Octagon with chamfered corners (20px corner cuts)
+    - Smart hit detection: Octagon shape properly detects clicks/drags in all 8 sides
+  - SVG export:
+    - Enabling: `<rect>` element with vertical dimensions (rx="14")
+    - Complicated-Subsystem: `<path>` element with octagon geometry
+    - Connection anchor points automatically adjust to team shape dimensions
+  - Pre-TT view continues using standard rectangles for all team types
+
 ### Changed
 - 🎯 **TT Design View Now Default**:
   - Application now opens in "TT Design" view instead of "Pre-TT" (formerly "Current State")
