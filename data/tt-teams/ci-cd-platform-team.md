@@ -96,8 +96,6 @@ platform_grouping: Cloud Infrastructure Platform Grouping
 | Data Engineering Team | Collaboration | Custom pipelines for Airflow DAG deployments, Spark job CI/CD | 4 weeks |
 | ML Recommendations Team | Collaboration | ML model deployment pipelines (train, test, deploy to SageMaker) | 8 weeks |
 
----
-
 **Platform Metrics (Q4 2025):**
 - **NPS Score**: 8.7/10 (CI/CD is critical for developer velocity)
 - **Platform adoption**: 95% of services (38 out of 40 teams)

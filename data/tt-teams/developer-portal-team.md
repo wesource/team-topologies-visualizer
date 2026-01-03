@@ -128,8 +128,6 @@ Yes – Cloud Infrastructure Platform Grouping (stream-aligned team delivering i
 | ML Recommendations Team | Collaboration | Add ML model catalog - track model versions, performance metrics | 8 weeks |
 | Security & Compliance Team | X-as-a-Service | Integrate security scan results (vulnerabilities, compliance status) in service catalog | Ongoing |
 
----
-
 **Portal Metrics (Q4 2025):**
 - **Daily active users**: 180 out of 200 engineers (90% adoption)
 - **Service catalog coverage**: 95% of production services (114 out of 120)

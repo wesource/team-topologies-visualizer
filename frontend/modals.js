@@ -540,5 +540,105 @@ export async function handleTeamSubmit(e) {
     alert('Create team functionality is disabled. Please edit files manually.');
 }
 
+/**
+ * Show validation report modal
+ */
+export async function showValidationReport(view) {
+    const modal = document.getElementById('validationModal');
+    const reportDiv = document.getElementById('validationReport');
+    
+    if (!modal || !reportDiv) return;
+    
+    // Show loading state
+    reportDiv.innerHTML = '<div class="loading">Running validation...</div>';
+    modal.style.display = 'block';
+    
+    try {
+        const response = await fetch(`/api/validate?view=${view}`);
+        const report = await response.json();
+        
+        // Build report HTML
+        let html = '<div class="validation-summary">';
+        html += `<h3>Summary</h3>`;
+        html += `<div class="summary-grid">`;
+        html += `<div class="summary-item"><strong>Total Files:</strong> ${report.total_files}</div>`;
+        html += `<div class="summary-item valid"><strong>✓ Valid:</strong> ${report.valid_files}</div>`;
+        html += `<div class="summary-item warning"><strong>⚠ Warnings:</strong> ${report.files_with_warnings}</div>`;
+        html += `<div class="summary-item error"><strong>✗ Errors:</strong> ${report.files_with_errors}</div>`;
+        html += `</div></div>`;
+        
+        if (report.issues.length === 0) {
+            html += '<div class="validation-success">🎉 All files are valid! No issues found.</div>';
+        } else {
+            html += '<h3>Issues Found</h3>';
+            html += '<div class="validation-issues">';
+            
+            report.issues.forEach(file => {
+                html += `<div class="file-issue">`;
+                html += `<h4 class="file-path">${file.file}</h4>`;
+                
+                if (file.errors.length > 0) {
+                    html += '<div class="issues-section errors">';
+                    html += '<strong>Errors:</strong>';
+                    html += '<ul>';
+                    file.errors.forEach(error => {
+                        html += `<li class="error-item">✗ ${error}</li>`;
+                    });
+                    html += '</ul></div>';
+                }
+                
+                if (file.warnings.length > 0) {
+                    html += '<div class="issues-section warnings">';
+                    html += '<strong>Warnings:</strong>';
+                    html += '<ul>';
+                    file.warnings.forEach(warning => {
+                        html += `<li class="warning-item">⚠ ${warning}</li>`;
+                    });
+                    html += '</ul></div>';
+                }
+                
+                html += `</div>`;
+            });
+            
+            html += '</div>';
+        }
+        
+        reportDiv.innerHTML = html;
+        
+    } catch (error) {
+        reportDiv.innerHTML = `<div class="validation-error">Error running validation: ${error.message}</div>`;
+    }
+}
+
+/**
+ * Close validation modal
+ */
+export function closeValidationModal() {
+    const modal = document.getElementById('validationModal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// Setup validation modal close handlers
+const validationModalClose = document.getElementById('validationModalClose');
+if (validationModalClose) {
+    validationModalClose.addEventListener('click', closeValidationModal);
+}
+
+window.addEventListener('click', (event) => {
+    const validationModal = document.getElementById('validationModal');
+    if (event.target === validationModal) {
+        closeValidationModal();
+    }
+});
+
+// Update ESC key handler to include validation modal
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeValidationModal();
+    }
+});
+
 // Export for testing
 export { renderMarkdownTables };

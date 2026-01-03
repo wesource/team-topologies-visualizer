@@ -287,6 +287,4 @@ _[Extended]_
 
 **Team formation**: This team was established in March 2024 as part of FleetFlow Systems' Team Topologies transformation. Previously, AWS infrastructure was managed by a centralized "Cloud Ops" team (15 people, ticket-based, 2-week lead times). The transformation to a self-service platform team reduced time-to-infrastructure from 10 days to 4 hours and improved developer satisfaction (NPS) from 4.2 to 8.2.
 
----
-
 **Platform Philosophy**: We believe infrastructure should be invisible to developers - provision in <30 minutes, scales automatically, costs are predictable, security is default. Our measure of success is how rarely teams need to talk to us.

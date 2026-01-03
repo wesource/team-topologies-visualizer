@@ -96,6 +96,7 @@ This tool provides dual visualizations to make these conversations easier.
 - 📊 **Interactive Canvas** - Drag-and-drop teams, zoom, pan
 - 🔄 **Dual Views** - Toggle between "Pre-TT" and "TT Design" (TT Design is default)
 - 📝 **Git-Friendly Storage** - Teams stored as markdown files with YAML front matter (structured metadata at the top of files between `---` delimiters, followed by markdown content)
+- ✅ **File Validation** - "✓ Validate Files" button checks for YAML errors, missing fields, filename mismatches, team size issues, and more
 - 🎨 **Customizable Team Types** - Define your own team classifications and colors via JSON config
 - 🏢 **Organizational Context** - Line managers, departments, reporting structures with org-chart style visualization
 - 📐 **Book-Accurate Team Shapes** (TT Design view) - Stream-aligned and Platform teams render as wide horizontal boxes (~80% of grouping width) matching Team Topologies book visualizations, stacking vertically to show flow alignment
@@ -245,6 +246,26 @@ See [CONCEPTS.md](docs/CONCEPTS.md) for detailed explanation of the example orga
   - See [CONCEPTS.md](docs/CONCEPTS.md#cognitive-load-management) for detailed explanation
 - **Groupings Filter** (TT Design view) - Filter teams by value stream or platform grouping to focus on specific areas
 - **Refresh** button - Reload all team markdown files and configurations from disk without losing your zoom/pan position
+
+### Validating Team Files
+
+The **"✓ Validate Files"** button checks all team markdown files for common errors:
+- YAML front matter syntax errors and duplicate blocks
+- Missing required fields (name, team_type, position)
+- Invalid team_type values
+- Filename mismatches (e.g., file named `platform-team.md` but team name is "API Gateway Platform Team")
+- Position coordinates validation
+- Team size recommendations (warns if outside 5-9 people range)
+- Interaction table format issues (TT Design view only)
+
+**How to use:**
+1. Click the **"✓ Validate Files"** button in the toolbar
+2. Review the validation report showing summary statistics and detailed issues
+3. Errors (red) must be fixed; warnings (yellow) are recommendations
+4. Fix issues by editing the markdown files directly
+5. Re-validate to confirm fixes
+
+This helps catch errors before they cause rendering issues or API failures when editing team files manually.
 
 ### Team API Templates
 

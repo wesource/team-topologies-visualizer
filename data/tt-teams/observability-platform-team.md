@@ -129,8 +129,6 @@ Yes - Developer Experience Platform Grouping (works alongside Cloud Development,
 | Data Engineering Team | Collaboration | Custom dashboards for Airflow DAG monitoring | 4 weeks |
 | Security & Compliance Team | X-as-a-Service | Integrate security audit logs into observability platform | Ongoing |
 
----
-
 **Platform Metrics (Q4 2025):**
 - **NPS Score**: 7.8/10 (industry avg for internal platforms: 6.5)
 - **Platform adoption**: 100% of production services (all 40 teams)

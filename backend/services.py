@@ -223,6 +223,9 @@ def find_all_teams(view: str = "tt") -> List[TeamData]:
         # Skip hierarchy/department files
         if file_path.name in exclude_files:
             continue
+        # Skip hidden directories like .pytest_cache
+        if any(part.startswith('.') for part in file_path.parts):
+            continue
             
         try:
             team = parse_team_file(file_path)
@@ -318,4 +321,3 @@ def find_team_by_name_or_slug(identifier: str, view: str = "tt") -> tuple[TeamDa
             print(f"Error parsing {file_path} while searching for slug {identifier}: {e}")
     
     return None
-

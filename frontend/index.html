@@ -43,6 +43,7 @@
                 <button id="autoAlignTTBtn" class="btn" style="display: none;">⚡ Auto-align Teams</button>
                 <button id="addTeamBtn" class="btn btn-primary">+ Add Team</button>
                 <button id="exportSVGBtn" class="btn">📥 Export SVG</button>
+                <button id="validateBtn" class="btn">✓ Validate Files</button>
                 <button id="refreshBtn" class="btn">Refresh</button>
             </div>
         </header>
@@ -153,6 +154,15 @@
         <div class="modal-content modal-medium">
             <span class="close" id="interactionModeModalClose">&times;</span>
             <div id="interactionModeContent"></div>
+        </div>
+    </div>
+
+    <!-- Validation Report Modal -->
+    <div id="validationModal" class="modal">
+        <div class="modal-content modal-large">
+            <span class="close" id="validationModalClose">&times;</span>
+            <h2>File Validation Report</h2>
+            <div id="validationReport"></div>
         </div>
     </div>
 

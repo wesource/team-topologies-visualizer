@@ -127,6 +127,4 @@ Announce major updates via #devops-enablement Slack channel.
 | ML Recommendations Team | Facilitating | MLOps practices, model versioning, A/B testing infrastructure | 10 weeks |
 | Enterprise Sales Portal Team | Facilitating | Blue-green deployments, canary releases, progressive delivery | 6 weeks |
 
----
-
 **Note**: As an enabling team, we're designed to be temporary collaborators. If your team is repeatedly asking us for help with the same topics, it's a signal that we haven't successfully enabled autonomy yet - let's discuss how to adjust our approach!

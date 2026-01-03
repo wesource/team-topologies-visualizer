@@ -1,6 +1,6 @@
 """API routes for team data management"""
 from fastapi import APIRouter, HTTPException
-from typing import List
+from typing import List, Dict, Any
 import json
 from pathlib import Path
 from backend.models import TeamData, PositionUpdate
@@ -8,6 +8,7 @@ from backend.services import (
     get_data_dir, find_all_teams, find_team_by_name, find_team_by_name_or_slug,
     write_team_file_to_path, CURRENT_TEAMS_DIR
 )
+from backend.validation import validate_all_team_files
 
 router = APIRouter(prefix="/api", tags=["teams"])
 
@@ -77,3 +78,10 @@ async def update_team_position(team_name: str, position: PositionUpdate, view: s
     write_team_file_to_path(team, file_path)
     
     return {"message": "Position updated", "position": team.position}
+
+
+@router.get("/validate")
+async def validate_files(view: str = "tt") -> Dict[str, Any]:
+    """Validate all team files for common issues"""
+    validation_report = validate_all_team_files(view)
+    return validation_report

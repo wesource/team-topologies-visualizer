@@ -204,23 +204,6 @@ metadata:
 
 ---
 
-### 6. Create 2 Essential Template Files ⭐⭐⭐ MEDIUM
-**Impact**: MEDIUM | **Effort**: 1 hour
-
-**Goal**: Help users create their own teams quickly
-
-**Tasks**:
-- [ ] Create `templates/` directory
-- [ ] `templates/pre-tt-team-template.md` - Pre-TT team with comments
-- [ ] `templates/tt-design-team-template.md` - TT team with all fields
-- [ ] Update SETUP.md with template usage instructions
-
-**Definition of Done**:
-- 2 templates with helpful comments
-- SETUP.md explains how to use them
-
----
-
 ## 🚀 v1.1 - Quick Wins (Post-Release)
 
 These are high-value features for v1.1, identified in expert reviews.
@@ -444,10 +427,10 @@ These are high-value features for v1.1, identified in expert reviews.
 
 ---
 
-### 5. Team Size Validation Warnings ⭐⭐⭐⭐ HIGH
+### 5. Enhanced Validation ⭐⭐⭐⭐ HIGH
 **Impact**: HIGH (increased from MEDIUM) | **Effort**: 4-5 hours | **From**: User request + Expert reviews
 
-**Status**: 🔴 Blocked until Team API implementation complete
+**Status**: 🟢 Core validation implemented, additional features available for future enhancement
 
 **Why This Matters**:
 > "Users edit markdown and YAML files directly (by design). Manual editing is error-prone: typos, invalid values, filename mismatches, missing required fields. With Team API implementation, validation becomes CRITICAL to ensure data quality."
@@ -462,66 +445,53 @@ These are high-value features for v1.1, identified in expert reviews.
   - Confusion about what's required vs optional
 - Validation catches errors BEFORE they cause problems
 
-**Scope**: 
-- **Both views**: current-teams AND tt-teams
-- **YAML validation**: Structure, required fields, data types
-- **Team API validation**: Only for tt-teams with Team API content
-- **Reference validation**: Dependencies, interactions point to real teams
-- **Filename consistency**: Matches team name
-
-**CLI Usage**:
-```bash
-# Validate all teams in both views
-python -m backend.validation --all
-
-# Validate only TT Design teams
-python -m backend.validation --view tt
-
-# Validate only Pre-TT teams  
-python -m backend.validation --view current
-
-# Validate specific file
-python -m backend.validation --file data/tt-teams/api-gateway-platform-team.md
-
-# CI/CD friendly (exit code 0=valid, 1=errors)
-python -m backend.validation --all --strict
-```
+**Implemented Features** ✅:
+- API endpoint: `GET /api/validate?view={tt|current}`
+- Frontend "✓ Validate Files" button with modal display
+- YAML structure validation (syntax, duplicate blocks)
+- Required fields validation (name, team_type)
+- Valid team_type values check
+- Filename consistency checks
+- Position coordinate validation
+- Team size recommendations (5-9 people)
+- Interaction table format validation (TT view)
+- Color-coded results (errors vs warnings)
+- Summary statistics display
 
 **Validation Checks**:
 
 **1. YAML Front Matter Structure (Both Views)**
-- [ ] Valid YAML syntax (parseable)
-- [ ] Required fields present:
+- [x] Valid YAML syntax (parseable)
+- [x] Required fields present:
   - `name` (string, 1-100 chars)
   - `team_type` (valid type from config)
   - `position` (object with x, y numeric)
   - `metadata.size` (optional but recommended, 1-20)
   - `metadata.cognitive_load` (optional, valid value if present)
-- [ ] Data types correct:
+- [x] Data types correct:
   - `position.x` and `position.y` are numbers, not strings
   - `metadata.size` is integer if present
-  - Arrays are arrays (dependencies, interactions)
-- [ ] No duplicate keys in YAML
+- [x] No duplicate YAML front matter blocks
 - [ ] No unknown fields (warn, don't error - allows extensibility)
 
 **2. Filename Consistency (Both Views)**
-- [ ] Filename matches team name:
+- [x] Filename matches team name:
   - Lowercase conversion
   - Spaces → hyphens
   - `&` → `and`
   - Special chars removed
-- [ ] Example:
+- [x] Example:
   - Team name: "API Gateway Platform Team"
   - Expected file: `api-gateway-platform-team.md`
   - Actual file: `platform-team.md` ❌
-  - Suggested fix: `mv platform-team.md api-gateway-platform-team.md`
+  - Error message shows expected filename
 
 **3. Team API Validation (TT Teams Only)**
+- [x] Interaction tables: Valid markdown table syntax
 - [ ] If markdown contains Team API sections, validate:
   - "Team name and focus" section present
   - "Team type" section matches YAML `team_type`
   - Contact info (if present): Valid email format, Slack channel format
-  - Interaction tables (if present): Valid markdown table syntax
   - Referenced teams in tables exist
   - Interaction modes valid (collaboration, x-as-a-service, facilitating)
 - [ ] Warn if Team API incomplete:
@@ -541,16 +511,16 @@ python -m backend.validation --all --strict
 - [ ] Circular dependency detection (warn, not error)
 
 **5. Team Topologies Best Practices (TT Teams)**
-- [ ] Team size 5-9 recommended (warn if outside range)
+- [x] Team size 5-9 recommended (warn if outside range)
 - [ ] Stream-aligned teams should have value_stream (warn if missing)
 - [ ] Platform teams should have platform_grouping (warn if missing)
 - [ ] Collaboration interactions: Warn if no duration/end_date (should be temporary)
 - [ ] Undefined teams: Info message suggesting classification
 
 **6. Data Quality Checks (Both Views)**
-- [ ] Position coordinates reasonable (0-3000 range)
+- [x] Position coordinates reasonable (0-3000 range)
 - [ ] No overlapping positions (warn if too close)
-- [ ] Team size reasonable (1-20 people)
+- [x] Team size reasonable (1-20 people)
 - [ ] Cognitive load valid values: low, medium, high, very-high
 - [ ] Established date valid format: YYYY-MM (if present)
 - [ ] Established date not in future
@@ -592,51 +562,21 @@ Run with --interactive to fix errors one by one.
 ```
 
 **Implementation Tasks**:
-- [ ] Create `backend/validation.py` module
-- [ ] Implement validation logic for all 6 categories above
-- [ ] CLI interface with argparse (--all, --view, --file, --strict)
-- [ ] User-friendly error messages with suggestions
-- [ ] Exit codes for CI/CD (0=valid, 1=errors, 2=warnings)
-- [ ] Optional `--fix-filenames` flag to auto-rename files
-- [ ] Optional `--interactive` mode for guided fixing
+- [x] Create `backend/validation.py` module
+- [x] Implement core validation logic (YAML structure, required fields, filename consistency, team size, position coordinates, interaction tables)
+- [x] User-friendly error messages with suggestions
+- [x] Color-coded output (red errors, yellow warnings)
+- [x] Summary statistics at end
+- [x] `GET /api/validate` - Returns validation report as JSON
+- [x] Frontend "✓ Validate Files" button in UI with modal display
 - [ ] Fuzzy matching for typo detection in team references
-- [ ] Color-coded output (red errors, yellow warnings, blue info)
-- [ ] Summary statistics at end
+- [ ] Optional `--fix-filenames` flag to auto-rename files
+- [ ] Reference validation (check dependencies/interactions point to real teams)
+- [ ] Circular dependency detection
+- [ ] Position overlap detection
 - [ ] Unit tests for each validation rule
 - [ ] Integration test with sample invalid files
-
-**Optional: API Endpoint** (Future enhancement)
-- [ ] `GET /api/validate` - Returns validation report as JSON
-- [ ] Frontend "Validate Files" button in UI
 - [ ] Real-time validation warnings in team edit modal
-
-**Documentation Updates**:
-- [ ] README.md: Add validation to Quick Start workflow
-- [ ] SETUP.md: Document validation rules and how to fix common errors
-- [ ] CONCEPTS.md: Link to validation as data quality best practice
-- [ ] Templates: Add comments about required vs optional fields
-
-**User Workflow**:
-1. User manually edits team markdown file
-2. User runs: `python -m backend.validation --all`
-3. Tool reports errors, warnings, info
-4. User fixes errors using suggestions
-5. User re-runs validation until clean ✅
-6. User commits changes to git with confidence
-
-**Definition of Done**:
-- Validation module with all 6 check categories
-- CLI tool with multiple modes (--all, --view, --file)
-- Clear, actionable error messages with fix suggestions
-- Filename mismatch detection with auto-rename option
-- Reference validation with fuzzy matching for typos
-- Team API validation for tt-teams
-- Exit codes for CI/CD integration
-- Comprehensive unit tests
-- Documentation updated (README, SETUP, CONCEPTS)
-- Works for both current-teams and tt-teams
-- Color-coded terminal output
-- Summary statistics
 
 **User Value**:
 - **Catch errors early**: Before they cause rendering issues or 404s
@@ -690,44 +630,6 @@ Run with --interactive to fix errors one by one.
 - [ ] Current work (services, systems, improvements)
 
 ---
-
-## ✅ Completed (Moved from Active Sprint)
-
-### Book-Accurate Team Shapes ✅ DONE 2026-01-02
-- Enabling teams: 60×140px vertical rectangles
-- Complicated-Subsystem: 100×100px octagons
-- Canvas + SVG export
-- Dark gray text (#222222) for readability
-
-### Undefined Team Type ✅ DONE 2026-01-02
-- Shared type for both views
-- Light gray (#E8E8E8), dashed border
-- Example teams in both views
-- Auto-align support
-
-### Platform Grouping Bounding Box Fix ✅ DONE 2026-01-02
-- Uses actual team heights
-- Proper spacing for taller shapes
-
-### Auto-Align Button Visibility Fix ✅ DONE 2026-01-02
-- Correct button on startup for TT Design default
-
----
-
-## 🗂️ Archived - Out of Scope for v1.0
-
-These are valuable but deferred to focus on core business value.
-
-- Comprehensive template library (7 templates)
-- Value stream flow metrics
-- Platform capabilities catalog
-- Interaction mode timelines
-- Conway's Law analysis
-- Flow efficiency metrics
-
----
-
-**End of Backlog**
 
 ### 1. Expand Team API Metadata Fields ⭐⭐⭐⭐⭐ CRITICAL PRIORITY
 **Impact**: HIGH | **Effort**: 1-2 hours | **From**: TT Expert Review - "Team APIs are cosmetic, not functional"

@@ -42,21 +42,6 @@ export function getPlatformGroupings(teams) {
             'tt' // View context for dynamic width calculation
         );
 
-        // Debug logging for Cloud Infrastructure Platform Grouping
-        if (name === 'Cloud Infrastructure Platform Grouping') {
-            console.log('🔍 Platform Grouping Debug:', {
-                name,
-                teamCount: teamsInGroup.length,
-                teams: teamsInGroup.map(t => ({ 
-                    name: t.name, 
-                    x: t.position?.x, 
-                    y: t.position?.y,
-                    teamType: t.team_type 
-                })),
-                bounds
-            });
-        }
-
         groupings.push({
             name,
             teams: teamsInGroup,

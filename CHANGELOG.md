@@ -8,6 +8,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **File Validation Report**: New validation system to catch errors in team markdown files
+  - Created `backend/validation.py` module (161 lines) extracted from `services.py` for better organization
+  - API endpoint: `GET /api/validate?view={tt|current}` returns comprehensive validation report
+  - Frontend: "✓ Validate Files" button in toolbar with modal display
+  - Validation checks:
+    - YAML front matter structure (presence, duplicate blocks, valid syntax)
+    - Required fields: `name`, `team_type`
+    - Valid team_type values against configuration
+    - Filename consistency (slug matches team name)
+    - Position coordinates (valid numbers)
+    - Team size recommendations (5-9 people, warns if outside range)
+    - Interaction table format (TT view only)
+  - Color-coded results: errors (red) vs warnings (yellow)
+  - Summary statistics: total files, valid files, files with warnings/errors
+  - Successfully validated 31 files in TT view with detailed issue reporting
+  - Fixed 5 files with duplicate YAML front matter errors found by validation
+  - Added check to skip hidden directories (`.pytest_cache`, `.git`, etc.) in team parsing
+  - Reduced `services.py` from 433 to 291 lines (-33%) through validation extraction
 - **Team API Backend Support (Step 1 of 5)**: Enhanced backend to support full Team API structure
   - Added `TeamAPI` submodel in `backend/models.py` for structured Team API fields (purpose, services, contact, SLA, etc.)
   - Extended `TeamData` model with optional Team API fields (roadmap, current_work, software_owned, testing_approach, etc.)

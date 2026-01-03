@@ -5,6 +5,7 @@ import { autoAlignTeamsByManager } from './current-state-alignment.js';
 import { autoAlignTTDesign } from './tt-design-alignment.js';
 import { exportToSVG } from './svg-export.js';
 import { showWarning, showInfo, showSuccess, showError } from './notifications.js';
+import { showValidationReport } from './modals.js';
 
 export function handleViewChange(e, loadAllTeams, draw) {
     const target = e.target;
@@ -226,5 +227,13 @@ export function setupUIEventListeners(loadAllTeams, draw, openAddTeamModal, clos
     const groupingFilterContainerInit = document.getElementById('groupingFilterContainer');
     if (groupingFilterContainerInit) {
         groupingFilterContainerInit.style.display = 'flex'; // Shown in TT view
+    }
+    
+    // Validate files button
+    const validateBtn = document.getElementById('validateBtn');
+    if (validateBtn) {
+        validateBtn.addEventListener('click', async () => {
+            await showValidationReport(state.currentView);
+        });
     }
 }
