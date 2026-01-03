@@ -1,42 +1,37 @@
 ---
 name: Developer Portal Team
 team_type: platform
-dependencies: []
-interaction_modes: {}
 position:
-  x: 1054.0
-  y: 1535.0
+  x: 1400.0
+  y: 900.0
 metadata:
-  size: 5
-  established: 2024-06
+  size: 6
   cognitive_load: medium
-  platform_grouping: Developer Experience Platform Grouping
+  established: 2023-09
+platform_grouping: Developer Experience Platform Grouping
 ---
+
 
 # Developer Portal Team
 
 ## Team name and focus
-
-**Developer Portal Team** - Provides a unified developer portal (Backstage-based) as the "single pane of glass" for FleetFlow Systems engineers, aggregating service catalogs, documentation, deployment status, cost insights, and onboarding workflows in one self-service hub.
+Developer Portal Team – Provides a unified developer portal (Backstage-based) as the "single pane of glass" for FleetFlow Systems engineers, aggregating service catalogs, documentation, deployment status, cost insights, and onboarding workflows in one self-service hub.
 
 ## Team type
-
 platform
 
 ## Part of a platform grouping?
-
-Yes - Developer Experience Platform Grouping
+Yes – Developer Experience Platform Grouping
 
 ## Services provided (if applicable)
-
-- **Developer Portal (Backstage)**: Unified web portal at https://portal.company-internal
-- **Service Catalog**: Searchable catalog of all 120+ services at FleetFlow with owners, dependencies, SLOs
-- **Software Templates (Scaffolder)**: "Create New Service" wizard - generates repo, CI/CD, monitoring in <15 minutes
-- **Tech Docs**: Documentation auto-synced from GitHub repos, searchable in portal
-- **Deployment Dashboard**: Real-time deployment status, history, rollback buttons
-- **Cost Visibility**: AWS cost breakdown by service/team (integrates with Cloud Development Platform)
-- **On-Call Schedules**: PagerDuty integration showing who's on-call for each service
-- **Onboarding Workflows**: "New Engineer" checklist automates first-week setup
+- Developer Portal (Backstage): Unified web portal at https://portal.company-internal
+- Service Catalog: Searchable catalog of all 120+ services at FleetFlow with owners, dependencies, SLOs
+- Software Templates (Scaffolder): "Create New Service" wizard - generates repo, CI/CD, monitoring in <15 minutes
+- Tech Docs: Documentation auto-synced from GitHub repos, searchable in portal
+- Deployment Dashboard: Real-time deployment status, history, rollback buttons
+- Cost Visibility: AWS cost breakdown by service/team (integrates with Cloud Development Platform)
+- On-Call Schedules: PagerDuty integration showing who's on-call for each service
+- Onboarding Workflows: "New Engineer" checklist automates first-week setup
 
 ## Service-level expectations (SLA)
 

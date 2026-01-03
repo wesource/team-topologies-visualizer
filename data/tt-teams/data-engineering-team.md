@@ -1,22 +1,21 @@
 ---
 name: Data Engineering Team
-team_type: stream-aligned
-dependencies:
-- Platform Team
-interaction_modes:
-  Platform Team: x-as-a-service
-  ML Team: collaboration
+team_type: complicated-subsystem
 position:
-  x: 1800.0
-  y: 100.0
+  x: 2000.0
+  y: 1300.0
 metadata:
   size: 6
-  focus: Data pipelines and analytics
+  cognitive_load: high
+  established: 2023-09
 ---
 
 # Data Engineering Team
 
-A stream-aligned team focused on building and maintaining data pipelines and analytics infrastructure.
+**Team name and focus**
+
+Data Engineering Team – A complicated-subsystem team responsible for architecting, building, and maintaining the organization’s core data infrastructure, pipelines, and analytics platforms. This team exists because data engineering requires deep technical expertise in distributed systems, data modeling, and scalable ETL, which is too complex for stream-aligned teams to handle alongside their product delivery responsibilities.
+
 
 ## Responsibilities
 - Data pipeline development

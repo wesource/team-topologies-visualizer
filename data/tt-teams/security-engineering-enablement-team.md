@@ -1,18 +1,12 @@
 ---
 name: Security Engineering Enablement Team
 team_type: enabling
-dependencies: []
-interaction_modes:
-  API Gateway Platform Team: facilitating
-  AWS Developer Platform Team: facilitating
 position:
-  x: 1777.5582990397804
-  y: 645.2674897119342
+  x: 1960.0
+  y: 1500.0
 metadata:
   size: 4
-  focus: Security practices, threat modeling, secure coding
   cognitive_load: medium
-  engagement_model: Time-boxed enablement missions (4-8 weeks)
   established: 2024-01
 ---
 

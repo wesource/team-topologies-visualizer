@@ -1,16 +1,15 @@
+
 ---
 name: Cloud Development Platform Team
 team_type: platform
-dependencies: []
-interaction_modes: {}
 position:
   x: 1054.0
   y: 1355.0
 metadata:
   size: 8
-  established: 2024-03
   cognitive_load: medium
-  platform_grouping: Developer Experience Platform Grouping
+  established: 2024-03
+platform_grouping: Developer Experience Platform Grouping
 ---
 
 # Cloud Development Platform Team

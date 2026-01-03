@@ -1,43 +1,23 @@
 ---
 name: Data Pipeline Platform Team
 team_type: platform
-dependencies: []
-interaction_modes: {}
 position:
-  x: 400.0
-  y: 1800.0
+  x: 1900.0
+  y: 1200.0
 metadata:
-  size: 6
-  platform_grouping: Data Platform Grouping
+  size: 7
   cognitive_load: medium
-  capabilities:
-  - Data ingestion pipelines
-  - ETL/ELT orchestration
-  - Data quality monitoring
-  - Streaming and batch processing
-  consumers: 4 teams
-  established: 2025-03
+  established: 2023-09
 ---
 
 # Data Pipeline Platform Team
 
-## Team name and focus
-Data Pipeline Platform Team – Provides robust, scalable data pipelines and orchestration services for all data-driven teams, enabling analytics, ML, and product features.
+**Team name and focus**
 
-## Team type
-platform
+Data Pipeline Platform Team – A platform team providing robust, scalable data pipeline orchestration and monitoring as an internal product. This team enables stream-aligned and complicated-subsystem teams to build, schedule, and monitor ETL/ELT workflows efficiently, reducing cognitive load and ensuring data reliability across the organization.
 
-## Part of a platform grouping?
-Yes – Data Platform Grouping
-
-## Services provided (if applicable)
-- Data ingestion pipelines
-- ETL/ELT orchestration
-- Data quality monitoring
-- Streaming and batch processing
 
 ## Service-level expectations (SLA)
-- >99.5% pipeline success rate
 - Data freshness: < 1 hour end-to-end latency
 - Incident response within 2 hours
 
@@ -64,7 +44,7 @@ Yes – Data Platform Grouping
 - **Email**: data-pipeline@company.com
 
 ## Daily sync time
-- 9:30 AM daily standup
+9:30 AM daily standup
 
 ## What we're currently working on
 - Q1 2026: Add new streaming sources

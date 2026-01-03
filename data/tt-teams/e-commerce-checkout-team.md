@@ -1,29 +1,13 @@
 ---
-name: E-commerce Checkout Team
+name: E-Commerce Checkout Team
 team_type: stream-aligned
-dependencies:
-- Payment Platform Team
-- Core Platform Team
-interaction_modes:
-  Payment Platform Team: x-as-a-service
-  Core Platform Team: x-as-a-service
 position:
-  x: 1054.0
-  y: 165.0
+  x: 1300.0
+  y: 1700.0
 metadata:
-  size: 7
-  value_stream: E-commerce Experience
+  size: 8
   cognitive_load: medium
-  cognitive_load_domain: high
-  cognitive_load_intrinsic: medium
-  cognitive_load_extraneous: low
-  platform_dependencies: 2
-  responsibilities:
-  - Shopping cart management
-  - Checkout flow
-  - Order placement
-  - Promo code application
-  established: 2025-01
+  established: 2023-11
 ---
 
 # E-commerce Checkout Team

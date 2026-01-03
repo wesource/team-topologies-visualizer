@@ -1,52 +1,40 @@
 ---
 name: Feature Management Platform Team
 team_type: platform
-dependencies: []
-interaction_modes:
-  E-Commerce Checkout Team: x-as-a-service
-  E-Commerce Product Discovery Team: x-as-a-service
-  Mobile App Experience Team: x-as-a-service
 position:
   x: 204.0
-  y: 345.0
+  y: 670.0
 metadata:
   size: 5
-  focus: Feature flags, A/B testing, experimentation platform
-  value_stream: E-Commerce Experience
-  platform_grouping: null
-  cognitive_load: low-medium
+  cognitive_load: medium
   established: 2024-08
 ---
 
 # Feature Management Platform Team
 
-Inner platform team providing feature flagging, A/B testing, and experimentation capabilities within the E-Commerce Experience value stream.
+**Team name and focus**
 
-## Inner Platform Team
-Operates within E-Commerce Experience value stream boundary, providing progressive delivery and experimentation tools tailored to e-commerce needs.
+Feature Management Platform Team – Provides a robust internal platform for feature flag management, experimentation, and progressive delivery, enabling product teams to safely test, release, and control features in production with minimal risk.
 
-## Responsibilities
+## Team type
 
-### Feature Flags Service
-- Feature toggle management (LaunchDarkly / Unleash / custom)
-- Targeting rules (user segments, % rollouts, geography)
-- Environment-specific configurations
-- Flag lifecycle management (deprecation tracking)
-- Flag analytics and usage metrics
+platform
 
-### A/B Testing & Experimentation
-- Experiment framework (statistical significance calculations)
-- Variant assignment and traffic splitting
-- Conversion tracking and funnel analysis
-- Multi-variate testing (MVT) support
-- Integration with analytics platforms
+## Part of a platform grouping?
 
-### Progressive Delivery
-- Canary deployment support
-- Blue/green deployment coordination with CI/CD
-- Ring-based rollouts (internal → beta → general availability)
-- Automatic rollback triggers
+Yes – Developer Experience Platform Grouping
 
+## Services provided (if applicable)
+- Feature flag management service (API & UI)
+- SDK libraries (JavaScript, Python, Java, Go)
+- Experimentation and A/B testing framework
+- Progressive delivery tooling (canary, blue/green, ring-based rollouts)
+- Documentation, best practices, and onboarding support
+
+## Technologies
+- LaunchDarkly / Unleash
+- Custom feature flag service (microservice)
+- PostgreSQL (flag configurations)
 ### Developer Experience
 - SDK libraries (JavaScript, Python, Java, Go)
 - Local development flag overrides

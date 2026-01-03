@@ -1,18 +1,26 @@
+name: Observability Platform Team
+team_type: platform
+position:
+  x: 1600.0
+  y: 1100.0
+metadata:
+  size: 5
+  cognitive_load: medium
+  established: 2023-09
+platform_grouping: Developer Experience Platform Grouping
+#
 ---
 name: Observability Platform Team
 team_type: platform
-dependencies: []
-interaction_modes: {}
 position:
-  x: 1054.0
-  y: 1715.0
+  x: 1600.0
+  y: 1100.0
 metadata:
-  size: 6
-  established: 2024-04
+  size: 5
   cognitive_load: medium
-  platform_grouping: Developer Experience Platform Grouping
+  established: 2023-09
+platform_grouping: Developer Experience Platform Grouping
 ---
-
 # Observability Platform Team
 
 ## Team name and focus

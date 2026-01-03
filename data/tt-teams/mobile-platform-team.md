@@ -1,26 +1,24 @@
+name: Mobile Platform Team
+team_type: platform
+position:
+  x: 1000.0
+  y: 1600.0
+metadata:
+  size: 6
+  cognitive_load: medium
+  established: 2023-10
+#
 ---
 name: Mobile Platform Team
 team_type: platform
-dependencies: []
-interaction_modes: {}
 position:
-  x: 1054.0
-  y: 850.0
+  x: 1000.0
+  y: 1600.0
 metadata:
-  size: 4
-  value_stream: Mobile Experience
-  platform_grouping: null
+  size: 6
   cognitive_load: medium
-  capabilities:
-  - Mobile CI/CD
-  - Push notification infrastructure
-  - Mobile analytics
-  - Crash reporting
-  - Feature flags for mobile
-  consumers: 1 team
-  established: 2024-10
+  established: 2023-10
 ---
-
 # Mobile Platform Team
 
 Platform team providing mobile-specific infrastructure and services, operating as an **inner platform team** within the Mobile Experience value stream.

@@ -1,18 +1,12 @@
----
 name: Mobile App Team
 team_type: stream-aligned
-dependencies:
-- Platform Team
-interaction_modes:
-  Platform Team: x-as-a-service
-  Data Engineering Team: collaboration
 position:
-  x: 1761.59122085048
-  y: 351.3305898491084
+  x: 1100.0
+  y: 1700.0
 metadata:
   size: 8
-  focus: Mobile applications
----
+  cognitive_load: medium
+  established: 2023-11
 
 # Mobile App Team
 

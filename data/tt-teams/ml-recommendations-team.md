@@ -1,23 +1,14 @@
 ---
 name: ML Recommendations Team
 team_type: complicated-subsystem
-dependencies:
-- Data Engineering Team
-interaction_modes:
-  Data Engineering Team: x-as-a-service
-  E-commerce Product Discovery Team: collaboration
 position:
-  x: 130.0
-  y: 2380.0
+  x: 2200.0
+  y: 1440.0
 metadata:
-  size: 5
+  size: 4
   cognitive_load: high
-  cognitive_load_domain: very-high
-  cognitive_load_intrinsic: very-high
-  cognitive_load_extraneous: low
-  specialist_domain: Machine Learning & Recommendations
-  platform_grouping: Data Platform Grouping
-  established: 2024-09
+  established: 2025-01
+platform_grouping: Data Platform Grouping
 ---
 
 # ML Recommendations Team
@@ -66,7 +57,7 @@ Yes – Data Platform Grouping
 - **Email**: ml-recommendations@company.com
 
 ## Daily sync time
-- 11:00 AM daily standup
+11:00 AM daily standup
 
 ## What we're currently working on
 - Q1 2026: Launch new collaborative filtering model

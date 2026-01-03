@@ -19,7 +19,7 @@ metadata:
 
 ## Team name and focus
 
-[Your Team Name] - [One-sentence description of your team's mission and primary focus area]
+[Your Team Name] - [One-sentence description of your team's mission and primary focus area, capturing the team's purpose]
 
 **Examples:**
 - "Identity Management API Team - Provides secure authentication and authorization services for all product teams"

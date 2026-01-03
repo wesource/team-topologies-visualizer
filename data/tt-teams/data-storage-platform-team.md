@@ -1,27 +1,16 @@
 ---
-name: Data Lake Platform Team
+name: Data Storage Platform Team
 team_type: platform
-dependencies: []
-interaction_modes: {}
 position:
-  x: 204.0
-  y: 165.0
+  x: 1800.0
+  y: 1100.0
 metadata:
-  size: 7
-  value_stream: E-Commerce Experience
-  platform_grouping: null
+  size: 6
   cognitive_load: medium
-  capabilities:
-  - PostgreSQL managed service
-  - Redis caching clusters
-  - Elasticsearch search infrastructure
-  - Database migration tooling
-  - Data backup and disaster recovery
-  consumers: 6 teams
-  established: 2024-06
+  established: 2023-09
 ---
 
-# Data Lake Platform Team
+# Data Storage Platform Team
 
 ## Team name and focus
 Data Lake Platform Team – Provides managed data lake, database, and caching services for all data-driven teams, enabling scalable analytics and product features.
@@ -70,6 +59,28 @@ Yes – Data Platform Grouping
 ## Communication
 - **Chat**: #data-lake-platform
 - **Email**: data-lake@company.com
+- **Office hours**: Thursdays 2-3pm
+
+## Daily sync time
+10:00 AM daily standup
+
+## What we're currently working on
+- Q1 2026: Migrate analytics workloads to new data lake
+- Q1 2026: Automate backup validation
+- Q1 2026: Add self-service onboarding for new teams
+
+## Teams we currently interact with
+| Team Name | Interaction Mode | Purpose | Duration |
+|-----------|------------------|---------|----------|
+| Data Engineering Team | Collaboration | Build new ETL pipelines | 3 months |
+| ML Recommendations Team | X-as-a-Service | Provide training data | Ongoing |
+| E-commerce Checkout | X-as-a-Service | Store order data | Ongoing |
+
+## Teams we expect to interact with soon
+| Team Name | Interaction Mode | Purpose | Expected Duration |
+|-----------|------------------|---------|-------------------|
+| Enterprise Sales Portal | X-as-a-Service | New consumer of analytics data | Ongoing |
+| Security & Compliance | Collaboration | Add audit logging and compliance features | 4 months |
 - **Office hours**: Thursdays 2-3pm
 
 ## Daily sync time

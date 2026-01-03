@@ -8,9 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- URL-safe team name slugs: Team names with special characters (e.g. "/", "&") are now supported everywhere via a consistent slug system. Both backend and frontend use the same logic. Example: "CI/CD Platform Team" → "ci-cd-platform-team".
-- Filename consistency: All team markdown files now use the slug format for filenames (e.g. `ci-cd-platform-team.md`).
-- New backend tests: 3 new tests for URL safety and slug logic (test_url_safe_team_names.py).
+
+### Changed
+- Audited and updated all team markdown files in `data/tt-teams` to strictly follow the Team API base/extended templates.
+- Removed duplicate YAML front matter and ensured only a single, correctly delimited (`---`) YAML block at the top of each file.
+- Standardized YAML delimiters across all files.
+- Fixed metadata fields (e.g., `team_type`, `established`, `cognitive_load`) for accuracy and template compliance.
+- Cleaned up duplicate or conflicting metadata entries.
+- No changes to team content or structure beyond template and metadata alignment.
 
 ### Changed
 - Strict Team API template alignment: All team markdown files now strictly follow the base Team API template section order and structure, including new product thinking sections where relevant.

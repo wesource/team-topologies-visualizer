@@ -1,54 +1,59 @@
 ---
 name: CI/CD Platform Team
 team_type: platform
-dependencies: []
-interaction_modes: {}
 position:
   x: 1054.0
   y: 1175.0
 metadata:
   size: 7
-  established: 2024-05
   cognitive_load: medium
-  platform_grouping: Developer Experience Platform Grouping
+  established: 2024-05
+platform_grouping: Developer Experience Platform Grouping
 ---
 
 # CI/CD Platform Team
 
 ## Team name and focus
-
-**CI/CD Platform Team** - Provides self-service continuous integration and deployment pipelines as a compelling internal product, enabling FleetFlow Systems engineering teams to deploy to production with <10 lines of configuration and achieve <15 minute build-to-prod cycle times.
+CI/CD Platform Team – Provides robust, scalable CI/CD pipelines and developer tooling as an internal product, enabling engineering teams to build, test, and deploy software efficiently and reliably.
 
 ## Team type
-
 platform
 
 ## Part of a platform grouping?
-
-Yes - Developer Experience Platform Grouping
+Yes – Developer Experience Platform Grouping
 
 ## Services provided (if applicable)
-
-- **GitHub Actions Workflows**: Reusable workflows at https://github.company.com/platform/gha-workflows (build, test, deploy patterns)
-- **ArgoCD GitOps Platform**: https://argocd.company-internal - Continuous deployment for Kubernetes, auto-sync, rollback UI
-- **Pipeline Templates**: 15+ templates for common patterns (microservice, frontend, data pipeline, ML model, mobile app)
-- **Build Metrics Dashboard**: https://grafana.company-internal/d/cicd-metrics - DORA metrics, deployment frequency, lead time
-- **Deployment CLI Tools**: `deploy` command for manual deploys, rollbacks, canary releases
-- **GitHub Self-Hosted Runners**: Managed runner pools for faster builds (no waiting for GitHub-hosted runners)
-
+- GitHub Actions Workflows: Reusable workflows for build, test, deploy
+- ArgoCD GitOps Platform: Continuous deployment for Kubernetes
+- Pipeline Templates: Templates for microservice, frontend, data pipeline, ML model, mobile app
+- Build Metrics Dashboard: DORA metrics, deployment frequency, lead time
+- Deployment CLI Tools: Manual deploys, rollbacks, canary releases
 ## Service-level expectations (SLA)
-
-- **Pipeline availability**: 99.9% (GitHub Actions + ArgoCD uptime)
-- **Build-to-prod time**: <15 minutes average (from commit to production deployment)
+- Pipeline availability: 99.9% (GitHub Actions + ArgoCD uptime)
+- Build-to-prod time: <15 minutes average (from commit to production deployment)
+...existing code...
 - **Pipeline success rate**: >94% first-try success (without retries)
 - **Support response**:
   - Slack questions: <1 hour during business hours (Mon-Fri 8am-6pm UTC)
   - Pipeline incidents (blocking deployments): <15 minutes response (24/7 on-call)
   - Feature requests: Acknowledged within 1 business day, triaged weekly
 - **Onboarding**: New service gets working CI/CD in <30 minutes (copy template, configure 3 variables)
-- **Rollback time**: <5 minutes for Kubernetes services (one-click in ArgoCD UI)
 
 ## Software owned and evolved by this team
+---
+name: CI/CD Platform Team
+team_type: platform
+position:
+  x: 1054.0
+  y: 1175.0
+metadata:
+  size: 7
+  cognitive_load: medium
+  established: 2024-05
+platform_grouping: Developer Experience Platform Grouping
+---
+
+# CI/CD Platform Team
 
 - **Reusable GitHub Actions Workflows** (https://github.company.com/platform/gha-workflows) - Build, test, deploy workflows (YAML)
 - **ArgoCD Applications** (https://github.company.com/platform/argocd-apps) - GitOps manifests (Helm, Kustomize)

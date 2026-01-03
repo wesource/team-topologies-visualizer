@@ -47,13 +47,43 @@ def parse_team_file(file_path: Path) -> TeamData:
         if len(parts) >= 3:
             yaml_content = parts[1]
             markdown_content = parts[2].strip()
-            
             # Parse YAML
             data = yaml.safe_load(yaml_content) or {}
+            # Always set description from markdown body
             data['description'] = markdown_content
-            
+
+            # Flatten metadata fields for convenience
+            metadata = data.get('metadata', {}) or {}
+            if 'established' in metadata:
+                data['established'] = metadata['established']
+            if 'cognitive_load' in metadata:
+                data['cognitive_load'] = metadata['cognitive_load']
+            if 'size' in metadata:
+                data['size'] = metadata['size']
+
+            # Support top-level purpose for quick access
+            if 'purpose' not in data:
+                # Try to extract from team_api or metadata
+                if 'team_api' in data and isinstance(data['team_api'], dict):
+                    data['purpose'] = data['team_api'].get('purpose')
+                elif 'purpose' in metadata:
+                    data['purpose'] = metadata['purpose']
+
+            # Support value_stream/platform_grouping at top-level or in metadata
+            if 'value_stream' not in data and 'value_stream' in metadata:
+                data['value_stream'] = metadata['value_stream']
+            if 'platform_grouping' not in data and 'platform_grouping' in metadata:
+                data['platform_grouping'] = metadata['platform_grouping']
+
+            # Support new Team API fields at top-level or in team_api
+            if 'team_api' in data and isinstance(data['team_api'], dict):
+                # Optionally flatten some fields for easier access
+                for key in ['services_provided', 'contact', 'sla', 'consumers', 'working_hours']:
+                    if key in data['team_api']:
+                        data[key] = data['team_api'][key]
+
             return TeamData(**data)
-    
+
     # If no front matter, treat as plain markdown
     return TeamData(
         name=file_path.stem,
@@ -79,18 +109,33 @@ def write_team_file_to_path(team: TeamData, file_path: Path) -> Path:
         'position': team.position or {"x": 0, "y": 0},
         'metadata': team.metadata or {}
     }
-    
-    # Add line_manager if present (for current org structure)
+    # Add new Team API fields if present
+    if team.team_api:
+        yaml_data['team_api'] = team.team_api.dict(exclude_none=True)
+    if team.purpose:
+        yaml_data['purpose'] = team.purpose
+    if team.value_stream:
+        yaml_data['value_stream'] = team.value_stream
+    if team.platform_grouping:
+        yaml_data['platform_grouping'] = team.platform_grouping
+    if team.established:
+        if 'metadata' not in yaml_data:
+            yaml_data['metadata'] = {}
+        yaml_data['metadata']['established'] = team.established
+    if team.cognitive_load:
+        if 'metadata' not in yaml_data:
+            yaml_data['metadata'] = {}
+        yaml_data['metadata']['cognitive_load'] = team.cognitive_load
     if team.line_manager:
         yaml_data['line_manager'] = team.line_manager
-    
+
     # Write file
     with open(file_path, 'w', encoding='utf-8') as f:
         f.write('---\n')
         yaml.dump(yaml_data, f, default_flow_style=False, sort_keys=False)
         f.write('---\n\n')
         f.write(team.description or '')
-    
+
     return file_path
 
 

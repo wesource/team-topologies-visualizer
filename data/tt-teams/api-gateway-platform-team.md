@@ -1,67 +1,107 @@
 ---
 name: API Gateway Platform Team
 team_type: platform
-dependencies: []
-interaction_modes:
-  Security & Compliance Team: collaboration
 position:
   x: 204.0
   y: 1175.0
 metadata:
   size: 6
-  focus: API gateway, service mesh, traffic management
-  platform_grouping: Cloud Infrastructure Platform Grouping
-  cognitive_load: medium-high
+  cognitive_load: medium
   established: 2023-11
+platform_grouping: Cloud Infrastructure Platform Grouping
 ---
 
 # API Gateway Platform Team
 
-Provides API gateway and service mesh infrastructure as a compelling internal product, managing all ingress traffic and inter-service communication.
+## Team name and focus
+API Gateway Platform Team – Provides API gateway and service mesh infrastructure as a compelling internal product, managing all ingress traffic and inter-service communication.
 
-## Platform Grouping
-**Cloud Infrastructure Platform Grouping** - Core infrastructure team working alongside AWS and Observability platform teams.
+## Team type
+platform
 
-## Responsibilities
+## Part of a platform grouping?
+Yes – Cloud Infrastructure Platform Grouping (core infrastructure team working alongside AWS and Observability platform teams)
 
-### API Gateway (North-South Traffic)
-- Kong / AWS API Gateway management
-- Rate limiting and throttling policies
-- API versioning and routing
-- Request/response transformation
-- API documentation generation (OpenAPI/Swagger)
-- Developer portal for external APIs
 
-### Service Mesh (East-West Traffic)
-- Istio / Linkerd deployment and management
-- mTLS between services (zero-trust networking)
-- Traffic splitting and canary routing
-- Fault injection for chaos testing
-- Circuit breakers and retry policies
-- Service-to-service authentication
+## Services provided (if applicable)
 
-### Traffic Management
-- Load balancing strategies (round-robin, least-connection, consistent hashing)
-- Geographic routing
-- Blue/green and canary deployment patterns
-- Header-based routing (A/B testing support)
-- Path-based routing and rewriting
 
-### Security & Compliance
-- OAuth2 / JWT validation
-- API key management
-- IP allowlisting / denylisting
-- DDoS protection (AWS Shield, Cloudflare)
-- WAF rule management
-- PCI-DSS compliance for payment APIs
+## Service-level expectations (SLA)
+## Software owned and evolved by this team
+---
+name: API Gateway Platform Team
+team_type: platform
+position:
+  x: 204.0
+  y: 1175.0
+metadata:
+  size: 6
+  cognitive_load: medium
+  established: 2023-11
+platform_grouping: Cloud Infrastructure Platform Grouping
+---
 
-## Technologies
+# API Gateway Platform Team
+
+## Team name and focus
+API Gateway Platform Team – Provides API gateway and service mesh infrastructure as a compelling internal product, managing all ingress traffic and inter-service communication.
+
+## Team type
+platform
+
+## Part of a platform grouping?
+Yes – Cloud Infrastructure Platform Grouping (core infrastructure team working alongside AWS and Observability platform teams)
+
+## Services provided (if applicable)
+- API Gateway (Kong / AWS API Gateway): rate limiting, throttling, versioning, routing, transformation, OpenAPI docs, developer portal
+- Service Mesh (Istio / Linkerd): mTLS, traffic splitting, canary routing, circuit breakers, retries, service-to-service auth
+- Traffic Management: load balancing, geo routing, blue/green/canary, header/path-based routing
+- Security & Compliance: OAuth2/JWT, API keys, DDoS protection, WAF, PCI-DSS compliance
+
+## Service-level expectations (SLA)
+- API gateway availability: 99.95% (measured monthly)
+- P99 latency overhead: < 5ms
+- Time to expose new API: < 2 hours
+- Services using service mesh: 85%
+- mTLS adoption: 100% of production services
+
+## Software owned and evolved by this team
+...existing code...
 - Kong Gateway / AWS API Gateway
-- Istio / Linkerd (service mesh)
+- Istio / Linkerd
 - Envoy proxy
-- Cert-manager (TLS certificate automation)
+- Cert-manager
 - AWS WAF, Shield
-- HashiCorp Vault (secrets for mTLS)
+- HashiCorp Vault
+## Versioning approaches
+- Semantic versioning for API gateway configs
+- Breaking changes announced 2 weeks in advance
+## Wiki and documentation
+- [Team Wiki](https://wiki.company.com/teams/api-gateway)
+- [API Docs](https://docs.company.com/api-gateway)
+## Glossary and terms ubiquitous language
+- **API Gateway**: Manages ingress traffic, authentication, and routing
+- **Service Mesh**: Manages service-to-service communication, security, and observability
+## Communication
+- **Chat**: #api-gateway-platform
+- **Email**: api-gateway@company.com
+## Daily sync time
+10:00 AM daily standup
+## What we're currently working on
+- Q1 2026: Simplify service mesh onboarding
+- Q1 2026: Automate WAF policy management
+- Q1 2026: Improve API analytics dashboards
+## Teams we currently interact with
+| Team Name | Interaction Mode | Purpose | Duration |
+|-----------|------------------|---------|----------|
+| Security & Compliance Team | Collaboration | Define compliance policies | Ongoing |
+| Developer Portal Team | X-as-a-Service | Expose API metrics | Ongoing |
+| All platform teams | Collaboration | Service mesh integration | Ongoing |
+## Teams we expect to interact with soon
+| Team Name | Interaction Mode | Purpose | Expected Duration |
+|-----------|------------------|---------|-------------------|
+| E-commerce Checkout Team | X-as-a-Service | New API onboarding | 2 months |
+| Fraud Detection & Risk Modeling Team | Collaboration | Secure fraud APIs | 3 months |
 
 ## X-as-a-Service Offerings
 - Self-service API route configuration

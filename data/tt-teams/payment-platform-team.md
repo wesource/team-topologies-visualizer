@@ -1,84 +1,87 @@
----
 name: Payment Platform Team
 team_type: platform
-dependencies:
-- Security Compliance Team
-interaction_modes:
-  Security Compliance Team: facilitation
 position:
-  x: 1054.0
-  y: 2180.0
+  x: 1700.0
+  y: 1200.0
 metadata:
   size: 7
-  platform_grouping: Financial Services Platform Grouping
+  cognitive_load: medium
+  established: 2023-09
+metadata:
+  size: 7
   cognitive_load: high
   cognitive_load_domain: high
   cognitive_load_intrinsic: high
   cognitive_load_extraneous: low
-  capabilities:
-  - Payment processing
-  - PCI compliance
-  - Fraud detection
-  - Subscription billing
-  - Refund management
-  consumers: 3 teams
   established: 2024-08
+platform_grouping: Financial Services Platform Grouping
+#
+---
+name: Payment Platform Team
+team_type: platform
+position:
+  x: 1700.0
+  y: 1200.0
+metadata:
+  size: 7
+  cognitive_load: medium
+  established: 2023-09
+metadata:
+  size: 7
+  cognitive_load: high
+  cognitive_load_domain: high
+  cognitive_load_intrinsic: high
+  cognitive_load_extraneous: low
+  established: 2024-08
+platform_grouping: Financial Services Platform Grouping
 ---
 
-# Payment Platform Team
-
-Platform team providing payment processing and financial transaction services.
-
-## Platform Grouping
-**Financial Services Platform Grouping** - Works alongside other financial platform teams to provide comprehensive financial services capabilities.
-
-## Platform Grouping
-**Core Platform Grouping** - Works alongside Core Platform Team to provide the full platform offering.
-
-## Cognitive Load Assessment
-- **Overall**: High (justified by domain complexity)
-- **Domain complexity**: Very high (payments, compliance, fraud, multiple payment methods)
-- **Intrinsic complexity**: High (inherently complex domain requiring specialists)
-- **Extraneous complexity**: Low (well-architected, good tooling)
-
-**Note**: High cognitive load is acceptable here - this is exactly what a Complicated Subsystem team handles. Stream-aligned teams would struggle with this complexity.
-
-## Platform Capabilities
-
-### 1. Payment Processing
-- Credit card processing (Stripe, PayPal)
-- Digital wallets (Apple Pay, Google Pay)
-- Bank transfers / ACH
-- International payment methods
-- Currency conversion
-- **Consumers**: E-commerce Checkout Team, Mobile App Team
-
-### 2. PCI Compliance
-- Secure card tokenization
-- PCI DSS compliance management
-- Secure card storage (PCI Level 1)
-- Compliance reporting
-- **Value**: Stream-aligned teams never touch raw card data
-
-### 3. Fraud Detection
-- Real-time fraud scoring
-- Transaction risk assessment
-- 3DS authentication
-- Chargeback management
-- **Machine learning models** for fraud patterns
-
-### 4. Subscription Billing
-- Recurring payment handling
-- Subscription management
-- Failed payment retry logic
-- Dunning management
-- **Consumers**: Enterprise Sales Portal Team
-
-### 5. Refund Management
-- Refund processing
-- Partial refunds
-- Chargeback handling
-- Refund analytics
+## Services provided (if applicable)
+- Payment processing (Stripe, PayPal, Apple Pay, Google Pay, ACH, international methods, currency conversion)
+- PCI compliance (tokenization, secure storage, compliance reporting)
+- Fraud detection (real-time scoring, risk assessment, ML models)
+- Subscription billing (recurring payments, retries, dunning)
+- Refund management (processing, analytics)
+## Service-level expectations (SLA)
+- Payment success rate: 99.7%
+- Fraud detection accuracy: 98.5%
+- Time to integrate new payment method: 2 weeks
+- PCI audit: Clean (annual)
+- Consumer team satisfaction: High (abstracts away complexity)
+## Software owned and evolved by this team
+- Java Spring Boot services
+- Stripe/PayPal integrations
+- PostgreSQL, Redis, Kafka event streaming
+## Versioning approaches
+- Semantic versioning for APIs
+- Breaking changes announced 1 month in advance
+## Wiki and documentation
+- [Team Wiki](https://wiki.company.com/teams/payment-platform)
+- [API Docs](https://docs.company.com/payment-platform)
+## Glossary and terms ubiquitous language
+- **PCI**: Payment Card Industry
+- **Dunning**: Process for collecting failed payments
+- **Chargeback**: Customer-initiated reversal of payment
+## Communication
+- **Chat**: #payment-platform
+- **Email**: payment-platform@company.com
+## Daily sync time
+10:30 AM daily standup
+## What we're currently working on
+- Q1 2026: Add new payment methods
+- Q1 2026: Improve fraud detection pipeline
+- Q1 2026: Automate PCI compliance reporting
+## Teams we currently interact with
+| Team Name | Interaction Mode | Purpose | Duration |
+|-----------|------------------|---------|----------|
+| E-commerce Checkout Team | X-as-a-Service | Payment processing | Ongoing |
+| Mobile App Team | X-as-a-Service | Payment processing | Ongoing |
+| Security Compliance Team | Facilitation | PCI compliance | 3 months |
+## Teams we expect to interact with soon
+| Team Name | Interaction Mode | Purpose | Expected Duration |
+|-----------|------------------|---------|-------------------|
+| Enterprise Sales Portal Team | X-as-a-Service | Subscription billing | Ongoing |
+| Fraud Detection & Risk Modeling Team | Collaboration | Improve fraud scoring | 2 months |
 
 ## Why This is a Platform Team (Not Complicated Subsystem)
 While this domain has high complexity, it's a **platform** because:

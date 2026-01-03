@@ -1,34 +1,43 @@
 ---
 name: Mobile App Experience Team
 team_type: stream-aligned
-dependencies:
-- Mobile Platform Team
-- Core Platform Team
-interaction_modes:
-  Mobile Platform Team: x-as-a-service
-  Core Platform Team: x-as-a-service
 position:
-  x: 1054.0
-  y: 670.0
+  x: 1200.0
+  y: 1800.0
 metadata:
-  size: 8
-  value_stream: Mobile Experience
-  cognitive_load: high
-  cognitive_load_domain: high
-  cognitive_load_intrinsic: high
-  cognitive_load_extraneous: medium
-  platform_dependencies: 2
-  responsibilities:
-  - Native iOS app
-  - Native Android app
-  - Mobile-specific features
-  - App store management
-  established: 2024-09
+  size: 7
+  cognitive_load: medium
+  established: 2023-11
 ---
+
 
 # Mobile App Experience Team
 
-Stream-aligned team responsible for native mobile applications (iOS and Android).
+**Team name and focus**
+
+Mobile App Experience Team – A stream-aligned team responsible for delivering and evolving the native mobile applications (iOS and Android), ensuring a seamless, high-quality experience for mobile-first customers.
+
+## Team type
+
+stream-aligned
+
+## Value Stream
+
+Mobile Experience – Focused on the end-to-end customer journey for mobile users, separate from the web experience.
+
+## Cognitive Load Assessment
+- **Overall**: Medium (well-balanced, but growing scope)
+- **Domain complexity**: High (multiple platforms, app store processes, mobile-specific patterns)
+- **Intrinsic complexity**: High (native development, performance optimization, offline support)
+- **Extraneous complexity**: Medium (some infrastructure still manual)
+
+## Responsibilities
+- iOS native app (Swift)
+- Android native app (Kotlin)
+- Push notification handling
+- Offline functionality
+- App store submissions and compliance
+- Mobile-specific features (camera, location, biometrics)
 
 ## Value Stream
 **Mobile Experience** - Separate value stream from web, serving mobile-first customers.
