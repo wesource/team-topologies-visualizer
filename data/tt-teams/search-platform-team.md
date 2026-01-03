@@ -21,70 +21,66 @@ metadata:
 
 # Search Platform Team
 
-Platform team providing search capabilities as a service to product teams.
+## Team name and focus
+Search Platform Team – Delivers fast, relevant, and reliable product search capabilities to all customer-facing applications, enabling users to find what they need quickly and efficiently.
 
-## Platform Grouping
-**Data Platform Grouping** - Part of a grouping that includes Search Platform, Data Engineering, and ML teams working together on data-driven capabilities.
+## Team type
+platform
 
-## Cognitive Load Assessment
-- **Overall**: Medium (specialist domain but well-contained)
-- **Domain complexity**: Medium (search algorithms, relevance tuning)
-- **Focus**: Narrow and deep (search only)
+## Part of a platform grouping?
+Yes – Data Platform Grouping
 
-## Platform Capabilities
+## Services provided (if applicable)
+- Product search infrastructure
+- Search indexing pipeline
+- Search relevance tuning
+- Search analytics
 
-### 1. Search Infrastructure
-- Elasticsearch cluster management
-- Index schema design and management
-- Query optimization
-- Search performance (< 100ms p99)
-- High availability (99.95%)
+## Service-level expectations (SLA)
+- 99.95% uptime
+- < 100ms p99 search latency
+- New team onboarding in 1 day
+- Support requests answered within 4 business hours
 
-### 2. Indexing Pipeline
-- Real-time product catalog indexing
-- Incremental index updates
-- Bulk reindexing capabilities
-- Data quality validation
+## Software owned and evolved by this team
+- Elasticsearch clusters
+- Indexing pipeline (Kafka, Python)
+- Search analytics dashboards
 
-### 3. Relevance Tuning
-- Search ranking algorithms
-- Personalized search results
-- Synonym management
-- Autocomplete and suggestions
-- Faceted search support
+## Versioning approaches
+- Semantic versioning for APIs and schema
+- Breaking changes announced 1 month in advance
 
-### 4. Search Analytics
-- Search query analytics
-- Zero-result tracking
-- Click-through rate monitoring
-- A/B testing for ranking changes
+## Wiki and documentation
+- [API Docs](https://docs.company.com/search)
+- [Onboarding Guide](https://wiki.company.com/search/onboarding)
+- [Runbooks](https://wiki.company.com/search/runbooks)
 
-## Self-Service Capabilities
-- **Documentation**: Comprehensive API docs
-- **Onboarding**: New team can integrate in 1 day
-- **Monitoring**: Real-time dashboards for each consumer
-- **SLA**: 99.95% uptime, < 100ms p99 latency
+## Glossary and terms ubiquitous language
+- **Relevance**: How well search results match user intent
+- **Zero-result query**: Search with no results
+- **Index freshness**: Time from product update to searchable
 
-## Technologies
-- Elasticsearch
-- Apache Kafka (indexing pipeline)
-- Python (relevance tuning, ML models)
-- Kubernetes
+## Communication
+- **Chat**: #search-platform
+- **Email**: search-platform@company.com
 
-## Team Composition
-- 1 Platform PM (shared with Data Platform Grouping)
-- 1 Search Tech Lead
-- 2 Search Engineers
-- 1 ML Engineer (relevance modeling)
+## Daily sync time
+- 10:30 AM daily standup
 
-## Platform Metrics
-- Consumer teams: 2 (E-commerce Product Discovery, Enterprise Sales Portal)
-- Queries per day: 5M
-- Search result quality score: 87/100
-- Zero-result rate: 3.2% (target: < 5%)
-- Consumer team satisfaction: 85
+## What we're currently working on
+- Q1 2026: Improve search ranking algorithms
+- Q1 2026: Reduce zero-result rate below 2%
+- Q1 2026: Launch new analytics dashboard
 
-## Relationship with Data Platform Grouping
-Works closely with:
-- **Data Engineering Team**: Shares data pipeline infrastructure
-- **ML Recommendations Team**: Collaborates on personalization algorithms
+## Teams we currently interact with
+| Team Name | Interaction Mode | Purpose | Duration |
+|-----------|------------------|---------|----------|
+| E-commerce Product Discovery | X-as-a-Service | Provide product search | Ongoing |
+| Enterprise Sales Portal | X-as-a-Service | Provide search for sales data | Ongoing |
+
+## Teams we expect to interact with soon
+| Team Name | Interaction Mode | Purpose | Expected Duration |
+|-----------|------------------|---------|-------------------|
+| ML Recommendations Team | Collaboration | Personalization integration | 3 months |
+| Data Engineering Team | Collaboration | Data pipeline improvements | 2 months |

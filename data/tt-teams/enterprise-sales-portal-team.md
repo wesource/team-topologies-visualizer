@@ -7,8 +7,8 @@ interaction_modes:
   Core Platform Team: x-as-a-service
   Data Engineering Team: collaboration
 position:
-  x: 204.0
-  y: 670.0
+  x: 112.0
+  y: 758.0
 metadata:
   size: 5
   value_stream: Enterprise Sales

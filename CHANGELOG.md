@@ -12,6 +12,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Filename consistency: All team markdown files now use the slug format for filenames (e.g. `ci-cd-platform-team.md`).
 - New backend tests: 3 new tests for URL safety and slug logic (test_url_safe_team_names.py).
 
+### Changed
+- Strict Team API template alignment: All team markdown files now strictly follow the base Team API template section order and structure, including new product thinking sections where relevant.
+- Data & ML Platform Grouping and Payment & Fraud Platform Grouping teams updated for template alignment and product thinking.
+
+### Removed
+- Unwanted files: EXPERT-REVIEW.md, TT-EXPERT-REVIEW.md, TT-TEAMS-IMPROVEMENT-PLAN.md deleted from working directory and git staging.
+
+### Fixed
+- Platform grouping logic: Platform grouping boxes now always render and dynamically resize, even when teams are dragged far apart (removed stale position check).
+- 404 errors for teams with special characters in their names (e.g. CI/CD Platform Team) are fixed via slug system.
+- Filename consistency: All team markdown files now use the slug format for filenames (e.g. `ci-cd-platform-team.md`).
+- URL-safe team names: Both backend and frontend use the same slug logic for team names.
+- New backend tests: 3 new tests for URL safety and slug logic (test_url_safe_team_names.py).
+- Removed files not intended for commit: EXPERT-REVIEW.md, TT-EXPERT-REVIEW.md, TT-TEAMS-IMPROVEMENT-PLAN.md.
+
 ### Fixed
 - Platform grouping boxes now always render and dynamically resize, even when teams are dragged far apart (removed stale position check).
 - 404 errors for teams with special characters in their names (e.g. CI/CD Platform Team) are fixed via slug system.

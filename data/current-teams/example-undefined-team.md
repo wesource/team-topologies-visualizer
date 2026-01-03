@@ -1,12 +1,14 @@
 ---
 name: Example Undefined Team
 team_type: undefined
-line_manager: TBD
+dependencies: []
+interaction_modes: {}
 position:
-  x: 50
-  y: 550
+  x: 78.0
+  y: 705.0
 metadata:
   size: 7
+line_manager: TBD
 ---
 
 # Example Undefined Team

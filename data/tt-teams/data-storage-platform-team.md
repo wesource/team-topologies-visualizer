@@ -1,5 +1,5 @@
 ---
-name: Data Storage Platform Team
+name: Data Lake Platform Team
 team_type: platform
 dependencies: []
 interaction_modes: {}
@@ -21,104 +21,74 @@ metadata:
   established: 2024-06
 ---
 
-# Data Storage Platform Team
+# Data Lake Platform Team
 
-Platform team providing managed data storage services, functioning as an **inner platform team** within the E-Commerce Experience value stream.
+## Team name and focus
+Data Lake Platform Team – Provides managed data lake, database, and caching services for all data-driven teams, enabling scalable analytics and product features.
 
-## Inner Platform Team (2nd Edition Concept)
-This team operates within the E-Commerce Experience value stream boundary, providing specialized database and caching capabilities for e-commerce stream-aligned teams.
+## Team type
+platform
 
-## Cognitive Load Assessment
-- **Overall**: Medium (focused on data infrastructure)
-- **Scope**: Multiple storage technologies but cohesive domain
-- **Specialization**: Database performance, reliability, scaling
+## Part of a platform grouping?
+Yes – Data Platform Grouping
 
-## Platform Capabilities (Thinnest Viable Platform approach)
+## Services provided (if applicable)
+- PostgreSQL managed service
+- Redis caching clusters
+- Elasticsearch search infrastructure
+- Database migration tooling
+- Data backup and disaster recovery
 
-### 1. PostgreSQL Managed Service
-- Automated provisioning and configuration
-- High-availability clusters with failover
-- Read replicas for scaling
-- Automated backups and point-in-time recovery
-- Performance monitoring and query optimization
-- **Consumers**: Checkout, Product Discovery, User Profile services
+## Service-level expectations (SLA)
+- 99.9% uptime for all managed services
+- < 100ms p99 latency for core APIs
+- New team onboarding within 1 week
+- Support requests answered within 4 business hours
 
-### 2. Redis Caching Infrastructure
-- Multi-tenant Redis clusters
-- Session storage and caching patterns
-- Rate limiting infrastructure
-- Real-time leaderboards and counters
-- **Consumers**: All stream-aligned teams
+## Software owned and evolved by this team
+- PostgreSQL clusters
+- Redis clusters
+- Elasticsearch/OpenSearch
+- Database migration tools
+- Backup/restore automation
 
-### 3. Elasticsearch / OpenSearch
-- Full-text search infrastructure
-- Log aggregation (application logs)
-- Analytics data storage
-- Index management and optimization
-- **Consumers**: Search, Product Discovery, Customer Support
+## Versioning approaches
+- Semantic versioning for APIs and schema changes
+- Breaking changes announced 1 month in advance
 
-### 4. Database Migration & Schema Management
-- Liquibase / Flyway integration
-- Schema versioning and rollback capabilities
-- Zero-downtime migration patterns
-- Development/staging environment parity
+## Wiki and documentation
+- [Team Wiki](https://wiki.company.com/teams/data-lake)
+- [API Documentation](https://docs.company.com/data-lake)
+- [Runbooks](https://wiki.company.com/data-lake/runbooks)
 
-### 5. Backup & Disaster Recovery
-- Automated backup schedules
-- Cross-region replication
-- Disaster recovery runbooks
-- Backup testing and validation
-- **Consumers**: All stream-aligned teams
+## Glossary and terms ubiquitous language
+- **Data Lake**: Centralized storage for structured and unstructured data
+- **ETL**: Extract, Transform, Load
+- **HA**: High Availability
+- **Disaster Recovery**: Procedures for restoring service after major failure
 
-### 3. User Profile Service
-- User account management
-- Profile data storage
-- Preferences management
-- **Consumers**: E-commerce teams, Mobile team, Enterprise team
+## Communication
+- **Chat**: #data-lake-platform
+- **Email**: data-lake@company.com
+- **Office hours**: Thursdays 2-3pm
 
-### 4. Notification Service
-- Email delivery (transactional, marketing)
-- SMS notifications
-- Push notifications (mobile)
-- Notification preferences
-- **Consumers**: All stream-aligned teams
+## Daily sync time
+- 10:00 AM daily standup
 
-### 5. Feature Flags
-- Feature toggle management
-- Gradual rollout controls
-- A/B testing framework
-- **Consumers**: All stream-aligned teams
+## What we're currently working on
+- Q1 2026: Migrate analytics workloads to new data lake
+- Q1 2026: Automate backup validation
+- Q1 2026: Add self-service onboarding for new teams
 
-## Platform as a Product
-- **Product Manager**: 1 dedicated PM treating internal teams as customers
-- **Developer Experience focus**: Easy-to-use APIs, great documentation, fast onboarding
-- **SLA commitments**: 99.9% uptime, < 100ms p99 latency
-- **Self-service**: Teams can integrate without Platform Team involvement
+## Teams we currently interact with
+| Team Name | Interaction Mode | Purpose | Duration |
+|-----------|------------------|---------|----------|
+| Data Engineering Team | Collaboration | Build new ETL pipelines | 3 months |
+| ML Recommendations Team | X-as-a-Service | Provide training data | Ongoing |
+| E-commerce Checkout | X-as-a-Service | Store order data | Ongoing |
 
-## Technologies
-- Kubernetes
-- Kong API Gateway
-- Auth0
-- PostgreSQL
-- RabbitMQ
-- LaunchDarkly (feature flags)
-
-## Team Composition
-- 1 Platform Product Manager
-- 1 Tech Lead / Architect
-- 5 Platform Engineers
-- 1 SRE
-- 1 DevRel / Developer Experience Engineer
-
-## Platform Metrics
-- Number of consumers: 8 teams
-- API request volume: 10M requests/day
-- Time to onboard new team: < 1 day (self-service docs)
-- Support tickets: Declining trend (good docs!)
-- Platform NPS from consumer teams: 72 (promoter zone)
-
-## Future Evolution
-Monitoring for signals to split into specialized teams:
-- **Auth & Identity Team** (if auth complexity grows)
-- **API Infrastructure Team** (if gateway becomes more complex)
-- **Developer Experience Team** (if dev tooling needs grow)
+## Teams we expect to interact with soon
+| Team Name | Interaction Mode | Purpose | Expected Duration |
+|-----------|------------------|---------|-------------------|
+| Enterprise Sales Portal | X-as-a-Service | New consumer of analytics data | Ongoing |
+| Security & Compliance | Collaboration | Add audit logging and compliance features | 4 months |

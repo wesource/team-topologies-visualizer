@@ -10,8 +10,8 @@ interaction_modes:
   Web Product Team: collaboration
   ML Product Team: collaboration
 position:
-  x: 1409.694258167528
-  y: 945.5042981919836
+  x: 630.0
+  y: 410.0
 metadata:
   size: 5
   department: Engineering

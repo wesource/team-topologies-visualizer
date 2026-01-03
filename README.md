@@ -88,8 +88,10 @@ This tool provides dual visualizations to make these conversations easier.
 
 ## Key Features
 
+- **Strict Team API template alignment**: All team markdown files now strictly follow the base Team API template section order and structure, including new product thinking sections where relevant.
 - **URL-safe team names**: Team names with special characters (e.g. "/", "&") are now fully supported via a consistent slug system. Filenames and URLs use the same logic (e.g. "CI/CD Platform Team" → "ci-cd-platform-team").
 - **Filename consistency**: All team markdown files use the slug format for filenames (e.g. `ci-cd-platform-team.md`).
+- **Platform grouping fix**: Platform grouping boxes now always render and dynamically resize, even when teams are dragged far apart (removed stale position check).
 
 - 📊 **Interactive Canvas** - Drag-and-drop teams, zoom, pan
 - 🔄 **Dual Views** - Toggle between "Pre-TT" and "TT Design" (TT Design is default)
@@ -246,7 +248,8 @@ See [CONCEPTS.md](docs/CONCEPTS.md) for detailed explanation of the example orga
 
 ### Team API Templates
 
-For TT Design teams, this tool supports **Team API** format following the [official Team Topologies Team API template](https://github.com/TeamTopologies/Team-API-template):
+
+For TT Design teams, this tool supports **Team API** format following the [official Team Topologies Team API template](https://github.com/TeamTopologies/Team-API-template). **All team markdown files now strictly follow the base Team API template section order and structure.**
 
 **Two templates available:**
 - **Base Template** (`templates/team-api-template-base.md`) - Follows GitHub Team API template exactly, minimal and focused
