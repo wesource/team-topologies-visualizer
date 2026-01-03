@@ -2,8 +2,8 @@
 name: Feature Management Platform Team
 team_type: platform
 position:
-  x: 204.0
-  y: 670.0
+  x: 1800.0
+  y: 1720.0
 metadata:
   size: 5
   cognitive_load: medium
@@ -40,13 +40,6 @@ Yes – Developer Experience Platform Grouping
 - Local development flag overrides
 - Documentation and best practices
 - Example patterns for common use cases
-
-## Technologies
-- LaunchDarkly / Unleash
-- Custom feature flag service (microservice)
-- PostgreSQL (flag configurations)
-- Redis (flag evaluation caching)
-- Segment / Amplitude integration
 
 ## X-as-a-Service Offerings
 - Self-service flag creation via web UI

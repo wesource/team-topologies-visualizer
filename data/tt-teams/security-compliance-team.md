@@ -1,15 +1,3 @@
-name: Security Compliance Team
-team_type: enabling
-position:
-  x: 2000.0
-  y: 1500.0
-metadata:
-  size: 4
-  cognitive_load: high
-  established: 2023-10
-  cognitive_load: medium
-  established: 2024-07
-#
 ---
 name: Security Compliance Team
 team_type: enabling
@@ -18,8 +6,6 @@ position:
   y: 1500.0
 metadata:
   size: 4
-  cognitive_load: high
-  established: 2023-10
   cognitive_load: medium
   established: 2024-07
 ---

@@ -1,13 +1,3 @@
-name: Mobile Platform Team
-team_type: platform
-position:
-  x: 1000.0
-  y: 1600.0
-metadata:
-  size: 6
-  cognitive_load: medium
-  established: 2023-10
-#
 ---
 name: Mobile Platform Team
 team_type: platform
@@ -19,6 +9,7 @@ metadata:
   cognitive_load: medium
   established: 2023-10
 ---
+
 # Mobile Platform Team
 
 Platform team providing mobile-specific infrastructure and services, operating as an **inner platform team** within the Mobile Experience value stream.

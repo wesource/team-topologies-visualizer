@@ -2,8 +2,8 @@
 name: Data Engineering Team
 team_type: complicated-subsystem
 position:
-  x: 2000.0
-  y: 1300.0
+  x: 1800.0
+  y: 3360.0
 metadata:
   size: 6
   cognitive_load: high

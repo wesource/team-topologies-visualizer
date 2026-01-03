@@ -1,4 +1,3 @@
-
 ---
 name: Cloud Development Platform Team
 team_type: platform

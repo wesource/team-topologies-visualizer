@@ -2,8 +2,8 @@
 name: ML Recommendations Team
 team_type: complicated-subsystem
 position:
-  x: 2200.0
-  y: 1440.0
+  x: 1960.0
+  y: 3480.0
 metadata:
   size: 4
   cognitive_load: high

@@ -7,9 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
+### Fixed
+- **Critical Bug**: Application no longer corrupts team markdown files when dragging teams on canvas
+  - Removed `dependencies: []` and `interaction_modes: {}` from being written to YAML front matter
+  - These fields were being added to files every time a team position was updated
+  - The write function now only persists template-compliant fields: `name`, `team_type`, `position`, `metadata`, and optional fields like `platform_grouping`, `established`, `cognitive_load`
+  - Fields still exist in backend model for runtime use (rendering connections) but are never persisted to files
+- **Team Markdown Files**: Comprehensive cleanup and validation of all 23 team files in `data/tt-teams`
+  - Fixed 3 files with duplicate YAML front matter blocks (api-gateway, ci-cd, cloud-development platform teams)
+  - Fixed 5 files with malformed YAML outside front matter (mobile-app, mobile-platform, observability, payment, security-compliance teams)
+  - Removed duplicate content sections in 4 files (data-storage, feature-management, mobile-app-experience, search platform teams)
+  - Fixed machine-learning-and-ai-specialists-team.md: changed team_type from `stream-aligned` to `complicated-subsystem` (correct classification), added proper metadata and Team API sections
+  - Removed invalid YAML fields from all files (only machine-learning file actually had them in previous commit)
+  - All files now strictly conform to Team API base or extended template structure
+  - Backend validation tests pass (17/17)
+- **E2E Tests**: Updated default view expectations to match "TT Design" as default
+  - 4 E2E tests updated to expect TT Design view as default instead of Pre-TT view
+  - All 23 E2E tests now passing
+  - Test expectations aligned with default view change made previously
 
 ### Changed
+- Default application view confirmed as "TT Design" (Team Topologies future state)
+  - Pre-TT view represents baseline/starting point before transformation
+  - E2E tests now reflect this as the expected default behavior
+
+### Added
+
+### Removed
 - Audited and updated all team markdown files in `data/tt-teams` to strictly follow the Team API base/extended templates.
 - Removed duplicate YAML front matter and ensured only a single, correctly delimited (`---`) YAML block at the top of each file.
 - Standardized YAML delimiters across all files.

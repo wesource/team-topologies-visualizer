@@ -2,13 +2,14 @@
 name: Enterprise Sales Portal Team
 team_type: stream-aligned
 position:
-  x: 1500.0
-  y: 1900.0
+  x: 1800.0
+  y: 1540.0
 metadata:
   size: 6
   cognitive_load: medium
   established: 2023-11
 ---
+
 ## Cognitive Load Assessment
 - **Overall**: Low 🟢 (healthy, team has capacity for innovation)
 - **Domain complexity**: Medium (CRM integration, quote generation, account hierarchies)

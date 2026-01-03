@@ -2,8 +2,8 @@
 name: E-Commerce Checkout Team
 team_type: stream-aligned
 position:
-  x: 1300.0
-  y: 1700.0
+  x: 1800.0
+  y: 1180.0
 metadata:
   size: 8
   cognitive_load: medium

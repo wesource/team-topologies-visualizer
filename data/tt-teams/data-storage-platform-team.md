@@ -3,7 +3,7 @@ name: Data Storage Platform Team
 team_type: platform
 position:
   x: 1800.0
-  y: 1100.0
+  y: 820.0
 metadata:
   size: 6
   cognitive_load: medium
@@ -63,28 +63,6 @@ Yes – Data Platform Grouping
 
 ## Daily sync time
 10:00 AM daily standup
-
-## What we're currently working on
-- Q1 2026: Migrate analytics workloads to new data lake
-- Q1 2026: Automate backup validation
-- Q1 2026: Add self-service onboarding for new teams
-
-## Teams we currently interact with
-| Team Name | Interaction Mode | Purpose | Duration |
-|-----------|------------------|---------|----------|
-| Data Engineering Team | Collaboration | Build new ETL pipelines | 3 months |
-| ML Recommendations Team | X-as-a-Service | Provide training data | Ongoing |
-| E-commerce Checkout | X-as-a-Service | Store order data | Ongoing |
-
-## Teams we expect to interact with soon
-| Team Name | Interaction Mode | Purpose | Expected Duration |
-|-----------|------------------|---------|-------------------|
-| Enterprise Sales Portal | X-as-a-Service | New consumer of analytics data | Ongoing |
-| Security & Compliance | Collaboration | Add audit logging and compliance features | 4 months |
-- **Office hours**: Thursdays 2-3pm
-
-## Daily sync time
-- 10:00 AM daily standup
 
 ## What we're currently working on
 - Q1 2026: Migrate analytics workloads to new data lake

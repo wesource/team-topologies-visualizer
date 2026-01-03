@@ -2,8 +2,8 @@
 name: Fraud Detection and Risk Modeling Team
 team_type: complicated-subsystem
 position:
-  x: 2100.0
-  y: 1400.0
+  x: 1800.0
+  y: 3480.0
 metadata:
   size: 5
   cognitive_load: high

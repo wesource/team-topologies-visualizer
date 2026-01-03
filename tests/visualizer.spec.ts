@@ -25,8 +25,8 @@ test.describe('Team Topologies Visualizer', () => {
     await expect(currentStateRadio).toBeVisible();
     await expect(ttVisionRadio).toBeVisible();
     
-    // Current State should be checked by default
-    await expect(currentStateRadio).toBeChecked();
+    // TT Design should be checked by default
+    await expect(ttVisionRadio).toBeChecked();
   });
 
   test('should load organization hierarchy API', async ({ page }) => {
@@ -88,17 +88,17 @@ test.describe('Team Topologies Visualizer', () => {
   test('should switch between Pre-TT and TT Design', async ({ page }) => {
     await page.goto(`${BASE_URL}/static/index.html`);
     
-    // Wait for initial load
-    await page.waitForResponse(response => response.url().includes('/api/teams?view=current'));
-    
-    // Click TT Vision radio button
-    await page.locator('input[value="tt"]').click();
-    
-    // Wait for TT teams to load
+    // Wait for initial load (TT Design is default)
     await page.waitForResponse(response => response.url().includes('/api/teams?view=tt'));
     
-    // Verify TT Vision is now checked
-    await expect(page.locator('input[value="tt"]')).toBeChecked();
+    // Click Pre-TT (current) radio button
+    await page.locator('input[value="current"]').click();
+    
+    // Wait for current teams to load
+    await page.waitForResponse(response => response.url().includes('/api/teams?view=current'));
+    
+    // Verify current is now checked
+    await expect(page.locator('input[value="current"]')).toBeChecked();
   });
 
   test('should have canvas with proper dimensions', async ({ page }) => {
@@ -132,9 +132,12 @@ test.describe('Team Topologies Visualizer', () => {
   test('should take screenshot of Pre-TT view for visual verification', async ({ page }) => {
     await page.goto(`${BASE_URL}/static/index.html`);
     
+    // Switch to Pre-TT view (current)
+    await page.locator('input[value="current"]').click();
+    
     // Wait for all data to load
     await page.waitForResponse(response => response.url().includes('/api/organization-hierarchy'));
-    await page.waitForResponse(response => response.url().includes('/api/teams'));
+    await page.waitForResponse(response => response.url().includes('/api/teams?view=current'));
     await page.waitForTimeout(500); // Minimal wait for rendering
     
     // Take screenshot
@@ -150,14 +153,11 @@ test.describe('Team Topologies Visualizer', () => {
     
     await page.goto(`${BASE_URL}/static/index.html`);
     
-    // Switch to TT Vision
-    await page.locator('input[value="tt"]').click();
-    
-    // Wait for TT data to load
+    // Wait for TT data to load (TT Design is default)
     await page.waitForResponse(response => response.url().includes('/api/teams?view=tt'));
     await page.waitForTimeout(500); // Minimal wait for rendering
     
-    // Click auto-align button for TT Design view (separate button from Pre-TT)
+    // Click auto-align button for TT Design view
     await page.locator('#autoAlignTTBtn').click();
     await page.waitForTimeout(1500); // Wait longer for alignment animation and API calls
     

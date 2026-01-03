@@ -22,36 +22,6 @@ platform
 ## Part of a platform grouping?
 Yes – Cloud Infrastructure Platform Grouping (core infrastructure team working alongside AWS and Observability platform teams)
 
-
-## Services provided (if applicable)
-
-
-## Service-level expectations (SLA)
-## Software owned and evolved by this team
----
-name: API Gateway Platform Team
-team_type: platform
-position:
-  x: 204.0
-  y: 1175.0
-metadata:
-  size: 6
-  cognitive_load: medium
-  established: 2023-11
-platform_grouping: Cloud Infrastructure Platform Grouping
----
-
-# API Gateway Platform Team
-
-## Team name and focus
-API Gateway Platform Team – Provides API gateway and service mesh infrastructure as a compelling internal product, managing all ingress traffic and inter-service communication.
-
-## Team type
-platform
-
-## Part of a platform grouping?
-Yes – Cloud Infrastructure Platform Grouping (core infrastructure team working alongside AWS and Observability platform teams)
-
 ## Services provided (if applicable)
 - API Gateway (Kong / AWS API Gateway): rate limiting, throttling, versioning, routing, transformation, OpenAPI docs, developer portal
 - Service Mesh (Istio / Linkerd): mTLS, traffic splitting, canary routing, circuit breakers, retries, service-to-service auth

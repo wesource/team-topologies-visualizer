@@ -2,15 +2,14 @@
 name: Search Platform Team
 team_type: platform
 position:
-  x: 1750.0
-  y: 1250.0
+  x: 1800.0
+  y: 2980.0
 metadata:
   size: 6
   cognitive_load: medium
   established: 2023-09
 platform_grouping: Data Platform Grouping
 ---
-
 
 # Search Platform Team
 
@@ -58,27 +57,6 @@ Yes – Data Platform Grouping
 
 ## Daily sync time
 10:30 AM daily standup
-
-## What we're currently working on
-- Q1 2026: Improve search ranking algorithms
-- Q1 2026: Reduce zero-result rate below 2%
-- Q1 2026: Launch new analytics dashboard
-
-## Teams we currently interact with
-| Team Name | Interaction Mode | Purpose | Duration |
-|-----------|------------------|---------|----------|
-| E-commerce Product Discovery | X-as-a-Service | Provide product search | Ongoing |
-| Enterprise Sales Portal | X-as-a-Service | Provide search for sales data | Ongoing |
-
-## Teams we expect to interact with soon
-| Team Name | Interaction Mode | Purpose | Expected Duration |
-|-----------|------------------|---------|-------------------|
-| ML Recommendations Team | Collaboration | Personalization integration | 3 months |
-| Data Engineering Team | Collaboration | Data pipeline improvements | 2 months |
-- **Email**: search-platform@company.com
-
-## Daily sync time
-- 10:30 AM daily standup
 
 ## What we're currently working on
 - Q1 2026: Improve search ranking algorithms

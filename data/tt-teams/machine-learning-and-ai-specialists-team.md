@@ -1,15 +1,28 @@
 ---
-name: machine-learning-and-ai-specialists-team
-team_type: stream-aligned
-dependencies: []
-interaction_modes: {}
+name: Machine Learning & AI Specialists Team
+team_type: complicated-subsystem
 position:
   x: 1800.0
   y: 1900.0
-metadata: {}
+metadata:
+  size: 6
+  cognitive_load: high
+  established: 2023-11
 ---
 
 # Machine Learning & AI Specialists Team
+
+## Team name and focus
+
+Machine Learning & AI Specialists Team - A complicated-subsystem team responsible for developing and maintaining machine learning models and AI capabilities that require deep specialized knowledge in data science, ML engineering, and advanced analytics.
+
+## Team type
+
+complicated-subsystem
+
+**Why complicated-subsystem?** This team exists because ML/AI work requires deep technical expertise (data science, model training, feature engineering, model deployment, monitoring for drift) that would create excessive cognitive load for stream-aligned teams. The complexity justifies a specialized team.
+
+## Services provided (if applicable)
 
 - Recommendation systems
 - Predictive analytics and forecasting

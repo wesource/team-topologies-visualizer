@@ -1,21 +1,3 @@
-name: Payment Platform Team
-team_type: platform
-position:
-  x: 1700.0
-  y: 1200.0
-metadata:
-  size: 7
-  cognitive_load: medium
-  established: 2023-09
-metadata:
-  size: 7
-  cognitive_load: high
-  cognitive_load_domain: high
-  cognitive_load_intrinsic: high
-  cognitive_load_extraneous: low
-  established: 2024-08
-platform_grouping: Financial Services Platform Grouping
-#
 ---
 name: Payment Platform Team
 team_type: platform
@@ -24,17 +6,12 @@ position:
   y: 1200.0
 metadata:
   size: 7
-  cognitive_load: medium
-  established: 2023-09
-metadata:
-  size: 7
   cognitive_load: high
-  cognitive_load_domain: high
-  cognitive_load_intrinsic: high
-  cognitive_load_extraneous: low
   established: 2024-08
 platform_grouping: Financial Services Platform Grouping
 ---
+
+# Payment Platform Team
 
 ## Services provided (if applicable)
 - Payment processing (Stripe, PayPal, Apple Pay, Google Pay, ACH, international methods, currency conversion)

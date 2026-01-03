@@ -2,8 +2,8 @@
 name: Data Pipeline Platform Team
 team_type: platform
 position:
-  x: 1900.0
-  y: 1200.0
+  x: 1800.0
+  y: 640.0
 metadata:
   size: 7
   cognitive_load: medium

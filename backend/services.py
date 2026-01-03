@@ -104,8 +104,6 @@ def write_team_file_to_path(team: TeamData, file_path: Path) -> Path:
     yaml_data = {
         'name': team.name,
         'team_type': team.team_type,
-        'dependencies': team.dependencies or [],
-        'interaction_modes': team.interaction_modes or {},
         'position': team.position or {"x": 0, "y": 0},
         'metadata': team.metadata or {}
     }

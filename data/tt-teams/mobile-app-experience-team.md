@@ -2,14 +2,13 @@
 name: Mobile App Experience Team
 team_type: stream-aligned
 position:
-  x: 1200.0
-  y: 1800.0
+  x: 1800.0
+  y: 2080.0
 metadata:
   size: 7
   cognitive_load: medium
   established: 2023-11
 ---
-
 
 # Mobile App Experience Team
 
@@ -28,23 +27,6 @@ Mobile Experience – Focused on the end-to-end customer journey for mobile user
 ## Cognitive Load Assessment
 - **Overall**: Medium (well-balanced, but growing scope)
 - **Domain complexity**: High (multiple platforms, app store processes, mobile-specific patterns)
-- **Intrinsic complexity**: High (native development, performance optimization, offline support)
-- **Extraneous complexity**: Medium (some infrastructure still manual)
-
-## Responsibilities
-- iOS native app (Swift)
-- Android native app (Kotlin)
-- Push notification handling
-- Offline functionality
-- App store submissions and compliance
-- Mobile-specific features (camera, location, biometrics)
-
-## Value Stream
-**Mobile Experience** - Separate value stream from web, serving mobile-first customers.
-
-## Cognitive Load Assessment
-- **Overall**: HIGH ⚠️ (approaching overload - consider splitting or adding platform support)
-- **Domain complexity**: High (2 native platforms, app store processes, mobile-specific patterns)
 - **Intrinsic complexity**: High (native development, performance optimization, offline support)
 - **Extraneous complexity**: Medium (some infrastructure still manual)
 

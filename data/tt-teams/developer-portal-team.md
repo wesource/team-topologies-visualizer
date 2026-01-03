@@ -2,15 +2,14 @@
 name: Developer Portal Team
 team_type: platform
 position:
-  x: 1400.0
-  y: 900.0
+  x: 1800.0
+  y: 1000.0
 metadata:
   size: 6
   cognitive_load: medium
   established: 2023-09
 platform_grouping: Developer Experience Platform Grouping
 ---
-
 
 # Developer Portal Team
 

@@ -2,15 +2,14 @@
 name: DevOps Enablement Team
 team_type: enabling
 position:
-  x: 980.0
-  y: 1915.0
+  x: 1960.0
+  y: 3360.0
 metadata:
   size: 4
   cognitive_load: medium
   established: 2024-02
 platform_grouping: Developer Experience Platform Grouping
 ---
-
 
 # DevOps Enablement Team
 

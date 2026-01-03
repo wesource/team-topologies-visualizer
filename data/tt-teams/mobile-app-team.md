@@ -1,3 +1,4 @@
+---
 name: Mobile App Team
 team_type: stream-aligned
 position:
@@ -7,6 +8,7 @@ metadata:
   size: 8
   cognitive_load: medium
   established: 2023-11
+---
 
 # Mobile App Team
 
