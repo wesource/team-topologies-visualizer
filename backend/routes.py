@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 from backend.models import TeamData, PositionUpdate
 from backend.services import (
-    get_data_dir, find_all_teams, find_team_by_name, 
+    get_data_dir, find_all_teams, find_team_by_name, find_team_by_name_or_slug,
     write_team_file_to_path, CURRENT_TEAMS_DIR
 )
 
@@ -50,8 +50,8 @@ async def get_teams(view: str = "tt"):
 
 @router.get("/teams/{team_name}", response_model=TeamData)
 async def get_team(team_name: str, view: str = "tt"):
-    """Get a specific team"""
-    result = find_team_by_name(team_name, view)
+    """Get a specific team by name or URL-safe slug"""
+    result = find_team_by_name_or_slug(team_name, view)
     
     if result is None:
         raise HTTPException(status_code=404, detail=f"Team not found: {team_name}")
@@ -63,7 +63,7 @@ async def get_team(team_name: str, view: str = "tt"):
 @router.patch("/teams/{team_name}/position")
 async def update_team_position(team_name: str, position: PositionUpdate, view: str = "tt"):
     """Update only the position of a team (for drag-and-drop on canvas)"""
-    result = find_team_by_name(team_name, view)
+    result = find_team_by_name_or_slug(team_name, view)
     
     if result is None:
         raise HTTPException(status_code=404, detail="Team not found")

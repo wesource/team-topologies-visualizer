@@ -4,8 +4,8 @@ team_type: undefined
 dependencies: []
 interaction_modes: {}
 position:
-  x: 824.0
-  y: 166.0
+  x: 1800.0
+  y: 480.0
 metadata:
   size: 7
 ---

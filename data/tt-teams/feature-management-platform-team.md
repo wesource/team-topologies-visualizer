@@ -7,8 +7,8 @@ interaction_modes:
   E-Commerce Product Discovery Team: x-as-a-service
   Mobile App Experience Team: x-as-a-service
 position:
-  x: -20.0
-  y: 493.0
+  x: 204.0
+  y: 345.0
 metadata:
   size: 5
   focus: Feature flags, A/B testing, experimentation platform

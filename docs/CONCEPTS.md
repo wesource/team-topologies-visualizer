@@ -108,6 +108,113 @@ These fractal patterns help organizations scale Team Topologies principles beyon
 - **Fast Flow**: Optimize for rapid delivery of value to customers
 - **Team-first Approach**: Teams are the fundamental unit of delivery, not individuals
 
+### Team API: Outward-Facing Team Interface
+
+> **"A team API helps a team define and communicate its principles, responsibilities, and mission to other teams in the organization"**  
+> — Team Topologies Presentation Materials
+
+A **Team API** is the comprehensive interface that defines how other teams interact with and understand your team. It answers the question: **"What do other teams need to know about us?"**
+
+#### Team API vs Team Agreement
+
+It's important to distinguish between two complementary concepts:
+
+**Team API** (Outward-facing)
+- **Purpose**: Define how OTHER teams interact with your team
+- **Audience**: External teams, stakeholders, consumers of your services
+- **Content**: Services provided, communication channels, SLAs, versioning, roadmap, interaction patterns
+- **Visibility**: Public within the organization - discoverable by any team
+- **Updates**: When external interfaces or expectations change
+
+**Team Agreement** (Inward-facing)
+- **Purpose**: Define how YOUR team works internally
+- **Audience**: Team members only
+- **Content**: Working practices, internal principles, team norms, decision-making processes, conflict resolution
+- **Visibility**: Private to the team
+- **Updates**: When team practices evolve or new members join
+
+**Key insight**: A team needs BOTH a Team API (for external clarity) and a Team Agreement (for internal alignment), but they serve different purposes and audiences.
+
+#### What's Included in a Team API?
+
+Based on the Team Topologies book (2nd edition) and official Team API template, a comprehensive Team API includes:
+
+**Core Identity**
+- Team name and focus (mission/purpose in one sentence)
+- Team type (stream-aligned, platform, enabling, complicated subsystem)
+- Platform grouping membership (if applicable)
+
+**Code & Services** (for software teams)
+- Runtime endpoints, libraries, clients, UI produced by the team
+- Services provided to other teams
+- Software owned and maintained
+
+**Collaboration Details**
+- Versioning approach (e.g., semantic versioning as a "team promise")
+- Testing approach and quality standards
+- Service-level expectations (SLAs, response times, uptime)
+- Wiki and documentation (especially how-to guides)
+- Communication preferences (chat channels, video conferencing, email, office hours)
+- Daily sync time and meeting preferences
+- Pull request and contribution expectations
+
+**Work Transparency**
+- What we're currently working on (priorities for this quarter)
+- Roadmap and medium-term priorities
+- Team backlog visibility for other teams
+
+**Practices & Principles** (Team working preferences)
+- Team's preferred ways of working that affect others
+- Technical principles (e.g., infrastructure as code, "you build it you run it")
+- Collaboration expectations
+
+**Team Interactions**
+- Which teams we currently interact with (and interaction modes)
+- Which teams we expect to interact with soon
+- Changes in interaction patterns over time
+
+#### Two Template Formats
+
+This tool supports two Team API formats to balance flexibility with standardization:
+
+**Base Template** (`templates/team-api-template-base.md`)
+- Strictly follows the [official GitHub Team API template](https://github.com/TeamTopologies/Team-API-template)
+- Minimal, focused on essential team interface
+- Best for: Teams starting with Team APIs, smaller teams, teams with simple interfaces
+- **Example**: See `data/tt-teams/observability-platform-team.md` for a real implementation
+
+**Extended Template** (`templates/team-api-template-extended.md`)
+- Includes additional fields from Team Topologies book (2nd edition) and presentation materials
+- Covers: Code artifacts detail, testing approach, practices & principles, expanded communication preferences, roadmap visibility, platform product metrics, customer problems solved, team members
+- Extended fields are marked with: _[Extended: Not part of github team api template...]_
+- Best for: Platform teams, teams with complex interfaces, organizations wanting maximum clarity
+- **Example**: See `data/tt-teams/cloud-development-platform-team.md` for a comprehensive showcase
+
+**Custom Company-Specific Templates**
+
+It's perfectly acceptable to create your own template with sections relevant to your organization:
+- **Industry-specific**: Healthcare (HIPAA compliance), Finance (SOC2 controls, audit trails), Regulated industries (certification tracking)
+- **Company-specific**: Custom tooling, deployment processes, cultural practices, specific metrics your org tracks
+- **Context-appropriate**: Add only what helps teams interact effectively - avoid documentation bloat
+
+**Recommendation**: Start with base template, add sections as needs emerge. Copy extended template sections that fit your context, or create your own.
+
+Both formats use minimal YAML front matter (only what the visualization tool needs) and rich markdown for human readability.
+
+#### Why Team APIs Matter
+
+Without clear Team APIs, organizations suffer from:
+- **Ambiguity**: Teams don't know who to contact or how to interact
+- **Friction**: Every interaction requires discovery and negotiation
+- **Bottlenecks**: Unclear SLAs and communication channels slow delivery
+- **Misalignment**: Teams make assumptions about dependencies that prove wrong
+
+With well-defined Team APIs:
+- **Reduced cognitive load**: Other teams know exactly how to interact without lengthy discovery
+- **Faster onboarding**: New teams can quickly understand who does what
+- **Explicit expectations**: SLAs and communication norms prevent misunderstandings
+- **Evolution tracking**: Changes to team interfaces are visible and managed
+
 ### Cognitive Load Management
 
 One of the foundational principles in Team Topologies is limiting **team cognitive load** - the total mental effort required by a team to operate and deliver value. When teams are overloaded, they slow down, make more mistakes, and struggle to innovate.

@@ -169,8 +169,8 @@ class TestFilenameConsistency:
     """Test that filenames match team names in files."""
     
     def test_tt_teams_filenames_match_team_names(self):
-        """All tt-teams filenames should match team names (lowercase, spaces->hyphens)."""
-        from backend.services import TT_TEAMS_DIR
+        """All tt-teams filenames should match team names (URL-safe slug format)."""
+        from backend.services import TT_TEAMS_DIR, team_name_to_slug
         
         mismatches = []
         for file_path in TT_TEAMS_DIR.rglob("*.md"):
@@ -190,7 +190,7 @@ class TestFilenameConsistency:
                         data = yaml.safe_load(parts[1])
                         if data and 'name' in data:
                             team_name = data['name']
-                            expected_filename = team_name.lower().replace(' ', '-').replace('&', 'and')
+                            expected_filename = team_name_to_slug(team_name)
                             actual_filename = file_path.stem
                             
                             if actual_filename != expected_filename:

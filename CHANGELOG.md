@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- URL-safe team name slugs: Team names with special characters (e.g. "/", "&") are now supported everywhere via a consistent slug system. Both backend and frontend use the same logic. Example: "CI/CD Platform Team" → "ci-cd-platform-team".
+- Filename consistency: All team markdown files now use the slug format for filenames (e.g. `ci-cd-platform-team.md`).
+- New backend tests: 3 new tests for URL safety and slug logic (test_url_safe_team_names.py).
+
+### Fixed
+- Platform grouping boxes now always render and dynamically resize, even when teams are dragged far apart (removed stale position check).
+- 404 errors for teams with special characters in their names (e.g. CI/CD Platform Team) are fixed via slug system.
+- Removed files not intended for commit: EXPERT-REVIEW.md, TT-EXPERT-REVIEW.md, TT-TEAMS-IMPROVEMENT-PLAN.md.
 - � **"Undefined" Team Type for Both Views**:
   - Added shared "undefined" team type for teams not yet classified/designed
   - **TT Design view**: Teams not yet designed into one of the 4 fundamental team types (stream-aligned, platform, enabling, complicated-subsystem)

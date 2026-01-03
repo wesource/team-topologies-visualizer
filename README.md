@@ -85,7 +85,11 @@ This tool provides dual visualizations to make these conversations easier.
 
 > **Note**: This tool applies Team Topologies principles developed by Matthew Skelton and Manuel Pais. See [Acknowledgments](#acknowledgments) for proper attribution.
 
+
 ## Key Features
+
+- **URL-safe team names**: Team names with special characters (e.g. "/", "&") are now fully supported via a consistent slug system. Filenames and URLs use the same logic (e.g. "CI/CD Platform Team" → "ci-cd-platform-team").
+- **Filename consistency**: All team markdown files use the slug format for filenames (e.g. `ci-cd-platform-team.md`).
 
 - 📊 **Interactive Canvas** - Drag-and-drop teams, zoom, pan
 - 🔄 **Dual Views** - Toggle between "Pre-TT" and "TT Design" (TT Design is default)
@@ -96,7 +100,7 @@ This tool provides dual visualizations to make these conversations easier.
 - ⚡ **Auto-align Teams** - One-click alignment for both views:
   - **TT Design**: Organize teams within value stream and platform groupings with book-accurate shapes
   - **Pre-TT**: Align teams under line managers in org-chart layout
-- 🎯 **Fractal Groupings** (TT 2nd edition) - Visual grouping of teams into Value Stream Groupings and Platform Groupings for team-of-teams patterns
+- 🎯 **Fractal Groupings** (TT 2nd edition) - Visual grouping of teams into Value Stream Groupings and Platform Groupings for team-of-teams patterns. Platform grouping boxes now always render and dynamically resize, even when teams are dragged far apart.
 - � **Cognitive Load Indicators** - Optional traffic light visualization (🟢🟡🔴) showing team cognitive load levels
   - Toggle on/off to reduce visual clutter
   - Identify overloaded teams at a glance
@@ -239,6 +243,24 @@ See [CONCEPTS.md](docs/CONCEPTS.md) for detailed explanation of the example orga
   - See [CONCEPTS.md](docs/CONCEPTS.md#cognitive-load-management) for detailed explanation
 - **Groupings Filter** (TT Design view) - Filter teams by value stream or platform grouping to focus on specific areas
 - **Refresh** button - Reload all team markdown files and configurations from disk without losing your zoom/pan position
+
+### Team API Templates
+
+For TT Design teams, this tool supports **Team API** format following the [official Team Topologies Team API template](https://github.com/TeamTopologies/Team-API-template):
+
+**Two templates available:**
+- **Base Template** (`templates/team-api-template-base.md`) - Follows GitHub Team API template exactly, minimal and focused
+  - Example: See `data/tt-teams/observability-platform-team.md`
+- **Extended Template** (`templates/team-api-template-extended.md`) - Adds platform product metrics, roadmap, customer problems, team members
+  - Example: See `data/tt-teams/cloud-development-platform-team.md`
+
+**Create your own company-specific template:**
+- Start with base or extended template
+- Add sections relevant to your industry (e.g., HIPAA compliance, SOC2 controls, audit trails)
+- Copy sections you need from extended template
+- Keep it focused - only add what helps teams interact effectively
+
+See [CONCEPTS.md](docs/CONCEPTS.md#team-api-outward-facing-team-interface) for detailed explanation of Team APIs and when to use each template.
 
 ### Team Files
 

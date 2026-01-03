@@ -148,16 +148,8 @@ export function calculateGroupingBoundingBox(teams, teamBoxHeight, padding, curr
         });
     });
 
-    // Check if teams are too spread out vertically (likely stale positions)
+    // Always render grouping boxes, even if teams are spread out after manual dragging
     const verticalSpread = maxY - minY;
-    const maxReasonableSpread = 800; // If teams span more than this vertically, positions are likely stale
-    
-    if (verticalSpread > maxReasonableSpread) {
-        // Teams are too spread out - likely have stale positions from before auto-align
-        // Return a minimal bounding box around just the first team to avoid huge boxes
-        console.warn(`⚠️ Platform grouping "${teams[0]?.metadata?.platform_grouping}" has stale positions (spread: ${verticalSpread}px). Skipping bounding box until auto-align.`);
-        return { x: 0, y: 0, width: 0, height: 0, stale: true };
-    }
 
     const result = {
         x: minX - padding,

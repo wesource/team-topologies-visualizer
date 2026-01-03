@@ -6,8 +6,8 @@ dependencies:
 interaction_modes:
   Security Compliance Team: facilitation
 position:
-  x: 204.0
-  y: 1860.0
+  x: 1054.0
+  y: 2180.0
 metadata:
   size: 7
   platform_grouping: Financial Services Platform Grouping

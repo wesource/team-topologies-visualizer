@@ -2,11 +2,12 @@
 name: Fraud Detection & Risk Modeling Team
 team_type: complicated-subsystem
 dependencies:
-  - team: Data Engineering Team
-    interaction: x-as-a-service
+- Data Engineering Team
+interaction_modes:
+  Data Engineering Team: x-as-a-service
 position:
-  x: 650.0
-  y: 800.0
+  x: 1981.9478737997258
+  y: 626.7764060356652
 metadata:
   size: 7
   focus: Machine learning models for fraud detection, risk scoring

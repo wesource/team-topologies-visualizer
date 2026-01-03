@@ -1,5 +1,6 @@
 """Service layer for file operations and data parsing"""
 import yaml
+import re
 from pathlib import Path
 from typing import List
 from backend.models import TeamData
@@ -10,6 +11,24 @@ TT_TEAMS_DIR = Path("data/tt-teams")
 CURRENT_TEAMS_DIR = Path("data/current-teams")
 TT_TEAMS_DIR.mkdir(parents=True, exist_ok=True)
 CURRENT_TEAMS_DIR.mkdir(parents=True, exist_ok=True)
+
+
+def team_name_to_slug(team_name: str) -> str:
+    """Convert team name to URL-safe slug.
+    
+    Examples:
+        "CI/CD Platform Team" -> "cicd-platform-team"
+        "Data & Analytics Team" -> "data-and-analytics-team"
+        "API Gateway Team" -> "api-gateway-team"
+    """
+    # Replace special characters with separators or words
+    slug = team_name
+    slug = slug.replace('/', '-')  # CI/CD -> CI-CD
+    slug = slug.replace('&', 'and')  # & -> and
+    slug = re.sub(r'[^\w\s-]', '', slug)  # Remove other special chars
+    slug = re.sub(r'[-\s]+', '-', slug)  # Multiple spaces/dashes -> single dash
+    slug = slug.strip('-').lower()  # Lowercase and trim dashes
+    return slug
 
 
 def get_data_dir(view: str = "tt") -> Path:
@@ -146,3 +165,54 @@ def find_team_by_name(team_name: str, view: str = "tt") -> tuple[TeamData, Path]
             print(f"Error parsing {file_path} while searching for {team_name}: {e}")
     
     return None
+
+
+def find_team_by_name_or_slug(identifier: str, view: str = "tt") -> tuple[TeamData, Path] | None:
+    """Find a team by exact name OR by URL-safe slug.
+    
+    This allows API endpoints to work with both:
+    - Exact team names: "CI/CD Platform Team"
+    - URL-safe slugs: "cicd-platform-team"
+    
+    Args:
+        identifier: Team name or slug
+        view: "tt" or "current"
+        
+    Returns:
+        Tuple of (TeamData, file_path) or None if not found
+    """
+    # First, try exact name match (handles direct team name lookups)
+    result = find_team_by_name(identifier, view)
+    if result:
+        return result
+    
+    # If not found, try matching by slug (handles URL-encoded names with special chars)
+    data_dir = get_data_dir(view)
+    exclude_files = {
+        'company-leadership.md',
+        'engineering-dept.md',
+        'customer-solutions-dept.md',
+        'product-management-dept.md',
+        'infrastructure-dept.md',
+        'support-dept.md',
+        'organization-hierarchy.json',
+        'current-team-types.json',
+        'tt-team-types.json'
+    }
+    
+    identifier_slug = team_name_to_slug(identifier)
+    
+    for file_path in data_dir.rglob("*.md"):
+        if file_path.name in exclude_files:
+            continue
+            
+        try:
+            team = parse_team_file(file_path)
+            team_slug = team_name_to_slug(team.name)
+            if team_slug == identifier_slug:
+                return team, file_path
+        except Exception as e:
+            print(f"Error parsing {file_path} while searching for slug {identifier}: {e}")
+    
+    return None
+

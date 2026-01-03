@@ -7,8 +7,8 @@ interaction_modes:
   Data Engineering Team: x-as-a-service
   E-commerce Product Discovery Team: collaboration
 position:
-  x: 1473.8271604938273
-  y: 1300.9259259259259
+  x: 130.0
+  y: 2380.0
 metadata:
   size: 5
   cognitive_load: high
