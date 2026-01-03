@@ -2,12 +2,13 @@
 name: Feature Management Platform Team
 team_type: platform
 position:
-  x: 1800.0
-  y: 1720.0
+  x: 204.0
+  y: 3435.0
 metadata:
   size: 5
   cognitive_load: medium
   established: 2024-08
+platform_grouping: Cloud Infrastructure Platform Grouping
 ---
 
 # Feature Management Platform Team

@@ -1,17 +1,17 @@
 ---
-name: Payment Platform Team
-team_type: platform
+name: Payment Processing Team
+team_type: stream-aligned
 position:
-  x: 1700.0
-  y: 1200.0
+  x: 204.0
+  y: 705.0
 metadata:
   size: 7
   cognitive_load: high
   established: 2024-08
-platform_grouping: Financial Services Platform Grouping
+value_stream: Financial Services
 ---
 
-# Payment Platform Team
+# Payment Processing Team
 
 ## Services provided (if applicable)
 - Payment processing (Stripe, PayPal, Apple Pay, Google Pay, ACH, international methods, currency conversion)

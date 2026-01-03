@@ -78,29 +78,285 @@ Team interaction modes define **how teams work together** and evolve over time. 
 
 ### Fractal Organizational Patterns (2nd Edition)
 
-The Team Topologies 2nd edition introduces **fractal organizational patterns** that extend the team-of-teams concept to higher levels:
+The Team Topologies 2nd edition introduces **fractal organizational patterns** that extend the team-of-teams concept to higher levels. **Critically, these groupings are hierarchical, not peer-level** - platform groupings serve multiple value stream groupings.
 
-#### Value Stream Grouping
+#### Understanding the Hierarchy: Platform Groupings SERVE Value Stream Groupings
+
+> **"Figure 0.1: Value Stream Grouping"** - Team Topologies 2nd Edition
+
+The 2nd edition clarifies that **platform groupings and value stream groupings are not mutually exclusive** - they work together in a hierarchical relationship:
+
+```
+Platform Grouping (Foundation)
+├─ Inner Platform Team(s) - provides foundational capabilities
+└─ SERVES ↑
+   ├─ Value Stream Grouping 1 (multiple stream-aligned teams)
+   ├─ Value Stream Grouping 2 (multiple stream-aligned teams)
+   └─ Value Stream Grouping 3 (multiple stream-aligned teams)
+```
+
+**Key Insight**: A platform grouping sits **below** (foundational) and **serves** multiple value stream groupings above.
+
+#### Visual Representation: Hierarchical Structure
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    VALUE STREAM GROUPINGS                            │
+│                     (Business Domains)                               │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐  │
+│  │  E-Commerce      │  │  Mobile          │  │  Enterprise      │  │
+│  │                  │  │  Experience      │  │  Sales           │  │
+│  ├──────────────────┤  ├──────────────────┤  ├──────────────────┤  │
+│  │ Stream-Aligned:  │  │ Stream-Aligned:  │  │ Stream-Aligned:  │  │
+│  │ • Checkout       │  │ • Mobile App     │  │ • Sales Portal   │  │
+│  │ • Product Disc.  │  │ • Mobile Web     │  │ • CRM Integr.    │  │
+│  │ • Search         │  │ • App Store Opt. │  │ • Reporting      │  │
+│  └──────────────────┘  └──────────────────┘  └──────────────────┘  │
+│                                                                       │
+└───────────────────────────────┬───────────────────────────────────┘
+                                │
+                    ↑ Consume services via X-as-a-Service
+                    │
+┌───────────────────────────────┴───────────────────────────────────┐
+│                    PLATFORM GROUPINGS                               │
+│                    (Foundation Layer)                               │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│  ┌────────────────────────────┐  ┌────────────────────────────────┐│
+│  │  Cloud Infrastructure      │  │  Data Platform                 ││
+│  │  Platform Grouping         │  │  Grouping                      ││
+│  ├────────────────────────────┤  ├────────────────────────────────┤│
+│  │ Platform Teams:            │  │ Platform Teams:                ││
+│  │ • CI/CD Platform           │  │ • Data Storage Platform        ││
+│  │ • Cloud Dev Platform       │  │ • Data Pipeline Platform       ││
+│  │ • API Gateway Platform     │  │ • Data Discovery Platform      ││
+│  │ • Observability Platform   │  │                                ││
+│  └────────────────────────────┘  └────────────────────────────────┘│
+│                                                                       │
+└─────────────────────────────────────────────────────────────────────┘
+
+                    ┌─────────────────────────┐
+                    │  Enabling Teams         │
+                    │  (Cross-cutting)        │
+                    ├─────────────────────────┤
+                    │ • DevOps Enablement     │
+                    │ • Security Enablement   │
+                    │ • UX Research           │
+                    └─────────────────────────┘
+                         ↕ Facilitating
+          (collaborate across all groupings)
+```
+
+#### Real-World Example: Docker Engineering (2024)
+
+Here's how Docker structures their engineering organization using this pattern:
+
+```mermaid
+graph TB
+    subgraph PG["🔵 Platform Grouping: Cloud"]
+        INFRA["Infrastructure Platform<br/>(Compute, Network, Storage)"]
+        SAAS["SaaS Platform<br/>(Auth, Tenancy, Scaling)"]
+    end
+    
+    subgraph VSG1["🟠 Value Stream: Customer Group"]
+        C1["Stream: Data"]
+        C2["Stream: Accounts"]
+        C3["Stream: Security"]
+        C4["Stream: Business"]
+        C5["Stream: Customer Success"]
+        C6["Stream: Billing"]
+        C7["Stream: XaaS"]
+        FEP["Platform: Frontend<br/>(in-stream platform)"]
+    end
+    
+    subgraph VSG2["🟠 Value Stream: Content Group"]
+        CO1["Stream: Runtime"]
+        CO2["Stream: Registry"]
+        CO3["Stream: Build"]
+        CO4["Stream: Content Consumer"]
+        CO5["Stream: Content Publisher"]
+        CO6["Stream: Extensions"]
+    end
+    
+    subgraph VSG3["🟠 Value Stream: Developer Experience"]
+        D1["Stream: Programmable OS"]
+        D2["Stream: Inner Loop"]
+        D3["Stream: XaaS"]
+        DESK["Platform: Desktop<br/>(in-stream platform)"]
+    end
+    
+    subgraph EN["🟣 Enabling Teams (Cross-cutting)"]
+        UX["UX Research"]
+        SEC["Security"]
+        DATA["Data"]
+    end
+    
+    PG -.->|"X-as-a-Service"| VSG1
+    PG -.->|"X-as-a-Service"| VSG2
+    PG -.->|"X-as-a-Service"| VSG3
+    
+    EN -.->|"Facilitating"| VSG1
+    EN -.->|"Facilitating"| VSG2
+    EN -.->|"Facilitating"| VSG3
+    
+    style PG fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    style VSG1 fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    style VSG2 fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    style VSG3 fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    style EN fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+```
+
+**Key Observations from Docker**:
+
+Docker's engineering organization demonstrates this pattern:
+
+**Platform Grouping: "Cloud Group"**
+- Inner Platforms: Infrastructure Platform + SaaS Platform
+- Role: Provides compute, networking, storage, authentication, tenancy
+- Interaction Mode: X-as-a-Service to all value streams
+
+**Value Stream Groupings served by Cloud Platform**:
+1. **Customer Group** (8 stream-aligned teams)
+   - Teams: Data, Accounts, Security, Business, Customer Success, Billing, XaaS
+   - Focus: Customer-facing business capabilities and experiences
+   
+2. **Content Group** (6 stream-aligned teams)
+   - Teams: Runtime, Registry, Build, Content Consumer, Content Publisher, Extensions
+   - Focus: Content creation, processing, delivery, and extensibility
+   
+3. **Developer Experience Group** (3 stream-aligned teams)
+   - Teams: Programmable OS, Inner Loop, XaaS
+   - Focus: Developer productivity, tooling, APIs, and SDKs
+
+**Cross-cutting Enabling Teams** (not in groupings):
+- UX Research (spans Customer, Content, Developer Experience)
+- Security (spans all groups)
+- Data (spans all groups)
+
+**Team Ratio**: ~17 stream-aligned teams : 4 platform teams : 4 enabling teams
+
+#### Value Stream Grouping (Business Domains)
+
 - **Definition**: A collection of stream-aligned teams working together to deliver a complete customer-facing flow of value
-- **Purpose**: Organize multiple stream-aligned teams serving the same value stream (e.g., "E-commerce Experience", "Mobile Experience")
+- **Purpose**: Organize multiple stream-aligned teams serving the same value stream (e.g., "E-Commerce", "Mobile Experience", "Enterprise Sales")
 - **Visual representation**: Light yellow/orange background grouping in this tool
+- **Can include**: 
+  - Multiple stream-aligned teams (primary)
+  - Occasionally a small "Inner Platform Team" dedicated to that value stream's specific needs
 - **Benefits**: 
   - Clear end-to-end ownership of customer value flows
   - Reduced cross-value-stream dependencies
   - Executive sponsorship alignment
   - Value stream-level metrics (lead time, deployment frequency)
+- **Examples**:
+  - E-Commerce: Checkout Team + Product Discovery Team + Search Team
+  - Mobile Experience: Mobile App Team + Mobile Web Team + App Store Optimization Team
+  - Enterprise Sales: Sales Portal Team + CRM Integration Team + Reporting Team
 
-#### Platform Grouping
-- **Definition**: A team-of-teams structure where multiple platform teams collaborate to provide related capabilities
-- **Purpose**: Group platform teams that work together to deliver a cohesive set of services (e.g., "Data Platform Grouping", "Cloud Infrastructure Grouping")
+#### Platform Grouping (Foundational Infrastructure)
+
+- **Definition**: A foundational platform (or small set of related platforms) that serves multiple value stream groupings
+- **Purpose**: Provide cohesive foundational capabilities that reduce cognitive load for ALL stream-aligned teams across ALL value streams
 - **Visual representation**: Very light blue background grouping in this tool
+- **Structure**:
+  - One or more "Inner Platform" teams at the foundation
+  - Serves multiple value stream groupings above it
+  - Platform grouping does NOT contain the stream-aligned teams it serves
+- **Typical Platform Groupings** (organizations usually have 1-3 total):
+  - **Cloud Infrastructure Platform**: Compute, networking, storage, deployment, observability
+  - **Data Platform**: Data storage, processing, pipelines, analytics infrastructure
+  - **Developer Experience Platform**: CI/CD, testing tools, developer portal, local dev environment
 - **Benefits**:
   - Clear platform ownership and governance
-  - Coordinated capability evolution
+  - Coordinated evolution of related platform capabilities
   - Thinnest Viable Platform (TVP) focus
-  - Internal platform team collaboration patterns
+  - Economies of scale for common infrastructure
 
-These fractal patterns help organizations scale Team Topologies principles beyond individual teams to higher-level organizational structures.
+#### Common Anti-Patterns to Avoid
+
+##### ❌ Anti-Pattern: Too Many Platform Groupings (Peer-Level)
+
+```
+❌ WRONG: Platform groupings as peers to value streams
+
+┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
+│ Value Stream │ │ Data Platform│ │ Security     │ │ DevEx        │
+│ E-Commerce   │ │ Grouping     │ │ Platform     │ │ Platform     │
+│              │ │              │ │ Grouping     │ │ Grouping     │
+│ 3 teams      │ │ 4 teams      │ │ 2 teams      │ │ 5 teams      │
+└──────────────┘ └──────────────┘ └──────────────┘ └──────────────┘
+
+Problem: All at same level - unclear who serves whom
+Result: Coordination overhead, unclear dependencies
+```
+
+##### ✅ Correct Pattern: Platform Groupings SERVE Value Streams
+
+```mermaid
+graph TB
+    subgraph VS["🟠 VALUE STREAMS (Business Domains) - Consume Services"]
+        VSG1["E-Commerce<br/>(3-5 stream teams)"]
+        VSG2["Mobile Experience<br/>(3-4 stream teams)"]
+        VSG3["Enterprise Sales<br/>(2-4 stream teams)"]
+    end
+    
+    subgraph PF["🔵 PLATFORM GROUPINGS (Foundation) - Provide Services"]
+        PG1["Cloud Infrastructure<br/>(4-6 platform teams)"]
+        PG2["Data Platform<br/>(2-4 platform teams)"]
+    end
+    
+    PF -.->|"X-as-a-Service<br/>reduces cognitive load"| VS
+    
+    style VS fill:#fff3e0,stroke:#f57c00,stroke-width:3px
+    style PF fill:#e3f2fd,stroke:#1976d2,stroke-width:3px
+```
+
+**✅ Correct Structure**:
+- Foundation layer: 1-3 platform groupings (Cloud, Data, maybe DevEx)
+- Business layer: 3-8 value stream groupings served by platforms
+- Clear directionality: Platforms serve multiple value streams
+- Healthy ratio: 60-70% stream-aligned teams
+
+**❌ Too Many Platform Groupings**: Creating 5-7 platform groupings suggests over-siloing
+- Problem: Platforms become isolated, missing opportunities for integration
+- Reality: Most organizations need 1-3 core platform groupings maximum
+
+**❌ Platform Groupings as Peer to Value Streams**: Treating platforms and value streams as same level
+- Problem: Misses the hierarchical relationship where platforms serve multiple value streams
+- Fix: Position platform groupings as foundational layer serving multiple business domains
+
+**❌ One Team = One Grouping**: Creating a grouping with only one team
+- Problem: Groupings are for coordination - a single team doesn't need grouping overhead
+- Fix: Either add related teams or remove the grouping designation
+
+**❌ Enabling Teams in Groupings**: Placing enabling teams inside value stream or platform groupings
+- Problem: Enabling teams should span across groupings (e.g., Security, UX Research)
+- Fix: Position enabling teams as cross-cutting, collaborating with multiple groupings via Facilitating interaction mode
+
+**❌ Stream-Aligned Teams Only in Value Streams**: Thinking stream-aligned teams can ONLY be in value stream groupings
+- Reality: The 2nd edition shows flexibility - what matters is clear value flow and cognitive load management
+
+#### Sizing Guidelines
+
+**Value Stream Groupings** (business domain focus):
+- Typical size: 3-8 stream-aligned teams per value stream
+- If > 8 teams: Consider splitting into multiple value streams
+- If < 3 teams: Might be too small to warrant grouping overhead
+
+**Platform Groupings** (foundation layer):
+- Typical size: 2-6 platform teams in a related capability area
+- Most organizations: 1-3 total platform groupings (Cloud, Data, DevEx)
+- If > 5 platform groupings: Likely over-siloing infrastructure
+
+**Team Type Ratio** (healthy organization):
+- Stream-aligned teams: 60-70% of total teams
+- Platform teams: 15-25% of total teams  
+- Enabling teams: 5-10% of total teams
+- Complicated Subsystem teams: 5-10% of total teams
+
+These fractal patterns help organizations scale Team Topologies principles beyond individual teams to higher-level organizational structures while maintaining clarity about who serves whom.
 
 ### Key Principles
 - **Team Cognitive Load**: Limit the amount of responsibility a single team handles
@@ -201,6 +457,57 @@ It's perfectly acceptable to create your own template with sections relevant to 
 
 Both formats use minimal YAML front matter (only what the visualization tool needs) and rich markdown for human readability.
 
+#### Team Interaction Tables
+
+This tool automatically parses and visualizes team interactions from markdown tables in your Team API documents. This makes dependencies explicit and helps identify interaction mode patterns.
+
+**Format**: Add interaction tables to your team markdown files under these sections:
+- `## Teams we currently interact with` - Active interactions
+- `## Teams we expect to interact with soon` - Planned interactions
+
+**Table structure**:
+```markdown
+| Team Name | Interaction Mode | Purpose | Duration |
+|-----------|------------------|---------|----------|
+| Payment Platform Team | X-as-a-Service | Payment processing | Ongoing |
+| Checkout Team | Collaboration | Build shared cart API | 3 months |
+```
+
+**Required columns**:
+- **Team Name** - Must match the team's `name` field in their YAML front matter
+- **Interaction Mode** - One of: `Collaboration`, `X-as-a-Service`, `Facilitating` (case-insensitive)
+
+**Optional columns**:
+- **Purpose** - Why the teams are interacting
+- **Duration** - How long the interaction will last (e.g., "Ongoing", "3 months", "6 weeks")
+- Any other columns you find useful
+
+**Visualization features**:
+- Interaction lines automatically drawn between teams on the canvas
+- Different line styles for each mode (solid/dashed/dotted)
+- Double-click teams to see interaction details in the modal
+- Rich markdown support in tables (links, inline code, formatting)
+
+**Best practices**:
+- Keep table simple - 4-5 columns maximum
+- Update Duration regularly to reflect changes
+- Use "Ongoing" for permanent dependencies
+- Document expected end dates for temporary interactions
+- Include Purpose to help others understand the relationship
+
+**Example from real team file**:
+```markdown
+## Teams we currently interact with
+
+| Team Name | Interaction Mode | Purpose | Duration |
+|-----------|------------------|---------|----------|
+| Cloud Development Platform Team | X-as-a-Service | Run on their AWS infrastructure | Ongoing |
+| API Gateway Team | Collaboration | Co-design authentication patterns | 2 months (ending Mar 2026) |
+| DevOps Enablement Team | Facilitating | Learn GitOps best practices | 8 weeks (ending Feb 2026) |
+```
+
+This format makes team dependencies discoverable, helps identify coupling, and tracks interaction mode evolution over time.
+
 #### Why Team APIs Matter
 
 Without clear Team APIs, organizations suffer from:
@@ -214,6 +521,26 @@ With well-defined Team APIs:
 - **Faster onboarding**: New teams can quickly understand who does what
 - **Explicit expectations**: SLAs and communication norms prevent misunderstandings
 - **Evolution tracking**: Changes to team interfaces are visible and managed
+- **Automatic visualization**: Interaction tables render as connection lines on the canvas
+
+#### Maintaining Team APIs
+
+**Update frequency**:
+- Review quarterly as part of team retrospectives
+- Update immediately when services/interfaces change
+- Update interaction tables when collaborations start/end
+
+**Keep it current**:
+- Remove outdated sections
+- Archive old interaction table entries (move to "Past interactions" section)
+- Update roadmap and "What we're currently working on"
+- Revise SLAs as services mature
+
+**Make it discoverable**:
+- Store in version control (Git) alongside code
+- Link from team wikis and documentation portals
+- Include in team onboarding materials
+- Review in cross-team syncs
 
 ### Cognitive Load Management
 
@@ -381,3 +708,7 @@ Use the dual visualization to:
 - [Team Interaction Modes](https://teamtopologies.com/key-concepts-content/what-are-the-three-team-interaction-modes) - Collaboration, X-as-a-Service, and Facilitating explained
 - [Henrik Kniberg: Spotify Engineering Culture (Video)](https://www.youtube.com/watch?v=4GK1NDTWbkY) - Part 1 of the original Spotify model presentation
 - [Conway's Law](https://martinfowler.com/bliki/ConwaysLaw.html) by Martin Fowler - How organizational structure influences system architecture
+
+### Real-World Examples & Case Studies
+- [Team Topologies 2nd Edition: Value Stream Grouping Clarification (LinkedIn)](https://www.linkedin.com/posts/team-topologies_one-of-the-most-crucial-clarifications-in-activity-7379446200917381120-Me27) - Visual explanation of the hierarchical relationship between platform groupings and value stream groupings from the 2nd edition
+- [Docker: Building Stronger, Happier Engineering Teams with Team Topologies](https://www.docker.com/blog/building-stronger-happier-engineering-teams-with-team-topologies/) - Docker's real-world implementation showing their Cloud Platform serving Customer, Content, and Developer Experience value streams with proper team ratios (~17 stream-aligned : 4 platform : 4 enabling teams)

@@ -1,23 +1,30 @@
 ---
-name: Search Platform Team
-team_type: platform
+name: E-Commerce Search Team
+team_type: stream-aligned
 position:
-  x: 1800.0
-  y: 2980.0
+  x: 204.0
+  y: 1890.0
 metadata:
   size: 6
   cognitive_load: medium
   established: 2023-09
-platform_grouping: Data Platform Grouping
+value_stream: E-Commerce
 ---
 
-# Search Platform Team
+# E-Commerce Search Team
 
 **Team name and focus**
 
-Search Platform Team – Provides scalable, high-performance search infrastructure and APIs as an internal platform, enabling product and business teams to deliver fast, relevant search experiences for customers and internal users.
+E-Commerce Search Team – Owns the end-to-end search experience for e-commerce customers, delivering fast, relevant product search and discovery features that drive conversion and engagement.
 
 ## Team type
+stream-aligned
+
+## Part of a value stream?
+
+Yes - E-Commerce
+
+## Team type (original)
 
 platform
 

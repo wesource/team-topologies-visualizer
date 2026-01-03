@@ -2,12 +2,13 @@
 name: Fraud Detection and Risk Modeling Team
 team_type: complicated-subsystem
 position:
-  x: 1800.0
-  y: 3480.0
+  x: 130.0
+  y: 905.0
 metadata:
   size: 5
   cognitive_load: high
   established: 2025-01
+value_stream: Financial Services
 ---
 
 # Fraud Detection & Risk Modeling Team

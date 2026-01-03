@@ -1,26 +1,30 @@
 ---
-name: ML Recommendations Team
+name: E-Commerce Recommendations Team
 team_type: complicated-subsystem
 position:
-  x: 1960.0
-  y: 3480.0
+  x: 130.0
+  y: 2090.0
 metadata:
-  size: 4
+  size: 5
   cognitive_load: high
   established: 2025-01
-platform_grouping: Data Platform Grouping
+value_stream: E-Commerce
 ---
 
-# ML Recommendations Team
+# E-Commerce Recommendations Team
 
 ## Team name and focus
-ML Recommendations Team – Builds and operates machine learning models for product recommendations and personalization, driving user engagement and sales.
+E-Commerce Recommendations Team – Owns personalized product recommendations and discovery features for e-commerce customers, using ML models to drive engagement and conversion.
 
 ## Team type
 complicated-subsystem
 
+## Part of a value stream?
+
+Yes - E-Commerce
+
 ## Part of a platform grouping?
-Yes – Data Platform Grouping
+No – Complicated-subsystem teams provide specialized ML/AI capabilities within their value stream
 
 ## Services provided (if applicable)
 - Product recommendation API

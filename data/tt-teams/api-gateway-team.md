@@ -1,9 +1,9 @@
 ---
-name: API Gateway Platform Team
-team_type: platform
+name: API Gateway Team
+team_type: stream-aligned
 position:
   x: 204.0
-  y: 1175.0
+  y: 2355.0
 metadata:
   size: 6
   cognitive_load: medium
@@ -11,22 +11,19 @@ metadata:
 platform_grouping: Cloud Infrastructure Platform Grouping
 ---
 
-# API Gateway Platform Team
+# API Gateway Team
 
 ## Team name and focus
-API Gateway Platform Team – Provides API gateway and service mesh infrastructure as a compelling internal product, managing all ingress traffic and inter-service communication.
+API Gateway Team – Stream-aligned team delivering API gateway as a product experience for API consumers, focusing on developer experience, API documentation, and service reliability within the platform grouping.
 
 ## Team type
-platform
+stream-aligned
 
 ## Part of a platform grouping?
-Yes – Cloud Infrastructure Platform Grouping (core infrastructure team working alongside AWS and Observability platform teams)
+Yes – Cloud Infrastructure Platform Grouping (stream-aligned team delivering internal API product, similar to Developer Portal Team)
 
 ## Services provided (if applicable)
-- API Gateway (Kong / AWS API Gateway): rate limiting, throttling, versioning, routing, transformation, OpenAPI docs, developer portal
-- Service Mesh (Istio / Linkerd): mTLS, traffic splitting, canary routing, circuit breakers, retries, service-to-service auth
-- Traffic Management: load balancing, geo routing, blue/green/canary, header/path-based routing
-- Security & Compliance: OAuth2/JWT, API keys, DDoS protection, WAF, PCI-DSS compliance
+N/A - This is a stream-aligned team delivering API gateway as a product experience.
 
 ## Service-level expectations (SLA)
 - API gateway availability: 99.95% (measured monthly)

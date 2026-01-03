@@ -2,13 +2,13 @@
 name: Cloud Development Platform Team
 team_type: platform
 position:
-  x: 1054.0
-  y: 1355.0
+  x: 204.0
+  y: 2715.0
 metadata:
   size: 8
   cognitive_load: medium
   established: 2024-03
-platform_grouping: Developer Experience Platform Grouping
+platform_grouping: Cloud Infrastructure Platform Grouping
 ---
 
 # Cloud Development Platform Team
@@ -25,7 +25,7 @@ platform
 
 ## Part of a platform grouping?
 
-Yes - Developer Experience Platform Grouping (works alongside Observability, CI/CD, Portal, DevOps Enablement teams)
+Yes - Cloud Infrastructure Platform Grouping (works alongside Observability, CI/CD, API Gateway, Portal, Feature Management teams)
 
 ## Code & Artifacts
 _[Extended]_
@@ -190,7 +190,6 @@ See "Roadmap & Current Priorities" above for Q1 2026 focus areas.
 | API Gateway Platform Team | X-as-a-Service | Deploy API Gateway on our AWS accounts | Ongoing |
 | CI/CD Platform Team | X-as-a-Service | Pipelines deploy to our AWS infrastructure | Ongoing |
 | Developer Portal Team | X-as-a-Service | Portal runs on our ECS clusters, integrates our cost APIs | Ongoing |
-| DevOps Enablement Team | Collaboration | Co-evolve platform patterns with real team feedback | Ongoing (occasional) |
 | Security & Compliance Team | X-as-a-Service | AWS guardrails and compliance automation | Ongoing |
 | All stream-aligned teams | X-as-a-Service | Consume our platform for AWS infrastructure | Ongoing |
 

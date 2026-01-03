@@ -237,10 +237,35 @@ export async function showTeamDetails(team, currentView) {
             typeBadge.className = `team-badge ${teamData.team_type}`;
         }
         
-        // Render description as HTML (simple markdown-like rendering)
+        // Render description as HTML with Team API formatting
         const detailDescription = document.getElementById('detailDescription');
         if (detailDescription) {
-            detailDescription.innerHTML = renderMarkdown(teamData.description || 'No description available.');
+            const description = teamData.description || 'No description available.';
+            const renderedHtml = renderMarkdown(description);
+            
+            // Apply Team API specific styling
+            detailDescription.innerHTML = `<div class="team-api-content">${renderedHtml}</div>`;
+            
+            // Make Slack/email links clickable if they're plain text
+            detailDescription.querySelectorAll('li, p').forEach(el => {
+                // Slack channels
+                el.innerHTML = el.innerHTML.replace(/#([a-z0-9-]+)/g, 
+                    '<a href="slack://channel?team=YOUR_TEAM&id=$1" class="slack-link">#$1</a>');
+                
+                // Email addresses (if not already linked)
+                el.innerHTML = el.innerHTML.replace(/([a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,})/gi, 
+                    (match, email) => {
+                        if (el.innerHTML.includes(`href="mailto:${email}"`)) return match;
+                        return `<a href="mailto:${email}">${email}</a>`;
+                    });
+                
+                // Wiki/docs URLs (if not already linked)
+                el.innerHTML = el.innerHTML.replace(/(https?:\/\/[^\s<]+)/g, 
+                    (match, url) => {
+                        if (el.innerHTML.includes(`href="${url}"`)) return match;
+                        return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+                    });
+            });
         }
         
         // Dependencies
@@ -367,20 +392,25 @@ export async function showTeamDetails(team, currentView) {
 }
 
 /**
- * Simple markdown-like text rendering
- * @param {string} text - Text to render
+ * Enhanced markdown rendering with Team API support
+ * @param {string} text - Markdown text to render
  * @returns {string} HTML string
  */
 function renderMarkdown(text) {
     if (!text) return '';
     
-    // Simple markdown-like rendering
     let html = text;
     
-    // Headers
-    html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
-    html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
-    html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+    // Parse markdown tables first (before other processing)
+    html = renderMarkdownTables(html);
+    
+    // Headers (h3, h2, h1)
+    html = html.replace(/^### (.+)$/gm, '<h3 class="team-api-h3">$1</h3>');
+    html = html.replace(/^## (.+)$/gm, '<h2 class="team-api-h2">$1</h2>');
+    html = html.replace(/^# (.+)$/gm, '<h1 class="team-api-h1">$1</h1>');
+    
+    // Links [text](url)
+    html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
     
     // Bold and italic
     html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
@@ -390,18 +420,116 @@ function renderMarkdown(text) {
     html = html.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
     html = html.replace(/`(.+?)`/g, '<code>$1</code>');
     
-    // Lists
-    html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
-    html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+    // Lists (unordered and ordered)
+    html = renderMarkdownLists(html);
     
     // Paragraphs
     html = html.split('\n\n').map(p => {
         if (!p.trim()) return '';
-        if (p.startsWith('<h') || p.startsWith('<ul') || p.startsWith('<pre')) return p;
+        // Don't wrap if already has block-level tags
+        if (p.match(/^<(h[123]|ul|ol|pre|table|div)/)) return p;
         return `<p>${p}</p>`;
     }).join('\n');
     
     return html;
+}
+
+/**
+ * Parse markdown tables into HTML tables
+ * @param {string} text - Text with markdown tables
+ * @returns {string} Text with HTML tables
+ */
+function renderMarkdownTables(text) {
+    // Match markdown tables: header | separator | rows
+    // Separator can have multiple columns: |---|---|---|
+    const tableRegex = /(\|.+\|)\n(\|[-: |]+\|)\n((?:\|.+\|\n?)+)/gm;
+    
+    return text.replace(tableRegex, (match, header, separator, rows) => {
+        
+        // Parse header
+        const headerCells = header.split('|').slice(1, -1).map(cell => cell.trim());
+        
+        // Parse rows
+        const rowLines = rows.trim().split('\n');
+        const rowData = rowLines.map(row => {
+            return row.split('|').slice(1, -1).map(cell => cell.trim());
+        });
+        
+        // Build HTML table
+        let tableHtml = '<table class="team-api-table"><thead><tr>';
+        headerCells.forEach(cell => {
+            tableHtml += `<th>${cell}</th>`;
+        });
+        tableHtml += '</tr></thead><tbody>';
+        
+        rowData.forEach(row => {
+            tableHtml += '<tr>';
+            row.forEach(cell => {
+                tableHtml += `<td>${cell}</td>`;
+            });
+            tableHtml += '</tr>';
+        });
+        
+        tableHtml += '</tbody></table>';
+        return tableHtml;
+    });
+}
+
+/**
+ * Parse markdown lists (handles nested lists)
+ * @param {string} text - Text with markdown lists
+ * @returns {string} Text with HTML lists
+ */
+function renderMarkdownLists(text) {
+    const lines = text.split('\n');
+    let result = [];
+    let inList = false;
+    let listType = null; // 'ul' or 'ol'
+    
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        
+        // Check for unordered list item
+        const unorderedMatch = line.match(/^- (.+)$/);
+        // Check for ordered list item
+        const orderedMatch = line.match(/^\d+\. (.+)$/);
+        
+        if (unorderedMatch) {
+            if (!inList) {
+                result.push('<ul>');
+                inList = true;
+                listType = 'ul';
+            } else if (listType !== 'ul') {
+                result.push(`</${listType}><ul>`);
+                listType = 'ul';
+            }
+            result.push(`<li>${unorderedMatch[1]}</li>`);
+        } else if (orderedMatch) {
+            if (!inList) {
+                result.push('<ol>');
+                inList = true;
+                listType = 'ol';
+            } else if (listType !== 'ol') {
+                result.push(`</${listType}><ol>`);
+                listType = 'ol';
+            }
+            result.push(`<li>${orderedMatch[1]}</li>`);
+        } else {
+            if (inList && line.trim() === '') {
+                result.push(`</${listType}>`);
+                inList = false;
+                listType = null;
+            }
+            result.push(line);
+        }
+    }
+    
+    // Close any open list
+    if (inList) {
+        result.push(`</${listType}>`);
+    }
+    
+    return result.join('\n');
 }
 
 /**
@@ -411,3 +539,6 @@ export async function handleTeamSubmit(e) {
     e.preventDefault();
     alert('Create team functionality is disabled. Please edit files manually.');
 }
+
+// Export for testing
+export { renderMarkdownTables };

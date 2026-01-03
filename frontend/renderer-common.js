@@ -80,7 +80,9 @@ export function getTeamBoxWidth(team, currentView = 'current') {
         // Stream-aligned and platform teams: wide horizontal
         if (team.team_type === 'stream-aligned' || team.team_type === 'platform') {
             // Check if team is in a grouping - if so, make it wide
-            const hasGrouping = team.metadata?.value_stream || team.metadata?.platform_grouping;
+            // Check top-level first (from YAML root), then metadata (for backwards compatibility)
+            const hasGrouping = team.value_stream || team.platform_grouping || 
+                                team.metadata?.value_stream || team.metadata?.platform_grouping;
             if (hasGrouping) {
                 // ~80% of grouping width (700px), with 10% margins = ~560px
                 return 560;

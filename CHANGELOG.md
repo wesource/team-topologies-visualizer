@@ -7,6 +7,79 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Team API Backend Support (Step 1 of 5)**: Enhanced backend to support full Team API structure
+  - Added `TeamAPI` submodel in `backend/models.py` for structured Team API fields (purpose, services, contact, SLA, etc.)
+  - Extended `TeamData` model with optional Team API fields (roadmap, current_work, software_owned, testing_approach, etc.)
+  - Implemented automatic interaction table parsing from Team API markdown content
+  - New `_parse_interaction_tables()` function extracts dependencies and interaction modes from "Teams we currently interact with" tables
+  - Dependencies and interaction modes now automatically populated from Team API markdown (not stored in YAML)
+  - Added 8 comprehensive tests for interaction table parsing (all passing)
+  - Backend tests: 25/25 passing (up from 17)
+
+- **Team API UI Display (Step 2 of 5)**: Enhanced modal to display Team API content with rich formatting
+  - Upgraded `renderMarkdown()` function with proper table, list, link, and code rendering
+  - Added `renderMarkdownTables()` function to parse markdown tables into HTML tables with styling
+  - Added `renderMarkdownLists()` function for ordered and unordered list support
+  - Auto-linkification of Slack channels (#platform-team), email addresses, and URLs
+  - Added comprehensive Team API CSS styling in `frontend/styles.css`:
+    - `.team-api-content` styles for headers, paragraphs, lists, code blocks
+    - `.team-api-table` styles for interaction tables with hover effects
+    - Slack link styling with Team Topologies purple color
+    - Improved readability for long descriptions
+  - Added 8 tests for markdown rendering concepts (frontend tests: 92/93 passing, up from 84/85)
+  - Team detail modal now displays Team API sections with proper formatting:
+    - Services provided with bullet lists
+    - SLA expectations in formatted text
+    - Communication channels with clickable Slack/email links
+    - Interaction tables rendered as HTML tables
+    - Roadmap and current priorities
+
+- **Team API Content Enrichment (Step 3 of 5)**: Comprehensive content updates across all 28 teams
+  - Enriched 18 teams with full Team API content (up from initial 10 teams)
+  - Added Team Interaction Tables to all 28 teams following Team API template format
+  - Created 4 new teams to improve team topology structure:
+    - Security Engineering Enablement Team (Enabling) - Filling security enablement gap
+    - Mobile Platform Team (Platform) - Supporting mobile development teams
+    - E-commerce Infrastructure Team (Platform) - Backend infrastructure for E-commerce
+    - Enterprise Sales Portal Team (Stream-aligned) - Part of Enterprise Sales value stream
+  - Restructured team composition to match Team Topologies patterns:
+    - 17 stream-aligned teams (60.7% - aligns with recommended 6:1:1 ratio)
+    - 7 platform teams (25%)
+    - 3 enabling teams (10.7%)
+    - 1 complicated subsystem team (3.6%)
+  - Implemented pattern examples from Team Topologies 2nd Edition:
+    - Mobile Inner Platform Team: Platform team within Value Stream Grouping (mobile experience)
+    - API Gateway Platform Team: Stream-aligned team within Platform Grouping (demonstrates flexible topology)
+  - All teams now have:
+    - Team Interaction Tables with proper columns (Team Name, Interaction Mode, Purpose, Duration)
+    - Defined services and SLAs where applicable
+    - Communication channels (Slack, email)
+    - Dependencies and interaction modes
+
+- **Team API Documentation (Step 4 of 5)**: Added comprehensive Team Interaction Tables guidance to CONCEPTS.md
+  - New "Team Interaction Tables" section documents:
+    - Standard table format and required columns
+    - Interaction mode detection and visualization
+    - Rich markdown support in tables
+    - Best practices for maintaining tables
+    - Examples and syntax
+  - Guidance helps users understand how tables drive canvas visualization
+  - Documents automatic interaction mode detection and connection rendering
+
+- **Markdown Table Rendering Fix**: Fixed critical bug where markdown tables rendered as raw text in team detail modal
+  - Root cause: Regex pattern `|[-: ]+|` didn't include pipe character, failing to match multi-column separator rows like `|-----------|------------------|---------|----------|`
+  - Solution: Updated regex to `|[-: |]+|` to allow pipes within separator line
+  - Added comprehensive test suite with 7 test cases covering:
+    - Simple 2-column tables
+    - 4-column tables with multiple pipes in separator
+    - Tables with blank lines before them
+    - Alignment markers (`:---`, `:---:`, `---:`)
+    - Multiple tables in same text
+    - Empty cells
+  - All 99 frontend tests passing (up from 92)
+  - Exported `renderMarkdownTables()` function for testability
+
 ### Fixed
 - **Critical Bug**: Application no longer corrupts team markdown files when dragging teams on canvas
   - Removed `dependencies: []` and `interaction_modes: {}` from being written to YAML front matter

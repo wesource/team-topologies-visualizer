@@ -2,51 +2,70 @@
 name: Enterprise Sales Portal Team
 team_type: stream-aligned
 position:
-  x: 1800.0
-  y: 1540.0
+  x: 1054.0
+  y: 525.0
 metadata:
   size: 6
   cognitive_load: medium
   established: 2023-11
+value_stream: Enterprise Sales
 ---
 
-## Cognitive Load Assessment
-- **Overall**: Low 🟢 (healthy, team has capacity for innovation)
-- **Domain complexity**: Medium (CRM integration, quote generation, account hierarchies)
-- **Intrinsic complexity**: Low (CRUD application with reporting)
-- **Extraneous complexity**: Low (excellent platform support)
+# Enterprise Sales Portal Team
 
-## Responsibilities
-- Sales portal web application
-- Enterprise customer account management
-- Sales analytics and dashboards
-- Quote and proposal generation
-- Contract management
-- Customer onboarding workflows
+## Team name and focus
+Enterprise Sales Portal Team – Delivers sales portal and account management for enterprise customers including quote generation, contract management, and sales analytics.
 
-## Platform Dependencies
-- **Core Platform**: Authentication (SSO), APIs, data access, hosting
+## Team type
+stream-aligned
 
-## Current Collaboration
-- **Data Engineering Team**: 2-month collaboration to build new analytics features using data warehouse
+## Part of a value stream?
 
-## Technologies
-- Vue.js (frontend)
-- Python FastAPI (backend)
-- PostgreSQL
-- Salesforce integration
+Yes - Enterprise Sales
 
-## Team Composition
-- 1 Product Lead (part-time, split with operations)
-- 1 Tech Lead
-- 2 Full-stack Engineers
-- 1 Data Analyst (embedded from Data Engineering for analytics work)
+## Services provided (if applicable)
+N/A - This is a stream-aligned team delivering customer-facing features.
 
-## Flow Metrics (Current)
-- Lead time: < 2 days
-- Deployment frequency: 2-3 times per week
-- Change fail rate: 2%
-- **Note**: Team is performing well with room for innovation time
+## Service-level expectations (SLA)
+- Portal availability: 99.5% uptime
+- Page load time: < 1 second
+- Support response: < 2 hours
+
+## Software owned and evolved by this team
+- Sales Portal (Vue.js)
+- Quote Generation Service (Python)
+- Contract Management System
+
+## Versioning approaches
+- Semantic versioning for APIs
+- Feature flags for experiments
+
+## Wiki and documentation
+- [Team Wiki](https://wiki.company.com/teams/enterprise-sales-portal)
+- [Sales Portal Docs](https://docs.company.com/sales-portal)
+
+## Glossary and terms ubiquitous language
+- **Quote**: Price estimate for enterprise customer
+- **Account Hierarchy**: Multi-level customer organization structure
+
+## Communication
+- **Chat**: #enterprise-sales-portal
+- **Email**: sales-portal@company.com
+
+## Daily sync time
+10:00 AM daily standup
+
+## What we're currently working on
+- Q1 2026: Self-service quote generation
+- Q1 2026: Contract renewal automation
+
+## Teams we currently interact with
+
+| Team Name | Interaction Mode | Purpose | Duration |
+|-----------|------------------|---------|----------|
+| DevOps Enablement Team | Facilitating | Cloud-native deployment patterns, CI/CD setup | 8 weeks (ending Feb 2026) |
+| Data Storage Platform Team | X-as-a-Service | Data persistence | Ongoing |
+| CI/CD Platform Team | X-as-a-Service | Deployment pipelines | Ongoing |
 
 ## Innovation Capacity
 Team has ~20% time for experimentation:

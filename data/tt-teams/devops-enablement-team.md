@@ -2,33 +2,36 @@
 name: DevOps Enablement Team
 team_type: enabling
 position:
-  x: 1960.0
-  y: 3360.0
+  x: 980.0
+  y: 725.0
 metadata:
   size: 4
   cognitive_load: medium
   established: 2024-02
-platform_grouping: Developer Experience Platform Grouping
+value_stream: Enterprise Sales
 ---
 
 # DevOps Enablement Team
 
 ## Team name and focus
-DevOps Enablement Team – Temporarily collaborates with stream-aligned and platform teams to upskill them on DevOps practices, CI/CD pipelines, infrastructure-as-code, and cloud-native patterns, with a goal of teams becoming autonomous within 8-12 weeks.
+DevOps Enablement Team – Currently embedded with the Enterprise Sales value stream teams to help them transform to cloud-native practices, CI/CD pipelines, and infrastructure-as-code. Temporary engagement (8-12 weeks) to upskill teams on DevOps practices with the goal of the Enterprise Sales teams becoming autonomous in cloud deployments.
 
 ## Team type
 enabling
 
-## Part of a platform grouping?
-Yes – Developer Experience Platform Grouping
+## Part of a value stream?
+
+Yes - Enterprise Sales (temporary engagement)
+
+This enabling team is currently focused on helping Enterprise Sales teams (Sales Portal, CRM Integration, Reporting) transition from traditional deployment models to cloud-native CI/CD practices. Once these teams are autonomous, the enabling team will move to help another value stream.
 
 ## Services provided (if applicable)
 Our enabling team provides coaching and knowledge transfer, not long-term services:
-- DevOps practices coaching: CI/CD, infrastructure-as-code, GitOps, deployment strategies
+- DevOps practices coaching: CI/CD, infrastructure-as-code, GitOps, deployment strategies for enterprise workloads
 - Cloud-native patterns guidance: Kubernetes, containers, serverless, microservices architectures
-- Tooling adoption support: Help teams adopt GitHub Actions, Terraform, ArgoCD, Helm
+- Tooling adoption support: Help teams adopt GitHub Actions, Terraform, ArgoCD, Helm in enterprise context
 - Pair programming sessions: Hands-on coding together on team's actual problems
-- Workshops and training: Custom workshops based on team needs (2-4 hour sessions)
+- Workshops and training: Custom workshops based on Enterprise Sales team needs (2-4 hour sessions)
 - Architecture reviews: Review team's infrastructure and deployment architecture, provide feedback
 
 ## Service-level expectations (SLA)
@@ -112,11 +115,9 @@ Announce major updates via #devops-enablement Slack channel.
 
 | Team Name | Interaction Mode | Purpose | Duration |
 |-----------|------------------|---------|----------|
-| Mobile App Experience Team | Facilitating | Kubernetes adoption, GitOps patterns | 8 weeks (ending Feb 2026) |
-| Fraud Detection & Risk Modeling Team | Facilitating | ML deployment pipelines, CI/CD for models | 10 weeks (ending Mar 2026) |
-| Data Engineering Team | Facilitating | Airflow testing, IaC for data infrastructure | 8 weeks (ending Mar 2026) |
-| Cloud Development Platform Team | Collaboration | Co-evolve platform patterns with real team feedback | Ongoing (occasional) |
-| Observability Platform Team | Collaboration | Share SRE practices, help teams adopt observability | Ongoing (occasional) |
+| Enterprise Sales Portal Team | Facilitating | Cloud-native deployment patterns, CI/CD setup | 8 weeks (ending Feb 2026) |
+| Enterprise CRM Integration Team | Facilitating | Infrastructure-as-code, GitOps workflows | 10 weeks (ending Mar 2026) |
+| Enterprise Reporting Team | Facilitating | Containerization, Kubernetes deployment | 8 weeks (ending Mar 2026) |
 
 ## Teams we expect to interact with soon
 

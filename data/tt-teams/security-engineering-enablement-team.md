@@ -2,8 +2,8 @@
 name: Security Engineering Enablement Team
 team_type: enabling
 position:
-  x: 2120.0
-  y: 3480.0
+  x: 1800.0
+  y: 220.0
 metadata:
   size: 4
   cognitive_load: medium
@@ -92,3 +92,43 @@ Facilitating is about **sensing and reducing obstacles** for other teams:
 - **Security & Compliance Team**: Defines policies, handles audits, incident response
 - **Security Engineering Enablement Team**: Helps teams implement policies, upskills on security practices
 - Clear division: Policy vs. Practice
+
+## Service-level expectations (SLA)
+- Initial consultation: Within 2 business days
+- Engagement capacity: 2-3 teams simultaneously
+- Follow-up support: 1 month after engagement
+
+## Software owned and evolved by this team
+- Security Playbooks & Guides
+- Security Workshop Materials
+- Threat Modeling Templates
+
+## Versioning approaches
+- Semantic versioning for playbooks
+
+## Wiki and documentation
+- [Team Wiki](https://wiki.company.com/teams/security-enablement)
+- [Security Playbooks](https://playbooks.company.com/security)
+
+## Glossary and terms ubiquitous language
+- **Threat Modeling**: Identifying security risks
+- **SAST**: Static Application Security Testing
+- **Shift-Left**: Finding security issues early
+
+## Communication
+- **Chat**: #security-enablement
+- **Email**: security-enablement@company.com
+
+## Daily sync time
+10:00 AM daily standup
+
+## What we're currently working on
+- Q1 2026: OAuth2 implementation coaching (Mobile team)
+- Q1 2026: Security workshop series
+
+## Teams we currently interact with
+
+| Team Name | Interaction Mode | Purpose | Duration |
+|-----------|------------------|---------|----------|
+| Mobile App Experience Team | Facilitating | OAuth2 implementation, biometric auth | 8 weeks (ending Feb 2026) |
+| API Gateway Platform Team | Facilitating | WAF optimization, DDoS mitigation | 6 weeks (ending Feb 2026) |

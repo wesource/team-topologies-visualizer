@@ -2,55 +2,76 @@
 name: E-Commerce Checkout Team
 team_type: stream-aligned
 position:
-  x: 1800.0
-  y: 1180.0
+  x: 204.0
+  y: 1350.0
 metadata:
   size: 8
   cognitive_load: medium
   established: 2023-11
+value_stream: E-Commerce
 ---
 
-# E-commerce Checkout Team
+# E-Commerce Checkout Team
 
-Stream-aligned team responsible for the end-to-end checkout experience for e-commerce customers.
+## Team name and focus
+E-Commerce Checkout Team – Owns the end-to-end checkout experience from cart review to order confirmation, ensuring fast and reliable payment processing for e-commerce customers.
 
-## Value Stream
-**E-commerce Experience** - Serves customers purchasing products online through web and mobile interfaces.
+## Team type
+stream-aligned
 
-## Cognitive Load Assessment
-- **Overall**: Medium (manageable but approaching limits)
-- **Domain complexity**: High (payment flows, tax calculations, inventory checks, fraud detection)
-- **Intrinsic complexity**: Medium (well-understood problem space)
-- **Extraneous complexity**: Low (good platform support reduces cognitive overhead)
+## Part of a value stream?
 
-## Responsibilities
-- Shopping cart management and persistence
-- Checkout flow orchestration
-- Order placement and confirmation
-- Promotional code application and validation
-- Guest checkout experience
-- Saved payment methods
-- Order review and editing
+Yes - E-Commerce
 
-## Platform Dependencies
-- **Payment Platform**: Payment processing, fraud detection, PCI compliance
-- **Core Platform**: Authentication, user profiles, notifications
+This team works within the E-Commerce value stream to deliver seamless checkout experiences across web and mobile channels.
 
-## Technologies
-- React (frontend)
-- Node.js (BFF - Backend for Frontend)
-- GraphQL
-- Redis (cart persistence)
+## Services provided (if applicable)
+N/A - This is a stream-aligned team delivering customer-facing features.
 
-## Team Composition
-- 1 Product Lead
-- 1 Tech Lead
-- 3 Full-stack Engineers
-- 1 Frontend Specialist
-- 1 UX Designer
+## Service-level expectations (SLA)
+- Checkout page availability: 99.9% uptime
+- Payment processing latency: < 2 seconds p99
+- Order confirmation delivery: < 30 seconds
+- Support response time: < 2 hours
 
-## Flow Metrics (Target)
-- Lead time: < 2 days
-- Deployment frequency: Multiple times per day
-- Change fail rate: < 5%
-- MTTR: < 1 hour
+## Software owned and evolved by this team
+- Checkout Service (Node.js microservice)
+- Checkout UI (React components)
+- Order Confirmation Service
+- Promotional Code Engine
+
+## Versioning approaches
+- Semantic versioning for APIs
+- Feature flags for gradual rollouts
+- Backward-compatible API changes only
+
+## Wiki and documentation
+- [Team Wiki](https://wiki.company.com/teams/e-commerce-checkout)
+- [Checkout API Docs](https://docs.company.com/checkout-api)
+- [Runbooks](https://runbooks.company.com/checkout)
+
+## Glossary and terms ubiquitous language
+- **Guest Checkout**: Purchase without account creation
+- **Saved Payment Method**: Tokenized payment info for faster checkout
+- **Order Confirmation**: Final step with order number and receipt
+
+## Communication
+- **Chat**: #ecommerce-checkout
+- **Email**: checkout-team@company.com
+
+## Daily sync time
+10:00 AM daily standup (15 minutes)
+
+## What we're currently working on
+- Q1 2026: Express checkout (one-click purchase) for returning customers
+- Q1 2026: Mobile payment integration (Apple Pay, Google Pay)
+- Q2 2026: Checkout A/B testing framework
+
+## Teams we currently interact with
+
+| Team Name | Interaction Mode | Purpose | Duration |
+|-----------|------------------|---------|----------|
+| E-Commerce Cart Team | Collaboration | Seamless cart-to-checkout handoff | Ongoing |
+| Payment Processing Team | X-as-a-Service | Payment processing and fraud detection | Ongoing |
+| Data Storage Platform Team | X-as-a-Service | Order data persistence | Ongoing |
+| CI/CD Platform Team | X-as-a-Service | Deployment pipelines | Ongoing |

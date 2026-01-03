@@ -2,13 +2,13 @@
 name: Observability Platform Team
 team_type: platform
 position:
-  x: 1600.0
-  y: 1100.0
+  x: 204.0
+  y: 3615.0
 metadata:
   size: 5
   cognitive_load: medium
   established: 2023-09
-platform_grouping: Developer Experience Platform Grouping
+platform_grouping: Cloud Infrastructure Platform Grouping
 ---
 
 # Observability Platform Team
@@ -117,7 +117,6 @@ Yes - Developer Experience Platform Grouping (works alongside Cloud Development,
 | Team Name | Interaction Mode | Purpose | Duration |
 |-----------|------------------|---------|----------|
 | Cloud Development Platform Team | X-as-a-Service | Run on their AWS/Kubernetes infrastructure | Ongoing |
-| DevOps Enablement Team | Facilitating | Collaborate on SRE practices and observability adoption | Ongoing (occasional) |
 | API Gateway Platform Team | X-as-a-Service | Monitor API Gateway metrics and traces | Ongoing |
 | All stream-aligned teams | X-as-a-Service | Consume observability platform for monitoring their services | Ongoing |
 | CI/CD Platform Team | X-as-a-Service | Monitor build/deploy pipelines, track deployment frequency | Ongoing |

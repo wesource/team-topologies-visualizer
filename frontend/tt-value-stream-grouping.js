@@ -18,7 +18,8 @@ export function getValueStreamGroupings(teams) {
     const groupMap = new Map();
     
     teams.forEach(team => {
-        const valueStream = team.metadata?.value_stream || '(Ungrouped)';
+        // Check top-level first (from YAML root), then metadata (for backwards compatibility)
+        const valueStream = team.value_stream || team.metadata?.value_stream || '(Ungrouped)';
         
         if (!groupMap.has(valueStream)) {
             groupMap.set(valueStream, []);
@@ -61,7 +62,8 @@ export function getValueStreamNames(teams) {
     const valueStreams = new Set();
     
     teams.forEach(team => {
-        const valueStream = team.metadata?.value_stream;
+        // Check top-level first (from YAML root), then metadata (for backwards compatibility)
+        const valueStream = team.value_stream || team.metadata?.value_stream;
         if (valueStream) {
             valueStreams.add(valueStream);
         }
@@ -81,7 +83,10 @@ export function filterTeamsByValueStream(teams, selectedValueStream) {
         return teams;
     }
 
-    return teams.filter(team => team.metadata?.value_stream === selectedValueStream);
+    return teams.filter(team => {
+        const valueStream = team.value_stream || team.metadata?.value_stream;
+        return valueStream === selectedValueStream;
+    });
 }
 
 /**

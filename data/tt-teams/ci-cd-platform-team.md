@@ -2,13 +2,13 @@
 name: CI/CD Platform Team
 team_type: platform
 position:
-  x: 1054.0
-  y: 1175.0
+  x: 204.0
+  y: 2535.0
 metadata:
   size: 7
   cognitive_load: medium
   established: 2024-05
-platform_grouping: Developer Experience Platform Grouping
+platform_grouping: Cloud Infrastructure Platform Grouping
 ---
 
 # CI/CD Platform Team
@@ -87,7 +87,6 @@ platform_grouping: Developer Experience Platform Grouping
 | Developer Portal Team | X-as-a-Service | CI/CD status displayed in portal | Ongoing |
 | API Gateway Platform Team | X-as-a-Service | Automated deployment to API Gateway routes | Ongoing |
 | All stream-aligned teams | X-as-a-Service | Consume CI/CD pipelines for deployments | Ongoing |
-| DevOps Enablement Team | Collaboration | Co-design advanced deployment patterns | Occasional |
 
 ## Teams we expect to interact with soon
 

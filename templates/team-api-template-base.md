@@ -9,6 +9,8 @@ position:
 metadata:
   size: 7  # Number of people on the team (5-9 recommended)
   cognitive_load: medium  # low | medium | high | very-high
+value_stream: [Value Stream Name]  # Optional: Grouping by value stream
+platform_grouping: [Platform Grouping Name]  # Optional: Grouping by platform or capability area
 ---
 
 # [Your Team Name]

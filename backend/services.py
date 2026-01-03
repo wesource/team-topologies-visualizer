@@ -37,7 +37,7 @@ def get_data_dir(view: str = "tt") -> Path:
 
 
 def parse_team_file(file_path: Path) -> TeamData:
-    """Parse a markdown file with YAML front matter"""
+    """Parse a markdown file with YAML front matter and extract Team API interactions from markdown tables"""
     with open(file_path, 'r', encoding='utf-8') as f:
         content = f.read()
     
@@ -82,6 +82,13 @@ def parse_team_file(file_path: Path) -> TeamData:
                     if key in data['team_api']:
                         data[key] = data['team_api'][key]
 
+            # Parse interaction tables from markdown content (for visualization connections)
+            dependencies, interaction_modes = _parse_interaction_tables(markdown_content)
+            if dependencies:
+                data['dependencies'] = dependencies
+            if interaction_modes:
+                data['interaction_modes'] = interaction_modes
+
             return TeamData(**data)
 
     # If no front matter, treat as plain markdown
@@ -90,6 +97,59 @@ def parse_team_file(file_path: Path) -> TeamData:
         team_type="stream-aligned",
         description=content
     )
+
+
+def _parse_interaction_tables(markdown_content: str) -> tuple[list[str], dict[str, str]]:
+    """Parse interaction tables from markdown content to extract dependencies and interaction modes.
+    
+    Looks for tables under "## Teams we currently interact with" section.
+    Expected format:
+    | Team Name | Interaction Mode | Purpose | Duration |
+    |-----------|------------------|---------|----------|
+    | Some Team | X-as-a-Service  | ...     | ...      |
+    
+    Returns:
+        Tuple of (dependencies: list of team names, interaction_modes: dict mapping team name to mode)
+    """
+    dependencies = []
+    interaction_modes = {}
+    
+    # Find the "Teams we currently interact with" section
+    current_interactions_match = re.search(
+        r'## Teams we currently interact with\s*\n(.*?)(?=\n## |$)',
+        markdown_content,
+        re.DOTALL | re.IGNORECASE
+    )
+    
+    if not current_interactions_match:
+        return dependencies, interaction_modes
+    
+    table_content = current_interactions_match.group(1)
+    
+    # Parse markdown table rows (skip header and separator)
+    lines = table_content.strip().split('\n')
+    for line in lines:
+        # Skip header row and separator row
+        if line.startswith('|') and not line.startswith('|---') and 'Team Name' not in line:
+            # Parse table columns
+            cols = [col.strip() for col in line.split('|')[1:-1]]  # Remove empty first/last elements
+            if len(cols) >= 2:
+                team_name = cols[0].strip()
+                interaction_mode = cols[1].strip().lower()
+                
+                if team_name and interaction_mode:
+                    dependencies.append(team_name)
+                    # Normalize interaction mode names
+                    if 'x-as-a-service' in interaction_mode or 'xaas' in interaction_mode:
+                        interaction_modes[team_name] = 'x-as-a-service'
+                    elif 'collaboration' in interaction_mode:
+                        interaction_modes[team_name] = 'collaboration'
+                    elif 'facilitat' in interaction_mode:
+                        interaction_modes[team_name] = 'facilitating'
+                    else:
+                        interaction_modes[team_name] = interaction_mode
+    
+    return dependencies, interaction_modes
 
 
 def write_team_file(team: TeamData, data_dir: Path) -> Path:

@@ -18,7 +18,8 @@ export function getPlatformGroupings(teams) {
     const groupMap = new Map();
     
     teams.forEach(team => {
-        const platformGrouping = team.metadata?.platform_grouping;
+        // Check top-level first (from YAML root), then metadata (for backwards compatibility)
+        const platformGrouping = team.platform_grouping || team.metadata?.platform_grouping;
         
         // Only group teams that have a platform_grouping value
         if (platformGrouping) {
@@ -79,7 +80,8 @@ export function getPlatformGroupingNames(teams) {
     const platformGroupings = new Set();
     
     teams.forEach(team => {
-        const platformGrouping = team.metadata?.platform_grouping;
+        // Check top-level first (from YAML root), then metadata (for backwards compatibility)
+        const platformGrouping = team.platform_grouping || team.metadata?.platform_grouping;
         if (platformGrouping) {
             platformGroupings.add(platformGrouping);
         }
@@ -99,7 +101,10 @@ export function filterTeamsByPlatformGrouping(teams, selectedPlatformGrouping) {
         return teams;
     }
 
-    return teams.filter(team => team.metadata?.platform_grouping === selectedPlatformGrouping);
+    return teams.filter(team => {
+        const platformGrouping = team.platform_grouping || team.metadata?.platform_grouping;
+        return platformGrouping === selectedPlatformGrouping;
+    });
 }
 
 /**

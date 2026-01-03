@@ -2,12 +2,13 @@
 name: Data Storage Platform Team
 team_type: platform
 position:
-  x: 1800.0
-  y: 820.0
+  x: 204.0
+  y: 3075.0
 metadata:
   size: 6
   cognitive_load: medium
   established: 2023-09
+platform_grouping: Cloud Infrastructure Platform Grouping
 ---
 
 # Data Storage Platform Team
@@ -19,7 +20,7 @@ Data Lake Platform Team – Provides managed data lake, database, and caching se
 platform
 
 ## Part of a platform grouping?
-Yes – Data Platform Grouping
+Yes – Cloud Infrastructure Platform Grouping
 
 ## Services provided (if applicable)
 - PostgreSQL managed service
@@ -72,12 +73,8 @@ Yes – Data Platform Grouping
 ## Teams we currently interact with
 | Team Name | Interaction Mode | Purpose | Duration |
 |-----------|------------------|---------|----------|
-| Data Engineering Team | Collaboration | Build new ETL pipelines | 3 months |
-| ML Recommendations Team | X-as-a-Service | Provide training data | Ongoing |
-| E-commerce Checkout | X-as-a-Service | Store order data | Ongoing |
-
-## Teams we expect to interact with soon
-| Team Name | Interaction Mode | Purpose | Expected Duration |
-|-----------|------------------|---------|-------------------|
-| Enterprise Sales Portal | X-as-a-Service | New consumer of analytics data | Ongoing |
-| Security & Compliance | Collaboration | Add audit logging and compliance features | 4 months |
+| Data Engineering Team | Facilitating | Coaching on data architecture | Occasional |
+| E-Commerce Recommendations Team | X-as-a-Service | Provide data storage | Ongoing |
+| E-Commerce Checkout Team | X-as-a-Service | Store order data | Ongoing |
+| Financial Reporting Team | X-as-a-Service | Store financial data | Ongoing |
+| All stream-aligned teams | X-as-a-Service | Consume data storage platform | Ongoing |

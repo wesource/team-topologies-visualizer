@@ -1,14 +1,14 @@
 ---
 name: Developer Portal Team
-team_type: platform
+team_type: stream-aligned
 position:
-  x: 1800.0
-  y: 1000.0
+  x: 204.0
+  y: 3255.0
 metadata:
   size: 6
   cognitive_load: medium
   established: 2023-09
-platform_grouping: Developer Experience Platform Grouping
+platform_grouping: Cloud Infrastructure Platform Grouping
 ---
 
 # Developer Portal Team
@@ -17,10 +17,10 @@ platform_grouping: Developer Experience Platform Grouping
 Developer Portal Team – Provides a unified developer portal (Backstage-based) as the "single pane of glass" for FleetFlow Systems engineers, aggregating service catalogs, documentation, deployment status, cost insights, and onboarding workflows in one self-service hub.
 
 ## Team type
-platform
+stream-aligned
 
 ## Part of a platform grouping?
-Yes – Developer Experience Platform Grouping
+Yes – Cloud Infrastructure Platform Grouping (stream-aligned team delivering internal product within the platform grouping)
 
 ## Services provided (if applicable)
 - Developer Portal (Backstage): Unified web portal at https://portal.company-internal
@@ -119,7 +119,6 @@ Yes – Developer Experience Platform Grouping
 | CI/CD Platform Team | X-as-a-Service | Show deployment status from GitHub Actions + ArgoCD | Ongoing |
 | API Gateway Platform Team | X-as-a-Service | Display API Gateway metrics and service mesh topology | Ongoing |
 | All stream-aligned teams | X-as-a-Service | Consume portal for service catalog, docs, deployment status | Ongoing |
-| DevOps Enablement Team | Collaboration | Get feedback on portal UX from teams they're enabling | Occasional |
 
 ## Teams we expect to interact with soon
 

@@ -2,51 +2,75 @@
 name: Mobile App Experience Team
 team_type: stream-aligned
 position:
-  x: 1800.0
-  y: 2080.0
+  x: 1054.0
+  y: 1170.0
 metadata:
   size: 7
   cognitive_load: medium
   established: 2023-11
+value_stream: Mobile Experience
 ---
 
 # Mobile App Experience Team
 
-**Team name and focus**
-
-Mobile App Experience Team – A stream-aligned team responsible for delivering and evolving the native mobile applications (iOS and Android), ensuring a seamless, high-quality experience for mobile-first customers.
+## Team name and focus
+Mobile App Experience Team – Delivers native mobile applications (iOS and Android) with focus on user experience, performance, and mobile-first features.
 
 ## Team type
-
 stream-aligned
 
-## Value Stream
+## Part of a value stream?
 
-Mobile Experience – Focused on the end-to-end customer journey for mobile users, separate from the web experience.
+Yes - Mobile Experience
 
-## Cognitive Load Assessment
-- **Overall**: Medium (well-balanced, but growing scope)
-- **Domain complexity**: High (multiple platforms, app store processes, mobile-specific patterns)
-- **Intrinsic complexity**: High (native development, performance optimization, offline support)
-- **Extraneous complexity**: Medium (some infrastructure still manual)
+## Services provided (if applicable)
+N/A - This is a stream-aligned team delivering customer-facing features.
 
-## Responsibilities
-- iOS native app (Swift)
-- Android native app (Kotlin)
-- Push notification handling
-- Offline functionality
-- App store submissions and compliance
-- Mobile-specific features (camera, location, biometrics)
-- Performance optimization
+## Service-level expectations (SLA)
+- App availability: 99.9% uptime
+- App performance: < 2s launch time
+- App store rating: > 4.5 stars
+- Support response: < 2 hours
 
-## Platform Dependencies
-- **Mobile Platform**: Push notifications, mobile analytics, crash reporting, feature flags
-- **Core Platform**: API gateway, authentication, user data
+## Software owned and evolved by this team
+- iOS Native App (Swift)
+- Android Native App (Kotlin)
+- Offline data sync
+- Mobile UI components
 
-## Cognitive Load Concerns
-⚠️ **Team is at capacity**. Opportunities to reduce load:
-1. Mobile Platform Team could take on more (CI/CD for mobile, automated testing infrastructure)
-2. Consider splitting into iOS and Android teams if value stream justifies it
+## Versioning approaches
+- Semantic versioning for app versions
+- Weekly app store releases
+- Feature flags for gradual rollouts
+
+## Wiki and documentation
+- [Team Wiki](https://wiki.company.com/teams/mobile-experience)
+- [Mobile Design System](https://design.company.com/mobile)
+
+## Glossary and terms ubiquitous language
+- **Native App**: iOS/Android apps built with Swift/Kotlin
+- **Offline-first**: App works without network connection
+- **App Store Compliance**: Apple/Google submission requirements
+
+## Communication
+- **Chat**: #mobile-experience
+- **Email**: mobile-experience@company.com
+
+## Daily sync time
+9:30 AM daily standup
+
+## What we're currently working on
+- Q1 2026: Offline mode improvements
+- Q1 2026: Camera/photo upload features
+- Q2 2026: Biometric authentication
+
+## Teams we currently interact with
+
+| Team Name | Interaction Mode | Purpose | Duration |
+|-----------|------------------|---------|----------|
+| Mobile Platform Team | X-as-a-Service | CI/CD, push notifications, analytics | Ongoing |
+| Mobile App Team | Collaboration | Shared mobile patterns | Ongoing |
+| Observability Platform Team | X-as-a-Service | Mobile app monitoring | Ongoing |
 3. Enabling team could help with mobile testing practices
 
 ## Technologies

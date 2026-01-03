@@ -2,25 +2,32 @@
 name: Machine Learning & AI Specialists Team
 team_type: complicated-subsystem
 position:
-  x: 1800.0
-  y: 1900.0
+  x: 290.0
+  y: 2090.0
 metadata:
   size: 6
   cognitive_load: high
   established: 2023-11
+value_stream: E-Commerce
 ---
 
 # Machine Learning & AI Specialists Team
 
 ## Team name and focus
 
-Machine Learning & AI Specialists Team - A complicated-subsystem team responsible for developing and maintaining machine learning models and AI capabilities that require deep specialized knowledge in data science, ML engineering, and advanced analytics.
+Machine Learning & AI Specialists Team - A complicated-subsystem team dedicated to developing and maintaining machine learning models and AI capabilities for e-commerce experiences, including product recommendations, search ranking, personalization, and predictive analytics that require deep specialized knowledge in data science and ML engineering.
 
 ## Team type
 
 complicated-subsystem
 
-**Why complicated-subsystem?** This team exists because ML/AI work requires deep technical expertise (data science, model training, feature engineering, model deployment, monitoring for drift) that would create excessive cognitive load for stream-aligned teams. The complexity justifies a specialized team.
+## Part of a value stream?
+
+Yes - E-Commerce
+
+This team is embedded within the E-Commerce value stream, providing specialized ML/AI capabilities for product discovery, recommendations, search, and personalization features.
+
+**Why complicated-subsystem?** E-commerce ML/AI work requires deep technical expertise (data science, model training, feature engineering, model deployment, A/B testing, monitoring for drift) that would create excessive cognitive load for stream-aligned teams. The complexity and specialization justify a dedicated team within the value stream.
 
 ## Services provided (if applicable)
 

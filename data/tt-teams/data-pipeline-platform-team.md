@@ -2,12 +2,13 @@
 name: Data Pipeline Platform Team
 team_type: platform
 position:
-  x: 1800.0
-  y: 640.0
+  x: 204.0
+  y: 2895.0
 metadata:
   size: 7
   cognitive_load: medium
   established: 2023-09
+platform_grouping: Cloud Infrastructure Platform Grouping
 ---
 
 # Data Pipeline Platform Team
@@ -54,10 +55,7 @@ Data Pipeline Platform Team – A platform team providing robust, scalable data 
 ## Teams we currently interact with
 | Team Name | Interaction Mode | Purpose | Duration |
 |-----------|------------------|---------|----------|
-| Data Engineering Team | Collaboration | Build new ingestion pipelines | 4 months |
-| ML Recommendations Team | X-as-a-Service | Provide feature data | Ongoing |
-
-## Teams we expect to interact with soon
-| Team Name | Interaction Mode | Purpose | Expected Duration |
-|-----------|------------------|---------|-------------------|
-| Search Platform Team | Collaboration | Real-time indexing | 2 months |
+| Data Engineering Team | Facilitating | Coaching on pipeline best practices | Occasional |
+| E-Commerce Recommendations Team | X-as-a-Service | Provide feature data pipelines | Ongoing |
+| Financial Reporting Team | X-as-a-Service | ETL for financial data | Ongoing |
+| All stream-aligned teams | X-as-a-Service | Consume data pipeline platform | Ongoing |

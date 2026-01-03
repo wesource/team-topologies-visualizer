@@ -451,6 +451,7 @@ This would help teams:
 - Visualize the impact of Team Topologies patterns on technical architecture
 
 ### Additional Ideas
+- **Nested value streams within platform groupings** - Support 2nd Edition pattern where value streams can exist within platform groupings (e.g., Developer Experience value stream within Cloud Infrastructure Platform Grouping). Would require hierarchical grouping rendering with nested bounding boxes and updated layout algorithms.
 - **Visibility controls** - Toggle visibility of individual teams and departments in Current State view to focus on specific areas of the organization
 - **Filtering by value stream** - Show only teams belonging to a specific value stream
 - **Interaction mode timeline** - Show how team interaction modes change over time (Collaboration → X-as-a-Service)
