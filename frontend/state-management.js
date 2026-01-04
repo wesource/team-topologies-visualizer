@@ -42,23 +42,26 @@ export function getFilteredTeams() {
     }
     
     return state.teams.filter(team => {
-        // If any value stream filter is selected, team must match one of them
+        // OR logic: team matches if it matches ANY selected filter
+        let matches = false;
+        
+        // Check value stream match (note: it's at top level, not in metadata)
         if (state.selectedFilters.valueStreams.length > 0) {
-            const teamValueStream = team.metadata?.value_stream;
-            if (!teamValueStream || !state.selectedFilters.valueStreams.includes(teamValueStream)) {
-                return false;
+            const teamValueStream = team.value_stream;
+            if (teamValueStream && state.selectedFilters.valueStreams.includes(teamValueStream)) {
+                matches = true;
             }
         }
         
-        // If any platform grouping filter is selected, team must match one of them
+        // Check platform grouping match (note: it's at top level, not in metadata)
         if (state.selectedFilters.platformGroupings.length > 0) {
-            const teamPlatformGrouping = team.metadata?.platform_grouping;
-            if (!teamPlatformGrouping || !state.selectedFilters.platformGroupings.includes(teamPlatformGrouping)) {
-                return false;
+            const teamPlatformGrouping = team.platform_grouping;
+            if (teamPlatformGrouping && state.selectedFilters.platformGroupings.includes(teamPlatformGrouping)) {
+                matches = true;
             }
         }
         
-        return true;
+        return matches;
     });
 }
 
@@ -95,15 +98,20 @@ export function fitToView(canvas, teams, drawCallback) {
     const contentHeight = maxY - minY;
     const padding = 50;
     
-    // Calculate scale to fit content
-    const scaleX = (canvas.width - padding * 2) / contentWidth;
+    // Get sidebar width to adjust canvas visible area
+    const sidebar = document.querySelector('.sidebar');
+    const sidebarWidth = sidebar ? sidebar.offsetWidth : 250;
+    const visibleCanvasWidth = canvas.width - sidebarWidth;
+    
+    // Calculate scale to fit content in visible canvas area
+    const scaleX = (visibleCanvasWidth - padding * 2) / contentWidth;
     const scaleY = (canvas.height - padding * 2) / contentHeight;
     state.scale = Math.min(scaleX, scaleY, 1.5); // Cap at 150% zoom
     
-    // Center the content
+    // Center the content in visible canvas area
     const centerX = (minX + maxX) / 2;
     const centerY = (minY + maxY) / 2;
-    state.viewOffset.x = canvas.width / 2 - centerX * state.scale;
+    state.viewOffset.x = sidebarWidth + visibleCanvasWidth / 2 - centerX * state.scale;
     state.viewOffset.y = canvas.height / 2 - centerY * state.scale;
     
     updateZoomDisplay();

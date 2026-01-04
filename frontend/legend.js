@@ -19,7 +19,7 @@ export function updateLegend() {
     };
     
     // Build legend from team type config
-    let legendHTML = '<h4>Team Types</h4>';
+    let legendHTML = '<div class="legend-section"><h4>Team Types</h4>';
     state.teamTypeConfig.team_types.forEach((type) => {
         // Use book-accurate shapes for TT Design, colored boxes for Current State
         const displaySymbol = state.currentView === 'tt' && ttDesignShapes[type.id]
@@ -32,77 +32,92 @@ export function updateLegend() {
         const hoverEffect = state.currentView === 'tt' ? 'onmouseover="this.style.background=\'rgba(200, 200, 200, 0.1)\'" onmouseout="this.style.background=\'transparent\'"' : '';
         
         legendHTML += `
-            <div class="legend-item team-type-item" data-team-type="${type.id}" style="${clickableStyle} padding: 0.3rem; border-radius: 4px; transition: background 0.2s; display: flex; align-items: center; gap: 0.5rem;" ${hoverEffect}>
-                <span style="flex-shrink: 0;">${displaySymbol}</span>
-                <span style="flex: 1;">${type.name}</span>
-                ${infoIcon}
+            <div class="legend-item team-type-item" data-team-type="${type.id}" style="${clickableStyle} padding: 0.3rem; border-radius: 4px; transition: background 0.2s;" ${hoverEffect}>
+                <div class="legend-symbol">${displaySymbol}</div>
+                <div class="legend-text">
+                    <span style="flex: 1;">${type.name}</span>
+                    ${infoIcon}
+                </div>
             </div>
         `;
     });
+    legendHTML += '</div>';
     
     // Add view-specific legend items
     if (state.currentView === 'current') {
         // Current State view shows dependencies (Actual Comms)
         legendHTML += `
-            <h4 style="margin-top: 1.5rem;">Connections</h4>
-            <div class="legend-item" style="align-items: center; padding: 0.3rem;">
-                <div style="flex: 1;">
-                    <strong>Actual Comms</strong>
-                    <div style="margin-top: 4px;">
-                        <svg width="70" height="16" viewBox="0 0 70 16">
-                            <line x1="8" y1="8" x2="62" y2="8" stroke="#666" stroke-width="4"/>
-                            <polygon points="70,8 62,4 62,12" fill="#666"/>
-                            <polygon points="0,8 8,4 8,12" fill="#666"/>
-                        </svg>
+            <div class="legend-section">
+                <h4>Connections</h4>
+                <div class="legend-item" style="padding: 0.3rem;">
+                    <div style="flex: 1;">
+                        <strong>Actual Comms</strong>
+                        <div style="margin-top: 4px;">
+                            <svg width="70" height="16" viewBox="0 0 70 16">
+                                <line x1="8" y1="8" x2="62" y2="8" stroke="#666" stroke-width="4"/>
+                                <polygon points="70,8 62,4 62,12" fill="#666"/>
+                                <polygon points="0,8 8,4 8,12" fill="#666"/>
+                            </svg>
+                        </div>
+                        <div style="font-size: 0.85rem; color: #666; margin-top: 2px;">Dependencies between teams</div>
                     </div>
-                    <div style="font-size: 0.85rem; color: #666; margin-top: 2px;">Dependencies between teams</div>
                 </div>
             </div>
         `;
     } else if (state.currentView === 'tt') {
         // TT Design view shows interaction modes (book-accurate symbols)
         legendHTML += `
-            <h4 style="margin-top: 1.5rem;">Interaction Modes</h4>
-            <div class="legend-item interaction-mode-item" data-mode="collaboration" style="align-items: center; cursor: pointer; padding: 0.3rem; border-radius: 4px; transition: background 0.2s;" onmouseover="this.style.background='rgba(122, 95, 166, 0.1)'" onmouseout="this.style.background='transparent'">
-                <svg width="40" height="20" viewBox="0 0 200 100" style="margin-right: 0.5rem; flex-shrink: 0;">
-                    <defs>
-                        <pattern id="crossHatchLegend" width="12" height="12" patternUnits="userSpaceOnUse">
-                            <path d="M0 12 L12 0" stroke="#7a5fa6" stroke-width="1"></path>
-                            <path d="M0 0 L12 12" stroke="#7a5fa6" stroke-width="1"></path>
-                        </pattern>
-                    </defs>
-                    <rect x="10" y="20" width="180" height="60" rx="8" ry="8" fill="#b7a6d9" stroke="#7a5fa6" stroke-width="2"></rect>
-                    <rect x="10" y="20" width="180" height="60" rx="8" ry="8" fill="url(#crossHatchLegend)"></rect>
-                </svg>
-                <div style="flex: 1;">
-                    <strong>Collaboration</strong>
-                    <div style="margin-top: 2px;">
-                        <svg width="60" height="10" viewBox="0 0 60 10">
-                            <line x1="0" y1="5" x2="60" y2="5" stroke="#7a5fa6" stroke-width="3"/>
-                            <polygon points="60,5 55,2 55,8" fill="#7a5fa6"/>
+            <div class="legend-section">
+                <h4>Interaction Modes</h4>
+                <div class="legend-item interaction-mode-item" data-mode="collaboration" style="cursor: pointer; padding: 0.3rem; border-radius: 4px; transition: background 0.2s;" onmouseover="this.style.background='rgba(122, 95, 166, 0.1)'" onmouseout="this.style.background='transparent'">
+                    <div class="legend-symbol">
+                        <svg width="40" height="20" viewBox="0 0 200 100">
+                            <defs>
+                                <pattern id="crossHatchLegend" width="12" height="12" patternUnits="userSpaceOnUse">
+                                    <path d="M0 12 L12 0" stroke="#7a5fa6" stroke-width="1"></path>
+                                    <path d="M0 0 L12 12" stroke="#7a5fa6" stroke-width="1"></path>
+                                </pattern>
+                            </defs>
+                            <rect x="10" y="20" width="180" height="60" rx="8" ry="8" fill="#b7a6d9" stroke="#7a5fa6" stroke-width="2"></rect>
+                            <rect x="10" y="20" width="180" height="60" rx="8" ry="8" fill="url(#crossHatchLegend)"></rect>
                         </svg>
                     </div>
-                </div>
-                <span style="color: #999; font-size: 0.9rem; margin-left: 0.5rem;">ℹ️</span>
-            </div>
-            <div class="legend-item interaction-mode-item" data-mode="x-as-a-service" style="align-items: center; cursor: pointer; padding: 0.3rem; border-radius: 4px; transition: background 0.2s; margin-top: 0.5rem;" onmouseover="this.style.background='rgba(34, 34, 34, 0.05)'" onmouseout="this.style.background='transparent'">
-                <svg width="40" height="20" viewBox="0 0 200 100" style="margin-right: 0.5rem; flex-shrink: 0;">
-                    <path d="M80 30 C60 30, 60 30, 60 50 C60 70, 60 70, 80 70" fill="none" stroke="#222222" stroke-width="6" stroke-linecap="round"></path>
-                    <path d="M120 30 C140 30, 140 30, 140 50 C140 70, 140 70, 120 70" fill="none" stroke="#222222" stroke-width="6" stroke-linecap="round"></path>
-                </svg>
-                <div style="flex: 1;">
-                    <strong>X-as-a-Service</strong>
-                    <div style="margin-top: 2px;">
-                        <svg width="60" height="10" viewBox="0 0 60 10">
-                            <line x1="0" y1="5" x2="60" y2="5" stroke="#222222" stroke-width="3" stroke-dasharray="10,5"/>
-                            <polygon points="60,5 55,2 55,8" fill="#222222"/>
-                        </svg>
+                    <div class="legend-text">
+                        <div style="flex: 1;">
+                            <strong>Collaboration</strong>
+                            <div style="margin-top: 2px;">
+                                <svg width="60" height="10" viewBox="0 0 60 10">
+                                    <line x1="0" y1="5" x2="60" y2="5" stroke="#7a5fa6" stroke-width="3"/>
+                                    <polygon points="60,5 55,2 55,8" fill="#7a5fa6"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <span style="color: #999; font-size: 0.9rem; margin-left: 0.5rem;">ℹ️</span>
                     </div>
                 </div>
-                <span style="color: #999; font-size: 0.9rem; margin-left: 0.5rem;">ℹ️</span>
+            <div class="legend-item interaction-mode-item" data-mode="x-as-a-service" style="cursor: pointer; padding: 0.3rem; border-radius: 4px; transition: background 0.2s; margin-top: 0.5rem;" onmouseover="this.style.background='rgba(34, 34, 34, 0.05)'" onmouseout="this.style.background='transparent'">
+                <div class="legend-symbol">
+                    <svg width="40" height="20" viewBox="0 0 200 100">
+                        <path d="M80 30 C60 30, 60 30, 60 50 C60 70, 60 70, 80 70" fill="none" stroke="#222222" stroke-width="6" stroke-linecap="round"></path>
+                        <path d="M120 30 C140 30, 140 30, 140 50 C140 70, 140 70, 120 70" fill="none" stroke="#222222" stroke-width="6" stroke-linecap="round"></path>
+                    </svg>
+                </div>
+                <div class="legend-text">
+                    <div style="flex: 1;">
+                        <strong>X-as-a-Service</strong>
+                        <div style="margin-top: 2px;">
+                            <svg width="60" height="10" viewBox="0 0 60 10">
+                                <line x1="0" y1="5" x2="60" y2="5" stroke="#222222" stroke-width="3" stroke-dasharray="10,5"/>
+                                <polygon points="60,5 55,2 55,8" fill="#222222"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <span style="color: #999; font-size: 0.9rem; margin-left: 0.5rem;">ℹ️</span>
+                </div>
             </div>
-            <div class="legend-item interaction-mode-item" data-mode="facilitating" style="align-items: center; cursor: pointer; padding: 0.3rem; border-radius: 4px; transition: background 0.2s; margin-top: 0.5rem;" onmouseover="this.style.background='rgba(111, 169, 140, 0.1)'" onmouseout="this.style.background='transparent'">
-                <svg width="24" height="24" viewBox="0 0 120 120" style="margin-right: 0.5rem; flex-shrink: 0;">
+            <div class="legend-item interaction-mode-item" data-mode="facilitating" style="cursor: pointer; padding: 0.3rem; border-radius: 4px; transition: background 0.2s; margin-top: 0.5rem;" onmouseover="this.style.background='rgba(111, 169, 140, 0.1)'" onmouseout="this.style.background='transparent'">
+                <div class="legend-symbol">
+                    <svg width="24" height="24" viewBox="0 0 120 120">
                     <defs>
                         <pattern id="dotPatternLegend" width="8" height="8" patternUnits="userSpaceOnUse">
                             <circle cx="2" cy="2" r="1.5" fill="#6fa98c"></circle>
@@ -110,17 +125,21 @@ export function updateLegend() {
                     </defs>
                     <circle cx="60" cy="60" r="45" fill="#9fd0b5" stroke="#6fa98c" stroke-width="2"></circle>
                     <circle cx="60" cy="60" r="45" fill="url(#dotPatternLegend)"></circle>
-                </svg>
-                <div style="flex: 1;">
-                    <strong>Facilitating</strong>
-                    <div style="margin-top: 2px;">
-                        <svg width="60" height="10" viewBox="0 0 60 10">
-                            <line x1="0" y1="5" x2="60" y2="5" stroke="#6fa98c" stroke-width="2" stroke-dasharray="5,5"/>
-                            <polygon points="60,5 56,2 56,8" fill="#6fa98c"/>
-                        </svg>
-                    </div>
+                    </svg>
                 </div>
-                <span style="color: #999; font-size: 0.9rem; margin-left: 0.5rem;">ℹ️</span>
+                <div class="legend-text">
+                    <div style="flex: 1;">
+                        <strong>Facilitating</strong>
+                        <div style="margin-top: 2px;">
+                            <svg width="60" height="10" viewBox="0 0 60 10">
+                                <line x1="0" y1="5" x2="60" y2="5" stroke="#6fa98c" stroke-width="2" stroke-dasharray="5,5"/>
+                                <polygon points="60,5 56,2 56,8" fill="#6fa98c"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <span style="color: #999; font-size: 0.9rem; margin-left: 0.5rem;">ℹ️</span>
+                </div>
+            </div>
             </div>
         `;
         
@@ -128,16 +147,26 @@ export function updateLegend() {
         const valueStreams = getValueStreamNames(state.teams);
         if (valueStreams.length > 0) {
             legendHTML += `
-                <h4 style="margin-top: 1.5rem;">Groupings</h4>
+                <div class="legend-section">
+                <h4>Groupings</h4>
                 <div class="legend-item grouping-item" data-grouping="value-stream" style="cursor: pointer; padding: 0.3rem; border-radius: 4px; transition: background 0.2s;" onmouseover="this.style.background='rgba(255, 200, 130, 0.1)'" onmouseout="this.style.background='transparent'">
-                    <span class="legend-grouping-box value-stream"></span>
-                    <span style="flex: 1;"><strong>Value Stream</strong></span>
-                    <span style="color: #999; font-size: 0.9rem; margin-left: 0.5rem;">ℹ️</span>
+                    <div class="legend-symbol">
+                        <span class="legend-grouping-box value-stream"></span>
+                    </div>
+                    <div class="legend-text">
+                        <span style="flex: 1;"><strong>Value Stream</strong></span>
+                        <span style="color: #999; font-size: 0.9rem; margin-left: 0.5rem;">ℹ️</span>
+                    </div>
                 </div>
                 <div class="legend-item grouping-item" data-grouping="platform-grouping" style="cursor: pointer; padding: 0.3rem; border-radius: 4px; transition: background 0.2s; margin-top: 0.5rem;" onmouseover="this.style.background='rgba(126, 200, 227, 0.1)'" onmouseout="this.style.background='transparent'">
-                    <span class="legend-grouping-box platform"></span>
-                    <span style="flex: 1;"><strong>Platform Grouping</strong></span>
-                    <span style="color: #999; font-size: 0.9rem; margin-left: 0.5rem;">ℹ️</span>
+                    <div class="legend-symbol">
+                        <span class="legend-grouping-box platform"></span>
+                    </div>
+                    <div class="legend-text">
+                        <span style="flex: 1;"><strong>Platform Grouping</strong></span>
+                        <span style="color: #999; font-size: 0.9rem; margin-left: 0.5rem;">ℹ️</span>
+                    </div>
+                </div>
                 </div>
             `;
         }

@@ -9,68 +9,76 @@
 <body>
     <div class="container">
         <header>
-            <h1>Team Topologies Visualizer</h1>
-            <div class="controls">
-                <div class="view-selector">
-                    <label class="radio-label">
-                        <input type="radio" name="view" value="current" id="viewCurrent">
-                        <span>Pre-TT</span>
-                    </label>
-                    <label class="radio-label">
-                        <input type="radio" name="view" value="tt" id="viewTT" checked>
-                        <span>TT Design</span>
-                    </label>
+            <div class="header-row">
+                <h1>Team Topologies Visualizer</h1>
+                <div class="header-actions">
+                    <button id="exportSVGBtn" class="btn">📥 Export SVG</button>
+                    <button id="validateBtn" class="btn">✓ Validate</button>
+                    <button id="refreshBtn" class="btn">🔄 Refresh</button>
                 </div>
-                <label class="radio-label" id="showConnectionsLabel" style="display: none;">
-                    <input type="checkbox" id="showConnections">
-                    <span>Show Communication Lines</span>
-                </label>
-                <label class="radio-label" id="showInteractionModesLabel" style="display: none;">
-                    <input type="checkbox" id="showInteractionModes" checked>
-                    <span>Show Interaction Modes</span>
-                </label>
-                <label class="radio-label">
-                    <input type="checkbox" id="showCognitiveLoad">
-                    <span>🚦 Cognitive Load</span>
-                </label>
-                <div id="groupingFilterContainer" class="filter-panel" style="display: none;">
-                    <button id="filterToggleBtn" class="btn filter-toggle-btn">
-                        <span>🔍 Filters</span>
-                        <span class="filter-count" id="filterCount"></span>
-                    </button>
-                    <div id="filterDropdown" class="filter-dropdown-panel">
-                        <div class="filter-section">
-                            <div class="filter-section-header">
-                                <strong>Value Streams</strong>
-                                <button class="filter-clear-btn" data-type="vs">Clear</button>
+            </div>
+            <div class="header-row controls-row">
+                <div class="controls-left">
+                    <div class="view-selector">
+                        <label class="radio-label">
+                            <input type="radio" name="view" value="current" id="viewCurrent">
+                            <span>Pre-TT</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="view" value="tt" id="viewTT" checked>
+                            <span>TT Design</span>
+                        </label>
+                    </div>
+                    <div class="view-options">
+                        <label class="radio-label" id="showConnectionsLabel" style="display: none;">
+                            <input type="checkbox" id="showConnections">
+                            <span>Show Communication Lines</span>
+                        </label>
+                        <label class="radio-label" id="showInteractionModesLabel" style="display: none;">
+                            <input type="checkbox" id="showInteractionModes" checked>
+                            <span>Show Interaction Modes</span>
+                        </label>
+                        <span class="inline-divider" id="modesCognitiveLoadDivider" style="display: none;"></span>
+                        <label class="radio-label">
+                            <input type="checkbox" id="showCognitiveLoad">
+                            <span>🚦 Cognitive Load</span>
+                        </label>
+                    </div>
+                    <div id="groupingFilterContainer" class="filter-panel" style="display: none;">
+                        <button id="filterToggleBtn" class="btn filter-toggle-btn">
+                            <span>🔍 Filters</span>
+                            <span class="filter-count" id="filterCount"></span>
+                        </button>
+                        <div id="filterDropdown" class="filter-dropdown-panel">
+                            <div class="filter-section">
+                                <div class="filter-section-header">
+                                    <strong>Value Streams</strong>
+                                    <button class="filter-clear-btn" data-type="vs">Clear</button>
+                                </div>
+                                <div id="valueStreamFilters" class="filter-options"></div>
                             </div>
-                            <div id="valueStreamFilters" class="filter-options"></div>
-                        </div>
-                        <div class="filter-section">
-                            <div class="filter-section-header">
-                                <strong>Platform Groupings</strong>
-                                <button class="filter-clear-btn" data-type="pg">Clear</button>
+                            <div class="filter-section">
+                                <div class="filter-section-header">
+                                    <strong>Platform Groupings</strong>
+                                    <button class="filter-clear-btn" data-type="pg">Clear</button>
+                                </div>
+                                <div id="platformGroupingFilters" class="filter-options"></div>
                             </div>
-                            <div id="platformGroupingFilters" class="filter-options"></div>
-                        </div>
-                        <div class="filter-actions">
-                            <button id="clearAllFiltersBtn" class="btn btn-secondary">Clear All</button>
-                            <button id="applyFiltersBtn" class="btn btn-primary">Apply</button>
+                            <div class="filter-actions">
+                                <button id="clearAllFiltersBtn" class="btn btn-secondary">Clear All</button>
+                                <button id="applyFiltersBtn" class="btn btn-primary">Apply</button>
+                            </div>
                         </div>
                     </div>
+                    <button id="autoAlignBtn" class="btn" style="display: none;">⚡ Auto-align</button>
+                    <button id="autoAlignTTBtn" class="btn" style="display: none;">⚡ Auto-align</button>
                 </div>
-                <button id="autoAlignBtn" class="btn" style="display: none;">⚡ Auto-align Teams</button>
-                <button id="autoAlignTTBtn" class="btn" style="display: none;">⚡ Auto-align Teams</button>
                 <div class="zoom-controls">
                     <button id="zoomOutBtn" class="btn btn-icon" title="Zoom Out (Ctrl+-)">-</button>
                     <span id="zoomLevel" class="zoom-level">100%</span>
                     <button id="zoomInBtn" class="btn btn-icon" title="Zoom In (Ctrl++)">+</button>
                     <button id="fitViewBtn" class="btn btn-icon" title="Fit to View (Ctrl+0)">⊡</button>
                 </div>
-                <button id="addTeamBtn" class="btn btn-primary">+ Add Team</button>
-                <button id="exportSVGBtn" class="btn">📥 Export SVG</button>
-                <button id="validateBtn" class="btn">✓ Validate Files</button>
-                <button id="refreshBtn" class="btn">Refresh</button>
             </div>
         </header>
 

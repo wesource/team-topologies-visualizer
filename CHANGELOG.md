@@ -8,6 +8,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Comprehensive UX Improvements**: Major enhancement to user experience with multiple new features
+  - **Multi-Select Filters**: Checkbox-based filter system for value streams and platform groupings
+    - Click "🔍 Filters" button to open filter panel
+    - Select multiple filters simultaneously (OR logic - show teams matching ANY filter)
+    - Filter count badge shows active filter count
+    - "Clear All" button to reset filters
+    - Auto-align respects filtered teams
+  - **Team Search**: Instant search box in sidebar to filter teams by name (Esc to clear)
+  - **Zoom Controls**: Visual controls with keyboard shortcuts
+    - +/- buttons for zoom in/out
+    - Zoom percentage display
+    - Fit-to-view button (⊡) centers all teams with optimal zoom (Ctrl+0)
+    - Mouse wheel zoom support
+    - Keyboard: Ctrl+/- to zoom, Ctrl+0 to fit
+  - **Right-Click Panning**: Pan canvas by right-clicking and dragging
+  - **Toolbar Reorganization**: Two-row header layout with visual grouping
+    - Removed "+Add Team" button (simplification)
+    - Controls grouped in bordered boxes with better spacing
+    - Zoom controls right-aligned for ergonomic access
+    - Inline dividers between related controls
+  - **Legend Improvements**: Enhanced visual alignment with dividers between sections
+  - **Sidebar Refinements**: 
+    - Reduced team list font size (0.85rem) for better density
+    - Dynamic team colors loaded from JSON (removed 30+ lines of hardcoded CSS)
+  - Technical: Fixed fit-to-view to account for 250px sidebar width
+
 - **Multi-Select Filters with Checkboxes**: Replaced single-select dropdown with modern checkbox-based filter system
   - Click "🔍 Filters" button to open filter dropdown panel
   - Separate sections for Value Streams and Platform Groupings
@@ -21,26 +47,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Team Search in Sidebar**: Quick search box to filter teams by name
   - Added search input at top of sidebar with 🔍 icon
   - Instant filtering as you type
-  - Press Escape to clear search and show all teams
-  - Complements the filter system for fast team discovery
+  - Technical: Fixed fit-to-view to account for 250px sidebar width
 
-- **Zoom Controls**: Visual zoom controls with keyboard shortcuts
-  - **+/- Buttons**: Click to zoom in/out
-  - **Zoom Level Display**: Shows current zoom percentage (e.g., "100%")
-  - **Fit to View Button (⊡)**: One-click to fit all teams in viewport
-  - **Keyboard Shortcuts**:
-    - `Ctrl/Cmd + +` or `Ctrl/Cmd + =` to zoom in
-    - `Ctrl/Cmd + -` to zoom out
-    - `Ctrl/Cmd + 0` to fit to view
-  - Zoom controls grouped in styled container in header
-  - `fitToView()` calculates bounding box, centers content, and sets optimal zoom (capped at 150%)
+### Changed
+- **Filter Logic**: Changed from AND to OR logic - teams shown if they match ANY selected filter (not all)
+- **Team Colors**: Removed 30+ lines of hardcoded CSS, now dynamically loaded from JSON config files
+- **Auto-align**: Updated to respect filtered teams in both TT Design and Pre-TT views
+- **Code Quality**: Removed all debug console.log statements added during filter debugging
 
-- **Right-Click Panning**: Pan canvas view by right-clicking and dragging
-  - Right-click (or middle mouse button) to enter pan mode
-  - Cursor changes to "grabbing" during panning
-  - Left-click still drags teams as before
-  - Context menu prevented on canvas for better UX
-  - Smooth panning with real-time viewport updates
+### Fixed
+- Filter system not working - teams showing "VS: undefined PG: undefined" (moved from metadata to top-level fields)
+- Auto-align ignoring active filters
+- Fit-to-view not centering properly (added sidebar width offset calculation)
+- Duplicate code in auto-align handlers
+- Import errors in renderer.js (switched to state-management.js for getFilteredTeams)
 
 - **File Validation Report**: New validation system to catch errors in team markdown files
   - Created `backend/validation.py` module (161 lines) extracted from `services.py` for better organization

@@ -3,7 +3,7 @@ import { drawCurrentStateView } from './renderer-current.js';
 import { drawTeam, drawConnections, wrapText, drawValueStreamGroupings, drawPlatformGroupings } from './renderer-common.js';
 import { getValueStreamGroupings } from './tt-value-stream-grouping.js';
 import { getPlatformGroupings } from './tt-platform-grouping.js';
-import { getFilteredTeams } from './filters.js';
+import { getFilteredTeams } from './state-management.js';
 
 /**
  * Main draw function - renders entire canvas
@@ -18,8 +18,8 @@ export function draw(state) {
     state.ctx.translate(state.viewOffset.x, state.viewOffset.y);
     state.ctx.scale(state.scale, state.scale);
     
-    // Filter teams by selected grouping
-    const teamsToRender = getFilteredTeams(state.teams, state.currentView, state.selectedGrouping);
+    // Filter teams using new multi-select filter system
+    const teamsToRender = getFilteredTeams();
     
     // Draw organization hierarchy if in current view
     if (state.currentView === 'current' && state.organizationHierarchy) {

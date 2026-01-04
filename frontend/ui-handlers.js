@@ -1,5 +1,5 @@
 // UI event handlers - manages button clicks and control interactions
-import { state, zoomIn, zoomOut, fitToView } from './state-management.js';
+import { state, zoomIn, zoomOut, fitToView, getFilteredTeams } from './state-management.js';
 import { updateTeamPosition } from './api.js';
 import { autoAlignTeamsByManager } from './current-state-alignment.js';
 import { autoAlignTTDesign } from './tt-design-alignment.js';
@@ -22,11 +22,20 @@ export function handleViewChange(e, loadAllTeams, draw) {
     }
     
     const showInteractionModesLabel = document.getElementById('showInteractionModesLabel');
+    const modesCognitiveLoadDivider = document.getElementById('modesCognitiveLoadDivider');
     if (showInteractionModesLabel) {
         if (state.currentView === 'tt') {
             showInteractionModesLabel.style.display = 'flex';
+            // Show divider when interaction modes is visible
+            if (modesCognitiveLoadDivider) {
+                modesCognitiveLoadDivider.style.display = 'block';
+            }
         } else {
             showInteractionModesLabel.style.display = 'none';
+            // Hide divider when interaction modes is hidden
+            if (modesCognitiveLoadDivider) {
+                modesCognitiveLoadDivider.style.display = 'none';
+            }
         }
     }
     
@@ -71,8 +80,9 @@ export async function handleAutoAlign(draw) {
         return;
     }
     
-    // Perform alignment
-    const realignedTeams = autoAlignTeamsByManager(state.teams, state.organizationHierarchy);
+    // Perform alignment - use filtered teams if filters are active
+    const teamsToAlign = getFilteredTeams();
+    const realignedTeams = autoAlignTeamsByManager(teamsToAlign, state.organizationHierarchy);
     
     if (realignedTeams.length === 0) {
         showInfo('No teams needed realignment. Teams are already properly positioned.');
@@ -98,8 +108,9 @@ export async function handleAutoAlign(draw) {
 }
 
 export async function handleAutoAlignTT(draw) {
-    // Perform alignment for TT Design view
-    const realignedTeams = autoAlignTTDesign(state.teams);
+    // Perform alignment for TT Design view - use filtered teams if filters are active
+    const teamsToAlign = getFilteredTeams();
+    const realignedTeams = autoAlignTTDesign(teamsToAlign);
     
     if (realignedTeams.length === 0) {
         showInfo('No teams needed realignment. Teams are already properly positioned.');
@@ -130,9 +141,7 @@ export function setupUIEventListeners(loadAllTeams, draw, openAddTeamModal, clos
         radio.addEventListener('change', (e) => handleViewChange(e, loadAllTeams, draw));
     });
     
-    const addTeamBtn = document.getElementById('addTeamBtn');
-    if (addTeamBtn)
-        addTeamBtn.addEventListener('click', openAddTeamModal);
+    // Add Team functionality removed for cleaner UI
     
     const exportSVGBtn = document.getElementById('exportSVGBtn');
     if (exportSVGBtn)

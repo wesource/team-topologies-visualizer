@@ -106,6 +106,12 @@ function updateTeamList() {
         const item = document.createElement('div');
         item.className = `team-item ${team.team_type}`;
         item.textContent = team.name;
+        
+        // Apply color from JSON config dynamically
+        if (team.team_type && state.teamColorMap && state.teamColorMap[team.team_type]) {
+            item.style.borderLeftColor = state.teamColorMap[team.team_type];
+        }
+        
         item.addEventListener('click', () => selectTeam(team, state, draw));
         item.addEventListener('dblclick', () => showTeamDetails(team, state.currentView));
         teamList.appendChild(item);

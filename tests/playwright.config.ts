@@ -4,14 +4,17 @@ export default defineConfig({
   testDir: '.',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
+  retries: process.env.CI ? 2 : 1, // Retry once locally, twice in CI
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
+  timeout: 60000, // 60 second timeout per test
   
   use: {
     baseURL: 'http://127.0.0.1:8000',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
+    actionTimeout: 10000, // 10 second timeout for actions
+    navigationTimeout: 30000, // 30 second navigation timeout
   },
 
   projects: [
@@ -22,11 +25,12 @@ export default defineConfig({
   ],
 
   // Run local dev server before starting tests
-  // Uncomment to auto-start server (requires uvicorn installed in venv)
-  // webServer: {
-  //   command: 'python -m uvicorn main:app --port 8000',
-  //   url: 'http://127.0.0.1:8000',
-  //   reuseExistingServer: !process.env.CI,
-  //   cwd: '..',
-  // },
+  webServer: {
+    command: process.platform === 'win32' 
+      ? 'cd .. && .\\venv\\Scripts\\python.exe -m uvicorn main:app --port 8000'
+      : 'python -m uvicorn main:app --port 8000',
+    url: 'http://127.0.0.1:8000',
+    reuseExistingServer: !process.env.CI,
+    timeout: 120 * 1000, // 2 minutes timeout
+  },
 });

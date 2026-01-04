@@ -93,7 +93,8 @@ This tool provides dual visualizations to make these conversations easier.
 - **Filename consistency**: All team markdown files use the slug format for filenames (e.g. `ci-cd-platform-team.md`).
 - **Platform grouping fix**: Platform grouping boxes now always render and dynamically resize, even when teams are dragged far apart (removed stale position check).
 
-- 📊 **Interactive Canvas** - Drag-and-drop teams, zoom, pan
+- 📊 **Interactive Canvas** - Drag-and-drop teams, zoom (Ctrl+/- or mouse wheel), pan (right-click drag), fit-to-view (Ctrl+0)
+- 🔍 **Search & Filter** - Instant team search (Esc to clear), multi-select filters for value streams and platform groupings (TT Design view)
 - 🔄 **Dual Views** - Toggle between "Pre-TT" and "TT Design" (TT Design is default)
 - 📝 **Git-Friendly Storage** - Teams stored as markdown files with YAML front matter (structured metadata at the top of files between `---` delimiters, followed by markdown content)
 - ✅ **File Validation** - "✓ Validate Files" button checks for YAML errors, missing fields, filename mismatches, team size issues, and more
