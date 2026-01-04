@@ -10,6 +10,32 @@ Comprehensive guide for developing, testing, and contributing to the Team Topolo
 
 ## Architecture Overview
 
+### Technology Stack
+
+**Backend**:
+- **Python 3.11+** - Core language
+- **FastAPI** - Modern async web framework
+- **Pydantic** - Data validation with type hints
+- **uvicorn** - ASGI server
+
+**Frontend**:
+- **Vanilla JavaScript (ES6 modules)** - No build step required
+- **HTML5 Canvas** - Interactive visualization
+- **marked.js v14** - Markdown rendering with GitHub Flavored Markdown (GFM) support
+  - Replaces custom regex parsing for security and robustness
+  - XSS protection and comprehensive markdown feature support
+  - CDN import: `https://cdn.jsdelivr.net/npm/marked@14.1.3/+esm`
+
+**Testing**:
+- **pytest** - Backend unit tests (Python)
+- **Vitest** - Frontend unit tests (JavaScript)
+- **Playwright** - End-to-end browser tests
+- **ESLint** - JavaScript linting
+
+**Data Format**:
+- **Markdown with YAML front matter** - Team files (Team API template)
+- **JSON** - Configuration files (team types, org hierarchy)
+
 ### Backend (Python + FastAPI)
 
 Modular architecture with clear separation of concerns:

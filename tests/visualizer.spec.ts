@@ -246,4 +246,89 @@ test.describe('Team Topologies Visualizer', () => {
     expect(engineeringDept.line_managers).toBeDefined();
     expect(engineeringDept.line_managers.length).toBe(5);
   });
+
+  test('should render markdown correctly in team detail modal', async ({ page }) => {
+    await page.goto(`${BASE_URL}/static/index.html`);
+    
+    // Wait for teams to load (TT Design is default)
+    await page.waitForResponse(response => response.url().includes('/api/teams?view=tt'));
+    await page.waitForTimeout(1500); // Wait for canvas rendering and app initialization
+    
+    // Fetch team data and call showTeamDetails directly
+    await page.evaluate(async () => {
+      const response = await fetch('/api/teams/Cloud%20Development%20Platform%20Team?view=tt');
+      const team = await response.json();
+      
+      // Use the exposed test helper
+      // @ts-ignore
+      if (window._testHelpers?.showTeamDetails) {
+        // @ts-ignore
+        window._testHelpers.showTeamDetails(team, 'tt');
+      }
+    });
+    
+    // Wait for modal to appear
+    const modal = page.locator('#detailModal');
+    await expect(modal).toBeVisible({ timeout: 3000 });
+    
+    const modalContent = modal.locator('.team-api-content');
+    
+    // Verify markdown headers are rendered as HTML headers with appropriate classes
+    const h2Headers = modalContent.locator('h2');
+    await expect(h2Headers.first()).toBeVisible();
+    const h2Count = await h2Headers.count();
+    expect(h2Count).toBeGreaterThan(0);
+    
+    const h3Headers = modalContent.locator('h3');
+    const h3Count = await h3Headers.count();
+    expect(h3Count).toBeGreaterThan(0);
+    
+    // Verify markdown tables are rendered as HTML tables
+    const tables = modalContent.locator('table');
+    await expect(tables.first()).toBeVisible();
+    const tableCount = await tables.count();
+    expect(tableCount).toBeGreaterThan(0);
+    
+    // Verify table structure (thead, tbody, th, td)
+    const firstTable = tables.first();
+    await expect(firstTable.locator('thead')).toBeVisible();
+    await expect(firstTable.locator('tbody')).toBeVisible();
+    await expect(firstTable.locator('th').first()).toBeVisible();
+    await expect(firstTable.locator('td').first()).toBeVisible();
+    
+    // Verify markdown lists are rendered as HTML lists
+    const lists = modalContent.locator('ul, ol');
+    const listCount = await lists.count();
+    expect(listCount).toBeGreaterThan(0);
+    
+    // Verify list items
+    const listItems = modalContent.locator('li');
+    const liCount = await listItems.count();
+    expect(liCount).toBeGreaterThan(0);
+    
+    // Verify bold text is rendered as <strong>
+    const boldText = modalContent.locator('strong');
+    const boldCount = await boldText.count();
+    expect(boldCount).toBeGreaterThan(0);
+    
+    // Verify links are rendered with target="_blank"
+    const links = modalContent.locator('a[target="_blank"]');
+    const linkCount = await links.count();
+    expect(linkCount).toBeGreaterThan(0);
+    
+    // Verify code blocks exist
+    const codeBlocks = modalContent.locator('code');
+    const codeCount = await codeBlocks.count();
+    expect(codeCount).toBeGreaterThan(0);
+    
+    // Take screenshot of rendered markdown for visual verification
+    await page.screenshot({ 
+      path: 'tests/screenshots/team-detail-markdown-rendering.png',
+      fullPage: true
+    });
+    
+    // Close modal
+    await page.locator('#detailModalClose').click();
+    await expect(modal).not.toBeVisible();
+  });
 });

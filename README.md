@@ -383,6 +383,7 @@ See [DEVELOPMENT.md](DEVELOPMENT.md) for full development guide including testin
 
 - **Backend**: FastAPI (Python)
 - **Frontend**: HTML5 Canvas, Vanilla JavaScript
+- **Markdown Rendering**: marked.js v14 (GitHub Flavored Markdown with XSS protection)
 - **Data Storage**: Markdown files with [YAML front matter](https://jekyllrb.com/docs/front-matter/) (structured metadata between `---` delimiters at the top of files)
 - **Visualization**: Interactive canvas with drag-and-drop
 - **Dependencies**: uvicorn, pyyaml, markdown

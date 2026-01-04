@@ -24,6 +24,10 @@ function init() {
     }
     // Setup UI event listeners
     setupUIEventListeners(loadAllTeams, () => draw(state), openAddTeamModal, closeModal, closeDetailModal, closeInteractionModeModal, handleTeamSubmit, (team) => selectTeam(team, state, draw));
+    // Expose for E2E testing
+    window._testHelpers = {
+        showTeamDetails
+    };
     // Load initial data
     loadAllTeams();
 }
@@ -103,6 +107,7 @@ function updateTeamList() {
         item.className = `team-item ${team.team_type}`;
         item.textContent = team.name;
         item.addEventListener('click', () => selectTeam(team, state, draw));
+        item.addEventListener('dblclick', () => showTeamDetails(team, state.currentView));
         teamList.appendChild(item);
     });
 }
