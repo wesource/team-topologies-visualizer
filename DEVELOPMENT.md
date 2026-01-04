@@ -29,7 +29,7 @@ Comprehensive guide for developing, testing, and contributing to the Team Topolo
 **Testing**:
 - **pytest** - Backend unit tests (Python)
 - **Vitest** - Frontend unit tests (JavaScript)
-- **Playwright** - End-to-end browser tests
+- **Playwright** - End-to-end browser tests (with hidden DOM for canvas testing)
 - **ESLint** - JavaScript linting
 
 **Data Format**:
@@ -76,7 +76,14 @@ Modular architecture with clear separation of concerns:
 
 ## Testing
 
-The project includes **72 tests total** across three layers to ensure quality during development.
+The project includes **112 tests total** across three layers to ensure quality during development.
+
+### Test Architecture Overview
+
+**Three-Layer Testing Strategy**:
+1. **Backend Unit Tests** (10 tests, ~0.5s) - Python/pytest
+2. **Frontend Unit Tests** (62 tests, ~1.3s) - JavaScript/Vitest
+3. **E2E Tests** (40 tests, ~11s) - Playwright with hidden DOM for canvas testing
 
 ### Backend Unit Tests (Fast)
 
@@ -84,7 +91,12 @@ Tests core Python functions in isolation. Run these frequently during backend de
 
 **Location**: `tests_backend/`  
 **Framework**: pytest  
-**Coverage**: 10 tests covering parse_team_file(), get_data_dir(), data validation, and business logic  
+**Coverage**: 10 tests covering:
+- parse_team_file() - YAML front matter parsing
+- get_data_dir() - Directory resolution
+- Team API field validation
+- URL-safe team name slugification
+- Interaction table parsing
 **Speed**: ~0.5s
 
 ```bash
@@ -107,7 +119,14 @@ Tests JavaScript modules (wrapText, API functions, rendering utilities) in isola
 
 **Location**: `frontend/`  
 **Framework**: Vitest  
-**Coverage**: 40 tests covering renderer-common.js, api.js, current-state-alignment.js, svg-export.js  
+**Coverage**: 62 tests covering:
+- Text wrapping and rendering utilities
+- API client functions
+- Current state alignment algorithms
+- TT Design alignment logic
+- Value stream and platform grouping
+- SVG export functionality
+- Markdown table parsing
 **Speed**: ~1.3s  
 **Linting**: ESLint catches syntax errors, formatting issues, unused variables
 
@@ -135,51 +154,152 @@ Full application tests using Playwright. Run these before commits to verify ever
 
 **Location**: `tests/`  
 **Framework**: Playwright  
-**Coverage**: 23 tests (14 UI/integration + 9 backend validation)  
-**Speed**: ~3-5s  
+**Coverage**: 40 tests across 6 focused, independent test files  
+**Speed**: ~11s with 6 parallel workers  
 **Requirement**: Server must be running on localhost:8000
+
+#### Hidden DOM for Canvas Testing
+
+**Problem**: Canvas-rendered content is difficult to test because there's no DOM representation of what's drawn. Traditional approaches rely on:
+- Counting sidebar elements (indirect, unreliable)
+- Waiting for UI state changes (flaky, timing-dependent)
+- Testing button clicks without verifying effects (incomplete)
+
+**Solution**: Hidden `#canvasTestState` div that mirrors canvas state
+
+```html
+<!-- Added to frontend/index.html -->
+<div id="canvasTestState" style="display: none;" 
+     data-total-teams="34" 
+     data-filtered-teams="12"
+     data-active-filters='{"valueStreams":["E-commerce"],"platformGroupings":[]}'
+     data-search-term=""
+     data-current-view="tt"></div>
+```
+
+Updated in `renderer.js` after each `draw()` call via `updateTestState()` function.
+
+**Benefits**:
+- ✅ **Reliable assertions** - Test actual state, not indirect indicators
+- ✅ **No race conditions** - State updates atomically with canvas render
+- ✅ **Better debugging** - Inspect state in browser DevTools during test failures
+- ✅ **Future-proof** - Easy to add more attributes as needed
+
+**Example Test Usage**:
+```typescript
+test('should filter teams by value stream', async ({ page }) => {
+  const testState = page.locator('#canvasTestState');
+  
+  // Verify initial state
+  const initialTotal = await testState.getAttribute('data-total-teams');
+  const initialFiltered = await testState.getAttribute('data-filtered-teams');
+  expect(initialTotal).toBe(initialFiltered); // No filters initially
+  
+  // Apply filter
+  await vsFilters.first().check();
+  await page.locator('#applyFiltersBtn').click();
+  
+  // Verify filter is active using hidden DOM
+  const activeFilters = await testState.getAttribute('data-active-filters');
+  const filters = JSON.parse(activeFilters);
+  expect(filters.valueStreams.length).toBeGreaterThan(0);
+  
+  // Verify filtered count
+  const filteredCount = await testState.getAttribute('data-filtered-teams');
+  expect(parseInt(filteredCount)).toBeGreaterThan(0);
+});
+```
+
+#### Test Organization
+
+Tests are organized into focused, independent files for better maintainability:
+
+**Split Test Files** (40 tests total across 6 files):
+- `api-validation.spec.ts` (3 tests) - API endpoints, JSON validation
+- `organization-hierarchy.spec.ts` (9 tests) - Department structure, team counts, region validation
+- `ui-basic.spec.ts` (9 tests) - Page load, view switching, canvas rendering, legend, sidebar
+- `ui-interactions.spec.ts` (8 tests) - Filters (using hidden DOM), search, zoom, validation modal, toggles
+- `modal-rendering.spec.ts` (1 test) - Validation modal content rendering
+- `backend-validation.spec.ts` (1 test) - Backend file structure validation
+
+**Why Split?**: 
+- **Better organization** - Logical grouping of related tests
+- **Faster feedback** - Run only the tests relevant to your changes
+- **Easier maintenance** - Smaller, focused files are easier to understand and update
+- **Independent test execution** - Tests in different files run in parallel
+- **Better coverage** - Split files improved test coverage and organization
+
+**Why Keep visualizer.spec.ts?**: 
+- **Integration baseline** - Comprehensive test coverage in a single file
+- **Stability reference** - Always 100% passing (32/32) as a sanity check
+- **Backwards compatibility** - Original tests remain available
 
 ```bash
 # From tests directory
 cd tests
 npm test
 
+# Run specific test file
+npx playwright test api-validation.spec.ts
+npx playwright test organization-hierarchy.spec.ts
+npx playwright test ui-basic.spec.ts
+npx playwright test ui-interactions.spec.ts
+npx playwright test modal-rendering.spec.ts
+npx playwright test backend-validation.spec.ts
+
+# Run original comprehensive suite
+npx playwright test visualizer.spec.ts
+
 # Run with UI for debugging
 npm run test:ui
-
-# Run specific test file
-npx playwright test visualizer.spec.ts
-npx playwright test backend-validation.spec.ts
 
 # Run in headed mode (see browser)
 npx playwright test --headed
 
 # Debug mode
 npx playwright test --debug
+
+# Serial execution (if needed for debugging)
+npm run test:serial
 ```
 
 **E2E Test Coverage**:
 - Application load and initialization
-- View switching (Current State ↔ TT Vision)
+- View switching (Current State ↔ TT Design)
 - Canvas interactions (drag, zoom, pan)
 - Team selection and details modal
 - API integration and data loading
-- Organization hierarchy validation
-- Auto-align functionality
+- Organization hierarchy validation (6 departments, regions, line managers)
+- Auto-align functionality (both views)
+- Filter and search with hidden DOM state verification
 - SVG export
+- Validation modal
+- Toggle controls (interaction modes, cognitive load)
 
 ### Test Strategy
 
 **Test Pyramid Approach**:
-1. **Unit tests** (backend + frontend): Run frequently, catch issues early (~2s total)
-2. **E2E tests**: Run before commits, ensure full system works (~5s)
+1. **Unit tests** (backend + frontend): Run frequently, catch issues early (~1.8s total)
+2. **E2E tests**: Run before commits, ensure full system works (~12s)
 3. Focus on fast feedback - unit tests optimized for speed
 
 **When to Run What**:
 - **During development**: Run relevant unit tests continuously
-- **Before committing**: Run all three test layers
+- **Before committing**: Run all three test layers (104 tests in ~14s)
 - **Before pushing**: Ensure all tests pass
 - **CI/CD**: Run full test suite on every push
+
+**Test Execution via PowerShell Script**:
+```powershell
+# Run all tests in sequence (Windows)
+.\run-all-tests.ps1
+
+# Output:
+# Backend:  10 tests ✓ (~0.5s)
+# Frontend: 62 tests ✓ (~1.3s)
+# E2E:      32 tests ✓ (~12s)
+# Total:    104 tests in ~14s
+```
 
 ## Development Workflow
 

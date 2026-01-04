@@ -175,10 +175,18 @@ This tool provides dual visualizations to make these conversations easier.
 │       ├── tt-team-types.json         # Team type config
 │       └── *.md               # Team files
 ├── tests_backend/             # Backend unit tests (10 tests)
-│   └── test_main.py
-├── tests/                     # E2E tests with Playwright (23 tests)
-│   ├── visualizer.spec.ts
-│   └── backend-validation.spec.ts
+│   ├── test_main.py
+│   ├── test_team_api_fields.py
+│   ├── test_url_safe_team_names.py
+│   └── test_interaction_table_parsing.py
+├── tests/                     # E2E tests with Playwright (40 tests across 6 files)
+│   ├── api-validation.spec.ts      # API endpoint tests (3 tests)
+│   ├── organization-hierarchy.spec.ts  # Org hierarchy tests (9 tests)
+│   ├── ui-basic.spec.ts           # Basic UI tests (9 tests)
+│   ├── ui-interactions.spec.ts    # Interaction tests (8 tests)
+│   ├── modal-rendering.spec.ts    # Modal tests (1 test)
+│   ├── backend-validation.spec.ts # Backend validation (1 test)
+│   └── playwright.config.ts       # Test configuration
 └── docs/
     ├── SETUP.md               # Detailed setup & configuration
     └── CONCEPTS.md            # TT concepts & example explanation
@@ -365,14 +373,44 @@ The API provides **read-only endpoints** for visualization purposes:
 
 ## Testing
 
-The project includes comprehensive automated testing (~95 tests total across 3 layers: backend unit, frontend unit, and E2E tests).
+The project includes comprehensive automated testing (~112 tests total across 3 layers: backend unit, frontend unit, and E2E tests).
+
+### Test Coverage
+- **Backend**: 10 tests with pytest (~0.5s) - API validation, file parsing, URL-safe names
+- **Frontend**: 62 tests with Vitest (~1.3s) - Rendering, state, filters, groupings, SVG export
+- **E2E**: 40 tests with Playwright (~11s) - Full user workflows, UI interactions, canvas rendering
+
+### E2E Testing Architecture
+
+**Hidden DOM for Canvas State Testing**  
+Since canvas-rendered content is difficult to test (no DOM representation), we implemented a hidden `#canvasTestState` div that mirrors the canvas state:
+
+```html
+<div id="canvasTestState" style="display: none;" 
+     data-total-teams="34" 
+     data-filtered-teams="12"
+     data-active-filters='{"valueStreams":["E-commerce"]}'
+     data-current-view="tt"></div>
+```
+
+This enables reliable assertions on canvas state without indirect UI checks:
+- Verify exact filter counts
+- Check which filters are active
+- Validate view state
+- Test search functionality
+
+Updated automatically in `renderer.js` after each draw cycle.
+
+**Test Organization**  
+E2E tests are organized into focused, independent test files (40 tests total across 6 files):
+- `api-validation.spec.ts` (3 tests) - API endpoints, JSON validation
+- `organization-hierarchy.spec.ts` (9 tests) - Department structure, team counts
+- `ui-basic.spec.ts` (9 tests) - Page load, views, canvas, legend
+- `ui-interactions.spec.ts` (8 tests) - Filters (using hidden DOM), search, zoom, validation
+- `modal-rendering.spec.ts` (1 test) - Modal content rendering
+- `backend-validation.spec.ts` (1 test) - Backend file structure validation
 
 See [DEVELOPMENT.md](DEVELOPMENT.md) for detailed testing instructions, development workflow, and technical decisions.
-
-**Quick summary**:
-- Backend: ~10 tests with pytest (~0.5s)
-- Frontend: ~62 tests with Vitest (~1.3s) 
-- E2E: ~23 tests with Playwright (~3-5s)
 
 ## Development
 

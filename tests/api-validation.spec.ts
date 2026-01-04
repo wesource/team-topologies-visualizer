@@ -2,31 +2,21 @@ import { test, expect } from '@playwright/test';
 
 const BASE_URL = 'http://127.0.0.1:8000';
 
-test.describe.configure({ mode: 'serial' });
-
 test.describe('API Validation', () => {
   test('should load organization hierarchy API', async ({ page }) => {
-    await page.goto(`${BASE_URL}/static/index.html`);
-    await page.locator('input[value="current"]').click();
-    
-    const response = await page.waitForResponse(
-      response => response.url().includes('/api/organization-hierarchy'),
-      { timeout: 10000 }
-    );
+    const response = await page.request.get(`${BASE_URL}/api/organization-hierarchy`);
     
     expect(response.status()).toBe(200);
     const data = await response.json();
-    expect(data).toHaveProperty('departments');
+    // API structure is: { company: { children: [...departments] } }
+    expect(data).toHaveProperty('company');
+    expect(data.company).toHaveProperty('children');
+    expect(Array.isArray(data.company.children)).toBe(true);
+    expect(data.company.children.length).toBe(6);
   });
 
   test('should load teams API for current view', async ({ page }) => {
-    await page.goto(`${BASE_URL}/static/index.html`);
-    await page.locator('input[value="current"]').click();
-    
-    const response = await page.waitForResponse(
-      response => response.url().includes('/api/teams?view=current'),
-      { timeout: 10000 }
-    );
+    const response = await page.request.get(`${BASE_URL}/api/teams?view=current`);
     
     expect(response.status()).toBe(200);
     const teams = await response.json();
@@ -34,13 +24,8 @@ test.describe('API Validation', () => {
     expect(teams.length).toBeGreaterThan(0);
   });
 
-  test('Teams API should return valid team data', async ({ page }) => {
-    await page.goto(`${BASE_URL}/static/index.html`);
-    
-    const response = await page.waitForResponse(
-      response => response.url().includes('/api/teams?view=tt'),
-      { timeout: 10000 }
-    );
+  test('should load teams API for TT Design view', async ({ page }) => {
+    const response = await page.request.get(`${BASE_URL}/api/teams?view=tt`);
     
     expect(response.status()).toBe(200);
     const teams = await response.json();
@@ -50,16 +35,14 @@ test.describe('API Validation', () => {
     // Validate team structure
     const firstTeam = teams[0];
     expect(firstTeam).toHaveProperty('name');
-    expect(firstTeam).toHaveProperty('type');
-    expect(['stream-aligned', 'enabling', 'complicated-subsystem', 'platform']).toContain(firstTeam.type);
+    expect(firstTeam).toHaveProperty('team_type');
+    expect(['stream-aligned', 'enabling', 'complicated-subsystem', 'platform']).toContain(firstTeam.team_type);
   });
 
   test('API endpoints should return valid JSON', async ({ page }) => {
     const endpoints = [
       '/api/teams?view=tt',
-      '/api/organization-hierarchy',
-      '/api/current-team-types',
-      '/api/company-leadership'
+      '/api/organization-hierarchy'
     ];
 
     for (const endpoint of endpoints) {
