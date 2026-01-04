@@ -353,4 +353,176 @@ test.describe('Team Topologies Visualizer', () => {
     await expect(modal).not.toBeVisible();
   });
   });
+
+  // UI Interaction Tests
+  test.describe('UI Interactions', () => {
+    test('should filter teams by value stream', async ({ page }) => {
+      await page.goto(`${BASE_URL}/static/index.html`);
+      await page.waitForResponse(response => response.url().includes('/api/teams?view=tt'), { timeout: 5000 });
+      await page.waitForTimeout(500);
+      
+      // Open filter panel
+      await page.locator('#filterToggleBtn').click();
+      const dropdown = page.locator('#filterDropdown');
+      await expect(dropdown).toBeVisible();
+      
+      // Verify filter options exist
+      const vsFilters = page.locator('#valueStreamFilters input[type="checkbox"]');
+      expect(await vsFilters.count()).toBeGreaterThan(0);
+      
+      // Select and apply
+      await vsFilters.first().check();
+      await page.locator('#applyFiltersBtn').click();
+      await page.waitForTimeout(300);
+      
+      // Verify filter badge shows
+      await expect(page.locator('#filterCount')).toBeVisible();
+      
+      // Clear
+      await page.locator('#filterToggleBtn').click();
+      await page.locator('#clearAllFiltersBtn').click();
+      await page.locator('#applyFiltersBtn').click();
+    });
+
+    test('should search teams in sidebar', async ({ page }) => {
+      await page.goto(`${BASE_URL}/static/index.html`);
+      await page.waitForResponse(response => response.url().includes('/api/teams'), { timeout: 5000 });
+      await page.waitForTimeout(500);
+      
+      const searchBox = page.locator('#teamSearch');
+      await expect(searchBox).toBeVisible();
+      
+      // Type search term
+      await searchBox.fill('Cloud');
+      await page.waitForTimeout(300);
+      
+      // Verify teams still visible
+      const teamItems = page.locator('#teamList .team-item');
+      expect(await teamItems.count()).toBeGreaterThan(0);
+      
+      // Clear with Escape
+      await searchBox.press('Escape');
+      await page.waitForTimeout(200);
+      expect(await searchBox.inputValue()).toBe('');
+    });
+
+    test('should use zoom controls', async ({ page }) => {
+      await page.goto(`${BASE_URL}/static/index.html`);
+      await page.waitForResponse(response => response.url().includes('/api/teams'), { timeout: 5000 });
+      
+      const zoomLevel = page.locator('#zoomLevel');
+      await expect(zoomLevel).toContainText('100%');
+      
+      // Zoom in
+      await page.locator('#zoomInBtn').click();
+      await page.waitForTimeout(100);
+      await expect(zoomLevel).not.toContainText('100%');
+      
+      // Zoom out
+      await page.locator('#zoomOutBtn').click();
+      await page.waitForTimeout(100);
+      
+      // Fit to view
+      await page.locator('#fitViewBtn').click();
+      await page.waitForTimeout(100);
+      await expect(zoomLevel).toBeVisible();
+    });
+
+    test('should open validation modal', async ({ page }) => {
+      await page.goto(`${BASE_URL}/static/index.html`);
+      await page.waitForResponse(response => response.url().includes('/api/teams'), { timeout: 5000 });
+      
+      await page.locator('#validateBtn').click();
+      
+      // Wait for validation API call
+      await page.waitForResponse(response => response.url().includes('/api/validate'), { timeout: 10000 });
+      
+      const modal = page.locator('#validationModal');
+      await expect(modal).toBeVisible({ timeout: 3000 });
+      
+      const report = page.locator('#validationReport');
+      await expect(report).toBeVisible();
+      
+      // Close modal
+      await page.locator('#validationModalClose').click();
+      await expect(modal).not.toBeVisible();
+    });
+
+    test('should toggle interaction modes visibility', async ({ page }) => {
+      await page.goto(`${BASE_URL}/static/index.html`);
+      await page.waitForResponse(response => response.url().includes('/api/teams?view=tt'), { timeout: 5000 });
+      await page.waitForTimeout(500);
+      
+      const checkbox = page.locator('#showInteractionModes');
+      await expect(checkbox).toBeVisible();
+      await expect(checkbox).toBeChecked();
+      
+      // Uncheck
+      await checkbox.uncheck();
+      await page.waitForTimeout(200);
+      await expect(checkbox).not.toBeChecked();
+      
+      // Check again
+      await checkbox.check();
+      await page.waitForTimeout(200);
+      await expect(checkbox).toBeChecked();
+    });
+
+    test('should toggle cognitive load indicators', async ({ page }) => {
+      await page.goto(`${BASE_URL}/static/index.html`);
+      await page.waitForResponse(response => response.url().includes('/api/teams'), { timeout: 5000 });
+      await page.waitForTimeout(500);
+      
+      const checkbox = page.locator('#showCognitiveLoad');
+      await expect(checkbox).toBeVisible();
+      await expect(checkbox).not.toBeChecked();
+      
+      // Check
+      await checkbox.check();
+      await page.waitForTimeout(200);
+      await expect(checkbox).toBeChecked();
+      
+      // Uncheck
+      await checkbox.uncheck();
+      await page.waitForTimeout(200);
+      await expect(checkbox).not.toBeChecked();
+    });
+
+    test('should open team details from sidebar double-click', async ({ page }) => {
+      await page.goto(`${BASE_URL}/static/index.html`);
+      await page.waitForResponse(response => response.url().includes('/api/teams'), { timeout: 5000 });
+      await page.waitForTimeout(500);
+      
+      const firstTeam = page.locator('#teamList .team-item').first();
+      await firstTeam.dblclick();
+      
+      // Wait for modal
+      const modal = page.locator('#detailModal');
+      await expect(modal).toBeVisible({ timeout: 3000 });
+      
+      // Verify content loaded
+      const content = page.locator('.team-api-content');
+      await expect(content).toBeVisible();
+      
+      // Close modal
+      await page.locator('#detailModalClose').click();
+    });
+
+    test('should use auto-align button', async ({ page }) => {
+      await page.goto(`${BASE_URL}/static/index.html`);
+      await page.waitForResponse(response => response.url().includes('/api/teams?view=tt'), { timeout: 5000 });
+      await page.waitForTimeout(500);
+      
+      const autoAlignBtn = page.locator('#autoAlignTTBtn');
+      await expect(autoAlignBtn).toBeVisible();
+      
+      await autoAlignBtn.click();
+      
+      // Wait for alignment to complete (it triggers API calls)
+      await page.waitForTimeout(1000);
+      
+      // Button should still be visible (no errors)
+      await expect(autoAlignBtn).toBeVisible();
+    });
+  });
 });
