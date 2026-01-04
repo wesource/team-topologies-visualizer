@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "E2E tests for Team Topologies Visualizer",
   "scripts": {
-    "test": "playwright test",
-    "test:headed": "playwright test --headed",
+    "test": "playwright test --workers=1",
+    "test:headed": "playwright test --headed --workers=1",
     "test:ui": "playwright test --ui",
-    "test:debug": "playwright test --debug"
+    "test:debug": "playwright test --debug",
+    "test:parallel": "playwright test --workers=3"
   },
   "devDependencies": {
     "@playwright/test": "^1.40.0"
