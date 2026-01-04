@@ -117,6 +117,82 @@ Use the radio buttons in the header to switch between:
 - **Show Communication Lines** checkbox - Toggle to show communication/dependency lines between teams in Current State view. Hidden by default to provide a cleaner org-chart visualization.
 - **Refresh** button - Reload all team markdown files and configuration from disk. Useful when editing files externally. Preserves your current zoom/pan position on the canvas.
 
+### Validating Team Files
+
+After manually editing team markdown files, use the validation feature to catch errors before they cause issues:
+
+1. **Click the "✓ Validate Files" button** in the toolbar
+2. **Review the validation report** showing:
+   - Summary statistics (total files, valid files, warnings, errors)
+   - Detailed issues organized by file
+   - Color-coded severity (🔴 errors must be fixed, 🟡 warnings are recommendations)
+3. **Fix any errors** by editing the markdown files:
+   - YAML syntax errors or duplicate front matter blocks
+   - Missing required fields (name, team_type, position)
+   - Invalid team_type values (must match team-types.json)
+   - Filename mismatches (e.g., file named `team.md` but team name is "Platform Team")
+   - Invalid position coordinates
+   - Team size outside recommended range (5-9 people)
+   - Malformed interaction tables (TT view only)
+4. **Re-validate** to confirm all issues are resolved
+
+**Validation checks both views:**
+- Pre-TT view: `GET /api/validate?view=current`
+- TT Design view: `GET /api/validate?view=tt`
+
+This helps maintain data quality when editing files directly, catching issues before they cause rendering problems or API failures.
+
+### Using Team Templates
+
+The `templates/` directory contains ready-to-use markdown templates to help you create new teams quickly:
+
+**Available templates:**
+- `team-api-template-base.md` - Strictly follows the [official Team API template](https://github.com/TeamTopologies/Team-API-template) from Team Topologies
+- `team-api-template-extended.md` - Adds platform product metrics, roadmap, and team member sections
+
+**How to use templates:**
+
+1. **Choose the right template:**
+   - Use **base template** for most teams (minimal, focused)
+   - Use **extended template** for complex platform teams or when you need product metrics
+
+2. **Copy template to your data directory:**
+   ```bash
+   # For TT Design teams
+   cp templates/team-api-template-base.md data/tt-teams/my-new-team.md
+   
+   # For Pre-TT teams (simpler structure)
+   # Create from scratch or copy an existing current-teams file
+   ```
+
+3. **Edit the YAML front matter:**
+   - Update `name` to your team's actual name
+   - Set correct `team_type` (must match your team-types.json)
+   - Adjust `position` coordinates (or use Auto-align button later)
+   - Fill in `metadata` (size, cognitive load, etc.)
+   - Add TT-specific fields (value_stream, platform_grouping) if applicable
+
+4. **Fill in the markdown content:**
+   - Follow the section structure in the template
+   - Replace placeholder text with your team's actual information
+   - Remove sections that don't apply to your team
+   - Keep "## Teams we currently interact with" table for automatic dependency parsing
+
+5. **Validate your new file:**
+   - Click "✓ Validate Files" to check for errors
+   - Fix any filename mismatches or missing required fields
+
+6. **Refresh the application:**
+   - Click the "Refresh" button in the toolbar
+   - Your new team should appear in the visualization
+
+**Template customization:**
+- Create your own company-specific template by copying and modifying the base template
+- Add industry-specific sections (HIPAA compliance, SOC2 controls, etc.)
+- Share templates across your organization for consistency
+
+See [CONCEPTS.md](CONCEPTS.md#team-api-outward-facing-team-interface) for detailed guidance on Team APIs and when to use each template.
+
 ## Team Files
 
 Teams are stored as markdown files with YAML front matter. Team types, colors, and descriptions are defined in prefixed configuration files within each view directory.
