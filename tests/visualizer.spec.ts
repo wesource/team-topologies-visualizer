@@ -361,6 +361,12 @@ test.describe('Team Topologies Visualizer', () => {
       await page.waitForResponse(response => response.url().includes('/api/teams?view=tt'), { timeout: 5000 });
       await page.waitForTimeout(500);
       
+      // Get initial state from hidden test element
+      const testState = page.locator('#canvasTestState');
+      const initialTotal = await testState.getAttribute('data-total-teams');
+      const initialFiltered = await testState.getAttribute('data-filtered-teams');
+      expect(initialTotal).toBe(initialFiltered); // No filters initially
+      
       // Open filter panel
       await page.locator('#filterToggleBtn').click();
       const dropdown = page.locator('#filterDropdown');
@@ -370,18 +376,33 @@ test.describe('Team Topologies Visualizer', () => {
       const vsFilters = page.locator('#valueStreamFilters input[type="checkbox"]');
       expect(await vsFilters.count()).toBeGreaterThan(0);
       
-      // Select and apply
+      // Select first value stream filter and apply
       await vsFilters.first().check();
       await page.locator('#applyFiltersBtn').click();
       await page.waitForTimeout(300);
       
+      // Verify filter is active in test state
+      const activeFilters = await testState.getAttribute('data-active-filters');
+      const filters = JSON.parse(activeFilters || '{}');
+      expect(filters.valueStreams.length).toBeGreaterThan(0);
+      
       // Verify filter badge shows
       await expect(page.locator('#filterCount')).toBeVisible();
       
-      // Clear
+      // Verify filtered count changed (may be same or less)
+      const filteredCount = await testState.getAttribute('data-filtered-teams');
+      expect(parseInt(filteredCount || '0')).toBeGreaterThan(0);
+      
+      // Clear filters
       await page.locator('#filterToggleBtn').click();
       await page.locator('#clearAllFiltersBtn').click();
       await page.locator('#applyFiltersBtn').click();
+      await page.waitForTimeout(200);
+      
+      // Verify filters cleared
+      const clearedFilters = await testState.getAttribute('data-active-filters');
+      const clearedParsed = JSON.parse(clearedFilters || '{}');
+      expect(clearedParsed.valueStreams.length).toBe(0);
     });
 
     test('should search teams in sidebar', async ({ page }) => {

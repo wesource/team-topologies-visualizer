@@ -113,6 +113,13 @@
 
             <main class="canvas-area">
                 <canvas id="teamCanvas"></canvas>
+                <!-- Hidden element for E2E testing - mirrors canvas state -->
+                <div id="canvasTestState" style="display: none;" 
+                     data-total-teams="0" 
+                     data-filtered-teams="0"
+                     data-active-filters=""
+                     data-search-term=""
+                     data-current-view=""></div>
             </main>
         </div>
     </div>

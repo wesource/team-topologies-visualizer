@@ -45,6 +45,30 @@ export function draw(state) {
     teamsToRender.forEach(team => drawTeam(state.ctx, team, state.selectedTeam, state.teamColorMap, (text, maxWidth) => wrapText(state.ctx, text, maxWidth), state.currentView, state.showCognitiveLoad));
     
     state.ctx.restore();
+    
+    // Update hidden test state for E2E testing
+    updateTestState(state, teamsToRender);
+}
+
+/**
+ * Update hidden DOM element with current canvas state for E2E testing
+ * @param {Object} state - Application state
+ * @param {Array} teamsToRender - Filtered teams being rendered
+ */
+function updateTestState(state, teamsToRender) {
+    const testState = document.getElementById('canvasTestState');
+    if (testState) {
+        testState.setAttribute('data-total-teams', state.teams.length);
+        testState.setAttribute('data-filtered-teams', teamsToRender.length);
+        testState.setAttribute('data-active-filters', 
+            JSON.stringify({
+                valueStreams: state.selectedFilters?.valueStreams || [],
+                platformGroupings: state.selectedFilters?.platformGroupings || []
+            })
+        );
+        testState.setAttribute('data-search-term', state.searchTerm || '');
+        testState.setAttribute('data-current-view', state.currentView);
+    }
 }
 
 /**
