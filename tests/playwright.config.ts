@@ -2,10 +2,10 @@ import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
   testDir: '.',
-  fullyParallel: false, // Run tests serially for stability
+  fullyParallel: true, // Tests are now stable - safe to run in parallel
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 1, // Retry once locally, twice in CI
-  workers: 1, // Run tests serially to ensure stability
+  workers: process.env.CI ? 1 : undefined, // Auto-detect workers locally, serial in CI
   reporter: 'html',
   timeout: 60000, // 60 second timeout per test
   

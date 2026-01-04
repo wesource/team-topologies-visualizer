@@ -51,8 +51,8 @@ Write-Host "Note: Playwright will automatically start the backend server`n" -For
 
 Push-Location tests
 try {
-    # Run with workers=1 for stability
-    npm test -- --workers=1
+    # Tests are now stable with parallel execution
+    npm test
     if ($LASTEXITCODE -ne 0) {
         Write-Host "`n✗ E2E tests had failures!" -ForegroundColor Red
         $ErrorCount++
