@@ -29,42 +29,45 @@ test.describe('Team Topologies Visualizer', () => {
     await expect(ttVisionRadio).toBeChecked();
   });
 
-  test('should load organization hierarchy API', async ({ page }) => {
-    await page.goto(`${BASE_URL}/static/index.html`);
-    
-    // Wait for API calls
-    const hierarchyResponse = await page.waitForResponse(
-      response => response.url().includes('/api/organization-hierarchy') && response.status() === 200
-    );
-    
-    const hierarchyData = await hierarchyResponse.json();
-    
-    // Verify hierarchy structure
-    expect(hierarchyData).toHaveProperty('company');
-    expect(hierarchyData.company).toHaveProperty('children');
-    expect(hierarchyData.company.children.length).toBeGreaterThan(0);
-  });
+  // API-dependent tests run serially to avoid resource contention and timeouts
+  test.describe.serial('API Loading Tests', () => {
+    test('should load organization hierarchy API', async ({ page }) => {
+      await page.goto(`${BASE_URL}/static/index.html`);
+      
+      // Wait for API calls
+      const hierarchyResponse = await page.waitForResponse(
+        response => response.url().includes('/api/organization-hierarchy') && response.status() === 200
+      );
+      
+      const hierarchyData = await hierarchyResponse.json();
+      
+      // Verify hierarchy structure
+      expect(hierarchyData).toHaveProperty('company');
+      expect(hierarchyData.company).toHaveProperty('children');
+      expect(hierarchyData.company.children.length).toBeGreaterThan(0);
+    });
 
-  test('should load teams API for current view', async ({ page }) => {
-    await page.goto(`${BASE_URL}/static/index.html`);
-    
-    const teamsResponse = await page.waitForResponse(
-      response => response.url().includes('/api/teams?view=current') && response.status() === 200
-    );
-    
-    const teams = await teamsResponse.json();
-    
-    // Verify teams are loaded
-    expect(Array.isArray(teams)).toBe(true);
-    expect(teams.length).toBeGreaterThan(0);
-    
-    // Check team structure
-    if (teams.length > 0) {
-      const firstTeam = teams[0];
-      expect(firstTeam).toHaveProperty('name');
-      expect(firstTeam).toHaveProperty('team_type');
-      expect(firstTeam).toHaveProperty('position');
-    }
+    test('should load teams API for current view', async ({ page }) => {
+      await page.goto(`${BASE_URL}/static/index.html`);
+      
+      const teamsResponse = await page.waitForResponse(
+        response => response.url().includes('/api/teams?view=current') && response.status() === 200
+      );
+      
+      const teams = await teamsResponse.json();
+      
+      // Verify teams are loaded
+      expect(Array.isArray(teams)).toBe(true);
+      expect(teams.length).toBeGreaterThan(0);
+      
+      // Check team structure
+      if (teams.length > 0) {
+        const firstTeam = teams[0];
+        expect(firstTeam).toHaveProperty('name');
+        expect(firstTeam).toHaveProperty('team_type');
+        expect(firstTeam).toHaveProperty('position');
+      }
+    });
   });
 
   test('should display teams in sidebar', async ({ page }) => {
@@ -206,72 +209,78 @@ test.describe('Team Topologies Visualizer', () => {
     expect(Array.isArray(teams)).toBe(true);
   });
 
-  test('should verify Customer Solutions department has 4 regions', async ({ page }) => {
-    await page.goto(`${BASE_URL}/static/index.html`);
-    
-    const hierarchyResponse = await page.waitForResponse(
-      response => response.url().includes('/api/organization-hierarchy')
-    );
-    
-    const hierarchyData = await hierarchyResponse.json();
-    const customerSolutionsDept = hierarchyData.company.children.find(
-      (dept: any) => dept.id === 'customer-solutions-dept'
-    );
-    
-    expect(customerSolutionsDept).toBeDefined();
-    expect(customerSolutionsDept.regions).toBeDefined();
-    expect(customerSolutionsDept.regions.length).toBe(4);
-    
-    // Verify region names
-    const regionNames = customerSolutionsDept.regions.map((r: any) => r.name);
-    expect(regionNames).toContain('Asia Region');
-    expect(regionNames).toContain('Africa Region');
-    expect(regionNames).toContain('Europe Region');
-    expect(regionNames).toContain('America Region');
-  });
-
-  test('should verify Engineering department has 5 line managers', async ({ page }) => {
-    await page.goto(`${BASE_URL}/static/index.html`);
-    
-    const hierarchyResponse = await page.waitForResponse(
-      response => response.url().includes('/api/organization-hierarchy')
-    );
-    
-    const hierarchyData = await hierarchyResponse.json();
-    const engineeringDept = hierarchyData.company.children.find(
-      (dept: any) => dept.id === 'engineering-dept'
-    );
-    
-    expect(engineeringDept).toBeDefined();
-    expect(engineeringDept.line_managers).toBeDefined();
-    expect(engineeringDept.line_managers.length).toBe(5);
-  });
-
-  test('should render markdown correctly in team detail modal', async ({ page }) => {
-    await page.goto(`${BASE_URL}/static/index.html`);
-    
-    // Wait for teams to load (TT Design is default)
-    await page.waitForResponse(response => response.url().includes('/api/teams?view=tt'));
-    await page.waitForTimeout(1500); // Wait for canvas rendering and app initialization
-    
-    // Fetch team data and call showTeamDetails directly
-    await page.evaluate(async () => {
-      const response = await fetch('/api/teams/Cloud%20Development%20Platform%20Team?view=tt');
-      const team = await response.json();
+  // Hierarchy structure tests run serially to avoid timeout issues
+  test.describe.serial('Organization Hierarchy Tests', () => {
+    test('should verify Customer Solutions department has 4 regions', async ({ page }) => {
+      await page.goto(`${BASE_URL}/static/index.html`);
       
-      // Use the exposed test helper
-      // @ts-ignore
-      if (window._testHelpers?.showTeamDetails) {
-        // @ts-ignore
-        window._testHelpers.showTeamDetails(team, 'tt');
-      }
+      const hierarchyResponse = await page.waitForResponse(
+        response => response.url().includes('/api/organization-hierarchy')
+      );
+      
+      const hierarchyData = await hierarchyResponse.json();
+      const customerSolutionsDept = hierarchyData.company.children.find(
+        (dept: any) => dept.id === 'customer-solutions-dept'
+      );
+      
+      expect(customerSolutionsDept).toBeDefined();
+      expect(customerSolutionsDept.regions).toBeDefined();
+      expect(customerSolutionsDept.regions.length).toBe(4);
+      
+      // Verify region names
+      const regionNames = customerSolutionsDept.regions.map((r: any) => r.name);
+      expect(regionNames).toContain('Asia Region');
+      expect(regionNames).toContain('Africa Region');
+      expect(regionNames).toContain('Europe Region');
+      expect(regionNames).toContain('America Region');
     });
-    
-    // Wait for modal to appear
-    const modal = page.locator('#detailModal');
-    await expect(modal).toBeVisible({ timeout: 3000 });
-    
-    const modalContent = modal.locator('.team-api-content');
+
+    test('should verify Engineering department has 5 line managers', async ({ page }) => {
+      await page.goto(`${BASE_URL}/static/index.html`);
+      
+      const hierarchyResponse = await page.waitForResponse(
+        response => response.url().includes('/api/organization-hierarchy')
+      );
+      
+      const hierarchyData = await hierarchyResponse.json();
+      const engineeringDept = hierarchyData.company.children.find(
+        (dept: any) => dept.id === 'engineering-dept'
+      );
+      
+      expect(engineeringDept).toBeDefined();
+      expect(engineeringDept.line_managers).toBeDefined();
+      expect(engineeringDept.line_managers.length).toBe(5);
+    });
+  });
+
+  // Modal rendering test runs separately with longer waits
+  test.describe.serial('Modal Rendering Tests', () => {
+    test('should render markdown correctly in team detail modal', async ({ page }) => {
+      await page.goto(`${BASE_URL}/static/index.html`);
+      
+      // Wait for teams to load (TT Design is default)
+      await page.waitForResponse(response => response.url().includes('/api/teams?view=tt'));
+      await page.waitForLoadState('networkidle'); // Wait for all network activity to finish
+      await page.waitForTimeout(1500); // Wait for canvas rendering and app initialization
+      
+      // Fetch team data and call showTeamDetails directly
+      await page.evaluate(async () => {
+        const response = await fetch('/api/teams/Cloud%20Development%20Platform%20Team?view=tt');
+        const team = await response.json();
+        
+        // Use the exposed test helper
+        // @ts-ignore
+        if (window._testHelpers?.showTeamDetails) {
+          // @ts-ignore
+          window._testHelpers.showTeamDetails(team, 'tt');
+        }
+      });
+      
+      // Wait for modal to appear
+      const modal = page.locator('#detailModal');
+      await expect(modal).toBeVisible({ timeout: 3000 });
+      
+      const modalContent = modal.locator('.team-api-content');
     
     // Verify markdown headers are rendered as HTML headers with appropriate classes
     const h2Headers = modalContent.locator('h2');
@@ -330,5 +339,6 @@ test.describe('Team Topologies Visualizer', () => {
     // Close modal
     await page.locator('#detailModalClose').click();
     await expect(modal).not.toBeVisible();
+  });
   });
 });

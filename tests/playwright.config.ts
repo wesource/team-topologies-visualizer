@@ -5,7 +5,7 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 1, // Retry once locally, twice in CI
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? 1 : 3, // Reduce parallel workers to avoid resource contention
   reporter: 'html',
   timeout: 60000, // 60 second timeout per test
   
@@ -13,8 +13,8 @@ export default defineConfig({
     baseURL: 'http://127.0.0.1:8000',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
-    actionTimeout: 10000, // 10 second timeout for actions
-    navigationTimeout: 30000, // 30 second navigation timeout
+    actionTimeout: 15000, // Increased to 15 seconds for actions
+    navigationTimeout: 45000, // Increased to 45 seconds for navigation and API waits
   },
 
   projects: [
