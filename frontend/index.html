@@ -33,14 +33,40 @@
                     <input type="checkbox" id="showCognitiveLoad">
                     <span>🚦 Cognitive Load</span>
                 </label>
-                <div id="groupingFilterContainer" style="display: none;">
-                    <label for="groupingFilter">Groupings:</label>
-                    <select id="groupingFilter" class="filter-dropdown">
-                        <option value="all">All Teams</option>
-                    </select>
+                <div id="groupingFilterContainer" class="filter-panel" style="display: none;">
+                    <button id="filterToggleBtn" class="btn filter-toggle-btn">
+                        <span>🔍 Filters</span>
+                        <span class="filter-count" id="filterCount"></span>
+                    </button>
+                    <div id="filterDropdown" class="filter-dropdown-panel">
+                        <div class="filter-section">
+                            <div class="filter-section-header">
+                                <strong>Value Streams</strong>
+                                <button class="filter-clear-btn" data-type="vs">Clear</button>
+                            </div>
+                            <div id="valueStreamFilters" class="filter-options"></div>
+                        </div>
+                        <div class="filter-section">
+                            <div class="filter-section-header">
+                                <strong>Platform Groupings</strong>
+                                <button class="filter-clear-btn" data-type="pg">Clear</button>
+                            </div>
+                            <div id="platformGroupingFilters" class="filter-options"></div>
+                        </div>
+                        <div class="filter-actions">
+                            <button id="clearAllFiltersBtn" class="btn btn-secondary">Clear All</button>
+                            <button id="applyFiltersBtn" class="btn btn-primary">Apply</button>
+                        </div>
+                    </div>
                 </div>
                 <button id="autoAlignBtn" class="btn" style="display: none;">⚡ Auto-align Teams</button>
                 <button id="autoAlignTTBtn" class="btn" style="display: none;">⚡ Auto-align Teams</button>
+                <div class="zoom-controls">
+                    <button id="zoomOutBtn" class="btn btn-icon" title="Zoom Out (Ctrl+-)">-</button>
+                    <span id="zoomLevel" class="zoom-level">100%</span>
+                    <button id="zoomInBtn" class="btn btn-icon" title="Zoom In (Ctrl++)">+</button>
+                    <button id="fitViewBtn" class="btn btn-icon" title="Fit to View (Ctrl+0)">⊡</button>
+                </div>
                 <button id="addTeamBtn" class="btn btn-primary">+ Add Team</button>
                 <button id="exportSVGBtn" class="btn">📥 Export SVG</button>
                 <button id="validateBtn" class="btn">✓ Validate Files</button>
@@ -51,6 +77,9 @@
         <div class="main-content">
             <aside class="sidebar">
                 <h3>Teams</h3>
+                <div class="search-container">
+                    <input type="text" id="teamSearch" placeholder="🔍 Search teams..." class="search-input">
+                </div>
                 <div id="teamList" class="team-list"></div>
                 
                 <div class="legend">

@@ -8,6 +8,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Multi-Select Filters with Checkboxes**: Replaced single-select dropdown with modern checkbox-based filter system
+  - Click "🔍 Filters" button to open filter dropdown panel
+  - Separate sections for Value Streams and Platform Groupings
+  - Select multiple filters simultaneously (OR logic within category, AND logic between categories)
+  - Filter count badge shows number of active filters
+  - Individual "Clear" buttons for each section plus "Clear All" button
+  - Updated `state.selectedFilters` to track arrays: `valueStreams[]` and `platformGroupings[]`
+  - Updated `getFilteredTeams()` to support multi-select filtering
+  - Better UX than single-select dropdown for complex filtering scenarios
+
+- **Team Search in Sidebar**: Quick search box to filter teams by name
+  - Added search input at top of sidebar with 🔍 icon
+  - Instant filtering as you type
+  - Press Escape to clear search and show all teams
+  - Complements the filter system for fast team discovery
+
+- **Zoom Controls**: Visual zoom controls with keyboard shortcuts
+  - **+/- Buttons**: Click to zoom in/out
+  - **Zoom Level Display**: Shows current zoom percentage (e.g., "100%")
+  - **Fit to View Button (⊡)**: One-click to fit all teams in viewport
+  - **Keyboard Shortcuts**:
+    - `Ctrl/Cmd + +` or `Ctrl/Cmd + =` to zoom in
+    - `Ctrl/Cmd + -` to zoom out
+    - `Ctrl/Cmd + 0` to fit to view
+  - Zoom controls grouped in styled container in header
+  - `fitToView()` calculates bounding box, centers content, and sets optimal zoom (capped at 150%)
+
+- **Right-Click Panning**: Pan canvas view by right-clicking and dragging
+  - Right-click (or middle mouse button) to enter pan mode
+  - Cursor changes to "grabbing" during panning
+  - Left-click still drags teams as before
+  - Context menu prevented on canvas for better UX
+  - Smooth panning with real-time viewport updates
+
 - **File Validation Report**: New validation system to catch errors in team markdown files
   - Created `backend/validation.py` module (161 lines) extracted from `services.py` for better organization
   - API endpoint: `GET /api/validate?view={tt|current}` returns comprehensive validation report

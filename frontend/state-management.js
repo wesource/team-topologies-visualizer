@@ -19,7 +19,11 @@ export const state = {
     showConnections: false,
     showInteractionModes: true, // Interaction mode lines enabled by default
     showCognitiveLoad: false, // Cognitive load indicators disabled by default
-    selectedGrouping: 'all' // Format: 'all', 'vs:ValueStreamName', 'pg:PlatformGroupingName'
+    selectedGrouping: 'all', // Legacy format: 'all', 'vs:ValueStreamName', 'pg:PlatformGroupingName'
+    selectedFilters: {
+        valueStreams: [], // Array of selected value stream names
+        platformGroupings: [] // Array of selected platform grouping names
+    }
 };
 
 // Interaction handler (initialized in app.js)
@@ -31,23 +35,86 @@ export function setInteractionHandler(handler) {
 
 // Helper to get filtered teams based on current grouping
 export function getFilteredTeams() {
-    if (state.selectedGrouping === 'all') {
+    // If no filters selected, return all teams
+    if (state.selectedFilters.valueStreams.length === 0 && 
+        state.selectedFilters.platformGroupings.length === 0) {
         return state.teams;
     }
     
-    // Value stream filter
-    if (state.selectedGrouping.startsWith('vs:')) {
-        const valueStreamName = state.selectedGrouping.substring(3);
-        const { filterTeamsByValueStream } = require('./tt-value-stream-grouping.js');
-        return filterTeamsByValueStream(state.teams, valueStreamName);
-    }
-    
-    // Platform grouping filter
-    if (state.selectedGrouping.startsWith('pg:')) {
-        const platformGroupingName = state.selectedGrouping.substring(3);
-        const { filterTeamsByPlatformGrouping } = require('./tt-platform-grouping.js');
-        return filterTeamsByPlatformGrouping(state.teams, platformGroupingName);
-    }
-    
-    return state.teams;
+    return state.teams.filter(team => {
+        // If any value stream filter is selected, team must match one of them
+        if (state.selectedFilters.valueStreams.length > 0) {
+            const teamValueStream = team.metadata?.value_stream;
+            if (!teamValueStream || !state.selectedFilters.valueStreams.includes(teamValueStream)) {
+                return false;
+            }
+        }
+        
+        // If any platform grouping filter is selected, team must match one of them
+        if (state.selectedFilters.platformGroupings.length > 0) {
+            const teamPlatformGrouping = team.metadata?.platform_grouping;
+            if (!teamPlatformGrouping || !state.selectedFilters.platformGroupings.includes(teamPlatformGrouping)) {
+                return false;
+            }
+        }
+        
+        return true;
+    });
 }
+
+// Zoom control functions
+export function zoomIn(drawCallback) {
+    state.scale = Math.min(3, state.scale * 1.2);
+    updateZoomDisplay();
+    if (drawCallback) drawCallback();
+}
+
+export function zoomOut(drawCallback) {
+    state.scale = Math.max(0.1, state.scale / 1.2);
+    updateZoomDisplay();
+    if (drawCallback) drawCallback();
+}
+
+export function fitToView(canvas, teams, drawCallback) {
+    if (!teams || teams.length === 0) return;
+    
+    // Calculate bounding box of all teams
+    let minX = Infinity, minY = Infinity;
+    let maxX = -Infinity, maxY = -Infinity;
+    
+    teams.forEach(team => {
+        const x = team.position?.x || 0;
+        const y = team.position?.y || 0;
+        minX = Math.min(minX, x);
+        minY = Math.min(minY, y);
+        maxX = Math.max(maxX, x + 200); // Team width
+        maxY = Math.max(maxY, y + 80);  // Team height
+    });
+    
+    const contentWidth = maxX - minX;
+    const contentHeight = maxY - minY;
+    const padding = 50;
+    
+    // Calculate scale to fit content
+    const scaleX = (canvas.width - padding * 2) / contentWidth;
+    const scaleY = (canvas.height - padding * 2) / contentHeight;
+    state.scale = Math.min(scaleX, scaleY, 1.5); // Cap at 150% zoom
+    
+    // Center the content
+    const centerX = (minX + maxX) / 2;
+    const centerY = (minY + maxY) / 2;
+    state.viewOffset.x = canvas.width / 2 - centerX * state.scale;
+    state.viewOffset.y = canvas.height / 2 - centerY * state.scale;
+    
+    updateZoomDisplay();
+    if (drawCallback) drawCallback();
+}
+
+export function updateZoomDisplay() {
+    const zoomLevel = document.getElementById('zoomLevel');
+    if (zoomLevel) {
+        zoomLevel.textContent = `${Math.round(state.scale * 100)}%`;
+    }
+}
+
+export default state;

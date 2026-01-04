@@ -178,43 +178,78 @@ export function updateLegend() {
 }
 
 export function updateGroupingFilter() {
-    const filterSelect = document.getElementById('groupingFilter');
-    if (!filterSelect) return;
+    const vsContainer = document.getElementById('valueStreamFilters');
+    const pgContainer = document.getElementById('platformGroupingFilters');
+    
+    if (!vsContainer || !pgContainer) return;
     
     // Get unique value streams and platform groupings from current teams
     const valueStreams = getValueStreamNames(state.teams);
     const platformGroupings = getPlatformGroupingNames(state.teams);
     
-    // Clear existing options
-    filterSelect.innerHTML = '<option value="all">All Teams</option>';
-    
-    // Add value stream options
-    if (valueStreams.length > 0) {
-        const vsOptGroup = document.createElement('optgroup');
-        vsOptGroup.label = 'Value Streams';
+    // Populate value stream checkboxes
+    vsContainer.innerHTML = '';
+    if (valueStreams.length === 0) {
+        vsContainer.innerHTML = '<div class="filter-empty">No value streams</div>';
+    } else {
         valueStreams.forEach(vs => {
-            const option = document.createElement('option');
-            option.value = `vs:${vs}`;
-            option.textContent = vs;
-            vsOptGroup.appendChild(option);
+            const label = document.createElement('label');
+            label.className = 'filter-checkbox-label';
+            
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.value = vs;
+            checkbox.dataset.filterType = 'vs';
+            checkbox.checked = state.selectedFilters.valueStreams.includes(vs);
+            
+            const span = document.createElement('span');
+            span.textContent = vs;
+            
+            label.appendChild(checkbox);
+            label.appendChild(span);
+            vsContainer.appendChild(label);
         });
-        filterSelect.appendChild(vsOptGroup);
     }
     
-    // Add platform grouping options
-    if (platformGroupings.length > 0) {
-        const pgOptGroup = document.createElement('optgroup');
-        pgOptGroup.label = 'Platform Groupings';
+    // Populate platform grouping checkboxes
+    pgContainer.innerHTML = '';
+    if (platformGroupings.length === 0) {
+        pgContainer.innerHTML = '<div class="filter-empty">No platform groupings</div>';
+    } else {
         platformGroupings.forEach(pg => {
-            const option = document.createElement('option');
-            option.value = `pg:${pg}`;
-            option.textContent = pg;
-            pgOptGroup.appendChild(option);
+            const label = document.createElement('label');
+            label.className = 'filter-checkbox-label';
+            
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.value = pg;
+            checkbox.dataset.filterType = 'pg';
+            checkbox.checked = state.selectedFilters.platformGroupings.includes(pg);
+            
+            const span = document.createElement('span');
+            span.textContent = pg;
+            
+            label.appendChild(checkbox);
+            label.appendChild(span);
+            pgContainer.appendChild(label);
         });
-        filterSelect.appendChild(pgOptGroup);
     }
     
-    // Reset selection to "all" when updating
-    state.selectedGrouping = 'all';
-    filterSelect.value = 'all';
+    updateFilterCount();
+}
+
+// Update the filter count badge
+function updateFilterCount() {
+    const filterCount = document.getElementById('filterCount');
+    if (!filterCount) return;
+    
+    const total = state.selectedFilters.valueStreams.length + 
+                  state.selectedFilters.platformGroupings.length;
+    
+    if (total > 0) {
+        filterCount.textContent = total;
+        filterCount.style.display = 'inline-block';
+    } else {
+        filterCount.style.display = 'none';
+    }
 }

@@ -94,6 +94,149 @@ header h1 {
     border-color: #4A90E2;
 }
 
+/* Multi-select filter panel */
+.filter-panel {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.filter-toggle-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+}
+
+.filter-count {
+    display: none;
+    min-width: 20px;
+    height: 20px;
+    background: #4A90E2;
+    color: white;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 20px;
+    text-align: center;
+    padding: 0 6px;
+}
+
+.filter-dropdown-panel {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 1000;
+    min-width: 320px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.filter-dropdown-panel.show {
+    display: block;
+}
+
+.filter-section {
+    padding: 1rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.filter-section:last-of-type {
+    border-bottom: none;
+}
+
+.filter-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.filter-section-header strong {
+    font-size: 0.9rem;
+    color: #2c3e50;
+}
+
+.filter-clear-btn {
+    font-size: 0.8rem;
+    color: #6c757d;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.filter-clear-btn:hover {
+    background: #f8f9fa;
+    color: #4A90E2;
+}
+
+.filter-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.filter-checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 0.4rem 0.6rem;
+    border-radius: 4px;
+    transition: background 0.2s;
+    font-size: 0.9rem;
+}
+
+.filter-checkbox-label:hover {
+    background: #f8f9fa;
+}
+
+.filter-checkbox-label input[type="checkbox"] {
+    margin-right: 0.6rem;
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+}
+
+.filter-empty {
+    color: #6c757d;
+    font-size: 0.85rem;
+    font-style: italic;
+    padding: 0.5rem;
+    text-align: center;
+}
+
+.filter-actions {
+    display: flex;
+    gap: 0.5rem;
+    padding: 1rem;
+    border-top: 1px solid #e9ecef;
+    background: #f8f9fa;
+}
+
+.filter-actions .btn {
+    flex: 1;
+}
+
+.btn-secondary {
+    background: white;
+    color: #6c757d;
+    border-color: #ddd;
+}
+
+.btn-secondary:hover {
+    background: #e9ecef;
+    color: #495057;
+}
+
+
 .btn {
     padding: 0.5rem 1rem;
     border: 1px solid #ddd;
@@ -118,6 +261,32 @@ header h1 {
     background: #357ABD;
 }
 
+.btn-icon {
+    padding: 0.5rem 0.75rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+    min-width: 36px;
+}
+
+.zoom-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 0.25rem;
+    background: white;
+}
+
+.zoom-level {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #666;
+    min-width: 45px;
+    text-align: center;
+    user-select: none;
+}
+
 .main-content {
     display: flex;
     flex: 1;
@@ -135,6 +304,29 @@ header h1 {
 .sidebar h3 {
     margin-bottom: 1rem;
     color: #2c3e50;
+}
+
+.search-container {
+    margin-bottom: 1rem;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #4A90E2;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.search-input::placeholder {
+    color: #999;
 }
 
 .team-list {
