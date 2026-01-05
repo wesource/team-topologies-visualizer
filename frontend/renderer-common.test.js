@@ -122,13 +122,9 @@ describe('getTeamAtPosition', () => {
     });
 });
 describe('initCanvasPolyfills', () => {
-    // Skip Canvas API tests since Canvas is not available in happy-dom
-    it.skip('should define roundRect polyfill function', () => {
-        expect(initCanvasPolyfills).toBeDefined();
-        expect(typeof initCanvasPolyfills).toBe('function');
-    });
     it('should exist as a function', () => {
-        // Just verify the function is exported
+        // Canvas API tests are covered by E2E tests with real browsers
+        // happy-dom doesn't support Canvas, so we just verify export exists
         expect(typeof initCanvasPolyfills).toBe('function');
     });
 });
