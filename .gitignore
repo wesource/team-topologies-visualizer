@@ -55,3 +55,6 @@ npm-debug.log*
 # Coverage
 .nyc_output/
 coverage/
+
+# Snapshots (comment out if you want to track snapshots in git)
+# data/snapshots/*.json

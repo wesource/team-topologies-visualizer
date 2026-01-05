@@ -1,14 +1,6 @@
 ---
 name: Integration Testing Team
 team_type: support-team
-dependencies:
-- Core Product Team
-- Web Product Team
-- ML Product Team
-interaction_modes:
-  Core Product Team: collaboration
-  Web Product Team: collaboration
-  ML Product Team: collaboration
 position:
   x: 630.0
   y: 410.0

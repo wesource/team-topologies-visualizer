@@ -23,7 +23,11 @@ export const state = {
     selectedFilters: {
         valueStreams: [], // Array of selected value stream names
         platformGroupings: [] // Array of selected platform grouping names
-    }
+    },
+    // Snapshot state
+    isViewingSnapshot: false,
+    currentSnapshot: null,
+    snapshotMetadata: null
 };
 
 // Interaction handler (initialized in app.js)

@@ -39,6 +39,11 @@ export class CanvasInteractionHandler {
             return;
         }
         
+        // Disable dragging when viewing snapshot (read-only mode)
+        if (this.state.isViewingSnapshot) {
+            return;
+        }
+        
         // Left-click for team dragging
         const team = getTeamAtPosition(this.state.teams, x, y, this.state.viewOffset, this.state.scale, this.state.currentView);
         if (team) {

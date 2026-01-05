@@ -11,35 +11,11 @@ This backlog tracks enhancements for iterative development. Items are organized 
 
 ---
 
-## ✅ Recently Completed
-
-### 1. Implement Full Team API Structure ⭐⭐⭐⭐⭐ CRITICAL - **✅ COMPLETED 2026-01-05**
-**Impact**: HIGH | **Effort**: 3-4 hours | **From**: Both expert reviews + TT Book 2nd Edition
-
-**Status**: ✅ **COMPLETED** - All components implemented and working
-
-**What Was Delivered**:
-- ✅ Backend models support full Team API structure (`backend/models.py`)
-- ✅ Backend parses interaction tables from markdown (`backend/services.py`)
-- ✅ Frontend modal displays Team API with rich formatting and clickable links (`frontend/modals.js`)
-- ✅ All 34 tt-teams updated to use Team API format (mix of base and extended templates)
-- ✅ Two templates created: base (GitHub strict) and extended (with book additions)
-- ✅ CONCEPTS.md documents Team API vs Team Agreement distinction
-- ✅ Example teams: `observability-platform-team.md`, `cloud-development-platform-team.md`, etc.
-
-**User Value Achieved**:
-- Teams know exactly who to contact, what SLAs to expect
-- New teams can discover services without lengthy meetings
-- Communication norms and interaction patterns are explicit
-- Roadmap visibility helps teams plan dependencies
-
----
-
 ## 🎯 v1.0 Release - Must Have (Current Sprint)
 
 These items are critical for v1.0 release. They address core business value gaps identified in expert reviews.
 
-### 2. Show Dependency & Consumer Counts (Bottleneck Detection) ⭐⭐⭐⭐⭐ CRITICAL
+### 1. Show Dependency & Consumer Counts (Bottleneck Detection) ⭐⭐⭐⭐⭐ CRITICAL
 **Impact**: HIGH | **Effort**: 2 hours | **From**: Expert Review - "No organizational sensing"
 
 **Why This Matters**:
@@ -219,9 +195,9 @@ These are high-value features for v1.1, identified in expert reviews.
 ```
 
 **Storage Location**:
-- `data/snapshots/tt-design-v1.0-2026-01-15.json`
-- `data/snapshots/tt-design-v1.1-2026-04-01.json`
-- `data/snapshots/tt-design-v2.0-2026-07-15.json`
+- `data/tt-snapshots/tt-design-v1.0-2026-01-15.json`
+- `data/tt-snapshots/tt-design-v1.1-2026-04-01.json`
+- `data/tt-snapshots/tt-design-v2.0-2026-07-15.json`
 - Git-tracked, version controlled
 - Immutable once created (frozen state)
 
@@ -235,7 +211,7 @@ These are high-value features for v1.1, identified in expert reviews.
   - Author (from git config or manual entry)
   - Preview: "This will capture 28 teams, 4 value streams, 3 platform groupings"
 - [ ] Progress indicator while saving
-- [ ] Success notification: "Snapshot saved: data/snapshots/tt-design-v1.0-2026-01-15.json"
+- [ ] Success notification: "Snapshot saved: data/tt-snapshots/tt-design-v1.0-2026-01-15.json"
 
 **2. Timeline/Snapshot Browser**
 - [ ] "🕐 Timeline" button in toolbar
@@ -275,7 +251,7 @@ These are high-value features for v1.1, identified in expert reviews.
   - Read all tt-teams markdown files
   - Parse and condense to JSON format
   - Generate snapshot ID and metadata
-  - Write to `data/snapshots/` directory
+  - Write to `data/tt-snapshots/` directory
   - Return snapshot summary
 - [ ] Backend: `GET /api/snapshots` endpoint
   - List all available snapshots (sorted by date)

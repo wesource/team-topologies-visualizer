@@ -12,6 +12,10 @@
             <div class="header-row">
                 <h1>Team Topologies Visualizer</h1>
                 <div class="header-actions">
+                    <div class="snapshot-controls-group">
+                        <button id="createSnapshotBtn" class="btn" style="display: none;">📸 Create Snapshot</button>
+                        <button id="timelineBtn" class="btn" style="display: none;">🕐 Timeline</button>
+                    </div>
                     <button id="exportSVGBtn" class="btn">📥 Export SVG</button>
                     <button id="validateBtn" class="btn">✓ Validate</button>
                     <button id="refreshBtn" class="btn">🔄 Refresh</button>
@@ -207,6 +211,61 @@
             <span class="close" id="validationModalClose">&times;</span>
             <h2>File Validation Report</h2>
             <div id="validationReport"></div>
+        </div>
+    </div>
+
+    <!-- Create Snapshot Modal -->
+    <div id="createSnapshotModal" class="modal">
+        <div class="modal-content modal-medium">
+            <span class="close" id="createSnapshotModalClose">&times;</span>
+            <h2>📸 Create Snapshot</h2>
+            <p>Capture the current TT Design state as a snapshot for tracking evolution over time.</p>
+            <div id="snapshotPreview" style="padding: 10px; background: #f5f5f5; border-radius: 4px; margin: 15px 0;">
+                Loading preview...
+            </div>
+            <form id="createSnapshotForm">
+                <div class="form-group">
+                    <label for="snapshotName">Snapshot Name *</label>
+                    <input type="text" id="snapshotName" required placeholder="e.g., TT Design v1.0 - 2026-01-15">
+                </div>
+                <div class="form-group">
+                    <label for="snapshotDescription">Description</label>
+                    <textarea id="snapshotDescription" rows="3" placeholder="Optional: Describe what changed or why this snapshot matters"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="snapshotAuthor">Author</label>
+                    <input type="text" id="snapshotAuthor" placeholder="Your name or email">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelSnapshotBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Snapshot</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Timeline/Snapshot Browser Panel -->
+    <div id="timelinePanel" class="timeline-panel" style="display: none;">
+        <div class="timeline-header">
+            <h3>📸 Snapshots & Timeline</h3>
+            <button class="close-panel-btn" id="closeTimelineBtn">&times;</button>
+        </div>
+        <div class="timeline-content">
+            <div class="snapshot-list" id="snapshotList">
+                Loading snapshots...
+            </div>
+        </div>
+    </div>
+
+    <!-- Snapshot View Banner -->
+    <div id="snapshotBanner" class="snapshot-banner" style="display: none;">
+        <div class="banner-content">
+            <span class="banner-icon">📸</span>
+            <span class="banner-text">
+                <strong>Viewing Snapshot (READ-ONLY):</strong> <span id="snapshotBannerName"></span>
+                <small id="snapshotBannerDate"></small>
+            </span>
+            <button class="btn btn-sm btn-primary" id="returnToLiveBtn">Return to Live View</button>
         </div>
     </div>
 

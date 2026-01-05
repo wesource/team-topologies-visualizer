@@ -1,12 +1,6 @@
 ---
 name: ML Product Team
 team_type: feature-team
-dependencies:
-- Core Product Team
-- Database Platform Team
-interaction_modes:
-  Core Product Team: collaboration
-  Database Platform Team: x-as-a-service
 position:
   x: 190.0
   y: 530.0

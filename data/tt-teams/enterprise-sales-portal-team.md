@@ -2,7 +2,7 @@
 name: Enterprise Sales Portal Team
 team_type: stream-aligned
 position:
-  x: 1054.0
+  x: 204.0
   y: 525.0
 metadata:
   size: 6

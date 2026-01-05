@@ -688,16 +688,209 @@ Use the dual visualization to:
 - **Communicate the transition** - Help everyone involved understand and discuss the "before and after"
 - **Version-controlled history** - Git-friendly format enables tracking evolution over time (via git history)
 
-## References
+## Evolution Tracking with Snapshots
 
-### Team Topologies Resources
-- [Team Topologies book and website](https://teamtopologies.com/) by Matthew Skelton and Manuel Pais - Book information and additional resources
-- [Team API Template](https://github.com/TeamTopologies/Team-API-template)
-- [Team Topologies Key Concepts](https://teamtopologies.com/key-concepts) - Core principles and patterns
-- [Team Topologies Blog](https://teamtopologies.com/blog) - Latest insights and case studies
+### The Problem: "Set It and Forget It"
 
-### Related Frameworks
-- [Scaled Agile Framework (SAFe)](https://scaledagileframework.com/)
+> ⚠️ **Static visualization trap**: Organizations create beautiful TT visualizations, put them on the wall, and 3 months later they're completely outdated. Teams have changed, new dependencies appeared, and nobody bothered to update the diagram.
+
+Team Topologies is **not** a one-time transformation project. It's a **continuous evolution** where team structures adapt to changing business needs, technology landscapes, and organizational learning. The snapshot system helps you:
+
+- Track transformation progress over quarters and years
+- Show stakeholders the journey, not just the current state
+- Enable "before and after" comparisons
+- Create audit trails for regulatory compliance
+- Experiment with structural changes safely
+
+### Creating Snapshots
+
+**What is a snapshot?**
+- A frozen, immutable copy of your TT Design at a specific point in time
+- Condensed JSON format (not full markdown) for efficient storage
+- Includes team positions, types, groupings, interactions, and statistics
+- Stored in `data/tt-snapshots/` directory
+
+**When to create snapshots:**
+
+1. **Quarterly snapshots** (recommended minimum)
+   - End of each quarter to track transformation progress
+   - Name: "TT Design Q1 2026", "TT Design Q2 2026", etc.
+
+2. **Milestone snapshots**
+   - After major organizational changes (team splits, new platforms)
+   - Before/after executive presentations
+   - When entering new transformation phase
+   - Example: "TT Design v1.0 - Initial Platform Teams"
+
+3. **Experiment snapshots**
+   - Before trying structural experiments
+   - Example: "TT Design - Experiment: Split Platform Team"
+   - Easy rollback if experiment fails
+
+4. **Compliance snapshots**
+   - Some industries require org structure audit trail
+   - Regular snapshots provide historical evidence
+
+**How to create a snapshot:**
+
+1. In TT Design view, click "📸 Create Snapshot" button
+2. Enter a descriptive name (auto-suggested: "TT Design vX.X - YYYY-MM-DD")
+3. Add description explaining what changed or why this snapshot matters
+4. Optionally add your name/email as author
+5. Preview shows how many teams/value streams/platform groupings will be captured
+6. Click "Create Snapshot" to save
+
+**Example snapshot workflow:**
+
+```
+Jan 2026: "TT Design v1.0 - Initial Design"
+├── 28 teams, 4 value streams, 3 platform groupings
+├── Description: "First TT structure after 6-week design workshops.
+│                 Focus: Establish platform teams and clear value streams."
+└── Author: jane@company.com
+
+Apr 2026: "TT Design v1.1 - Q1 Progress"
+├── 32 teams, 5 value streams, 4 platform groupings
+├── Description: "Added Mobile Experience value stream. Split Infrastructure
+│                 Platform into Network and Storage teams for better focus."
+└── Author: jane@company.com
+
+Jul 2026: "TT Design v2.0 - Platform Maturity"
+├── 35 teams, 5 value streams, 4 platform groupings
+├── Description: "Transitioned 8 collaboration modes to X-as-a-Service as
+│                 platform APIs stabilized. Added 2 enabling teams."
+└── Author: jane@company.com
+```
+
+### Viewing Snapshots
+
+**Timeline Browser:**
+
+1. Click "🕐 Timeline" button to open snapshot browser panel
+2. See list of all snapshots sorted by date (newest first)
+3. Each snapshot shows:
+   - Name and creation date/time
+   - Author (if provided)
+   - Team counts and statistics
+   - Description (if provided)
+4. Current live view shown at top: "▶ Current (Live)"
+
+**Loading a snapshot:**
+
+1. Click any snapshot in the timeline
+2. Canvas switches to frozen snapshot view
+3. Banner appears: "📸 Viewing Snapshot: [name] ([date])"
+4. Visualization becomes **read-only** (no drag-and-drop)
+5. All teams, positions, interactions rendered exactly as captured
+
+**Returning to live view:**
+
+- Click "Return to Live View" button in banner
+- Or click "▶ Current (Live)" in timeline panel
+- Switches back to editable, current team data
+
+### Snapshot Data Format
+
+Snapshots use a condensed JSON format (not full markdown) for efficiency:
+
+```json
+{
+  "snapshot_id": "tt-design-v10-20260115-103000",
+  "name": "TT Design v1.0 - Initial Design",
+  "description": "First TT structure after 6-week design workshops",
+  "author": "jane@company.com",
+  "created_at": "2026-01-15T10:30:00Z",
+  "teams": [
+    {
+      "name": "E-commerce Checkout Team",
+      "team_type": "stream-aligned",
+      "position": {"x": 500, "y": 200},
+      "value_stream": "E-commerce Experience",
+      "platform_grouping": null,
+      "dependencies": ["Payment Platform Team"],
+      "interaction_modes": {
+        "Payment Platform Team": "x-as-a-service"
+      },
+      "metadata": {
+        "size": 7,
+        "cognitive_load": "medium",
+        "established": "2025-11"
+      },
+      "team_api_summary": {
+        "purpose": "Own end-to-end checkout experience",
+        "services": ["Checkout API", "Cart Service"],
+        "contact": {"slack": "#checkout-team"}
+      }
+    }
+    // ... all other teams
+  ],
+  "statistics": {
+    "total_teams": 28,
+    "stream_aligned": 15,
+    "platform": 10,
+    "enabling": 2,
+    "complicated_subsystem": 1,
+    "value_streams": 4,
+    "platform_groupings": 3
+  }
+}
+```
+
+**Key differences from live data:**
+
+- **Condensed format**: Only essential fields, not full markdown content
+- **Immutable**: Snapshots cannot be edited after creation
+- **Statistics included**: Pre-calculated for quick filtering/reporting
+- **Team API summary**: Key contact/purpose info preserved
+- **Git-trackable**: JSON format works well with version control
+
+### Git Workflow with Snapshots
+
+**Option 1: Track snapshots in git** (recommended for teams)
+- Snapshots provide audit trail of organizational changes
+- Team members can review historical structures
+- Enables git-based rollback if needed
+- Useful for compliance and documentation
+
+```bash
+# Commit snapshots with descriptive messages
+git add data/tt-snapshots/tt-design-v11-20260401-*.json
+git commit -m "feat: Q1 snapshot - Added Mobile value stream"
+git push
+```
+
+**Option 2: Keep snapshots local** (`.gitignore` them)
+- Useful for personal experimentation
+- Avoid cluttering team repository with frequent snapshots
+- Each team member maintains their own snapshot history
+- Add to `.gitignore`: `data/tt-snapshots/*.json`
+
+**Best practice**: Start with option 1 (tracked in git), use option 2 only for experimental snapshots.
+
+### Best Practices
+
+**DO:**
+- Create regular quarterly snapshots (minimum)
+- Name snapshots descriptively with dates
+- Add meaningful descriptions explaining changes
+- Review snapshots with stakeholders to show progress
+- Use snapshots before major structural experiments
+
+**DON'T:**
+- Create snapshots daily (too granular, defeats purpose)
+- Never create snapshots (loses historical context)
+- Treat snapshots as backups (use git for that)
+- Edit snapshot JSON files manually (they're immutable by design)
+
+### Future Enhancements (v1.2+)
+
+- **Snapshot comparison view**: Side-by-side diff showing changes between two snapshots
+- **Animated transitions**: Visual playback of evolution from v1.0 → v1.1 → v2.0
+- **Automatic snapshots**: Schedule monthly/quarterly snapshots automatically
+- **Team-level history**: Track individual team's journey through multiple snapshots
+- **Export timeline to PowerPoint**: Multi-slide presentation showing transformation journey
+- **Snapshot annotations**: Add comments and lessons learned to snapshots after creation
+
 - [Large-Scale Scrum (LeSS)](https://less.works/) - Scaling Scrum while keeping simplicity
 - [Spotify Engineering Culture](https://engineering.atspotify.com/2014/03/spotify-engineering-culture-part-1/) - Squads, tribes, chapters, and guilds model
 

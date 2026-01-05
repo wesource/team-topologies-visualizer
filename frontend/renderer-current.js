@@ -11,7 +11,7 @@ export function drawCurrentStateView(ctx, organizationHierarchy, teams, wrapText
     const boxHeight = LAYOUT.DEPT_BOX_HEIGHT;
     // Draw company leadership
     const company = organizationHierarchy.company;
-    drawHierarchyBox(ctx, company.name, startX + 400, startY, boxWidth + 100, boxHeight, '#5D6D7E', 'white', true, wrapText);
+    drawHierarchyBox(ctx, company.name, startX + 400, startY, boxWidth + 100, boxHeight, '#E8E8E8', 'black', true, wrapText);
     // Draw departments
     const deptSpacing = LAYOUT.DEPT_SPACING;
     const deptStartX = startX + 50;
@@ -21,7 +21,7 @@ export function drawCurrentStateView(ctx, organizationHierarchy, teams, wrapText
         // Draw line from company to department
         drawHierarchyLine(ctx, startX + 400 + (boxWidth + 100) / 2, startY + boxHeight, deptX + boxWidth / 2, deptY);
         // Draw department box
-        drawHierarchyBox(ctx, dept.name, deptX, deptY, boxWidth, boxHeight, '#566573', 'white', false, wrapText);
+        drawHierarchyBox(ctx, dept.name, deptX, deptY, boxWidth, boxHeight, '#E8E8E8', 'black', false, wrapText);
         // If it's engineering, draw line managers directly under department (no VP box)
         if (dept.id === 'engineering-dept' && dept.line_managers) {
             // Draw line managers directly under department
@@ -34,7 +34,7 @@ export function drawCurrentStateView(ctx, organizationHierarchy, teams, wrapText
                 // Draw line from department to line manager
                 drawHierarchyLine(ctx, deptX + boxWidth / 2, deptY + boxHeight, lmX + boxWidth / 2, lmY);
                 // Draw line manager box
-                drawHierarchyBox(ctx, lm.name, lmX, lmY, boxWidth, boxHeight - 10, '#27ae60', 'white', false, wrapText);
+                drawHierarchyBox(ctx, lm.name, lmX, lmY, boxWidth, boxHeight - 10, '#A0A0A0', 'white', false, wrapText);
                 // Draw teams under line manager with org-chart style
                 const teamsUnderManager = lm.teams
                     .map(teamName => teams.find(t => t.name === teamName))
@@ -71,7 +71,7 @@ export function drawCurrentStateView(ctx, organizationHierarchy, teams, wrapText
                 // Draw line from department to region
                 drawHierarchyLine(ctx, deptX + boxWidth / 2, deptY + boxHeight, regionX + boxWidth / 2, regionY);
                 // Draw region box as sub-level
-                drawHierarchyBox(ctx, region.name, regionX, regionY, boxWidth, boxHeight - 10, '#3498db', 'white', false, wrapText);
+                drawHierarchyBox(ctx, region.name, regionX, regionY, boxWidth, boxHeight - 10, '#A0A0A0', 'white', false, wrapText);
                 // Draw teams under region with org-chart style
                 if (region.teams && region.teams.length > 0) {
                     const teamsUnderRegion = region.teams

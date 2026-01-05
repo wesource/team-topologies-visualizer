@@ -7,6 +7,7 @@ import { openAddTeamModal, closeModal, closeDetailModal, closeInteractionModeMod
 import { updateLegend, updateGroupingFilter } from './legend.js';
 import { setupUIEventListeners } from './ui-handlers.js';
 import { draw, selectTeam } from './renderer.js';
+import { initSnapshotHandlers } from './snapshot-handlers.js';
 
 let interactionHandler = null;
 // Initialize
@@ -24,6 +25,8 @@ function init() {
     }
     // Setup UI event listeners
     setupUIEventListeners(loadAllTeams, () => draw(state), openAddTeamModal, closeModal, closeDetailModal, closeInteractionModeModal, handleTeamSubmit, (team) => selectTeam(team, state, draw));
+    // Initialize snapshot handlers
+    initSnapshotHandlers();
     // Expose for E2E testing
     window._testHelpers = {
         showTeamDetails

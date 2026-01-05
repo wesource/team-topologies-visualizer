@@ -3,7 +3,7 @@ name: Cloud Development Platform Team
 team_type: platform
 position:
   x: 204.0
-  y: 2895.0
+  y: 1530.0
 metadata:
   size: 8
   cognitive_load: medium

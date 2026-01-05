@@ -1,6 +1,7 @@
 """Pydantic models for API request/response validation"""
 from pydantic import BaseModel
 from typing import List, Optional, Dict, Any
+from datetime import datetime
 
 
 
@@ -50,3 +51,57 @@ class PositionUpdate(BaseModel):
     """Model for updating team position on canvas"""
     x: float
     y: float
+
+
+# Snapshot models
+class SnapshotTeamCondensed(BaseModel):
+    """Condensed team data for snapshots - only essential fields"""
+    name: str
+    team_type: str
+    position: Dict[str, float]
+    value_stream: Optional[str] = None
+    platform_grouping: Optional[str] = None
+    dependencies: Optional[List[str]] = []
+    interaction_modes: Optional[Dict[str, str]] = {}
+    metadata: Optional[Dict[str, Any]] = {}
+    team_api_summary: Optional[Dict[str, Any]] = None  # Key Team API fields only
+
+
+class SnapshotStatistics(BaseModel):
+    """Statistics about the snapshot"""
+    total_teams: int
+    stream_aligned: int = 0
+    platform: int = 0
+    enabling: int = 0
+    complicated_subsystem: int = 0
+    value_streams: int = 0
+    platform_groupings: int = 0
+
+
+class SnapshotMetadata(BaseModel):
+    """Metadata for a snapshot"""
+    snapshot_id: str
+    name: str
+    description: Optional[str] = ""
+    author: Optional[str] = ""
+    created_at: datetime
+    statistics: SnapshotStatistics
+
+
+class Snapshot(BaseModel):
+    """Complete snapshot with all teams"""
+    snapshot_id: str
+    name: str
+    description: Optional[str] = ""
+    author: Optional[str] = ""
+    created_at: datetime
+    teams: List[SnapshotTeamCondensed]
+    statistics: SnapshotStatistics
+
+
+class CreateSnapshotRequest(BaseModel):
+    """Request model for creating a snapshot"""
+    name: str
+    description: Optional[str] = ""
+    author: Optional[str] = ""
+

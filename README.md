@@ -88,6 +88,7 @@ This tool provides dual visualizations to make these conversations easier.
 
 ## Key Features
 
+- **📸 Evolution Tracking**: Create snapshots of your TT Design to track transformation progress over time. View historical states, compare quarterly changes, and show stakeholders your journey from "before" to "after". Snapshots are immutable, condensed JSON files perfect for audit trails and experimentation. See [Evolution Tracking documentation](docs/CONCEPTS.md#evolution-tracking-with-snapshots) for best practices.
 - **Strict Team API template alignment**: All team markdown files now strictly follow the base Team API template section order and structure, including new product thinking sections where relevant.
 - **URL-safe team names**: Team names with special characters (e.g. "/", "&") are now fully supported via a consistent slug system. Filenames and URLs use the same logic (e.g. "CI/CD Platform Team" → "ci-cd-platform-team").
 - **Filename consistency**: All team markdown files use the slug format for filenames (e.g. `ci-cd-platform-team.md`).

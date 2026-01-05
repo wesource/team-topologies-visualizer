@@ -48,3 +48,31 @@ export async function updateTeamPosition(teamName, x, y, view) {
     });
     return response.ok;
 }
+
+// Snapshot API functions
+export async function createSnapshot(name, description = '', author = '') {
+    const response = await fetch(getApiUrl('/snapshots/create'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, description, author })
+    });
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || 'Failed to create snapshot');
+    }
+    return await response.json();
+}
+
+export async function loadSnapshots() {
+    const response = await fetch(getApiUrl('/snapshots'));
+    return await response.json();
+}
+
+export async function loadSnapshot(snapshotId) {
+    const response = await fetch(getApiUrl(`/snapshots/${snapshotId}`));
+    if (!response.ok) {
+        throw new Error(`Snapshot not found: ${snapshotId}`);
+    }
+    return await response.json();
+}
+
