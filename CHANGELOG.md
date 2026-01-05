@@ -7,7 +7,76 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- **Upgraded Dependencies**: Updated to latest stable versions
+  - FastAPI: 0.115.0 → 0.128.0 (latest)
+  - Uvicorn: 0.32.0 → 0.40.0 (latest)
+  - PyYAML: 6.0.2 → 6.0.3 (latest)
+  - Markdown: 3.10 (already latest)
+  - All 34 backend tests still passing ✅
+
 ### Added
+- **🎉 Evolution Tracking with Snapshots**: Major new feature for tracking Team Topologies transformation over time
+  - **The Problem**: Addresses the "static visualization trap" where TT designs are created once and never updated, becoming outdated within months
+  - **Create Snapshots**: Capture the current TT Design state as an immutable JSON snapshot
+    - Click "📸 Create Snapshot" button (only visible in TT Design view)
+    - Modal with name (auto-suggested: "TT Design vX.X - YYYY-MM-DD"), description, and author fields
+    - Preview shows team count, value streams, and platform groupings before creating
+    - Condensed JSON format (not full markdown) for efficient storage
+    - Snapshots saved to `data/snapshots/` directory with timestamp-based IDs
+  - **Timeline Browser**: View and navigate all historical snapshots
+    - Click "🕐 Timeline" button to open side panel
+    - Lists all snapshots sorted by date (newest first)
+    - Shows "▶ Current (Live)" for current editable state
+    - Each snapshot displays: name, date/time, author, team counts, statistics, and description
+    - Click any snapshot to load frozen view
+  - **Snapshot View Mode**: Browse historical states in read-only mode
+    - Banner shows "📸 Viewing Snapshot: [name] ([date])" at top
+    - Canvas becomes fully read-only (no drag-and-drop editing)
+    - Panning, zooming, and team details still work
+    - "Return to Live View" button switches back to editable current state
+  - **Snapshot Statistics**: Each snapshot includes pre-calculated statistics
+    - Total teams, team types (stream-aligned, platform, enabling, complicated subsystem)
+    - Value stream count, platform grouping count
+    - Used for quick filtering and reporting
+  - **Git-Friendly Storage**: Snapshots stored as JSON files, trackable in version control
+    - `.gitignore` includes commented-out option to exclude snapshots if desired
+    - Default: snapshots tracked in git for team-wide audit trail
+    - Alternative: gitignore snapshots for personal experimentation
+  - **Backend**: 
+    - New `backend/snapshot_services.py` module with snapshot creation, listing, and loading
+    - New API endpoints: `POST /api/snapshots/create`, `GET /api/snapshots`, `GET /api/snapshots/:id`
+    - 6 new Pydantic models: `Snapshot`, `SnapshotMetadata`, `SnapshotTeamCondensed`, `SnapshotStatistics`, `CreateSnapshotRequest`, `SnapshotTeamAPIInfo`
+    - Team condensation logic to convert full `TeamData` to storage-efficient format
+    - Automatic statistics calculation (team counts, value streams, platform groupings)
+    - Snapshot ID generation with timestamp for uniqueness
+  - **Frontend**:
+    - New `frontend/snapshot-handlers.js` module (370+ lines) handling all snapshot UI
+    - Two new toolbar buttons: "📸 Create Snapshot" and "🕐 Timeline" (TT Design view only)
+    - Create Snapshot modal with form validation and preview
+    - Timeline browser panel with slide-in animation
+    - Snapshot view banner with gradient background
+    - Read-only mode enforcement in canvas interactions
+    - State management: `isViewingSnapshot`, `currentSnapshot`, `snapshotMetadata`
+    - 200+ lines of CSS for snapshot UI components
+  - **Testing**: 9 comprehensive pytest tests covering snapshot creation, listing, loading, immutability, and accuracy
+  - **Documentation**:
+    - Extensive "Evolution Tracking with Snapshots" section in `docs/CONCEPTS.md` (250+ lines)
+    - Best practices for when to create snapshots (quarterly, milestones, experiments, compliance)
+    - Example workflows showing snapshot naming and descriptions
+    - Data format explanation with JSON examples
+    - Git workflow guidance (tracked vs gitignored snapshots)
+    - DO/DON'T guidelines for snapshot usage
+    - Future enhancement ideas (comparison view, animated transitions, auto-scheduling)
+    - README.md updated with snapshot feature highlight
+  - **Use Cases**:
+    - Track quarterly transformation progress ("Q1 2026" → "Q2 2026" → "Q3 2026")
+    - Show stakeholders "before and after" comparisons
+    - Create milestone snapshots for major org changes (team splits, new platforms)
+    - Experiment safely (snapshot current state, try changes, revert if needed)
+    - Maintain audit trail for regulatory compliance
+    - Communicate transformation journey to executives
+
 - **Comprehensive UX Improvements**: Major enhancement to user experience with multiple new features
   - **Multi-Select Filters**: Checkbox-based filter system for value streams and platform groupings
     - Click "🔍 Filters" button to open filter panel
