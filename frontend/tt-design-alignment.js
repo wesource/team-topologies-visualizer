@@ -59,7 +59,7 @@ export function autoAlignTTDesign(teams) {
     const labelHeight = 35; // Height reserved for grouping label
     
     // Team dimensions and spacing based on Team Topologies book visualization
-    const wideTeamVerticalSpacing = 100; // Vertical spacing between wide teams (stacked)
+    const wideTeamVerticalSpacing = 60; // Vertical spacing between wide teams (stacked) - 75% of team box height
     const narrowTeamSpacingX = 160; // Horizontal spacing between narrow teams
     const narrowTeamSpacingY = 120; // Vertical spacing between rows of narrow teams
     const narrowTeamsPerRow = 3; // Max narrow teams per row
@@ -109,8 +109,15 @@ export function autoAlignTTDesign(teams) {
                 realignedTeams.push(team);
             }
             
+            // Move to next team position (but we'll adjust after the loop if this is the last team)
             currentYPos += LAYOUT.TEAM_BOX_HEIGHT + wideTeamVerticalSpacing;
         });
+        
+        // After wide teams, currentYPos is spacing pixels below the last team
+        // Adjust back: we want currentYPos at the BOTTOM of the last team, not beyond it
+        if (wideTeams.length > 0) {
+            currentYPos -= wideTeamVerticalSpacing; // Remove the extra spacing after last team
+        }
         
         // Position narrow teams below wide teams - in a grid layout
         if (narrowTeams.length > 0) {
@@ -132,15 +139,28 @@ export function autoAlignTTDesign(teams) {
                     team.position.y = newY;
                     realignedTeams.push(team);
                 }
+                
+                // Debug: log narrow team positioning
+                const teamBottom = newY + LAYOUT.TEAM_BOX_HEIGHT;
+                console.log(`[DEBUG] Narrow team "${team.name}" (${team.team_type}): Y=${newY}, Bottom=${teamBottom}, Row=${row}, GroupingStartY=${groupingStartY}`);
             });
             
-            // Update currentYPos to after narrow teams
+            // Update currentYPos to bottom of narrow teams
+            // Last row starts at: currentYPos + (narrowRows-1) * narrowTeamSpacingY
+            // Last row bottom is at: currentYPos + (narrowRows-1) * narrowTeamSpacingY + TEAM_BOX_HEIGHT
             const narrowRows = Math.ceil(narrowTeams.length / narrowTeamsPerRow);
-            currentYPos += narrowRows * narrowTeamSpacingY;
+            currentYPos += (narrowRows - 1) * narrowTeamSpacingY + LAYOUT.TEAM_BOX_HEIGHT;
+            console.log(`[DEBUG] After narrow teams: currentYPos=${currentYPos}, narrowRows=${narrowRows}`);
         }
         
         // Calculate total grouping height
-        return currentYPos - groupingStartY + paddingInGrouping;
+        // currentYPos is now at the bottom of the last team
+        // Add extra spacing after last team to ensure padding below all teams
+        const bottomSpacing = 40; // Extra space after last team for visual padding
+        const totalHeight = currentYPos - groupingStartY + bottomSpacing + paddingInGrouping;
+        const groupingBottom = groupingStartY + totalHeight;
+        console.log(`[DEBUG] Grouping height: totalHeight=${totalHeight}, groupingBottom=${groupingBottom}, currentYPos=${currentYPos}`);
+        return totalHeight;
     }
     
     // Position value stream groupings first (excluding ungrouped)

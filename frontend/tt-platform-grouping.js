@@ -32,7 +32,7 @@ export function getPlatformGroupings(teams) {
 
     // Convert to array and calculate bounding boxes
     const groupings = [];
-    const padding = 20;
+    const padding = 30; // Increased from 20 to provide more visual padding around teams
 
     groupMap.forEach((teamsInGroup, name) => {
         const bounds = calculateGroupingBoundingBox(

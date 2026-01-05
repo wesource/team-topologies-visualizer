@@ -29,7 +29,7 @@ export function getValueStreamGroupings(teams) {
 
     // Convert to array and calculate bounding boxes
     const groupings = [];
-    const padding = 20;
+    const padding = 30; // Increased from 20 to provide more visual padding around teams
 
     groupMap.forEach((teamsInGroup, name) => {
         const bounds = calculateGroupingBoundingBox(
@@ -121,10 +121,14 @@ export function calculateGroupingBoundingBox(teams, teamBoxHeight, padding, curr
         maxY = Math.max(maxY, y + teamBoxHeight);
     });
 
-    return {
+    const bounds = {
         x: minX - padding,
         y: minY - padding - labelAreaHeight, // Extra space for label at top
         width: (maxX - minX) + (padding * 2),
         height: (maxY - minY) + (padding * 2) + labelAreaHeight // Include label area in height
     };
+    
+    console.log(`[DEBUG] Grouping bounds: minY=${minY}, maxY=${maxY}, padding=${padding}, labelArea=${labelAreaHeight}, finalHeight=${bounds.height}, bottom=${bounds.y + bounds.height}`);
+    
+    return bounds;
 }
