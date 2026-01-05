@@ -3,7 +3,7 @@ name: Mobile Inner Platform Team
 team_type: platform
 position:
   x: 1054.0
-  y: 1530.0
+  y: 1250.0
 metadata:
   size: 6
   cognitive_load: medium

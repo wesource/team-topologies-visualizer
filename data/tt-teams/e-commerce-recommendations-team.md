@@ -3,7 +3,7 @@ name: E-Commerce Recommendations Team
 team_type: complicated-subsystem
 position:
   x: 130.0
-  y: 2090.0
+  y: 1630.0
 metadata:
   size: 5
   cognitive_load: high

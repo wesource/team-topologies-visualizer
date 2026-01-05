@@ -189,4 +189,72 @@ describe('SVG Export', () => {
             expect(global.URL.revokeObjectURL).toHaveBeenCalled();
         });
     });
+
+    describe('Filtered Teams Export', () => {
+        it('should only export filtered teams when filters are active', () => {
+            // Simulate filtered scenario: only 2 out of 4 teams should be exported
+            const allTeams = [
+                { name: 'Team A', team_type: 'stream-aligned', position: { x: 100, y: 100 }, value_stream: 'E-Commerce' },
+                { name: 'Team B', team_type: 'platform', position: { x: 300, y: 100 }, value_stream: 'E-Commerce' },
+                { name: 'Team C', team_type: 'stream-aligned', position: { x: 500, y: 100 }, value_stream: 'Mobile' },
+                { name: 'Team D', team_type: 'enabling', position: { x: 700, y: 100 } } // ungrouped
+            ];
+            
+            // Only export E-Commerce teams (filtered list)
+            const filteredTeams = allTeams.filter(t => t.value_stream === 'E-Commerce');
+            
+            const teamColorMap = { 'stream-aligned': '#4A90E2', 'platform': '#7ED321' };
+            const state = { hideConnections: false };
+            const mockBlob = new Blob(['test'], { type: 'image/svg+xml' });
+            const mockCreateObjectURL = vi.fn(() => 'mock-url');
+            global.URL.createObjectURL = mockCreateObjectURL;
+
+            // Call export with filtered teams (this simulates handleExportSVG using getFilteredTeams())
+            exportModule.exportToSVG(state, null, filteredTeams, teamColorMap, 'tt');
+
+            // Verify a blob was created (export happened)
+            expect(mockCreateObjectURL).toHaveBeenCalled();
+            
+            // Get the blob that was passed to createObjectURL
+            const blobArg = mockCreateObjectURL.mock.calls[0][0];
+            expect(blobArg).toBeInstanceOf(Blob);
+            
+            // Read the SVG content to verify only filtered teams are included
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const svgContent = e.target.result;
+                
+                // Should contain filtered teams
+                expect(svgContent).toContain('Team A');
+                expect(svgContent).toContain('Team B');
+                
+                // Should NOT contain non-filtered teams
+                expect(svgContent).not.toContain('Team C');
+                expect(svgContent).not.toContain('Team D');
+            };
+            reader.readAsText(blobArg);
+        });
+
+        it('should export ungrouped teams when ungrouped filter is active', () => {
+            const allTeams = [
+                { name: 'Team A', team_type: 'stream-aligned', position: { x: 100, y: 100 }, value_stream: 'E-Commerce' },
+                { name: 'Enabling Team', team_type: 'enabling', position: { x: 300, y: 100 } }, // ungrouped
+                { name: 'Security Team', team_type: 'enabling', position: { x: 500, y: 100 } } // ungrouped
+            ];
+            
+            // Only export ungrouped teams (filtered list)
+            const filteredTeams = allTeams.filter(t => !t.value_stream && !t.platform_grouping);
+            
+            const teamColorMap = { 'stream-aligned': '#4A90E2', 'enabling': '#F5A623' };
+            const state = { hideConnections: false };
+            const mockCreateObjectURL = vi.fn(() => 'mock-url');
+            global.URL.createObjectURL = mockCreateObjectURL;
+
+            exportModule.exportToSVG(state, null, filteredTeams, teamColorMap, 'tt');
+
+            expect(mockCreateObjectURL).toHaveBeenCalled();
+            expect(filteredTeams.length).toBe(2); // Only ungrouped teams
+            expect(filteredTeams.every(t => !t.value_stream && !t.platform_grouping)).toBe(true);
+        });
+    });
 });

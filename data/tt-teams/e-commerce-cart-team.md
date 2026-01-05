@@ -3,7 +3,7 @@ name: E-Commerce Cart Team
 team_type: stream-aligned
 position:
   x: 204.0
-  y: 1170.0
+  y: 970.0
 metadata:
   size: 6
   cognitive_load: medium

@@ -3,7 +3,7 @@ name: Mobile App Experience Team
 team_type: stream-aligned
 position:
   x: 1054.0
-  y: 1170.0
+  y: 970.0
 metadata:
   size: 7
   cognitive_load: medium

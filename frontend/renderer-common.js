@@ -201,8 +201,28 @@ function drawEnablingTeam(ctx, team, x, y, width, height, selectedTeam, teamColo
     // Cognitive load indicator
     drawCognitiveLoadIndicator(ctx, team, x, y, width, showCognitiveLoad);
     
-    // Team name (vertical text wrapping for narrow box)
-    drawTeamName(ctx, team, x, y, width, height, wrapText);
+    // Team name (vertical text - rotated 90° counterclockwise for narrow box)
+    ctx.save();
+    ctx.fillStyle = '#222222';
+    ctx.font = 'bold 14px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    
+    // Wrap text to fit within height (which becomes width when rotated)
+    // Leave some padding (20px total = 10px on each side)
+    const lines = wrapText(team.name, height - 20);
+    
+    // Translate to center of box and rotate
+    ctx.translate(x + width / 2, y + height / 2);
+    ctx.rotate(-Math.PI / 2); // -90 degrees (counterclockwise)
+    
+    // Draw each line, vertically centered
+    lines.forEach((line, i) => {
+        const yOffset = (lines.length - 1) * 8 - i * 16;
+        ctx.fillText(line, 0, yOffset);
+    });
+    
+    ctx.restore();
 }
 
 /**

@@ -71,7 +71,8 @@ export function handleViewChange(e, loadAllTeams, draw) {
 }
 
 export function handleExportSVG() {
-    exportToSVG(state, state.organizationHierarchy, state.teams, state.teamColorMap, state.currentView, state.showInteractionModes);
+    const teamsToExport = getFilteredTeams();
+    exportToSVG(state, state.organizationHierarchy, teamsToExport, state.teamColorMap, state.currentView, state.showInteractionModes);
 }
 
 export async function handleAutoAlign(draw) {
@@ -230,13 +231,17 @@ export function setupUIEventListeners(loadAllTeams, draw, openAddTeamModal, clos
             // Collect selected filters
             const vsCheckboxes = document.querySelectorAll('#valueStreamFilters input[type="checkbox"]:checked');
             const pgCheckboxes = document.querySelectorAll('#platformGroupingFilters input[type="checkbox"]:checked');
+            const ungroupedCheckbox = document.getElementById('showUngroupedTeams');
             
             state.selectedFilters.valueStreams = Array.from(vsCheckboxes).map(cb => cb.value);
             state.selectedFilters.platformGroupings = Array.from(pgCheckboxes).map(cb => cb.value);
+            state.selectedFilters.showUngrouped = ungroupedCheckbox ? ungroupedCheckbox.checked : false;
             
             // Update filter count badge
             const filterCount = document.getElementById('filterCount');
-            const total = state.selectedFilters.valueStreams.length + state.selectedFilters.platformGroupings.length;
+            const total = state.selectedFilters.valueStreams.length + 
+                         state.selectedFilters.platformGroupings.length + 
+                         (state.selectedFilters.showUngrouped ? 1 : 0);
             if (filterCount) {
                 if (total > 0) {
                     filterCount.textContent = total;

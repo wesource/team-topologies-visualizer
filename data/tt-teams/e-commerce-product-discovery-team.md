@@ -3,7 +3,7 @@ name: E-Commerce Product Discovery Team
 team_type: stream-aligned
 position:
   x: 204.0
-  y: 1530.0
+  y: 1250.0
 metadata:
   size: 7
   cognitive_load: medium

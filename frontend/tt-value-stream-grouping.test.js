@@ -62,7 +62,7 @@ describe('Value Stream Grouping', () => {
             expect(bbox.y).toBe(45); // 100 - 20 - 35 (label area)
             // Width: (400 + 560) - 100 + 40 = 900 (using 560px for wide teams)
             expect(bbox.width).toBe(900);
-            expect(bbox.height).toBe(295); // (200 + 120) - 100 + 40 + 35 (label area)
+            expect(bbox.height).toBe(255); // Now uses actual heights: both teams 80px, (200+80)-100+40+35=255
         });
 
         it('should handle single team', () => {
@@ -78,7 +78,7 @@ describe('Value Stream Grouping', () => {
             expect(bbox.y).toBe(45); // 100 - 20 - 35 (label area)
             // Width: 560 + 40 = 600 (wide team width + padding*2)
             expect(bbox.width).toBe(600);
-            expect(bbox.height).toBe(195); // 120 + 40 + 35 (label area)
+            expect(bbox.height).toBe(155); // Now uses actual height: 80 + 40 + 35 = 155
         });
 
         it('should handle empty teams array', () => {
@@ -104,7 +104,7 @@ describe('Value Stream Grouping', () => {
             expect(bbox.y).toBe(-105); // -50 - 20 - 35 (label area)
             // Width: (100 + 560) - (-100) + 40 = 800
             expect(bbox.width).toBe(800);
-            expect(bbox.height).toBe(295); // (50 + 120) - (-50) + 40 + 35 (label area)
+            expect(bbox.height).toBe(255); // Now uses actual heights: (50+80)-(-50)+40+35=255
         });
     });
 

@@ -2,8 +2,8 @@
 name: Security Engineering Enablement Team
 team_type: enabling
 position:
-  x: 1484.4993141289438
-  y: 499.83539094650206
+  x: 1800.0
+  y: 280.0
 metadata:
   size: 4
   cognitive_load: medium

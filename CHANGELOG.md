@@ -7,13 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Vertical Text for Enabling Teams**: Enabling teams now display their name vertically rotated to visually distinguish their temporary/facilitating role
+  - Canvas rendering: Teams with type "enabling" display vertical text rotation
+  - SVG export: Vertical text preserved in exported SVG files
+  - Visual consistency: Both canvas and SVG share same rotation logic
+- **Ungrouped Teams Filter**: New "Show Ungrouped Teams" checkbox allows hiding/showing teams without value stream assignments
+  - Filter state persisted across view switches
+  - SVG export respects filter state (ungrouped teams hidden if filter disabled)
+  - Test coverage: Added Playwright E2E test for filtered SVG export
+- **Test Coverage Improvements**: Comprehensive test additions across all test suites
+  - Frontend: Added tests for filtered SVG export functionality
+  - E2E: Added Playwright test validating SVG export with ungrouped filter disabled
+  - Test count: 95 total tests (10 backend + 62 frontend + 23 E2E)
+
+### Fixed
+- **Height Calculation Consistency**: Fixed all height calculations to use `getTeamBoxHeight()` instead of hardcoded values
+  - Bounding box calculations now use actual team heights (80px stream-aligned, 100px complicated-subsystem, 140px enabling)
+  - Ungrouped narrow teams positioning fixed to use correct team heights
+  - Reduced vertical spacing for wide teams from 100px to 60px (75% of box height for better density)
+  - Fixed 4 test failures in height expectations to match new calculation logic
+
 ### Changed
 - **Upgraded Dependencies**: Updated to latest stable versions
   - FastAPI: 0.115.0 → 0.128.0 (latest)
   - Uvicorn: 0.32.0 → 0.40.0 (latest)
   - PyYAML: 6.0.2 → 6.0.3 (latest)
   - Markdown: 3.10 (already latest)
-  - All 34 backend tests still passing ✅
+  - All 35 backend tests still passing ✅
 
 ### Added
 - **🎉 Evolution Tracking with Snapshots**: Major new feature for tracking Team Topologies transformation over time

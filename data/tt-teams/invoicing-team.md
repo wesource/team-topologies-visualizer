@@ -3,7 +3,7 @@ name: Invoicing Team
 team_type: stream-aligned
 position:
   x: 204.0
-  y: 525.0
+  y: 445.0
 metadata:
   size: 5
   cognitive_load: medium

@@ -3,7 +3,7 @@ name: Financial Reporting Team
 team_type: stream-aligned
 position:
   x: 204.0
-  y: 345.0
+  y: 305.0
 metadata:
   size: 6
   cognitive_load: medium

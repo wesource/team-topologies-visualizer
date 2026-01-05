@@ -3,7 +3,7 @@ name: Mobile Push Notifications Team
 team_type: stream-aligned
 position:
   x: 1054.0
-  y: 1890.0
+  y: 1530.0
 metadata:
   size: 5
   cognitive_load: medium

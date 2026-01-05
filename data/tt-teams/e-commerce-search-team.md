@@ -3,7 +3,7 @@ name: E-Commerce Search Team
 team_type: stream-aligned
 position:
   x: 204.0
-  y: 1890.0
+  y: 1530.0
 metadata:
   size: 6
   cognitive_load: medium

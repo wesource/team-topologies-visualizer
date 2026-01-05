@@ -2,7 +2,7 @@
 // Handles grouping teams by value stream and calculating bounding boxes
 
 import { LAYOUT } from './constants.js';
-import { getTeamBoxWidth } from './renderer-common.js';
+import { getTeamBoxWidth, getTeamBoxHeight } from './renderer-common.js';
 
 /**
  * Groups teams by their value stream
@@ -114,21 +114,18 @@ export function calculateGroupingBoundingBox(teams, teamBoxHeight, padding, curr
     teams.forEach(team => {
         const { x, y } = team.position;
         const teamWidth = getTeamBoxWidth(team, currentView);
+        const teamHeight = getTeamBoxHeight(team, currentView);
         
         minX = Math.min(minX, x);
         minY = Math.min(minY, y);
         maxX = Math.max(maxX, x + teamWidth);
-        maxY = Math.max(maxY, y + teamBoxHeight);
+        maxY = Math.max(maxY, y + teamHeight);
     });
 
-    const bounds = {
+    return {
         x: minX - padding,
         y: minY - padding - labelAreaHeight, // Extra space for label at top
         width: (maxX - minX) + (padding * 2),
         height: (maxY - minY) + (padding * 2) + labelAreaHeight // Include label area in height
     };
-    
-    console.log(`[DEBUG] Grouping bounds: minY=${minY}, maxY=${maxY}, padding=${padding}, labelArea=${labelAreaHeight}, finalHeight=${bounds.height}, bottom=${bounds.y + bounds.height}`);
-    
-    return bounds;
 }

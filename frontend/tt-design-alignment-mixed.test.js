@@ -55,12 +55,15 @@ describe('autoAlignTTDesign - Mixed Team Types', () => {
         
         // Wide teams Y positions: stacked vertically
         expect(realigned[0].position.y).toBe(165);  // First wide team
-        expect(realigned[1].position.y).toBe(345);  // Second wide team
-        expect(realigned[2].position.y).toBe(525);  // Third wide team
+        expect(realigned[1].position.y).toBe(305);  // Second wide team (165 + 80 + 60 spacing)
+        expect(realigned[2].position.y).toBe(445);  // Third wide team (305 + 80 + 60 spacing)
         
         // Last 3 teams (narrow: enabling x2, complicated-subsystem x1) in grid below
         // Grid starts after wide teams with some spacing
-        const narrowStartY = 525 + 80 + 100 + 20; // Last wide team Y + height + spacing + gap = 725
+        // New calculation: last wide team at 445, height 80, spacing 60, gap 20 = 605
+        // But actually the code adds wideTeamVerticalSpacing (60) + some gap
+        // Let's calculate: 445 + 80 + 20 = 545 (last team bottom + gap)
+        const narrowStartY = 445 + 80 + 20; // Last wide team Y + height + gap = 545
         
         // Narrow teams in grid: 3 per row
         expect(realigned[3].position.x).toBe(130); // First column

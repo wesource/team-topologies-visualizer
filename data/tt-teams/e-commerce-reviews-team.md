@@ -3,7 +3,7 @@ name: E-Commerce Reviews Team
 team_type: stream-aligned
 position:
   x: 204.0
-  y: 1710.0
+  y: 1390.0
 metadata:
   size: 5
   cognitive_load: low

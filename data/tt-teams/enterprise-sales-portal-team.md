@@ -2,8 +2,8 @@
 name: Enterprise Sales Portal Team
 team_type: stream-aligned
 position:
-  x: 204.0
-  y: 525.0
+  x: 1054.0
+  y: 445.0
 metadata:
   size: 6
   cognitive_load: medium

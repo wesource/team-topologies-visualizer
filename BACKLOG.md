@@ -1248,6 +1248,135 @@ Show in team detail modal warnings section:
 - [ ] Create `detectAntiPatterns()` function
 - [ ] Add warnings section to team detail modal
 - [ ] Implement 5 basic anti-pattern checks
+
+---
+
+### QW8. Drag Entire Groupings (Value Streams/Platform Groupings) ⭐⭐ MEDIUM IMPACT
+**Impact**: MEDIUM | **Effort**: 2-3 hours | **Complexity**: Medium
+
+**User Value**:
+- Move entire value stream or platform grouping as a unit instead of repositioning teams one-by-one
+- Maintain relative positions of teams within grouping while moving the whole group
+- Faster manual layout adjustments when auto-align isn't quite right
+
+**Problem**:
+- Currently, each team must be dragged individually to reposition
+- If a value stream has 6 teams, user must drag 6 times to move it elsewhere
+- Tedious for complex layouts with many groupings
+
+**Solution**: Enable dragging grouping boxes to move all contained teams together
+
+**Implementation Overview**:
+```javascript
+// Click detection in canvas-interactions.js
+function handleMouseDown(e) {
+  const clickPos = getMousePos(canvas, e);
+  
+  // Check if click is on a grouping (NOT on a team within it)
+  // Easiest: detect clicks on the label area (top 35px of grouping box)
+  const clickedGrouping = findGroupingAtPosition(clickPos);
+  
+  if (clickedGrouping && !findTeamAtPosition(clickPos)) {
+    startGroupingDrag(clickedGrouping, clickPos);
+    return;
+  }
+  
+  // Otherwise, fall through to existing team drag logic
+}
+
+// During drag
+function handleMouseMove(e) {
+  if (draggingGrouping) {
+    const dx = newX - startX;
+    const dy = newY - startY;
+    
+    // Apply delta to ALL teams in grouping
+    draggingGrouping.teams.forEach(team => {
+      team.position.x += dx;
+      team.position.y += dy;
+    });
+    
+    redraw();
+  }
+}
+
+// On release
+function handleMouseUp() {
+  if (draggingGrouping) {
+    // Save positions of all teams in grouping
+    await Promise.all(
+      draggingGrouping.teams.map(team => 
+        updateTeamPosition(team.name, team.position)
+      )
+    );
+  }
+}
+```
+
+**Technical Considerations**:
+- **Click detection priority**: Teams are drawn ON TOP of groupings, so need logic: "if click in grouping bounds AND not on any team, then it's a grouping drag"
+- **Label area**: Simplest approach is to make only the label area (top 35px) draggable, since it's guaranteed to be team-free
+- **Z-order**: Grouping boxes are drawn first, then teams on top, so click detection must check teams first
+- **Nested groupings**: Platform teams can have both value_stream AND platform_grouping - decide which grouping takes precedence
+- **Visual feedback**: Change cursor to move cursor when hovering over draggable grouping area
+- **Performance**: Moving 10+ teams at once requires efficient redraw
+
+**Implementation Tasks**:
+- [ ] Add grouping click detection in `canvas-interactions.js`
+  - Implement `findGroupingAtPosition(clickPos)` helper
+  - Check grouping label area (top 35px of bounding box)
+  - Return null if click is on a team within grouping
+- [ ] Add grouping drag state variables
+  - `draggingGrouping`, `groupingDragStartPos`
+- [ ] Implement `startGroupingDrag()` function
+  - Store reference to grouping and all its teams
+  - Store initial click position
+  - Change cursor to 'move'
+- [ ] Update `handleMouseMove()` to handle grouping drags
+  - Calculate dx, dy from start position
+  - Apply delta to all team positions in grouping
+  - Redraw canvas continuously
+- [ ] Update `handleMouseUp()` to save grouping positions
+  - Loop through all teams in grouping
+  - Fire PATCH requests in parallel (Promise.all)
+  - Show success notification
+- [ ] Add visual feedback
+  - Cursor changes to 'move' when hovering over label area
+  - Optional: Highlight grouping border while dragging
+- [ ] Add helpers in `tt-value-stream-grouping.js` and `tt-platform-grouping.js`
+  - `getTeamsForGrouping(groupingName)` - return all teams in grouping
+- [ ] Handle edge cases
+  - Teams in both value stream AND platform grouping - which takes precedence?
+  - Ungrouped teams (not in any grouping) - skip them
+  - Empty groupings (no teams) - allow dragging label but nothing moves
+- [ ] Add cursor styling in `styles.css`
+  - `.grouping-label:hover { cursor: move; }`
+- [ ] Test with various grouping sizes (2 teams, 10+ teams)
+- [ ] Update CHANGELOG.md with new feature
+
+**User Workflow**:
+1. User switches to TT Design view
+2. Clicks on "Enterprise Sales" value stream label area
+3. Drags entire grouping (box + all 4 teams move together)
+4. Releases mouse - all team positions saved
+5. Layout preserved, entire grouping relocated
+
+**Edge Cases to Handle**:
+- Clicking on team within grouping → drags individual team (existing behavior)
+- Clicking on grouping label → drags entire grouping (new behavior)
+- Clicking outside any grouping → pan canvas (existing behavior)
+- Overlapping groupings → detect topmost grouping first
+- Teams shared between groupings → move with primary grouping (value stream > platform grouping)
+
+**Definition of Done**:
+- Can drag entire value stream grouping by clicking label area
+- Can drag entire platform grouping by clicking label area
+- All teams in grouping move together with preserved relative positions
+- Individual team drag still works (click on team, not label)
+- Cursor changes to 'move' when hovering over draggable area
+- All team positions saved correctly after grouping drag
+- Works with groupings of any size (2-20+ teams)
+- No performance issues with large groupings
 - [ ] Add educational tooltips (why is this an anti-pattern?)
 - [ ] Add to CONCEPTS.md documenting each anti-pattern
 

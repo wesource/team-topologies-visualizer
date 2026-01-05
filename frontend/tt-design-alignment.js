@@ -1,6 +1,7 @@
 import { LAYOUT } from './constants.js';
 import { getValueStreamGroupings } from './tt-value-stream-grouping.js';
 import { getPlatformGroupings } from './tt-platform-grouping.js';
+import { getTeamBoxHeight } from './renderer-common.js';
 
 // TT Design view alignment utilities for auto-organizing teams within groupings
 
@@ -126,12 +127,26 @@ export function autoAlignTTDesign(teams) {
                 currentYPos += 20;
             }
             
+            // Position narrow teams (enabling, complicated-subsystem)
             narrowTeams.forEach((team, index) => {
                 const row = Math.floor(index / narrowTeamsPerRow);
                 const col = index % narrowTeamsPerRow;
                 
+                // Calculate Y position by summing heights of all previous rows
+                let rowYPos = currentYPos;
+                for (let r = 0; r < row; r++) {
+                    const rowStartIdx = r * narrowTeamsPerRow;
+                    const rowEndIdx = Math.min((r + 1) * narrowTeamsPerRow, narrowTeams.length);
+                    const teamsInRow = narrowTeams.slice(rowStartIdx, rowEndIdx);
+                    // Find the tallest team in this row
+                    const maxHeightInRow = Math.max(...teamsInRow.map(t => getTeamBoxHeight(t, 'tt')));
+                    // Add this row's max height plus the fixed gap between rows (40px)
+                    const gapBetweenRows = 40; // Fixed gap between rows
+                    rowYPos += maxHeightInRow + gapBetweenRows;
+                }
+                
                 const newX = groupingStartX + paddingInGrouping + (col * narrowTeamSpacingX);
-                const newY = currentYPos + (row * narrowTeamSpacingY);
+                const newY = rowYPos;
                 
                 // Only update if position changed significantly
                 if (Math.abs(team.position.x - newX) > 5 || Math.abs(team.position.y - newY) > 5) {
@@ -139,28 +154,24 @@ export function autoAlignTTDesign(teams) {
                     team.position.y = newY;
                     realignedTeams.push(team);
                 }
-                
-                // Debug: log narrow team positioning
-                const teamBottom = newY + LAYOUT.TEAM_BOX_HEIGHT;
-                console.log(`[DEBUG] Narrow team "${team.name}" (${team.team_type}): Y=${newY}, Bottom=${teamBottom}, Row=${row}, GroupingStartY=${groupingStartY}`);
             });
             
             // Update currentYPos to bottom of narrow teams
-            // Last row starts at: currentYPos + (narrowRows-1) * narrowTeamSpacingY
-            // Last row bottom is at: currentYPos + (narrowRows-1) * narrowTeamSpacingY + TEAM_BOX_HEIGHT
+            // Need to account for the ACTUAL height of teams, not just LAYOUT.TEAM_BOX_HEIGHT
+            // Find the tallest team in the last row
             const narrowRows = Math.ceil(narrowTeams.length / narrowTeamsPerRow);
-            currentYPos += (narrowRows - 1) * narrowTeamSpacingY + LAYOUT.TEAM_BOX_HEIGHT;
-            console.log(`[DEBUG] After narrow teams: currentYPos=${currentYPos}, narrowRows=${narrowRows}`);
+            const lastRowStartIndex = (narrowRows - 1) * narrowTeamsPerRow;
+            const lastRowTeams = narrowTeams.slice(lastRowStartIndex);
+            const maxHeightInLastRow = Math.max(...lastRowTeams.map(t => getTeamBoxHeight(t, 'tt')));
+            
+            currentYPos += (narrowRows - 1) * narrowTeamSpacingY + maxHeightInLastRow;
         }
         
         // Calculate total grouping height
         // currentYPos is now at the bottom of the last team
         // Add extra spacing after last team to ensure padding below all teams
         const bottomSpacing = 40; // Extra space after last team for visual padding
-        const totalHeight = currentYPos - groupingStartY + bottomSpacing + paddingInGrouping;
-        const groupingBottom = groupingStartY + totalHeight;
-        console.log(`[DEBUG] Grouping height: totalHeight=${totalHeight}, groupingBottom=${groupingBottom}, currentYPos=${currentYPos}`);
-        return totalHeight;
+        return currentYPos - groupingStartY + bottomSpacing + paddingInGrouping;
     }
     
     // Position value stream groupings first (excluding ungrouped)
@@ -246,8 +257,19 @@ export function autoAlignTTDesign(teams) {
                 const row = Math.floor(index / narrowTeamsPerRow);
                 const col = index % narrowTeamsPerRow;
                 
+                // Calculate Y position by summing heights of all previous rows
+                let rowYPos = currentYPos;
+                for (let r = 0; r < row; r++) {
+                    const rowStartIdx = r * narrowTeamsPerRow;
+                    const rowEndIdx = Math.min((r + 1) * narrowTeamsPerRow, narrowUngrouped.length);
+                    const teamsInRow = narrowUngrouped.slice(rowStartIdx, rowEndIdx);
+                    const maxHeightInRow = Math.max(...teamsInRow.map(t => getTeamBoxHeight(t, 'tt')));
+                    const gapBetweenRows = 40;
+                    rowYPos += maxHeightInRow + gapBetweenRows;
+                }
+                
                 const newX = ungroupedStartX + (col * narrowTeamSpacingX);
-                const newY = currentYPos + (row * narrowTeamSpacingY);
+                const newY = rowYPos;
                 
                 if (Math.abs(team.position.x - newX) > 5 || Math.abs(team.position.y - newY) > 5) {
                     team.position.x = newX;

@@ -3,7 +3,7 @@ name: Feature Management Platform Team
 team_type: platform
 position:
   x: 204.0
-  y: 2250.0
+  y: 2895.0
 metadata:
   size: 5
   cognitive_load: medium

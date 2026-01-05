@@ -22,7 +22,8 @@ export const state = {
     selectedGrouping: 'all', // Legacy format: 'all', 'vs:ValueStreamName', 'pg:PlatformGroupingName'
     selectedFilters: {
         valueStreams: [], // Array of selected value stream names
-        platformGroupings: [] // Array of selected platform grouping names
+        platformGroupings: [], // Array of selected platform grouping names
+        showUngrouped: false // Show only ungrouped teams (teams without value_stream or platform_grouping)
     },
     // Snapshot state
     isViewingSnapshot: false,
@@ -41,7 +42,8 @@ export function setInteractionHandler(handler) {
 export function getFilteredTeams() {
     // If no filters selected, return all teams
     if (state.selectedFilters.valueStreams.length === 0 && 
-        state.selectedFilters.platformGroupings.length === 0) {
+        state.selectedFilters.platformGroupings.length === 0 &&
+        !state.selectedFilters.showUngrouped) {
         return state.teams;
     }
     
@@ -61,6 +63,13 @@ export function getFilteredTeams() {
         if (state.selectedFilters.platformGroupings.length > 0) {
             const teamPlatformGrouping = team.platform_grouping;
             if (teamPlatformGrouping && state.selectedFilters.platformGroupings.includes(teamPlatformGrouping)) {
+                matches = true;
+            }
+        }
+        
+        // Check ungrouped teams (teams without value_stream AND platform_grouping)
+        if (state.selectedFilters.showUngrouped) {
+            if (!team.value_stream && !team.platform_grouping) {
                 matches = true;
             }
         }

@@ -333,33 +333,39 @@ function drawSVGUndefinedTeam(text, x, y, width, height, bgColor, textColor, fon
 function drawSVGEnablingTeam(text, x, y, width, height, bgColor, textColor, fontSize, fontWeight, borderColor) {
     const rx = 14; // Larger radius for enabling teams
     
-    // Wrap text (narrower width requires more wrapping)
+    // Wrap text to fit within height (which becomes width when rotated)
+    // Leave some padding (20px total = 10px on each side)
+    const effectiveWidth = height - 20;
     const words = text.split(' ');
     const lines = [];
     let currentLine = '';
-    const maxChars = Math.floor(width / (fontSize * 0.5)); // Adjusted for narrower box
+    const maxChars = Math.floor(effectiveWidth / (fontSize * 0.5));
+    
     words.forEach(word => {
         if ((currentLine + word).length <= maxChars) {
             currentLine += (currentLine ? ' ' : '') + word;
-        }
-        else {
-            if (currentLine)
-                lines.push(currentLine);
+        } else {
+            if (currentLine) lines.push(currentLine);
             currentLine = word;
         }
     });
-    if (currentLine)
-        lines.push(currentLine);
+    if (currentLine) lines.push(currentLine);
     
     let box = `<g>
     <rect x="${x}" y="${y}" width="${width}" height="${height}" rx="${rx}" fill="${bgColor}" stroke="${borderColor}" stroke-width="2" class="team-box"/>`;
-    // Add text lines
-    const lineHeight = 14;
-    const startY = y + height / 2 - (lines.length - 1) * lineHeight / 2;
+    
+    // Add rotated text lines (vertical orientation)
+    // Center of rotation: x + width/2, y + height/2
+    const centerX = x + width / 2;
+    const centerY = y + height / 2;
+    const lineHeight = 16;
+    
     lines.forEach((line, i) => {
+        const yOffset = (lines.length - 1) * 8 - i * lineHeight;
         box += `
-    <text x="${x + width / 2}" y="${startY + i * lineHeight}" fill="${textColor}" font-size="${fontSize}" font-weight="${fontWeight}" text-anchor="middle" dominant-baseline="middle">${escapeXml(line)}</text>`;
+    <text x="${centerX}" y="${centerY + yOffset}" fill="${textColor}" font-size="${fontSize}" font-weight="${fontWeight}" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90 ${centerX} ${centerY})">${escapeXml(line)}</text>`;
     });
+    
     box += '\n  </g>';
     return box;
 }
