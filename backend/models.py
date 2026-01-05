@@ -104,4 +104,5 @@ class CreateSnapshotRequest(BaseModel):
     name: str
     description: Optional[str] = ""
     author: Optional[str] = ""
+    team_names: Optional[List[str]] = None  # Optional: specific teams to include (for filtered snapshots)
 

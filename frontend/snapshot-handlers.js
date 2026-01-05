@@ -1,7 +1,7 @@
 /**
  * Snapshot UI handlers and interactions
  */
-import { state } from './state-management.js';
+import { state, getFilteredTeams } from './state-management.js';
 import { createSnapshot, loadSnapshots, loadSnapshot } from './api.js';
 import { showError, showSuccess, showInfo } from './notifications.js';
 import { draw } from './renderer.js';
@@ -64,12 +64,17 @@ async function openCreateSnapshotModal() {
     preview.innerHTML = 'Loading preview...';
     
     try {
-        const teams = state.teams;
+        // Use filtered teams if filters are active
+        const teams = getFilteredTeams();
         const stats = calculateStats(teams);
+        
+        // Show filter info if applicable
+        const hasFilters = state.selectedFilters.valueStreams.length > 0 || 
+                          state.selectedFilters.platformGroupings.length > 0;
         
         preview.innerHTML = `
             <strong>Preview:</strong><br>
-            This will capture ${stats.total} teams across ${stats.valueStreams} value streams and ${stats.platformGroupings} platform groupings.
+            ${hasFilters ? '<span style="color: #ff9800;">⚠️ Filtered view:</span> ' : ''}This will capture ${stats.total} teams across ${stats.valueStreams} value streams and ${stats.platformGroupings} platform groupings.
             <br><br>
             <strong>Team types:</strong> 
             ${stats.streamAligned} stream-aligned, 
@@ -108,8 +113,16 @@ async function handleCreateSnapshot(event) {
     }
     
     try {
+        // Get filtered teams if filters are active
+        const filteredTeams = getFilteredTeams();
+        const hasFilters = state.selectedFilters.valueStreams.length > 0 || 
+                          state.selectedFilters.platformGroupings.length > 0;
+        
+        // Pass team names if filters are active, otherwise undefined (all teams)
+        const teamNames = hasFilters ? filteredTeams.map(t => t.name) : undefined;
+        
         showInfo('Creating snapshot...');
-        const snapshot = await createSnapshot(name, description, author);
+        const snapshot = await createSnapshot(name, description, author, teamNames);
         
         closeCreateSnapshotModal();
         showSuccess(`Snapshot created: ${snapshot.name}`);

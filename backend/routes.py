@@ -94,12 +94,17 @@ async def validate_files(view: str = "tt") -> Dict[str, Any]:
 # Snapshot endpoints
 @router.post("/snapshots/create", response_model=Snapshot)
 async def create_new_snapshot(request: CreateSnapshotRequest):
-    """Create a new snapshot of the current TT design state"""
+    """Create a new snapshot of the current TT design state.
+    
+    If team_names is provided, creates a filtered snapshot with only those teams.
+    Otherwise, includes all teams.
+    """
     try:
         snapshot = create_snapshot(
             name=request.name,
             description=request.description or "",
-            author=request.author or ""
+            author=request.author or "",
+            team_names=request.team_names
         )
         return snapshot
     except Exception as e:

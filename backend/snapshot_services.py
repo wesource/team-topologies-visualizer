@@ -98,10 +98,24 @@ def generate_snapshot_id(name: str, created_at: datetime) -> str:
     return f"{safe_name}-{timestamp}"
 
 
-def create_snapshot(name: str, description: str = "", author: str = "") -> Snapshot:
-    """Create a new snapshot of current TT design state"""
+def create_snapshot(name: str, description: str = "", author: str = "", team_names: Optional[List[str]] = None) -> Snapshot:
+    """Create a new snapshot of current TT design state
+    
+    Args:
+        name: Snapshot name
+        description: Optional description
+        author: Optional author
+        team_names: Optional list of team names to include (for filtered snapshots).
+                   If None, includes all teams.
+    """
     # Load all current teams
-    teams = find_all_teams(view="tt")
+    all_teams = find_all_teams(view="tt")
+    
+    # Filter teams if specific names provided
+    if team_names is not None:
+        teams = [team for team in all_teams if team.name in team_names]
+    else:
+        teams = all_teams
     
     # Create snapshot metadata
     created_at = datetime.now()

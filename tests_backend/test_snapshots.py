@@ -209,3 +209,31 @@ def test_snapshot_team_count_accuracy():
     # Verify counts match
     assert len(snapshot.teams) == len(live_teams)
     assert snapshot.statistics.total_teams == len(live_teams)
+
+
+def test_snapshot_with_filtered_teams():
+    """Test that snapshot can capture only specific teams (filtered view)"""
+    from backend.services import find_all_teams
+    
+    # Get all teams
+    all_teams = find_all_teams(view="tt")
+    
+    # Filter to first 3 teams
+    filtered_team_names = [team.name for team in all_teams[:3]]
+    
+    # Create filtered snapshot
+    snapshot = create_snapshot(
+        name="Test Filtered Snapshot",
+        team_names=filtered_team_names
+    )
+    
+    # Verify only filtered teams are included
+    assert len(snapshot.teams) == 3
+    assert snapshot.statistics.total_teams == 3
+    
+    # Verify correct teams are captured
+    snapshot_team_names = {team.name for team in snapshot.teams}
+    assert snapshot_team_names == set(filtered_team_names)
+    
+    # Verify it's less than total teams
+    assert len(snapshot.teams) < len(all_teams)

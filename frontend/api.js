@@ -50,11 +50,18 @@ export async function updateTeamPosition(teamName, x, y, view) {
 }
 
 // Snapshot API functions
-export async function createSnapshot(name, description = '', author = '') {
+export async function createSnapshot(name, description = '', author = '', teamNames = undefined) {
+    const body = { name, description, author };
+    
+    // Only include team_names if provided (for filtered snapshots)
+    if (teamNames !== undefined) {
+        body.team_names = teamNames;
+    }
+    
     const response = await fetch(getApiUrl('/snapshots/create'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, description, author })
+        body: JSON.stringify(body)
     });
     if (!response.ok) {
         const error = await response.json();
