@@ -1,7 +1,7 @@
 # Team Topologies Visualizer - Development Backlog
 
 **Status**: Pre-release v1.0 development
-**Last updated**: 2026-01-03
+**Last updated**: 2026-01-05
 
 **Note**: The tool now defaults to "TT Design" view. The other view is called "Pre-TT" (previously "Current State") to represent the baseline/starting point before TT transformation.
 
@@ -11,107 +11,33 @@ This backlog tracks enhancements for iterative development. Items are organized 
 
 ---
 
+## ✅ Recently Completed
+
+### 1. Implement Full Team API Structure ⭐⭐⭐⭐⭐ CRITICAL - **✅ COMPLETED 2026-01-05**
+**Impact**: HIGH | **Effort**: 3-4 hours | **From**: Both expert reviews + TT Book 2nd Edition
+
+**Status**: ✅ **COMPLETED** - All components implemented and working
+
+**What Was Delivered**:
+- ✅ Backend models support full Team API structure (`backend/models.py`)
+- ✅ Backend parses interaction tables from markdown (`backend/services.py`)
+- ✅ Frontend modal displays Team API with rich formatting and clickable links (`frontend/modals.js`)
+- ✅ All 34 tt-teams updated to use Team API format (mix of base and extended templates)
+- ✅ Two templates created: base (GitHub strict) and extended (with book additions)
+- ✅ CONCEPTS.md documents Team API vs Team Agreement distinction
+- ✅ Example teams: `observability-platform-team.md`, `cloud-development-platform-team.md`, etc.
+
+**User Value Achieved**:
+- Teams know exactly who to contact, what SLAs to expect
+- New teams can discover services without lengthy meetings
+- Communication norms and interaction patterns are explicit
+- Roadmap visibility helps teams plan dependencies
+
+---
+
 ## 🎯 v1.0 Release - Must Have (Current Sprint)
 
 These items are critical for v1.0 release. They address core business value gaps identified in expert reviews.
-
-### 1. Implement Full Team API Structure ⭐⭐⭐⭐⭐ CRITICAL - **ONGOING**
-**Impact**: HIGH | **Effort**: 3-4 hours | **From**: Both expert reviews + TT Book 2nd Edition
-
-**Status**: 🔄 In Progress - Templates created, backend implementation next
-
-**Scope**: 
-- **Team API content**: TT Design view (tt-teams) only - Team Topologies specific
-- **YAML front matter structure**: Both views (tt-teams + current-teams) - shared minimal metadata format
-- **Validation**: Both views need validation (see item #3 for details)
-
-**Why This Matters**:
-> "A team API helps a team define and communicate its principles, responsibilities, and mission to other teams in the organization." - Team Topologies Presentation
->
-> "Team APIs are cosmetic, not functional. Tool shows pretty arrows but doesn't tell anyone: What the service provides, What the SLA is, How to contact the team, What's on the roadmap." - TT Expert Review
-
-**Solution**: Implement comprehensive Team API following official [Team Topologies Team API Template](https://github.com/TeamTopologies/Team-API-template) plus book extensions
-
-**Team API vs Team Agreement**:
-- **Team API** (outward-facing): "What do other teams need to know about us?" 
-- **Team Agreement** (inward-facing): "Which practices and principles do we want to follow as a team?"
-- This tool implements Team API (external interface), not Team Agreement (internal norms)
-
-**Data Format**: Minimal YAML + Rich Markdown
-```yaml
----
-name: Identity Management API Team
-team_type: platform
-position: {x: 200, y: 300}
-metadata:
-  size: 8
-  cognitive_load: medium
----
-
-# Identity Management API Team
-
-## Team name and focus
-Identity Management API Team - Provides secure authentication and authorization services for all product teams
-
-[...full Team API structure in markdown...]
-```
-
-**Two Template Versions Created**:
-- ✅ `templates/team-api-template-base.md` - 100% strict GitHub Team API template
-- ✅ `templates/team-api-template-extended.md` - Adds fields from TT book 2nd edition:
-  - Code & Artifacts (runtime endpoints, libraries, UI)
-  - Testing Approach (how team tests, quality standards)
-  - Practices & Principles (team's preferred ways of working)
-  - Communication Preferences (async/sync, response times, PR expectations)
-  - Roadmap & Current Priorities (medium-term visibility)
-
-**Extended sections marked**: _[Not part of github team api template, but mentioned in book or other TT resources]_
-
-**Tasks**:
-- [x] Add Team API concepts to `docs/CONCEPTS.md` with outward vs inward-facing distinction
-- [x] Create base template following GitHub Team API exactly
-- [x] Create extended template with book additions (marked clearly)
-- [ ] Update `backend/models.py` - TeamData supports optional Team API fields
-  - Shared YAML structure for both views (name, type, position, metadata)
-  - Team API sections optional (only for tt-teams with Team API content)
-- [ ] Update `backend/services.py` - Parse Team API from markdown body:
-  - Parse interaction tables → extract dependencies/interactions automatically (tt-teams only)
-  - Extract Team API sections (services, SLA, contact, etc.) if present
-  - Keep YAML minimal (name, type, position, metadata only)
-  - Shared parsing logic for both views, Team API parsing conditional
-- [ ] Update team detail modal UI:
-  - Display Team API sections with rich formatting (when present)
-  - Render markdown tables for interactions
-  - Make contact links clickable (Slack channels, email, wiki)
-  - Show roadmap/priorities section
-  - Gracefully handle absence of Team API content (current-teams)
-- [ ] Update most tt-teams to use Team API structure:
-  - ~20-25 teams: Base format (GitHub strict) - stream-aligned, simple platforms
-  - 2-3 teams: Extended format - complex platforms or examples
-  - All teams: Minimal YAML front matter (no duplication in YAML of what's in markdown)
-  - Parse dependencies/interactions from markdown tables, not YAML
-- [ ] Update `CONCEPTS.md` with Team API guidance:
-  - When to use base vs extended template
-  - Best practices for writing Team APIs
-  - Examples of good purpose statements, SLAs, communication preferences
-  - Note: Team API is TT-specific, not used in current-teams view
-
-**Definition of Done**:
-- ✅ Templates created and documented
-- ✅ CONCEPTS.md explains Team API vs Team Agreement
-- Backend parses both YAML and markdown Team API
-- Team modal displays Team API with good UX
-- Example teams demonstrate both base and extended formats
-- Tests pass (backend parsing, frontend rendering)
-- Non-technical person can edit markdown files easily
-
-**User Value**:
-- **Reduced ambiguity**: Teams know exactly who to contact, what SLAs to expect
-- **Faster onboarding**: New teams discover services without lengthy meetings
-- **Explicit expectations**: Communication norms and interaction patterns are clear
-- **Evolution tracking**: Roadmap visibility helps teams plan their own work
-
----
 
 ### 2. Show Dependency & Consumer Counts (Bottleneck Detection) ⭐⭐⭐⭐⭐ CRITICAL
 **Impact**: HIGH | **Effort**: 2 hours | **From**: Expert Review - "No organizational sensing"
