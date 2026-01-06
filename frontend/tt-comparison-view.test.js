@@ -11,6 +11,7 @@ class MockCanvasContext {
         this.save = vi.fn();
         this.translate = vi.fn();
         this.scale = vi.fn();
+        this.rotate = vi.fn();
         this.restore = vi.fn();
         this.fillRect = vi.fn();
         this.strokeRect = vi.fn();
