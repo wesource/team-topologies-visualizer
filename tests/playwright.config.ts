@@ -7,14 +7,14 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 1, // Retry once locally, twice in CI
   workers: process.env.CI ? 1 : undefined, // Auto-detect workers locally, serial in CI
   reporter: 'html',
-  timeout: 60000, // 60 second timeout per test
+  timeout: process.env.CI ? 30000 : 60000, // 30s in CI, 60s locally
   
   use: {
     baseURL: 'http://127.0.0.1:8000',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
-    actionTimeout: 15000, // Increased to 15 seconds for actions
-    navigationTimeout: 45000, // Increased to 45 seconds for navigation and API waits
+    actionTimeout: 10000, // 10 seconds for actions
+    navigationTimeout: 30000, // 30 seconds for navigation
   },
 
   projects: [
@@ -32,6 +32,8 @@ export default defineConfig({
     cwd: '..',
     url: 'http://127.0.0.1:8000',
     reuseExistingServer: !process.env.CI,
-    timeout: 120 * 1000, // 2 minutes timeout
+    timeout: 60 * 1000, // 1 minute timeout for server startup
+    stdout: 'pipe', // Show server output
+    stderr: 'pipe',
   },
 });
