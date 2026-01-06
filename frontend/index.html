@@ -29,20 +29,26 @@
                             <input type="radio" name="view" value="current" id="viewCurrent">
                             <span>Pre-TT</span>
                         </label>
+                        <span class="pipe-separator">|</span>
                         <label class="radio-label">
                             <input type="radio" name="view" value="tt" id="viewTT" checked>
                             <span>TT Design</span>
                         </label>
                     </div>
                     <div class="perspective-selector" id="perspectiveSelector" style="display: none;">
-                        <span class="inline-divider"></span>
                         <label class="radio-label">
                             <input type="radio" name="perspective" value="hierarchy" id="perspectiveHierarchy" checked>
-                            <span>📊 Hierarchy</span>
+                            <span>Hierarchy</span>
                         </label>
+                        <span class="pipe-separator">|</span>
                         <label class="radio-label">
                             <input type="radio" name="perspective" value="product-lines" id="perspectiveProductLines">
-                            <span>🏭 Product Lines</span>
+                            <span>Product Lines</span>
+                        </label>
+                        <span class="pipe-separator">|</span>
+                        <label class="radio-label">
+                            <input type="radio" name="perspective" value="value-streams" id="perspectiveValueStreams">
+                            <span>Value Streams</span>
                         </label>
                     </div>
                     <div class="view-options">
@@ -58,12 +64,12 @@
                         <span class="inline-divider" id="modesCognitiveLoadDivider" style="display: none;"></span>
                         <label class="radio-label">
                             <input type="checkbox" id="showCognitiveLoad">
-                            <span>🚦 Cognitive Load</span>
+                            <span>🚦Cognitive Load</span>
                         </label>
                         <span class="inline-divider" id="cognitiveLoadBadgesDivider" style="display: none;"></span>
                         <label class="radio-label" id="teamTypeBadgesLabel" style="display: none;">
                             <input type="checkbox" id="showTeamTypeBadges">
-                            <span>🏷️ Type Badges</span>
+                            <span>Type Badges</span>
                         </label>
                     </div>
                     <div id="groupingFilterContainer" class="filter-panel" style="display: none;">

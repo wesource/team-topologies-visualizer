@@ -8,6 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Toolbar UI Improvements (2026-01-06)**: Enhanced visual separation and clarity of view selectors
+  - Added pipe separators (`|`) between all radio button options:
+    - Between "Pre-TT" and "TT Design" view selector
+    - Between "Hierarchy", "Product Lines", and "Value Streams" perspective selector
+  - Added framed styling to perspective selector:
+    - Light gray background (#f8f9fa)
+    - Border with rounded corners
+    - Subtle inset shadow for depth
+    - Padding for better spacing
+  - **Rationale**: Improved visual hierarchy and clarity, making selector groups more distinct and easier to scan
+  - **Files**: `frontend/index.html`, `frontend/styles.css`
 - **Pre-TT Team Template (2026-01-06)**: Created comprehensive template for current organizational state
   - New `templates/pre-tt-team-template.md` with fields for Pre-TT teams (dependencies, product_line, line_manager, department)
   - Renamed existing templates: `tt-design-team-api-template-base.md` and `tt-design-team-api-template-extended.md`
