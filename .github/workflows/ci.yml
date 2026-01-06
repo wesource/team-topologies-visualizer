@@ -29,9 +29,18 @@ jobs:
       run: |
         python -m ruff check backend/ tests_backend/ main.py
     
-    - name: Run pytest
+    - name: Run pytest with coverage
       run: |
-        python -m pytest tests_backend/ -v --tb=short
+        python -m pytest tests_backend/ -v --tb=short --cov=backend --cov=main --cov-report=html --cov-report=term
+    
+    - name: Upload backend coverage report
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: backend-coverage-report
+        path: htmlcov/
+        if-no-files-found: ignore
+        retention-days: 7
 
   frontend-tests:
     name: Frontend Tests (Vitest)
@@ -53,9 +62,18 @@ jobs:
       working-directory: frontend
       run: npm run lint
     
-    - name: Run Vitest
+    - name: Run Vitest with coverage
       working-directory: frontend
-      run: npm test -- --run
+      run: npm run test:coverage
+    
+    - name: Upload frontend coverage report
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: frontend-coverage-report
+        path: frontend/coverage/
+        if-no-files-found: ignore
+        retention-days: 7
 
   e2e-tests:
     name: E2E Tests (Playwright)
