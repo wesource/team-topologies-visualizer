@@ -1,5 +1,5 @@
 ---
-name: FleetFlow Systems Leadership
+name: LogiCore Systems Leadership
 type: executive
 line_manager: Board of Directors
 metadata:
@@ -9,13 +9,28 @@ metadata:
 
 # Company Leadership
 
-Executive leadership team of FleetFlow Systems, responsible for overall company strategy, financial performance, and organizational direction.
+Executive leadership team of LogiCore Systems, responsible for overall company strategy, financial performance, and organizational direction.
+
+## Company Overview
+
+LogiCore Systems is a mid-sized logistics software company serving both enterprise fleet operators (B2B) and individual drivers/end-customers (B2C). Founded in 2015 as a route optimization tool, the company has grown rapidly to offer a comprehensive logistics platform.
+
+**Products**:
+- **B2B Services**: DispatchHub, FleetMonitor, RouteOptix, Analytics Dashboard, Enterprise Integration APIs
+- **B2C Services**: Driver Mobile Apps (iOS/Android), Customer Delivery Tracking, Proof of Delivery, Driver Communications
+
+**Current Organizational Challenges** (Pre-TT State):
+- ~20 teams organized by technology layer (backend, frontend, mobile, QA) rather than value streams
+- Component teams and handoffs causing coordination overhead
+- Monolithic backend architecture limiting deployment speed
+- Cognitive overload on teams owning too many responsibilities
+- Weekly "integration meetings" with 15+ people to coordinate dependencies
 
 ## Leadership Structure
 - CEO: Jennifer Williams
 - CFO: David Chen
 - CTO: Robert Miller
-- VP Engineering: Sarah Johnson
+- VP Engineering: Sarah Johnson (leads ~9 engineering teams)
 - VP Professional Services: Marcus Thompson
 - VP Product: Tom Anderson
 

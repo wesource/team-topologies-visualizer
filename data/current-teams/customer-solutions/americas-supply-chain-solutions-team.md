@@ -16,7 +16,7 @@ line_manager: Carlos Martinez
 
 # Americas Supply Chain Solutions Team
 
-Delivers comprehensive RouteOptix solutions for supply chain operations across North and South America, specializing in complex multi-modal transportation.
+Delivers comprehensive LogiCore Platform solutions for supply chain operations across North and South America, specializing in complex multi-modal transportation.
 
 ## Responsibilities
 - End-to-end supply chain implementations
@@ -29,7 +29,7 @@ Delivers comprehensive RouteOptix solutions for supply chain operations across N
 - Vendor managed inventory (VMI) support
 
 ## Technologies
-- **Core**: RouteOptix Platform
+- **Core**: LogiCore Platform (DispatchHub, FleetMonitor, RouteOptix, Integration APIs)
 - **ERP**: SAP, Oracle, Microsoft Dynamics
 - **WMS**: Manhattan Associates, Blue Yonder, SAP EWM
 - **TMS**: Oracle OTM, Blue Yonder, E2open

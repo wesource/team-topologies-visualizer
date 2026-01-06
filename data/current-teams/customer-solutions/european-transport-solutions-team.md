@@ -16,7 +16,7 @@ line_manager: Marco Rossi
 
 # European Transport Solutions Team
 
-Focuses on RouteOptix solutions for European transportation and freight companies, specializing in long-haul and cross-border transport optimization.
+Focuses on LogiCore Platform solutions for European transportation and freight companies, specializing in long-haul and cross-border transport optimization.
 
 ## Responsibilities
 - Transport company-specific implementations
@@ -29,7 +29,7 @@ Focuses on RouteOptix solutions for European transportation and freight companie
 - Digital tachograph integration
 
 ## Technologies
-- **Core**: RouteOptix Platform
+- **Core**: LogiCore Platform (RouteOptix, FleetMonitor, DispatchHub)
 - **Telematics**: Geotab, Webfleet, Verizon Connect
 - **Compliance**: Digital tachographs, EU driver hours regulations
 - **Mapping**: HERE Maps, TomTom

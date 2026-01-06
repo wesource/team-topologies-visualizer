@@ -604,14 +604,27 @@ Many organizations classify their engineering teams using patterns like:
 
 **Your Current State Should Reflect Your Reality**: The tool is designed to be flexible. Document whatever team classification and organizational structure you currently have, whether it follows SAFe, LeSS, Spotify, or your own custom approach. The value is in visualizing your actual starting point before designing the Team Topologies vision.
 
-#### Example Organization: FleetFlow Systems
+#### Example Organization: LogiCore Systems
 
 For demonstration purposes, this repository includes a fictive company setup:
 
-- **Context**: FleetFlow Systems, a logistics software company
-- **Product**: RouteOptix (route optimization and delivery planning)
-- **Setup**: Originally structured around 2 Agile Release Trains (ARTs) with SAFe influence
-- **Pattern**: "Dual Operating Model" concept (operational hierarchy + agile ways of working)
+**The LogiCore Systems Story:**
+
+LogiCore Systems started in 2015 as a small route optimization tool for local delivery companies. After rapid growth driven by the e-commerce boom, they now serve two distinct markets: enterprise fleet operators (B2B) and individual drivers/end-customers (B2C) with a comprehensive suite of logistics products.
+
+The company's flagship products include:
+- **B2B Services**: DispatchHub (dispatcher tools), FleetMonitor (vehicle tracking), RouteOptix (optimization for fleet managers), Analytics Dashboard, Enterprise Integration APIs
+- **B2C Services**: Driver Mobile Apps (iOS/Android), Customer Delivery Tracking portals, Proof of Delivery systems, Driver Communications platform
+
+Like many successful startups that scaled quickly, LogiCore Systems now faces typical organizational challenges: monolithic architecture, component teams organized by technology layer rather than value stream, handoffs between teams, coordination overhead with weekly "integration meetings" involving 15+ people, and cognitive overload on teams owning too many responsibilities.
+
+**Current State** (Pre-TT):
+- ~20 teams organized around technology layers and components
+- Originally structured around 2 business divisions with SAFe influence
+- "Dual Operating Model" concept (operational hierarchy + agile ways of working)
+- Struggling with all common scaling anti-patterns: component teams, handoffs, shared service bottlenecks, unclear boundaries, mandated shared libraries, technology silos
+
+**The Transformation Goal**: Apply Team Topologies principles to reorganize around B2B Services and B2C Services value streams, establish true platform teams, reduce coordination overhead, and enable fast flow.
 
 **Team Type Mapping** (fictional company naming):
 
@@ -621,30 +634,35 @@ For demonstration purposes, this repository includes a fictive company setup:
 | Platform Team | "Platform Team" (Database Platform, Build & Integration) | Shared Services, Foundation Team, Infrastructure Team |
 | Enabling/Support Team | "Architecture Team", "Testing Team" | Enablement Team, Center of Excellence, Guild, Chapter |
 
-**Current Issues in Example**:
-- ❌ Component teams organized by technology layer (backend, frontend, ML, QA)
-- ❌ Heavy dependencies and coordination overhead between teams
-- ❌ Handoffs between teams (dev → QA)
-- ❌ Unclear team purposes and boundaries
-- ❌ Cognitive overload on some teams
+**Current Issues in Example** (all common anti-patterns present):
+- ❌ **Component teams** - Backend, Frontend, Mobile, QA organized by technology layer
+- ❌ **Handoffs** - Dev → QA → Ops creating delays and lost context
+- ❌ **Shared service bottlenecks** - Database team everyone waits for, blocking schema changes
+- ❌ **Cognitive overload** - Teams owning too much: routing + dispatch + tracking in one team
+- ❌ **Unclear boundaries** - Multiple teams touching same customer journeys causing conflicts
+- ❌ **Mandated shared libraries** - UI components, API framework forced on teams (not self-service)
+- ❌ **Coordination overhead** - Weekly integration meetings with 15+ people, dependency tracking spreadsheets
+- ❌ **Technology silos** - iOS team, Android team, Backend team instead of cross-functional teams
 
 **Representative Teams in Current State** (demonstrating common patterns):
-1. Core Product Team - Backend monolith (C++/Python) - *Feature Team*
-2. Web Product Team - Frontend (Angular) - *Feature Team*
-3. ML Product Team - Data science & ML - *Feature Team*
-4. Integration Testing Team - QA - *Enabling/Support Team*
-5. Database Platform Team - Oracle/ORM/Flyway - *Platform Team*
-6. Build & Integration Team - CI/CD & infrastructure - *Platform Team*
-7. Enterprise Architecture Team - Governance & strategy - *Enabling/Support Team*
+1. Backend Services Team - Monolithic routing/dispatch/tracking services (Node.js/Python) - *Feature Team*
+2. Web Frontend Team - Dispatcher and customer portals (React) - *Feature Team*
+3. Mobile Platform Team - iOS/Android shared components (not true platform) - *Component Team*
+4. Route Optimization Team - Algorithm development (Python/OR-Tools) - *Feature Team*
+5. QA & Testing Team - Cross-team testing (handoff bottleneck) - *Enabling/Support Team*
+6. Database Team - PostgreSQL/MongoDB management - *Platform Team*
+7. DevOps & Infrastructure - CI/CD, AWS infrastructure - *Platform Team*
+8. API Framework Team - Mandated API standards/libraries - *Component Team*
 
-**Note**: The example data shows representative teams to demonstrate core concepts, not a complete organization. Real transformations may involve different numbers of teams before and after reorganization.
+**Note**: Pre-TT shows ~20 teams with typical dysfunction. TT-Design shows ~33 teams reorganized for fast flow with clear value streams (B2B Services, B2C Services), true platform teams, and eliminated handoffs.
 
-**Characteristics of this setup:**
-- ❌ Teams organized by function, not value stream
-- ❌ Heavy dependencies and coordination overhead
-- ❌ Handoffs between teams (dev → QA)
-- ❌ Unclear team purposes and boundaries
-- ❌ Cognitive overload on some teams
+**Characteristics of Pre-TT setup:**
+- ❌ Teams organized by function/technology, not value stream or customer journey
+- ❌ Heavy dependencies and coordination overhead (integration meetings, dependency management)
+- ❌ Handoffs between teams (dev → QA → ops) causing delays
+- ❌ Unclear team purposes and boundaries (who owns the driver mobile experience end-to-end?)
+- ❌ Cognitive overload on teams (one team owns routing algorithms + API + UI)
+- ❌ Pseudo-platforms (mandated shared libraries rather than self-service platforms)
 
 ### TT Design (Team Topologies Target Design)
 
@@ -652,9 +670,16 @@ The TT Design view (`data/tt-teams/`) shows how these same capabilities could be
 
 ## Disclaimer
 
-**Important**: The example data in this repository (FleetFlow Systems, RouteOptix product, team structures, technical details, etc.) is entirely fictitious and created for demonstration purposes only. The author has never worked in the logistics software industry or domain represented in these examples. All technical details, responsibilities, team sizes, technology stacks, and organizational patterns are made up to provide realistic working examples for learning Team Topologies concepts.
+**Important**: The example data in this repository (LogiCore Systems, product names like RouteOptix/DispatchHub/FleetMonitor, team structures, technical details, etc.) is entirely fictitious and created for demonstration purposes only. The author has never worked in the logistics software industry or domain represented in these examples. The company name "LogiCore Systems" and all associated products, team names, responsibilities, team sizes, technology stacks, and organizational patterns are completely made up to provide realistic working examples for learning Team Topologies concepts.
 
-If you recognize patterns similar to your organization, it's because many companies face common organizational challenges - not because this data represents any specific real-world company.
+**Why logistics domain?** Logistics software was chosen because:
+- It's a universally understood problem space (everyone has received a package)
+- It naturally requires all four TT team types (stream-aligned, platform, enabling, complicated subsystem)
+- It demonstrates clear B2B vs B2C value streams (fleet operators vs drivers/customers)
+- Complex enough to show real organizational challenges without being overly specialized
+- Avoids resemblance to any specific real-world company the author has worked with
+
+If you recognize patterns similar to your organization, it's because many companies face common organizational challenges (component teams, handoffs, coordination overhead, shared service bottlenecks) - not because this data represents any specific real-world company.
 
 ## Use Cases
 

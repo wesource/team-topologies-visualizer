@@ -16,10 +16,10 @@ line_manager: Hans Schmidt
 
 # European Logistics Solutions Team
 
-Delivers customized RouteOptix solutions for European logistics companies, focusing on compliance with EU regulations and regional transportation requirements.
+Delivers customized LogiCore Platform solutions for European logistics companies, focusing on compliance with EU regulations and regional transportation requirements.
 
 ## Responsibilities
-- Implementation of RouteOptix for European logistics customers
+- Implementation of LogiCore Platform for European logistics customers
 - EU GDPR and transportation compliance
 - Multi-language support (German, French, Dutch, Spanish)
 - Integration with European TMS and ERP systems
@@ -29,7 +29,7 @@ Delivers customized RouteOptix solutions for European logistics companies, focus
 - Post-implementation support
 
 ## Technologies
-- **Core**: RouteOptix Platform
+- **Core**: LogiCore Platform (DispatchHub, FleetMonitor, RouteOptix)
 - **Integration**: SAP, Oracle, local European TMS systems
 - **Languages**: Java, Python, JavaScript
 - **Databases**: PostgreSQL, Oracle

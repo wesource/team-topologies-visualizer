@@ -2,20 +2,19 @@
 name: Machine Learning & AI Specialists Team
 team_type: complicated-subsystem
 position:
-  x: 290.0
-  y: 1630.0
+  x: 130.0
+  y: 2055.0
 metadata:
   size: 6
   cognitive_load: high
   established: 2023-11
-value_stream: E-Commerce
 ---
 
 # Machine Learning & AI Specialists Team
 
 ## Team name and focus
 
-Machine Learning & AI Specialists Team - A complicated-subsystem team dedicated to developing and maintaining machine learning models and AI capabilities for e-commerce experiences, including product recommendations, search ranking, personalization, and predictive analytics that require deep specialized knowledge in data science and ML engineering.
+Machine Learning & AI Specialists Team - A complicated-subsystem team dedicated to developing and maintaining machine learning models and AI capabilities for LogiCore's logistics operations, including route optimization algorithms, delivery ETA predictions, demand forecasting, driver behavior analytics, and fleet utilization models that require deep specialized knowledge in data science and ML engineering.
 
 ## Team type
 
@@ -23,16 +22,21 @@ complicated-subsystem
 
 ## Part of a value stream?
 
-Yes - E-Commerce
+No - Serves both B2B Services and B2C Services
 
-This team is embedded within the E-Commerce value stream, providing specialized ML/AI capabilities for product discovery, recommendations, search, and personalization features.
+This team provides specialized ML/AI capabilities across multiple value streams:
+- **B2B Services**: Route optimization algorithms, fleet utilization forecasting, demand prediction, load planning optimization
+- **B2C Services**: Delivery ETA predictions, driver behavior analytics, delivery time window optimization, customer demand patterns
 
-**Why complicated-subsystem?** E-commerce ML/AI work requires deep technical expertise (data science, model training, feature engineering, model deployment, A/B testing, monitoring for drift) that would create excessive cognitive load for stream-aligned teams. The complexity and specialization justify a dedicated team within the value stream.
+**Why complicated-subsystem?** Logistics ML/AI work requires deep technical expertise (data science, operations research, model training, feature engineering, model deployment, A/B testing, monitoring for drift) that would create excessive cognitive load for stream-aligned teams. The complexity and specialization justify a dedicated team serving multiple value streams.
 
 ## Services provided (if applicable)
 
-- Recommendation systems
-- Predictive analytics and forecasting
+- Route optimization and vehicle routing algorithms
+- Delivery ETA prediction models
+- Demand forecasting and capacity planning
+- Driver behavior analytics and scoring
+- Fleet utilization optimization
 - Technical guidance on AI/ML best practices
 
 ## Service-level expectations (SLA)

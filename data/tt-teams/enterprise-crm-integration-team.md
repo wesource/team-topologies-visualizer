@@ -2,36 +2,36 @@
 name: Enterprise CRM Integration Team
 team_type: stream-aligned
 position:
-  x: 1054.0
-  y: 165.0
+  x: 204.0
+  y: 970.0
 metadata:
   size: 6
   cognitive_load: high
   established: 2024-02
-value_stream: Enterprise Sales
+value_stream: B2B Services
 ---
 
 # Enterprise CRM Integration Team
 
 ## Team name and focus
-Enterprise CRM Integration Team – Owns integrations with enterprise CRM systems (Salesforce, HubSpot, Dynamics) enabling seamless data flow and automation for enterprise customers.
+Enterprise CRM Integration Team – Owns integrations with enterprise CRM systems (Salesforce, HubSpot, Dynamics) enabling LogiCore Platform to sync with B2B customer systems for seamless fleet management data flow.
 
 ## Team type
 stream-aligned
 
 ## Part of a value stream?
 
-Yes - Enterprise Sales
+Yes - B2B Services
 
-This team works within the Enterprise Sales value stream alongside the Sales Portal team.
+This team works within the B2B Services value stream alongside Enterprise Reporting and Fleet Operations teams, serving enterprise fleet operators.
 
 ## Services provided (if applicable)
-N/A - This is a stream-aligned team that delivers customer-facing features.
+N/A - This is a stream-aligned team that delivers customer-facing integration features for B2B clients.
 
 ## Service-level expectations (SLA)
 - Integration availability: 99.5% uptime
 - Data sync latency: < 5 minutes
-- Support response: < 2 hours
+- Support response: < 2 hours (business-critical for enterprise customers)
 
 ## Software owned and evolved by this team
 - CRM Integration Service (Python)

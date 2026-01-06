@@ -16,10 +16,10 @@ line_manager: Sophie Dubois
 
 # European Retail Solutions Team
 
-Specializes in RouteOptix implementations for European retail chains, focusing on last-mile delivery optimization and omnichannel fulfillment.
+Specializes in LogiCore Platform implementations for European retail chains, focusing on last-mile delivery optimization and omnichannel fulfillment.
 
 ## Responsibilities
-- Retail-specific RouteOptix implementations
+- Retail-specific LogiCore implementations
 - Last-mile delivery optimization
 - Click-and-collect solutions
 - Store replenishment optimization
@@ -29,7 +29,7 @@ Specializes in RouteOptix implementations for European retail chains, focusing o
 - Seasonal demand planning support
 
 ## Technologies
-- **Core**: RouteOptix Platform
+- **Core**: LogiCore Platform (DispatchHub, Customer Tracking, Driver Apps)
 - **Retail Systems**: Salesforce Commerce Cloud, Shopify, Magento
 - **Integration**: REST APIs, webhooks
 - **Analytics**: Tableau, Power BI

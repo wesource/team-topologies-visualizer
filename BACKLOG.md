@@ -18,6 +18,38 @@ This backlog tracks enhancements for iterative development. Items are organized 
 - ✅ File naming conventions (tt- prefix for TT-specific modules)
 - ✅ E2E test flakiness resolution (robust async handling)
 
+## Configuration & Data Structure Decisions
+
+### Naming Conventions (2026-01-06)
+**Decision**: Use `snake_case` for all YAML frontmatter fields and JSON configuration properties
+- Rationale: snake_case is the standard convention in YAML/JSON configuration files
+- Applied to: `team_type`, `team_types`, `interaction_modes`, `platform_grouping`, etc.
+- Config files: `current-team-types.json` and `tt-team-types.json` (separate but consistent)
+
+**Structure**: Both config files use same array format:
+```json
+{
+  "team_types": [
+    {"id": "feature-team", "name": "...", "description": "...", "color": "..."},
+    {"id": "platform-team", "name": "...", "description": "...", "color": "..."}
+  ]
+}
+```
+- Enables consistent frontend parsing with `.forEach()` on `team_types` array
+- Each type has `id` field used in team YAML frontmatter `team_type: feature-team`
+
+### Interaction Data Storage (2026-01-06)
+**Current Implementation**:
+- **TT-Design teams**: Interactions stored in markdown tables ("## Teams we currently interact with"), parsed from markdown body
+- **Pre-TT teams**: Interactions stored in YAML frontmatter (`dependencies`, `interaction_modes`)
+
+**Rationale for difference**:
+- TT-Design follows Team API template format (rich markdown with tables, prose)
+- Pre-TT teams have simpler structure (YAML-heavy, less documentation)
+
+**Future consideration**: May want to unify Pre-TT to use markdown tables like TT-Design
+- See backlog item in "Data & Configuration Management" section below
+
 ---
 
 ## 🎯 v1.0 Release - Must Have (Current Sprint)
@@ -118,6 +150,30 @@ metadata:
 ## 🚀 v1.1 - Quick Wins (Post-Release)
 
 These are high-value features for v1.1, identified in expert reviews.
+
+### Unify Pre-TT Interaction Data Format
+**Impact**: MEDIUM | **Effort**: 3-4 hours | **Added**: 2026-01-06
+
+**Current Inconsistency**:
+- **TT-Design teams**: Store interactions in markdown tables ("## Teams we currently interact with")
+- **Pre-TT teams**: Store interactions in YAML frontmatter (`dependencies`, `interaction_modes`)
+
+**Goal**: Unify Pre-TT teams to use markdown table format like TT-Design
+- Easier to read and maintain
+- Consistent parsing logic across both views
+- More flexible for rich interaction descriptions
+
+**Tasks**:
+- [ ] Create Pre-TT interaction table template
+- [ ] Migrate all Pre-TT YAML `dependencies`/`interaction_modes` to markdown tables
+- [ ] Update backend parser to support markdown tables for Pre-TT view
+- [ ] Update validation to check markdown table format
+- [ ] Remove YAML `dependencies`/`interaction_modes` support from Pre-TT after migration
+- [ ] Document in CHANGELOG.md
+
+**Priority**: Low - Current YAML approach works, but markdown would be more consistent
+
+---
 
 ### Platform Service Count Badge
 **Impact**: MEDIUM | **Effort**: 1 hour

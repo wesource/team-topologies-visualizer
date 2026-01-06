@@ -1,7 +1,7 @@
 {
   "company": {
     "id": "company-leadership",
-    "name": "FleetFlow Systems Leadership Team",
+    "name": "LogiCore Systems Leadership Team",
     "type": "leadership",
     "level": 0,
     "children": [
@@ -18,8 +18,8 @@
             "type": "line-manager",
             "level": 3,
             "teams": [
-              "Core Product Team",
-              "ML Product Team"
+              "Backend Services Team",
+              "Route Optimization Team"
             ]
           },
           {
@@ -28,8 +28,8 @@
             "type": "line-manager",
             "level": 3,
             "teams": [
-              "Web Product Team",
-              "Mobile Product Team"
+              "Web Frontend Team",
+              "Mobile App Team"
             ]
           },
           {
@@ -38,7 +38,7 @@
             "type": "line-manager",
             "level": 3,
             "teams": [
-              "Integration Testing Team"
+              "QA & Testing Team"
             ]
           },
           {
@@ -47,7 +47,7 @@
             "type": "line-manager",
             "level": 3,
             "teams": [
-              "Enterprise Architecture Team"
+              "Architecture & Standards Team"
             ]
           },
           {
@@ -56,8 +56,17 @@
             "type": "line-manager",
             "level": 3,
             "teams": [
-              "Build & Integration Team",
-              "Database Platform Team"
+              "DevOps & Infrastructure Team",
+              "Database Team"
+            ]
+          },
+          {
+            "id": "lm-sarah-johnson",
+            "name": "Sarah Johnson - API Standards Lead",
+            "type": "line-manager",
+            "level": 3,
+            "teams": [
+              "API Framework Team"
             ]
           }
         ]

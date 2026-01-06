@@ -1,35 +1,35 @@
 ---
-name: Enterprise Sales Portal Team
+name: Enterprise Fleet Portal Team
 team_type: stream-aligned
 position:
-  x: 1054.0
-  y: 445.0
+  x: 204.0
+  y: 1110.0
 metadata:
   size: 6
   cognitive_load: medium
   established: 2023-11
-value_stream: Enterprise Sales
+value_stream: B2B Services
 ---
 
-# Enterprise Sales Portal Team
+# Enterprise Fleet Portal Team
 
 ## Team name and focus
-Enterprise Sales Portal Team – Delivers sales portal and account management for enterprise customers including quote generation, contract management, and sales analytics.
+Enterprise Fleet Portal Team – Delivers self-service portal for enterprise fleet managers including contract management, billing, fleet analytics, and account settings for B2B customers.
 
 ## Team type
 stream-aligned
 
 ## Part of a value stream?
 
-Yes - Enterprise Sales
+Yes - B2B Services
 
 ## Services provided (if applicable)
-N/A - This is a stream-aligned team delivering customer-facing features.
+N/A - This is a stream-aligned team delivering customer-facing portal features for enterprise fleet operators.
 
 ## Service-level expectations (SLA)
-- Portal availability: 99.5% uptime
+- Portal availability: 99.9% uptime (enterprise SLA)
 - Page load time: < 1 second
-- Support response: < 2 hours
+- Support response: < 1 hour (enterprise support)
 
 ## Software owned and evolved by this team
 - Sales Portal (Vue.js)

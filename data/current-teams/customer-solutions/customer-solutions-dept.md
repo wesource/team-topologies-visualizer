@@ -5,14 +5,14 @@ line_manager: Marcus Thompson
 reports_to: VP Professional Services
 metadata:
   department: Customer Solutions
-  size: 25
+  size: 27
   budget_type: profit-center
   billable: true
 ---
 
 # Customer Solutions Department
 
-Professional services team responsible for customer-specific implementations, customizations, and regional adaptations of RouteOptix. Operates as a billable profit center.
+Professional services team responsible for customer-specific implementations, customizations, and regional adaptations of LogiCore Platform. Operates as a billable profit center.
 
 ## Department Goals
 - 💰 Maximize billable hours and revenue
@@ -28,12 +28,12 @@ Professional services team responsible for customer-specific implementations, cu
 - Regional compliance and customization
 - Invoice as many hours as possible
 
-## Teams (5 regional teams, ~25 people)
-- Americas Solutions Team (planned)
-- Europe Solutions Team (planned)
-- Asia Solutions Team (planned)
-- Middle East Solutions Team (planned)
-- Africa Solutions Team (planned)
+## Teams (5 regional teams, 27 people)
+- Americas E-commerce Solutions Team (5)
+- Americas Supply Chain Solutions Team (7)
+- European Logistics Solutions Team (6)
+- European Retail Solutions Team (5)
+- European Transport Solutions Team (4)
 
 ## Operating Model
 - Billable hourly work model

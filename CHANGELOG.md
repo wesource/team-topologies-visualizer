@@ -7,7 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- **🔧 Naming Convention Consistency (2026-01-06)**: Unified all config files to use `snake_case`
+  - Fixed `current-team-types.json`: Changed `teamTypes` → `team_types` (matches TT config)
+  - Fixed structure: Changed from object `{"team_types": {key: {...}}}` to array `{"team_types": [{id: "...", ...}]}`
+  - **Rationale**: Array structure matches `tt-team-types.json` format, enables consistent frontend parsing
+  - Fixed `backend/validation.py`: Updated to parse array format with `id` field
+  - All config properties now consistent: `team_type`, `team_types`, `interaction_modes`, etc.
+- **TT-Design Team Migrations to LogiCore Systems (2026-01-06)**: Completed logistics domain migration
+  - Updated 12+ stream-aligned teams from E-Commerce/Mobile to B2B/B2C Services logistics content
+  - Renamed files to match updated content (e.g., e-commerce-cart-team.md → fleet-operations-team.md)
+  - DevOps Enablement Team: Updated from "Enterprise Sales" to "B2B Services" value stream (reflects current embedding)
+  - ML/AI Specialists Team: Removed value_stream (now serves both B2B and B2C, true complicated-subsystem pattern)
+  - Updated team descriptions, services, and interaction patterns for logistics operations
+
 ### Added
+- **Pre-TT Interaction Data (2026-01-06)**: Added `dependencies` and `interaction_modes` to all 9 Pre-TT engineering teams
+  - Enables visualization of interaction lines in Pre-TT view
+  - Shows Pre-TT dysfunction: handoffs, bottlenecks, coordination overhead
+  - Current approach: YAML frontmatter storage (vs TT-Design markdown tables)
+  - Future enhancement: May migrate to markdown table format for consistency (see BACKLOG.md)
+- **Product Lines View Foundation (2026-01-06)**: Started Phase 1 of multi-perspective Pre-TT visualization
+  - Added `product_line` field to 4 Pre-TT teams (Backend Services, Web Frontend, Mobile App, Route Optimization)
+  - Products defined: DispatchHub, Driver Mobile Apps, RouteOptix
+  - Next: Backend API + Hybrid renderer (vertical product lanes + horizontal shared teams row)
+  - See `pre-tt-view-improvements-solution.md` for full design and rationale
+
+### Fixed
+- **🐛 Frontend Variable Name (2026-01-06)**: Fixed `interactionHandler` undefined error
+  - Changed `_interactionHandler` → `interactionHandler` for consistency
+  - Pre-TT view now loads without console errors
 - **📊 Snapshot Comparison View**: Side-by-side comparison of snapshots to visualize Team Topologies evolution
   - **Split-Screen Canvas**: Independent before/after canvases with separate zoom/pan controls
     - Click "Compare" button on any two snapshots in Timeline panel

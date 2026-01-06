@@ -46,7 +46,8 @@ def validate_all_team_files(view: str = "tt") -> dict[str, Any]:
         if config_file.exists():
             with open(config_file, encoding='utf-8') as f:
                 config = json.load(f)
-                valid_types["current"] = list(config.get("teamTypes", {}).keys())
+                # team_types is now an array like TT config
+                valid_types["current"] = [t["id"] for t in config.get("team_types", [])]
 
     # Check all markdown files
     for file_path in data_dir.rglob("*.md"):

@@ -3,35 +3,35 @@ name: DevOps Enablement Team
 team_type: enabling
 position:
   x: 980.0
-  y: 545.0
+  y: 970.0
 metadata:
   size: 4
   cognitive_load: medium
   established: 2024-02
-value_stream: Enterprise Sales
+value_stream: B2B Services
 ---
 
 # DevOps Enablement Team
 
 ## Team name and focus
-DevOps Enablement Team – Currently embedded with the Enterprise Sales value stream teams to help them transform to cloud-native practices, CI/CD pipelines, and infrastructure-as-code. Temporary engagement (8-12 weeks) to upskill teams on DevOps practices with the goal of the Enterprise Sales teams becoming autonomous in cloud deployments.
+DevOps Enablement Team – Currently embedded with the B2B Services value stream teams to help them transform to cloud-native practices, CI/CD pipelines, and infrastructure-as-code. Temporary engagement (8-12 weeks) to upskill teams on DevOps practices with the goal of the Enterprise Sales teams becoming autonomous in cloud deployments.
 
 ## Team type
 enabling
 
 ## Part of a value stream?
 
-Yes - Enterprise Sales (temporary engagement)
+Yes - B2B Services (temporary engagement)
 
-This enabling team is currently focused on helping Enterprise Sales teams (Sales Portal, CRM Integration, Reporting) transition from traditional deployment models to cloud-native CI/CD practices. Once these teams are autonomous, the enabling team will move to help another value stream.
+This enabling team is currently focused on helping B2B Services teams (Enterprise Fleet Portal, Enterprise CRM Integration, Enterprise Reporting) transition from traditional deployment models to cloud-native CI/CD practices. Once these teams are autonomous, the enabling team will move to help another value stream.
 
 ## Services provided (if applicable)
 Our enabling team provides coaching and knowledge transfer, not long-term services:
-- DevOps practices coaching: CI/CD, infrastructure-as-code, GitOps, deployment strategies for enterprise workloads
+- DevOps practices coaching: CI/CD, infrastructure-as-code, GitOps, deployment strategies for enterprise B2B workloads
 - Cloud-native patterns guidance: Kubernetes, containers, serverless, microservices architectures
-- Tooling adoption support: Help teams adopt GitHub Actions, Terraform, ArgoCD, Helm in enterprise context
+- Tooling adoption support: Help teams adopt GitHub Actions, Terraform, ArgoCD, Helm in fleet management context
 - Pair programming sessions: Hands-on coding together on team's actual problems
-- Workshops and training: Custom workshops based on Enterprise Sales team needs (2-4 hour sessions)
+- Workshops and training: Custom workshops based on B2B Services team needs (2-4 hour sessions)
 - Architecture reviews: Review team's infrastructure and deployment architecture, provide feedback
 
 ## Service-level expectations (SLA)

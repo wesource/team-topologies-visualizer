@@ -16,10 +16,10 @@ line_manager: Jennifer Kim
 
 # Americas E-commerce Solutions Team
 
-Specializes in RouteOptix implementations for e-commerce and direct-to-consumer businesses in the Americas, focusing on rapid delivery and customer experience.
+Specializes in LogiCore Platform implementations (DispatchHub, FleetMonitor, RouteOptix, Customer Tracking) for e-commerce and direct-to-consumer businesses in the Americas, focusing on rapid delivery and customer experience.
 
 ## Responsibilities
-- E-commerce-specific RouteOptix implementations
+- E-commerce-specific LogiCore implementations
 - Same-day and next-day delivery optimization
 - Returns and reverse logistics management
 - Peak season scaling (Black Friday, holidays)
@@ -29,7 +29,7 @@ Specializes in RouteOptix implementations for e-commerce and direct-to-consumer 
 - Customer experience analytics
 
 ## Technologies
-- **Core**: RouteOptix Platform
+- **Core**: LogiCore Platform (DispatchHub, RouteOptix, FleetMonitor, Customer Apps)
 - **E-commerce**: Shopify, Magento, WooCommerce, Amazon MWS
 - **Delivery**: Last-mile delivery APIs, driver apps
 - **Notifications**: Twilio, SendGrid, Push notifications

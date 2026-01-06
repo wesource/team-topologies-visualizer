@@ -2,36 +2,36 @@
 name: Enterprise Reporting Team
 team_type: stream-aligned
 position:
-  x: 1054.0
-  y: 305.0
+  x: 204.0
+  y: 1250.0
 metadata:
   size: 5
   cognitive_load: medium
   established: 2024-09
-value_stream: Enterprise Sales
+value_stream: B2B Services
 ---
 
 # Enterprise Reporting Team
 
 ## Team name and focus
-Enterprise Reporting Team – Delivers custom analytics and reporting capabilities for enterprise customers, including dashboards, scheduled reports, and data exports.
+Enterprise Reporting Team – Delivers custom analytics and reporting capabilities for enterprise B2B fleet operators, including fleet performance dashboards, scheduled reports, and data exports.
 
 ## Team type
 stream-aligned
 
 ## Part of a value stream?
 
-Yes - Enterprise Sales
+Yes - B2B Services
 
-This team works within the Enterprise Sales value stream alongside Sales Portal and CRM Integration teams.
+This team works within the B2B Services value stream alongside Enterprise Fleet Portal and Fleet Monitor teams, serving enterprise customers with advanced analytics needs.
 
 ## Services provided (if applicable)
-N/A - This is a stream-aligned team that delivers customer-facing features.
+N/A - This is a stream-aligned team that delivers customer-facing reporting features for B2B clients.
 
 ## Service-level expectations (SLA)
-- Dashboard availability: 99.5% uptime
-- Report generation: < 1 hour
-- Data freshness: < 15 minutes
+- Dashboard availability: 99.9% uptime
+- Report generation: < 30 minutes for complex reports
+- Data freshness: < 5 minutes for real-time dashboards
 
 ## Software owned and evolved by this team
 - Enterprise Analytics Service (Python)

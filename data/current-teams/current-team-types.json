@@ -7,6 +7,12 @@
       "color": "#E74C3C"
     },
     {
+      "id": "component-team",
+      "name": "Component Team",
+      "description": "Teams organized around technical components rather than customer value streams. Anti-pattern in many contexts.",
+      "color": "#95A5A6"
+    },
+    {
       "id": "platform-team",
       "name": "Platform Team",
       "description": "Teams that own shared/core components and maintain the common foundation other teams build on. Provide internal services and infrastructure.",
