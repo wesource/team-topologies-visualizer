@@ -9,7 +9,6 @@ These tests validate the Pre-TT specific endpoints:
 import json
 from pathlib import Path
 
-import pytest
 from fastapi.testclient import TestClient
 
 from main import app
@@ -61,9 +60,9 @@ class TestValueStreamsEndpoint:
         value_streams = data["value_streams"]
 
         # Find a value stream with products containing teams
-        for vs_name, vs_data in value_streams.items():
+        for _vs_name, vs_data in value_streams.items():
             products = vs_data["products"]
-            for product_name, teams in products.items():
+            for _product_name, teams in products.items():
                 if isinstance(teams, list) and len(teams) > 0:
                     team = teams[0]
                     # Check required team fields
