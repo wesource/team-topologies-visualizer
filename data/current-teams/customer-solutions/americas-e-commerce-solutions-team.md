@@ -9,8 +9,8 @@ position:
 metadata:
   size: 5
   department: Customer Solutions
+  line_manager: Jennifer Kim
   established: 2020-02
-line_manager: Jennifer Kim
 ---
 
 # Americas E-commerce Solutions Team

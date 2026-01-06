@@ -12,9 +12,9 @@ position:
 metadata:
   size: 5
   department: Engineering
+  line_manager: Lisa Anderson
   established: 2018-11
   cognitive_load: high
-line_manager: Lisa Anderson
 ---
 
 # QA & Testing Team

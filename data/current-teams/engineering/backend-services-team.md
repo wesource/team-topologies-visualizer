@@ -11,10 +11,9 @@ position:
 metadata:
   size: 8
   department: Engineering
-  product: DispatchHub, FleetMonitor, RouteOptix
+  line_manager: Rachel Martinez
   established: 2018-06
   cognitive_load: very-high
-line_manager: Rachel Martinez
 ---
 
 # Backend Services Team

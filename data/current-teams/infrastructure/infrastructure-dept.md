@@ -1,10 +1,10 @@
 ---
 name: Infrastructure & Operations Department
 type: department
-line_manager: David Kim
 reports_to: CTO
 metadata:
   department: Infrastructure
+  line_manager: David Kim
   size: 8
   budget_type: cost-center
 ---

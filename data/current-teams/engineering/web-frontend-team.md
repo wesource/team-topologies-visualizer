@@ -11,10 +11,9 @@ position:
 metadata:
   size: 6
   department: Engineering
-  product: DispatchHub, Customer Portal
+  line_manager: Marcus Thompson
   established: 2019-06
   cognitive_load: high
-line_manager: Marcus Thompson
 ---
 
 # Web Frontend Team

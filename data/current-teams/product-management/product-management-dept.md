@@ -1,10 +1,10 @@
 ---
 name: Product Management Department
 type: department
-line_manager: Tom Anderson
 reports_to: VP Product
 metadata:
   department: Product Management
+  line_manager: Tom Anderson
   size: 8
   budget_type: cost-center
 ---

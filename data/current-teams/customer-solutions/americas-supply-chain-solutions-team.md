@@ -9,8 +9,8 @@ position:
 metadata:
   size: 7
   department: Customer Solutions
+  line_manager: Carlos Martinez
   established: 2018-11
-line_manager: Carlos Martinez
 ---
 
 # Americas Supply Chain Solutions Team

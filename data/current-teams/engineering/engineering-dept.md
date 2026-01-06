@@ -1,10 +1,10 @@
 ---
 name: Engineering Department
 type: department
-line_manager: Rachel Martinez
 reports_to: CTO
 metadata:
   department: Engineering
+  line_manager: Rachel Martinez
   size: 45
   budget_type: cost-center
 ---

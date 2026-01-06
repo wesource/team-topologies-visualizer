@@ -88,7 +88,8 @@ jobs:
     
     - name: Run Playwright tests
       working-directory: tests
-      run: npx playwright test --reporter=html
+      run: npx playwright test --reporter=html,line
+      timeout-minutes: 8  # Kill this step if it takes longer than 8 minutes
     
     - name: Upload Playwright report
       if: always()

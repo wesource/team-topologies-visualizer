@@ -9,8 +9,8 @@ position:
 metadata:
   size: 5
   department: Customer Solutions
+  line_manager: Sophie Dubois
   established: 2020-06
-line_manager: Sophie Dubois
 ---
 
 # European Retail Solutions Team

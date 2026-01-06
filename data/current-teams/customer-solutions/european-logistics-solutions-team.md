@@ -9,8 +9,8 @@ position:
 metadata:
   size: 6
   department: Customer Solutions
+  line_manager: Hans Schmidt
   established: 2019-03
-line_manager: Hans Schmidt
 ---
 
 # European Logistics Solutions Team

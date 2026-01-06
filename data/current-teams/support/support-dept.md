@@ -1,10 +1,10 @@
 ---
 name: Customer Support Department
 type: department
-line_manager: Lisa Anderson
 reports_to: VP Customer Success
 metadata:
   department: Support
+  line_manager: Lisa Anderson
   size: 12
   budget_type: cost-center
 ---

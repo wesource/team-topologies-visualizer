@@ -7,7 +7,6 @@ position:
   y: 705.0
 metadata:
   size: 7
-line_manager: TBD
 ---
 
 # Example Undefined Team

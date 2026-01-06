@@ -7,9 +7,9 @@ position:
 metadata:
   size: 3
   department: Engineering
+  line_manager: Robert Miller
   established: 2017-09
   cognitive_load: high
-line_manager: Robert Miller
 ---
 
 # Database Team

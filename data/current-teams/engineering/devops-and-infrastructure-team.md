@@ -7,9 +7,9 @@ position:
 metadata:
   size: 4
   department: Engineering
+  line_manager: Robert Miller
   established: 2018-09
   cognitive_load: high
-line_manager: Robert Miller
 ---
 
 # DevOps & Infrastructure Team

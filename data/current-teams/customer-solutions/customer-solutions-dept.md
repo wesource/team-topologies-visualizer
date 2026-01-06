@@ -1,10 +1,10 @@
 ---
 name: Customer Solutions Department
 type: department
-line_manager: Marcus Thompson
 reports_to: VP Professional Services
 metadata:
   department: Customer Solutions
+  line_manager: Marcus Thompson
   size: 27
   budget_type: profit-center
   billable: true

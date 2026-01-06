@@ -8,10 +8,9 @@ position:
 metadata:
   size: 4
   department: Engineering
-  product: Internal API Standards
+  line_manager: Sarah Johnson
   established: 2019-11
   cognitive_load: medium
-line_manager: Sarah Johnson
 ---
 
 # API Framework Team

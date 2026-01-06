@@ -7,9 +7,9 @@ position:
 metadata:
   size: 3
   department: Engineering
+  line_manager: Jennifer Williams
   established: 2017-01
   cognitive_load: medium
-line_manager: Jennifer Williams
 ---
 
 # Architecture & Standards Team

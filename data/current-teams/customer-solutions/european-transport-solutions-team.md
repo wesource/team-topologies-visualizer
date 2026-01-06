@@ -9,8 +9,8 @@ position:
 metadata:
   size: 4
   department: Customer Solutions
+  line_manager: Marco Rossi
   established: 2021-09
-line_manager: Marco Rossi
 ---
 
 # European Transport Solutions Team

@@ -12,10 +12,9 @@ position:
 metadata:
   size: 5
   department: Engineering
-  product: RouteOptix Core Algorithms
+  line_manager: Marcus Thompson
   established: 2016-03
   cognitive_load: very-high
-line_manager: Marcus Thompson
 ---
 
 # Route Optimization Team

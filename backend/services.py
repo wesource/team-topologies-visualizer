@@ -74,6 +74,10 @@ def parse_team_file(file_path: Path) -> TeamData:
                 data['value_stream'] = metadata['value_stream']
             if 'platform_grouping' not in data and 'platform_grouping' in metadata:
                 data['platform_grouping'] = metadata['platform_grouping']
+            
+            # Support line_manager at top-level or in metadata (prefer metadata)
+            if 'line_manager' not in data and 'line_manager' in metadata:
+                data['line_manager'] = metadata['line_manager']
 
             # Support new Team API fields at top-level or in team_api
             if 'team_api' in data and isinstance(data['team_api'], dict):
@@ -185,7 +189,9 @@ def write_team_file_to_path(team: TeamData, file_path: Path) -> Path:
             yaml_data['metadata'] = {}
         yaml_data['metadata']['cognitive_load'] = team.cognitive_load
     if team.line_manager:
-        yaml_data['line_manager'] = team.line_manager
+        if 'metadata' not in yaml_data:
+            yaml_data['metadata'] = {}
+        yaml_data['metadata']['line_manager'] = team.line_manager
 
     # Write file
     with open(file_path, 'w', encoding='utf-8') as f:

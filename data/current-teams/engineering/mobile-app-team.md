@@ -11,10 +11,9 @@ position:
 metadata:
   size: 8
   department: Engineering
-  product: Driver Mobile Apps, Customer Mobile Apps
+  line_manager: Michael Chen
   established: 2020-01
   cognitive_load: high
-line_manager: Michael Chen
 ---
 
 # Mobile App Team
