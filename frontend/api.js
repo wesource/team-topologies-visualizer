@@ -83,3 +83,10 @@ export async function loadSnapshot(snapshotId) {
     return await response.json();
 }
 
+export async function compareSnapshots(beforeId, afterId) {
+    const response = await fetch(getApiUrl(`/snapshots/compare/${beforeId}/${afterId}`));
+    if (!response.ok) {
+        throw new Error(`Failed to compare snapshots`);
+    }
+    return await response.json();
+}

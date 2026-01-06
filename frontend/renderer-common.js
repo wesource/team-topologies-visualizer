@@ -121,39 +121,65 @@ export function getTeamBoxHeight(team, currentView = 'current') {
  * @param {Function} wrapText - Function to wrap text within a given width
  * @param {string} [currentView='current'] - Current view mode ('current' or 'tt')
  * @param {boolean} [showCognitiveLoad=false] - Whether to display cognitive load indicator
+ * @param {Object|null} [comparisonData=null] - Snapshot comparison data for highlighting changes
  * @description Renders team with type-specific shapes: rounded rectangles for stream-aligned/platform,
  * vertical boxes for enabling teams, octagons for complicated-subsystem teams
  */
-export function drawTeam(ctx, team, selectedTeam, teamColorMap, wrapText, currentView = 'current', showCognitiveLoad = false) {
+export function drawTeam(ctx, team, selectedTeam, teamColorMap, wrapText, currentView = 'current', showCognitiveLoad = false, comparisonData = null) {
     const x = team.position.x;
     const y = team.position.y;
     const width = getTeamBoxWidth(team, currentView);
     const height = getTeamBoxHeight(team, currentView);
     
+    // Check if this team is part of a comparison
+    let comparisonBadge = null;
+    if (comparisonData && comparisonData.changes) {
+        const changes = comparisonData.changes;
+        if (changes.added_teams.includes(team.name)) {
+            comparisonBadge = { type: 'added', color: '#4CAF50', emoji: '🟢', label: 'NEW' };
+        } else if (changes.moved_teams.find(t => t.name === team.name)) {
+            comparisonBadge = { type: 'moved', color: '#FFC107', emoji: '🟡', label: 'MOVED' };
+        } else if (changes.type_changed_teams.find(t => t.name === team.name)) {
+            comparisonBadge = { type: 'type_changed', color: '#2196F3', emoji: '🔵', label: 'CHANGED' };
+        }
+    }
+    
     // Use shape-specific drawing in TT Design view
     if (currentView === 'tt') {
         if (team.team_type === 'enabling') {
-            drawEnablingTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad);
+            drawEnablingTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData);
             return;
         }
         if (team.team_type === 'complicated-subsystem') {
-            drawComplicatedSubsystemTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad);
+            drawComplicatedSubsystemTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData);
             return;
         }
         if (team.team_type === 'undefined') {
-            drawUndefinedTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad);
+            drawUndefinedTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData);
             return;
         }
     }
     
     // Default: draw as rounded rectangle
-    drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad);
+    drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData);
 }
 
 /**
  * Draw team as default rounded rectangle (for stream-aligned, platform, and Pre-TT view)
  */
-function drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad) {
+function drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData) {
+    // Check if this team has a comparison badge
+    let comparisonBadge = null;
+    if (comparisonData) {
+        if (comparisonData.added_teams?.some(t => t.name === team.name)) {
+            comparisonBadge = { type: 'added', color: '#28a745', emoji: '🟢', label: 'NEW' };
+        } else if (comparisonData.moved_teams?.some(t => t.name === team.name)) {
+            comparisonBadge = { type: 'moved', color: '#ffc107', emoji: '🟡', label: 'MOVED' };
+        } else if (comparisonData.type_changed_teams?.some(t => t.name === team.name)) {
+            comparisonBadge = { type: 'changed', color: '#17a2b8', emoji: '🔵', label: 'CHANGED' };
+        }
+    }
+    
     const radius = 8;
     const fillColor = getTeamColor(team, teamColorMap);
     const borderColor = darkenColor(fillColor, LAYOUT.BORDER_COLOR_DARKEN_FACTOR);
@@ -187,7 +213,19 @@ function drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamCo
  * Draw enabling team as vertical rounded rectangle
  * Shape: 80×120 vertical orientation (tall and narrow)
  */
-function drawEnablingTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad) {
+function drawEnablingTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData) {
+    // Check if this team has a comparison badge
+    let comparisonBadge = null;
+    if (comparisonData) {
+        if (comparisonData.added_teams?.some(t => t.name === team.name)) {
+            comparisonBadge = { type: 'added', color: '#28a745', emoji: '🟢', label: 'NEW' };
+        } else if (comparisonData.moved_teams?.some(t => t.name === team.name)) {
+            comparisonBadge = { type: 'moved', color: '#ffc107', emoji: '🟡', label: 'MOVED' };
+        } else if (comparisonData.type_changed_teams?.some(t => t.name === team.name)) {
+            comparisonBadge = { type: 'changed', color: '#17a2b8', emoji: '🔵', label: 'CHANGED' };
+        }
+    }
+    
     const radius = 14; // Larger radius for enabling teams (matches SVG)
     const fillColor = getTeamColor(team, teamColorMap);
     const borderColor = darkenColor(fillColor, LAYOUT.BORDER_COLOR_DARKEN_FACTOR);
@@ -235,13 +273,30 @@ function drawEnablingTeam(ctx, team, x, y, width, height, selectedTeam, teamColo
     });
     
     ctx.restore();
+    
+    // Draw comparison badge if in comparison mode
+    if (comparisonBadge) {
+        drawComparisonBadge(ctx, comparisonBadge, x, y, width, height);
+    }
 }
 
 /**
  * Draw complicated-subsystem team as octagon
  * Shape: 8-sided polygon representing internal complexity
  */
-function drawComplicatedSubsystemTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad) {
+function drawComplicatedSubsystemTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData) {
+    // Check if this team has a comparison badge
+    let comparisonBadge = null;
+    if (comparisonData) {
+        if (comparisonData.added_teams?.some(t => t.name === team.name)) {
+            comparisonBadge = { type: 'added', color: '#28a745', emoji: '🟢', label: 'NEW' };
+        } else if (comparisonData.moved_teams?.some(t => t.name === team.name)) {
+            comparisonBadge = { type: 'moved', color: '#ffc107', emoji: '🟡', label: 'MOVED' };
+        } else if (comparisonData.type_changed_teams?.some(t => t.name === team.name)) {
+            comparisonBadge = { type: 'changed', color: '#17a2b8', emoji: '🔵', label: 'CHANGED' };
+        }
+    }
+    
     const fillColor = getTeamColor(team, teamColorMap);
     const borderColor = darkenColor(fillColor, LAYOUT.BORDER_COLOR_DARKEN_FACTOR);
     
@@ -282,12 +337,29 @@ function drawComplicatedSubsystemTeam(ctx, team, x, y, width, height, selectedTe
     
     // Team name
     drawTeamName(ctx, team, x, y, width, height, wrapText);
+    
+    // Draw comparison badge if in comparison mode
+    if (comparisonBadge) {
+        drawComparisonBadge(ctx, comparisonBadge, x, y, width, height);
+    }
 }
 
 /**
  * Draw undefined team with dashed border (TT Design view only)
  */
-function drawUndefinedTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad) {
+function drawUndefinedTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData) {
+    // Check if this team has a comparison badge
+    let comparisonBadge = null;
+    if (comparisonData) {
+        if (comparisonData.added_teams?.some(t => t.name === team.name)) {
+            comparisonBadge = { type: 'added', color: '#28a745', emoji: '🟢', label: 'NEW' };
+        } else if (comparisonData.moved_teams?.some(t => t.name === team.name)) {
+            comparisonBadge = { type: 'moved', color: '#ffc107', emoji: '🟡', label: 'MOVED' };
+        } else if (comparisonData.type_changed_teams?.some(t => t.name === team.name)) {
+            comparisonBadge = { type: 'changed', color: '#17a2b8', emoji: '🔵', label: 'CHANGED' };
+        }
+    }
+    
     const fillColor = getTeamColor(team, teamColorMap);
     const radius = 8;
     
@@ -332,6 +404,11 @@ function drawUndefinedTeam(ctx, team, x, y, width, height, selectedTeam, teamCol
     
     // Draw team name
     drawTeamName(ctx, team, x, y, width, height, wrapText);
+    
+    // Draw comparison badge if in comparison mode
+    if (comparisonBadge) {
+        drawComparisonBadge(ctx, comparisonBadge, x, y, width, height);
+    }
 }
 
 /**
@@ -356,6 +433,25 @@ function drawCognitiveLoadIndicator(ctx, team, x, y, width, showCognitiveLoad) {
             ctx.stroke();
         }
     }
+}
+
+/**
+ * Helper: Draw comparison badge for changed teams
+ */
+function drawComparisonBadge(ctx, badge, x, y, width, height) {
+    const badgeHeight = 20;
+    const badgeY = y - badgeHeight - 5; // Above the team box
+    
+    // Background
+    ctx.fillStyle = badge.color;
+    ctx.fillRect(x, badgeY, width, badgeHeight);
+    
+    // Text
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 11px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(`${badge.emoji} ${badge.label}`, x + width / 2, badgeY + badgeHeight / 2);
 }
 
 /**

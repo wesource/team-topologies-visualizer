@@ -28,7 +28,10 @@ export const state = {
     // Snapshot state
     isViewingSnapshot: false,
     currentSnapshot: null,
-    snapshotMetadata: null
+    snapshotMetadata: null,
+    // Comparison state
+    isComparingSnapshots: false,
+    comparisonData: null
 };
 
 // Interaction handler (initialized in app.js)

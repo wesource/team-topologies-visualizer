@@ -42,7 +42,16 @@ export function draw(state) {
     }
     
     // Draw teams
-    teamsToRender.forEach(team => drawTeam(state.ctx, team, state.selectedTeam, state.teamColorMap, (text, maxWidth) => wrapText(state.ctx, text, maxWidth), state.currentView, state.showCognitiveLoad));
+    teamsToRender.forEach(team => drawTeam(
+        state.ctx, 
+        team, 
+        state.selectedTeam, 
+        state.teamColorMap, 
+        (text, maxWidth) => wrapText(state.ctx, text, maxWidth), 
+        state.currentView, 
+        state.showCognitiveLoad,
+        state.comparisonData // Pass comparison data for highlighting
+    ));
     
     state.ctx.restore();
     

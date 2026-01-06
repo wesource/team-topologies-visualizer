@@ -13,6 +13,7 @@ from backend.services import (
 )
 from backend.validation import validate_all_team_files
 from backend.snapshot_services import create_snapshot, list_snapshots, load_snapshot
+from backend.comparison import compare_snapshots
 
 router = APIRouter(prefix="/api", tags=["teams"])
 
@@ -127,3 +128,25 @@ async def get_snapshot(snapshot_id: str):
     
     return snapshot
 
+
+@router.get("/snapshots/compare/{before_id}/{after_id}")
+async def compare_snapshot_versions(before_id: str, after_id: str):
+    """
+    Compare two snapshots and return differences
+    
+    Args:
+        before_id: ID of the earlier snapshot
+        after_id: ID of the later snapshot
+    
+    Returns:
+        Comparison data with added, removed, moved, and type-changed teams
+    """
+    before = load_snapshot(before_id)
+    after = load_snapshot(after_id)
+    
+    if before is None:
+        raise HTTPException(status_code=404, detail=f"Before snapshot not found: {before_id}")
+    if after is None:
+        raise HTTPException(status_code=404, detail=f"After snapshot not found: {after_id}")
+    
+    return compare_snapshots(before, after)

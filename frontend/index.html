@@ -14,7 +14,7 @@
                 <div class="header-actions">
                     <div class="snapshot-controls-group">
                         <button id="createSnapshotBtn" class="btn" style="display: none;">📸 Create Snapshot</button>
-                        <button id="timelineBtn" class="btn" style="display: none;">🕐 Timeline</button>
+                        <button id="timelineBtn" class="btn" style="display: none;">� Snapshots & Timeline</button>
                     </div>
                     <button id="exportSVGBtn" class="btn">📥 Export SVG</button>
                     <button id="validateBtn" class="btn">✓ Validate</button>
@@ -261,9 +261,47 @@
             <h3>📸 Snapshots & Timeline</h3>
             <button class="close-panel-btn" id="closeTimelineBtn">&times;</button>
         </div>
+        <div class="timeline-actions">
+            <button id="compareSnapshotsBtn" class="btn btn-primary" style="display: none;">🔄 Compare Snapshots</button>
+        </div>
         <div class="timeline-content">
             <div class="snapshot-list" id="snapshotList">
                 Loading snapshots...
+            </div>
+        </div>
+    </div>
+
+    <!-- Snapshot Comparison Modal -->
+    <div id="compareSnapshotsModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🔄 Compare Snapshots</h2>
+                <span class="close-btn" id="compareSnapshotsModalClose">&times;</span>
+            </div>
+            
+            <div class="compare-form">
+                <div class="form-group">
+                    <label for="beforeSnapshot">Before (earlier snapshot):</label>
+                    <select id="beforeSnapshot" class="form-control" required>
+                        <option value="">Select snapshot...</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="afterSnapshot">After (later snapshot):</label>
+                    <select id="afterSnapshot" class="form-control" required>
+                        <option value="">Select snapshot...</option>
+                    </select>
+                </div>
+                
+                <div class="modal-actions">
+                    <button id="cancelCompareBtn" class="btn btn-secondary">Cancel</button>
+                    <button id="compareBtn" class="btn btn-primary">🔄 Compare</button>
+                </div>
+            </div>
+            
+            <div id="comparisonResults" style="display: none;">
+                <!-- Comparison results will be displayed here -->
             </div>
         </div>
     </div>

@@ -21,7 +21,8 @@ export class CanvasInteractionHandler {
         this.canvas.addEventListener('mousemove', (e) => this.handleMouseMove(e));
         this.canvas.addEventListener('mouseup', (e) => this.handleMouseUp(e));
         this.canvas.addEventListener('dblclick', (e) => this.handleDoubleClick(e));
-        this.canvas.addEventListener('wheel', (e) => this.handleWheel(e));
+        // Use passive: false because we call preventDefault() in handleWheel for zoom control
+        this.canvas.addEventListener('wheel', (e) => this.handleWheel(e), { passive: false });
         this.canvas.addEventListener('contextmenu', (e) => e.preventDefault());
     }
     

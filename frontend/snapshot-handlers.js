@@ -2,7 +2,7 @@
  * Snapshot UI handlers and interactions
  */
 import { state, getFilteredTeams } from './state-management.js';
-import { createSnapshot, loadSnapshots, loadSnapshot } from './api.js';
+import { createSnapshot, loadSnapshots, loadSnapshot, compareSnapshots } from './api.js';
 import { showError, showSuccess, showInfo } from './notifications.js';
 import { draw } from './renderer.js';
 
@@ -32,6 +32,12 @@ export function initSnapshotHandlers() {
     
     // Return to live view
     document.getElementById('returnToLiveBtn').addEventListener('click', returnToLiveView);
+    
+    // Comparison button and modal
+    document.getElementById('compareSnapshotsBtn').addEventListener('click', openCompareModal);
+    document.getElementById('compareSnapshotsModalClose').addEventListener('click', closeCompareModal);
+    document.getElementById('cancelCompareBtn').addEventListener('click', closeCompareModal);
+    document.getElementById('compareBtn').addEventListener('click', handleCompareSnapshots);
     
     // Initial visibility
     updateSnapshotButtonVisibility();
@@ -207,6 +213,10 @@ async function refreshTimelinePanel() {
     try {
         const snapshots = await loadSnapshots();
         
+        // Show/hide compare button based on snapshot count
+        const compareBtn = document.getElementById('compareSnapshotsBtn');
+        compareBtn.style.display = snapshots.length >= 2 ? 'inline-block' : 'none';
+        
         if (snapshots.length === 0) {
             listElement.innerHTML = `
                 <div style="text-align: center; padding: 40px 20px; color: #888;">
@@ -374,3 +384,200 @@ async function returnToLiveView() {
         showError(`Failed to return to live view: ${error.message}`);
     }
 }
+/**
+ * Open compare snapshots modal
+ */
+async function openCompareModal() {
+    const modal = document.getElementById('compareSnapshotsModal');
+    const beforeSelect = document.getElementById('beforeSnapshot');
+    const afterSelect = document.getElementById('afterSnapshot');
+    
+    try {
+        // Load snapshots
+        const snapshots = await loadSnapshots();
+        
+        if (snapshots.length < 2) {
+            showInfo('You need at least 2 snapshots to compare');
+            return;
+        }
+        
+        // Populate dropdowns
+        beforeSelect.innerHTML = '<option value="">Select earlier snapshot...</option>';
+        afterSelect.innerHTML = '<option value="">Select later snapshot...</option>';
+        
+        snapshots.forEach(snapshot => {
+            const date = new Date(snapshot.created_at).toLocaleDateString();
+            const option = `<option value="${snapshot.snapshot_id}">${snapshot.name} (${date})</option>`;
+            beforeSelect.innerHTML += option;
+            afterSelect.innerHTML += option;
+        });
+        
+        // Reset results
+        document.getElementById('comparisonResults').style.display = 'none';
+        
+        modal.style.display = 'block';
+    } catch (error) {
+        showError('Failed to load snapshots', error);
+    }
+}
+
+/**
+ * Close compare snapshots modal
+ */
+function closeCompareModal() {
+    document.getElementById('compareSnapshotsModal').style.display = 'none';
+    document.getElementById('beforeSnapshot').value = '';
+    document.getElementById('afterSnapshot').value = '';
+    document.getElementById('comparisonResults').style.display = 'none';
+}
+
+/**
+ * Handle compare button click
+ */
+async function handleCompareSnapshots() {
+    const beforeId = document.getElementById('beforeSnapshot').value;
+    const afterId = document.getElementById('afterSnapshot').value;
+    
+    if (!beforeId || !afterId) {
+        showError('Please select both snapshots to compare');
+        return;
+    }
+    
+    if (beforeId === afterId) {
+        showError('Please select two different snapshots');
+        return;
+    }
+    
+    try {
+        showInfo('Comparing snapshots...');
+        
+        // Call API
+        const comparison = await compareSnapshots(beforeId, afterId);
+        
+        // Display results
+        displayComparisonResults(comparison);
+        
+        // Store in state for canvas rendering
+        state.isComparingSnapshots = true;
+        state.comparisonData = comparison;
+        
+        // Load the "after" snapshot to display with highlights
+        const afterSnapshot = await loadSnapshot(afterId);
+        state.isViewingSnapshot = true;
+        state.currentSnapshot = afterSnapshot;
+        state.teams = afterSnapshot.teams;
+        
+        // Re-render canvas with diff highlighting
+        draw(state);
+        
+        // Don't close modal immediately - let user review changes
+        // Modal will stay open showing the comparison results
+        closeTimelinePanel();
+        
+        showSuccess('Comparison complete - see highlighted changes on canvas');
+    } catch (error) {
+        showError('Failed to compare snapshots', error);
+    }
+}
+
+/**
+ * Display comparison results in modal
+ */
+function displayComparisonResults(comparison) {
+    const resultsDiv = document.getElementById('comparisonResults');
+    const changes = comparison.changes;
+    const summary = changes.summary;
+    
+    let html = `
+        <div class="comparison-summary">
+            <h3>Comparison Results</h3>
+            <p><strong>${comparison.before_snapshot.name}</strong> → <strong>${comparison.after_snapshot.name}</strong></p>
+            
+            <div class="changes-summary">
+                <div class="change-stat added">🟢 ${summary.added_count} teams added</div>
+                <div class="change-stat removed">🔴 ${summary.removed_count} teams removed</div>
+                <div class="change-stat moved">🟡 ${summary.moved_count} teams moved</div>
+                <div class="change-stat changed">🔵 ${summary.type_changed_count} teams changed type</div>
+            </div>
+    `;
+    
+    // Added teams
+    if (changes.added_teams.length > 0) {
+        html += '<div class="change-details"><h4>🟢 Added Teams:</h4><ul>';
+        changes.added_teams.forEach(name => {
+            html += `<li>${name}</li>`;
+        });
+        html += '</ul></div>';
+    }
+    
+    // Removed teams
+    if (changes.removed_teams.length > 0) {
+        html += '<div class="change-details"><h4>🔴 Removed Teams:</h4><ul>';
+        changes.removed_teams.forEach(name => {
+            html += `<li>${name}</li>`;
+        });
+        html += '</ul></div>';
+    }
+    
+    // Moved teams
+    if (changes.moved_teams.length > 0) {
+        html += '<div class="change-details"><h4>🟡 Moved Teams:</h4><ul>';
+        changes.moved_teams.forEach(team => {
+            html += `<li>${team.name}</li>`;
+        });
+        html += '</ul></div>';
+    }
+    
+    // Type changed teams
+    if (changes.type_changed_teams.length > 0) {
+        html += '<div class="change-details"><h4>🔵 Type Changed:</h4><ul>';
+        changes.type_changed_teams.forEach(team => {
+            html += `<li>${team.name}: ${team.before} → ${team.after}</li>`;
+        });
+        html += '</ul></div>';
+    }
+    
+    html += `
+        </div>
+        <div class="modal-actions">
+            <button class="btn btn-primary" onclick="document.getElementById('compareSnapshotsModal').style.display='none'; document.getElementById('comparisonResults').innerHTML='';">Close & View Changes</button>
+        </div>
+    `;
+    
+    resultsDiv.innerHTML = html;
+    resultsDiv.style.display = 'block';
+}
+
+/**
+ * Show comparison banner
+ */
+function showComparisonBanner(comparison) {
+    const banner = document.getElementById('comparisonBanner');
+    const textEl = document.getElementById('comparisonBannerText');
+    
+    const summary = comparison.changes.summary;
+    const totalChanges = summary.added_count + summary.removed_count + summary.moved_count + summary.type_changed_count;
+    
+    textEl.innerHTML = `
+        Comparing: <strong>${comparison.before_snapshot.name}</strong> → <strong>${comparison.after_snapshot.name}</strong>
+        <br><small>${totalChanges} changes detected</small>
+    `;
+    banner.style.display = 'block';
+    
+    // Adjust container padding to account for banner
+    document.querySelector('.container').style.paddingTop = '60px';
+}
+
+/**
+ * Exit comparison mode
+ */
+window.exitComparisonMode = function() {
+    state.isComparingSnapshots = false;
+    state.comparisonData = null;
+    
+    // Hide comparison banner
+    document.getElementById('comparisonBanner').style.display = 'none';
+    document.querySelector('.container').style.paddingTop = '0';
+    
+    returnToLiveView();
+};
