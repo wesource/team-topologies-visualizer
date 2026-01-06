@@ -2,7 +2,7 @@
  * Unit tests for comparison view module
  */
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { comparisonView } from './comparison-view.js';
+import { comparisonView } from './tt-comparison-view.js';
 
 // Mock canvas context
 class MockCanvasContext {

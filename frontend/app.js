@@ -8,7 +8,7 @@ import { updateLegend, updateGroupingFilter } from './legend.js';
 import { setupUIEventListeners } from './ui-handlers.js';
 import { draw, selectTeam } from './renderer.js';
 import { initSnapshotHandlers } from './snapshot-handlers.js';
-import { comparisonView } from './comparison-view.js';
+import { comparisonView } from './tt-comparison-view.js';
 
 let interactionHandler = null;
 // Initialize

@@ -5,7 +5,7 @@ import { state, getFilteredTeams } from './state-management.js';
 import { createSnapshot, loadSnapshots, loadSnapshot, compareSnapshots } from './api.js';
 import { showError, showSuccess, showInfo } from './notifications.js';
 import { draw } from './renderer.js';
-import { comparisonView } from './comparison-view.js';
+import { comparisonView } from './tt-comparison-view.js';
 
 let timelinePanelOpen = false;
 
