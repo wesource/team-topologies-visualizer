@@ -59,23 +59,23 @@ async def get_organization_hierarchy():
 async def get_product_lines():
     """Get teams grouped by product lines for Product Lines view"""
     products_file = CURRENT_TEAMS_DIR / "products.json"
-    
+
     if not products_file.exists():
         raise HTTPException(status_code=404, detail="Products configuration not found")
-    
+
     with open(products_file, encoding='utf-8') as f:
         products_config = json.load(f)
-    
+
     # Get all teams from current view
     all_teams = find_all_teams("current")
-    
+
     # Group teams by product_line
     products_with_teams = {}
     shared_teams = []
-    
+
     for team in all_teams:
         product_line = team.product_line
-        
+
         if product_line:
             if product_line not in products_with_teams:
                 products_with_teams[product_line] = []
@@ -83,13 +83,13 @@ async def get_product_lines():
         else:
             # Teams without product_line go to shared section
             shared_teams.append(team.model_dump())
-    
+
     # Build response with product metadata
     result = {
         "products": [],
         "shared_teams": shared_teams
     }
-    
+
     for product_config in products_config["products"]:
         product_name = product_config["name"]
         result["products"].append({
@@ -99,7 +99,7 @@ async def get_product_lines():
             "color": product_config["color"],
             "teams": products_with_teams.get(product_name, [])
         })
-    
+
     return result
 
 

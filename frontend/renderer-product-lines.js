@@ -2,7 +2,6 @@
  * Product Lines View Renderer - Hybrid Layout
  * Vertical product lanes + horizontal shared teams row
  */
-import { LAYOUT } from './constants.js';
 import { darkenColor, getCognitiveLoadIndicator } from './renderer-common.js';
 
 const PRODUCT_LANE_WIDTH = 300;
@@ -80,8 +79,8 @@ function drawProductLane(ctx, product, x, y, teamColorMap, wrapText, showCogniti
 
     // Team count
     ctx.font = '12px Arial';
-    ctx.fillText(`${product.teams.length} team${product.teams.length !== 1 ? 's' : ''}`, 
-                 x + PRODUCT_LANE_WIDTH / 2, y + 45);
+    ctx.fillText(`${product.teams.length} team${product.teams.length !== 1 ? 's' : ''}`,
+        x + PRODUCT_LANE_WIDTH / 2, y + 45);
 
     // Draw lane background (light gray, not product colored)
     const laneHeight = (product.teams.length * (TEAM_CARD_HEIGHT + TEAM_CARD_SPACING)) + 40;
@@ -113,7 +112,7 @@ function drawProductTeamCard(ctx, team, x, y, width, teamColorMap, wrapText, sho
 
     // Get team type color (same as used in hierarchy view)
     const teamColor = teamColorMap[team.team_type] || '#666';
-    
+
     // Card background with team-type color
     ctx.fillStyle = teamColor;
     ctx.fillRect(x, y, width, TEAM_CARD_HEIGHT);
@@ -128,12 +127,12 @@ function drawProductTeamCard(ctx, team, x, y, width, teamColorMap, wrapText, sho
     ctx.fillStyle = '#000';
     ctx.font = 'bold 13px Arial';
     ctx.textAlign = 'left';
-    
+
     // Truncate name if too long
     const maxWidth = width - 20;
     let teamName = team.name;
     let textWidth = ctx.measureText(teamName).width;
-    
+
     if (textWidth > maxWidth) {
         while (textWidth > maxWidth && teamName.length > 0) {
             teamName = teamName.slice(0, -1);
@@ -141,7 +140,7 @@ function drawProductTeamCard(ctx, team, x, y, width, teamColorMap, wrapText, sho
         }
         teamName += '...';
     }
-    
+
     ctx.fillText(teamName, x + 10, y + 20);
 
     // Team type badge (only if enabled)
@@ -180,8 +179,8 @@ function drawSharedTeamsRow(ctx, sharedTeams, x, y, width, teamColorMap, wrapTex
     ctx.textAlign = 'center';
     ctx.fillText('Shared / Platform Teams', x + width / 2, y + 25);
     ctx.font = '12px Arial';
-    ctx.fillText(`${sharedTeams.length} team${sharedTeams.length !== 1 ? 's' : ''}`, 
-                 x + width / 2, y + 40);
+    ctx.fillText(`${sharedTeams.length} team${sharedTeams.length !== 1 ? 's' : ''}`,
+        x + width / 2, y + 40);
 
     // Draw row background
     ctx.fillStyle = '#f8f9fa';
@@ -198,7 +197,7 @@ function drawSharedTeamsRow(ctx, sharedTeams, x, y, width, teamColorMap, wrapTex
 
     sharedTeams.forEach((team, index) => {
         const teamX = teamStartX + index * (SHARED_TEAM_WIDTH + SHARED_TEAM_SPACING);
-        
+
         // Check if we need to wrap to next row (simple layout for now)
         if (teamX + SHARED_TEAM_WIDTH > x + width - 20) {
             return; // Skip if it doesn't fit (we'll improve this later)
@@ -239,12 +238,12 @@ function drawSharedTeamCard(ctx, team, x, y, teamColorMap, wrapText, showCogniti
     ctx.fillStyle = '#000';
     ctx.font = 'bold 11px Arial';
     ctx.textAlign = 'center';
-    
+
     // Truncate name if too long
     const maxWidth = cardWidth - 10;
     let teamName = team.name;
     let textWidth = ctx.measureText(teamName).width;
-    
+
     if (textWidth > maxWidth) {
         while (textWidth > maxWidth && teamName.length > 0) {
             teamName = teamName.slice(0, -1);
@@ -252,7 +251,7 @@ function drawSharedTeamCard(ctx, team, x, y, teamColorMap, wrapText, showCogniti
         }
         teamName += '...';
     }
-    
+
     ctx.fillText(teamName, x + cardWidth / 2, y + 25);
 
     // Team type badge (only if enabled)
@@ -297,25 +296,4 @@ function getTeamTypeBadge(teamType) {
         'feature-team': 'Feature'
     };
     return badges[teamType] || teamType;
-}
-
-/**
- * Lighten a color by a factor (0-1)
- */
-function lightenColor(color, factor) {
-    if (!color) return '#f0f0f0';
-    
-    // Convert hex to RGB
-    const hex = color.replace('#', '');
-    const r = parseInt(hex.substr(0, 2), 16);
-    const g = parseInt(hex.substr(2, 2), 16);
-    const b = parseInt(hex.substr(4, 2), 16);
-    
-    // Lighten towards white
-    const newR = Math.round(r + (255 - r) * factor);
-    const newG = Math.round(g + (255 - g) * factor);
-    const newB = Math.round(b + (255 - b) * factor);
-    
-    // Convert back to hex
-    return `#${newR.toString(16).padStart(2, '0')}${newG.toString(16).padStart(2, '0')}${newB.toString(16).padStart(2, '0')}`;
 }

@@ -179,7 +179,7 @@ function generateProductLinesSVG(productLinesData, teamColorMap) {
 
     // Build team positions map for communication lines
     const teamPositions = new Map();
-    
+
     // Calculate positions for product teams
     products.forEach((product, index) => {
         const laneX = startX + index * (PRODUCT_LANE_WIDTH + PRODUCT_LANE_PADDING);
@@ -216,7 +216,7 @@ function generateProductLinesSVG(productLinesData, teamColorMap) {
     // Draw each product lane
     products.forEach((product, index) => {
         const laneX = startX + index * (PRODUCT_LANE_WIDTH + PRODUCT_LANE_PADDING);
-        
+
         // Product header
         elements += `<rect x="${laneX}" y="${startY}" width="${PRODUCT_LANE_WIDTH}" height="${PRODUCT_HEADER_HEIGHT}" fill="${product.color || '#3498db'}" rx="0" ry="0"/>\n`;
         elements += `<text x="${laneX + PRODUCT_LANE_WIDTH / 2}" y="${startY + 25}" class="team-text-bold" font-size="18" fill="white">${escapeXml(product.name)}</text>\n`;
@@ -225,7 +225,7 @@ function generateProductLinesSVG(productLinesData, teamColorMap) {
         // Product lane background
         const laneHeight = PRODUCT_HEADER_HEIGHT + (product.teams.length * (TEAM_CARD_HEIGHT + TEAM_CARD_SPACING)) + 40;
         elements += `<rect x="${laneX}" y="${startY + PRODUCT_HEADER_HEIGHT}" width="${PRODUCT_LANE_WIDTH}" height="${laneHeight - PRODUCT_HEADER_HEIGHT}" fill="#f8f9fa" rx="0" ry="0"/>\n`;
-        
+
         // Border
         elements += `<rect x="${laneX}" y="${startY}" width="${PRODUCT_LANE_WIDTH}" height="${laneHeight}" fill="none" stroke="${darkenColor(product.color || '#3498db', 0.7)}" stroke-width="2" rx="0" ry="0"/>\n`;
     });
@@ -259,13 +259,13 @@ function generateProductLinesSVG(productLinesData, teamColorMap) {
     // Now draw teams on top of everything
     products.forEach((product, index) => {
         const laneX = startX + index * (PRODUCT_LANE_WIDTH + PRODUCT_LANE_PADDING);
-        
+
         // Teams in lane
         product.teams.forEach((team, teamIndex) => {
             const teamX = laneX + 20;
             const teamY = startY + PRODUCT_HEADER_HEIGHT + 20 + teamIndex * (TEAM_CARD_HEIGHT + TEAM_CARD_SPACING);
             const teamColor = teamColorMap[team.team_type] || '#666';
-            
+
             // Team card
             elements += `<rect x="${teamX}" y="${teamY}" width="${PRODUCT_LANE_WIDTH - 40}" height="${TEAM_CARD_HEIGHT}" fill="${teamColor}" rx="0" ry="0"/>\n`;
             elements += `<rect x="${teamX}" y="${teamY}" width="${PRODUCT_LANE_WIDTH - 40}" height="${TEAM_CARD_HEIGHT}" fill="none" stroke="${darkenColor(teamColor, 0.7)}" stroke-width="2" rx="0" ry="0"/>\n`;
@@ -277,7 +277,7 @@ function generateProductLinesSVG(productLinesData, teamColorMap) {
     sharedTeams.forEach((team, index) => {
         const teamX = teamStartX + index * (SHARED_TEAM_WIDTH + SHARED_TEAM_SPACING);
         const teamColor = teamColorMap[team.team_type] || '#666';
-        
+
         elements += `<rect x="${teamX}" y="${teamY}" width="${SHARED_TEAM_WIDTH}" height="60" fill="${teamColor}" rx="0" ry="0"/>\n`;
         elements += `<rect x="${teamX}" y="${teamY}" width="${SHARED_TEAM_WIDTH}" height="60" fill="none" stroke="${darkenColor(teamColor, 0.7)}" stroke-width="2" rx="0" ry="0"/>\n`;
         elements += `<text x="${teamX + SHARED_TEAM_WIDTH / 2}" y="${teamY + 35}" class="team-text" font-size="11" fill="#000">${escapeXml(team.name)}</text>\n`;

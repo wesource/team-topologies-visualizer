@@ -48,11 +48,11 @@ export class CanvasInteractionHandler {
 
         // Left-click for team dragging
         const team = getTeamAtPosition(
-            this.state.teams, 
-            x, 
-            y, 
-            this.state.viewOffset, 
-            this.state.scale, 
+            this.state.teams,
+            x,
+            y,
+            this.state.viewOffset,
+            this.state.scale,
             this.state.currentView,
             this.state.currentPerspective,
             this.state.productLinesTeamPositions
@@ -65,7 +65,9 @@ export class CanvasInteractionHandler {
                     showInfo('Teams cannot be repositioned in Product Lines view. Switch to Hierarchy view to move teams.');
                     this._productLinesDragWarningShown = true;
                     // Reset flag after 5 seconds to allow message to show again if needed
-                    setTimeout(() => { this._productLinesDragWarningShown = false; }, 5000);
+                    setTimeout(() => {
+                        this._productLinesDragWarningShown = false;
+                    }, 5000);
                 }
                 // Still select the team for viewing details
                 this.state.selectedTeam = team;
@@ -151,11 +153,11 @@ export class CanvasInteractionHandler {
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
         const team = getTeamAtPosition(
-            this.state.teams, 
-            x, 
-            y, 
-            this.state.viewOffset, 
-            this.state.scale, 
+            this.state.teams,
+            x,
+            y,
+            this.state.viewOffset,
+            this.state.scale,
             this.state.currentView,
             this.state.currentPerspective,
             this.state.productLinesTeamPositions

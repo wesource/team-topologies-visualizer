@@ -519,7 +519,7 @@ function drawConnection(ctx, from, to, mode, currentView = 'current', currentPer
     if (currentView === 'current' && currentPerspective === 'product-lines' && productLinesTeamPositions) {
         const fromBounds = productLinesTeamPositions.get(from.name);
         const toBounds = productLinesTeamPositions.get(to.name);
-        
+
         if (fromBounds && toBounds) {
             fromX = fromBounds.x + fromBounds.width / 2;
             fromY = fromBounds.y + fromBounds.height / 2;
@@ -571,7 +571,7 @@ function drawActualCommsConnection(ctx, from, to, currentView = 'current', curre
     if (currentView === 'current' && currentPerspective === 'product-lines' && productLinesTeamPositions) {
         const fromBounds = productLinesTeamPositions.get(from.name);
         const toBounds = productLinesTeamPositions.get(to.name);
-        
+
         if (fromBounds && toBounds) {
             fromX = fromBounds.x + fromBounds.width / 2;
             fromY = fromBounds.y + fromBounds.height / 2;
