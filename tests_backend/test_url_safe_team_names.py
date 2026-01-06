@@ -80,8 +80,8 @@ Test team with slash in name.
         slug = team_name_to_slug(team_name)
         assert slug == "ci-cd-platform-team"
 
-        # API call using slug should work (200 OK)
-        response = client.get(f"/api/teams/{slug}?view=tt")
+        # API call using slug should work (200 OK) - using new /api/tt/ prefix
+        response = client.get(f"/api/tt/teams/{slug}")
 
         # Should succeed - backend matches by slug
         assert response.status_code == 200, \

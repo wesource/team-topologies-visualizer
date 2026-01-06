@@ -2,6 +2,13 @@
 import { getApiUrl } from './config.js';
 
 /**
+ * Get the API prefix based on view (Pre-TT or TT-Design)
+ */
+function getViewPrefix(view) {
+    return view === 'current' ? '/pre-tt' : '/tt';
+}
+
+/**
  * Convert team name to URL-safe slug.
  * Must match backend logic in backend/services.py:team_name_to_slug()
  *
@@ -21,27 +28,40 @@ export function teamNameToSlug(teamName) {
 }
 
 export async function loadTeamTypes(view) {
-    const response = await fetch(getApiUrl(`/team-types?view=${view}`));
+    const prefix = getViewPrefix(view);
+    const response = await fetch(getApiUrl(`${prefix}/team-types`));
     return await response.json();
 }
+
 export async function loadOrganizationHierarchy() {
-    const response = await fetch(getApiUrl('/organization-hierarchy'));
+    const response = await fetch(getApiUrl('/pre-tt/organization-hierarchy'));
     return await response.json();
 }
+
+export async function loadProductLines() {
+    const response = await fetch(getApiUrl('/pre-tt/product-lines'));
+    return await response.json();
+}
+
 export async function loadTeams(view) {
-    const response = await fetch(getApiUrl(`/teams?view=${view}`));
+    const prefix = getViewPrefix(view);
+    const response = await fetch(getApiUrl(`${prefix}/teams`));
     return await response.json();
 }
+
 export async function loadTeamDetails(teamName, view) {
+    const prefix = getViewPrefix(view);
     // Use URL-safe slug instead of URL-encoding the team name
     const slug = teamNameToSlug(teamName);
-    const response = await fetch(getApiUrl(`/teams/${slug}?view=${view}`));
+    const response = await fetch(getApiUrl(`${prefix}/teams/${slug}`));
     return await response.json();
 }
+
 export async function updateTeamPosition(teamName, x, y, view) {
+    const prefix = getViewPrefix(view);
     // Use URL-safe slug instead of URL-encoding the team name
     const slug = teamNameToSlug(teamName);
-    const response = await fetch(getApiUrl(`/teams/${slug}/position?view=${view}`), {
+    const response = await fetch(getApiUrl(`${prefix}/teams/${slug}/position`), {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ x, y })
@@ -58,7 +78,7 @@ export async function createSnapshot(name, description = '', author = '', teamNa
         body.team_names = teamNames;
     }
 
-    const response = await fetch(getApiUrl('/snapshots/create'), {
+    const response = await fetch(getApiUrl('/pre-tt/snapshots/create'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
@@ -71,12 +91,12 @@ export async function createSnapshot(name, description = '', author = '', teamNa
 }
 
 export async function loadSnapshots() {
-    const response = await fetch(getApiUrl('/snapshots'));
+    const response = await fetch(getApiUrl('/pre-tt/snapshots'));
     return await response.json();
 }
 
 export async function loadSnapshot(snapshotId) {
-    const response = await fetch(getApiUrl(`/snapshots/${snapshotId}`));
+    const response = await fetch(getApiUrl(`/pre-tt/snapshots/${snapshotId}`));
     if (!response.ok) {
         throw new Error(`Snapshot not found: ${snapshotId}`);
     }
@@ -84,7 +104,7 @@ export async function loadSnapshot(snapshotId) {
 }
 
 export async function compareSnapshots(beforeId, afterId) {
-    const response = await fetch(getApiUrl(`/snapshots/compare/${beforeId}/${afterId}`));
+    const response = await fetch(getApiUrl(`/pre-tt/snapshots/compare/${beforeId}/${afterId}`));
     if (!response.ok) {
         throw new Error('Failed to compare snapshots');
     }

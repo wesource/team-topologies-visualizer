@@ -11,13 +11,43 @@ export function handleViewChange(e, loadAllTeams, _draw) {
     const target = e.target;
     state.currentView = target.value;
 
+    // Show/hide perspective selector (Pre-TT only)
+    const perspectiveSelector = document.getElementById('perspectiveSelector');
+    if (perspectiveSelector) {
+        if (state.currentView === 'current') {
+            perspectiveSelector.style.display = 'flex';
+        } else {
+            perspectiveSelector.style.display = 'none';
+        }
+    }
+
     // Show/hide the view-specific checkboxes and auto-align button based on view
     const showConnectionsLabel = document.getElementById('showConnectionsLabel');
+    const connectionsCognitiveLoadDivider = document.getElementById('connectionsCognitiveLoadDivider');
     if (showConnectionsLabel) {
         if (state.currentView === 'current') {
             showConnectionsLabel.style.display = 'flex';
+            if (connectionsCognitiveLoadDivider) {
+                connectionsCognitiveLoadDivider.style.display = 'block';
+            }
         } else {
             showConnectionsLabel.style.display = 'none';
+            if (connectionsCognitiveLoadDivider) {
+                connectionsCognitiveLoadDivider.style.display = 'none';
+            }
+        }
+    }
+
+    // Show/hide team type badges checkbox (visible in Pre-TT view)
+    const teamTypeBadgesLabel = document.getElementById('teamTypeBadgesLabel');
+    const cognitiveLoadBadgesDivider = document.getElementById('cognitiveLoadBadgesDivider');
+    if (teamTypeBadgesLabel && cognitiveLoadBadgesDivider) {
+        if (state.currentView === 'current') {
+            teamTypeBadgesLabel.style.display = 'flex';
+            cognitiveLoadBadgesDivider.style.display = 'block';
+        } else {
+            teamTypeBadgesLabel.style.display = 'none';
+            cognitiveLoadBadgesDivider.style.display = 'none';
         }
     }
 
@@ -68,6 +98,51 @@ export function handleViewChange(e, loadAllTeams, _draw) {
     }
 
     loadAllTeams();
+}
+
+export async function handlePerspectiveChange(e, draw) {
+    const target = e.target;
+    state.currentPerspective = target.value;
+
+    // Show team type badges checkbox for both Pre-TT perspectives (always visible)
+    const teamTypeBadgesLabel = document.getElementById('teamTypeBadgesLabel');
+    const cognitiveLoadBadgesDivider = document.getElementById('cognitiveLoadBadgesDivider');
+    if (teamTypeBadgesLabel && cognitiveLoadBadgesDivider) {
+        // Always show in Pre-TT view (both hierarchy and product-lines)
+        teamTypeBadgesLabel.style.display = 'flex';
+        cognitiveLoadBadgesDivider.style.display = 'block';
+    }
+
+    // Show/hide and enable/disable auto-align based on perspective
+    const autoAlignBtn = document.getElementById('autoAlignBtn');
+    if (autoAlignBtn) {
+        if (state.currentPerspective === 'product-lines') {
+            autoAlignBtn.disabled = true;
+            autoAlignBtn.style.opacity = '0.5';
+            autoAlignBtn.style.cursor = 'not-allowed';
+        } else {
+            autoAlignBtn.disabled = false;
+            autoAlignBtn.style.opacity = '1';
+            autoAlignBtn.style.cursor = 'pointer';
+        }
+    }
+
+    // Load product lines data if switching to that perspective
+    if (state.currentPerspective === 'product-lines' && !state.productLinesData) {
+        try {
+            const { loadProductLines } = await import('./api.js');
+            state.productLinesData = await loadProductLines();
+        } catch (error) {
+            console.error('Failed to load product lines data:', error);
+            showError('Failed to load product lines view');
+            // Fall back to hierarchy
+            document.getElementById('perspectiveHierarchy').checked = true;
+            state.currentPerspective = 'hierarchy';
+            return;
+        }
+    }
+
+    draw();
 }
 
 export function handleExportSVG() {
@@ -142,6 +217,11 @@ export function setupUIEventListeners(loadAllTeams, draw, openAddTeamModal, clos
         radio.addEventListener('change', (e) => handleViewChange(e, loadAllTeams, draw));
     });
 
+    // Perspective selector (Pre-TT: Hierarchy vs Product Lines)
+    document.querySelectorAll('input[name="perspective"]').forEach(radio => {
+        radio.addEventListener('change', (e) => handlePerspectiveChange(e, draw));
+    });
+
     // Add Team functionality removed for cleaner UI
 
     const exportSVGBtn = document.getElementById('exportSVGBtn');
@@ -201,6 +281,14 @@ export function setupUIEventListeners(loadAllTeams, draw, openAddTeamModal, clos
     if (showCognitiveLoadCheckbox) {
         showCognitiveLoadCheckbox.addEventListener('change', (e) => {
             state.showCognitiveLoad = e.target.checked;
+            draw();
+        });
+    }
+
+    const showTeamTypeBadgesCheckbox = document.getElementById('showTeamTypeBadges');
+    if (showTeamTypeBadgesCheckbox) {
+        showTeamTypeBadgesCheckbox.addEventListener('change', (e) => {
+            state.showTeamTypeBadges = e.target.checked;
             draw();
         });
     }

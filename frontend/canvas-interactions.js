@@ -1,6 +1,7 @@
 // Canvas mouse and interaction handling
 import { getTeamAtPosition } from './renderer-common.js';
 import { updateTeamPosition } from './api.js';
+import { showInfo } from './notifications.js';
 
 export class CanvasInteractionHandler {
     constructor(canvas, state, drawCallback) {
@@ -46,8 +47,32 @@ export class CanvasInteractionHandler {
         }
 
         // Left-click for team dragging
-        const team = getTeamAtPosition(this.state.teams, x, y, this.state.viewOffset, this.state.scale, this.state.currentView);
+        const team = getTeamAtPosition(
+            this.state.teams, 
+            x, 
+            y, 
+            this.state.viewOffset, 
+            this.state.scale, 
+            this.state.currentView,
+            this.state.currentPerspective,
+            this.state.productLinesTeamPositions
+        );
         if (team) {
+            // Disable dragging in Product Lines view (teams are positioned by product lane)
+            if (this.state.currentView === 'current' && this.state.currentPerspective === 'product-lines') {
+                // Show info message on first drag attempt
+                if (!this._productLinesDragWarningShown) {
+                    showInfo('Teams cannot be repositioned in Product Lines view. Switch to Hierarchy view to move teams.');
+                    this._productLinesDragWarningShown = true;
+                    // Reset flag after 5 seconds to allow message to show again if needed
+                    setTimeout(() => { this._productLinesDragWarningShown = false; }, 5000);
+                }
+                // Still select the team for viewing details
+                this.state.selectedTeam = team;
+                this.drawCallback();
+                return;
+            }
+
             this.draggedTeam = team;
             this.dragStartPosition = { x: team.position.x, y: team.position.y };
             this.hasDragged = false;
@@ -125,7 +150,16 @@ export class CanvasInteractionHandler {
         const rect = this.canvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
-        const team = getTeamAtPosition(this.state.teams, x, y, this.state.viewOffset, this.state.scale, this.state.currentView);
+        const team = getTeamAtPosition(
+            this.state.teams, 
+            x, 
+            y, 
+            this.state.viewOffset, 
+            this.state.scale, 
+            this.state.currentView,
+            this.state.currentPerspective,
+            this.state.productLinesTeamPositions
+        );
         if (team && this.state.onTeamDoubleClick) {
             this.state.onTeamDoubleClick(team);
         }

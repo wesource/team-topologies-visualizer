@@ -1,8 +1,6 @@
 ---
 name: Database Team
 team_type: platform-team
-dependencies: []
-interaction_modes: {}
 position:
   x: 960.0
   y: 530.0

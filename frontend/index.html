@@ -34,11 +34,23 @@
                             <span>TT Design</span>
                         </label>
                     </div>
+                    <div class="perspective-selector" id="perspectiveSelector" style="display: none;">
+                        <span class="inline-divider"></span>
+                        <label class="radio-label">
+                            <input type="radio" name="perspective" value="hierarchy" id="perspectiveHierarchy" checked>
+                            <span>📊 Hierarchy</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="perspective" value="product-lines" id="perspectiveProductLines">
+                            <span>🏭 Product Lines</span>
+                        </label>
+                    </div>
                     <div class="view-options">
                         <label class="radio-label" id="showConnectionsLabel" style="display: none;">
                             <input type="checkbox" id="showConnections">
                             <span>Show Communication Lines</span>
                         </label>
+                        <span class="inline-divider" id="connectionsCognitiveLoadDivider" style="display: none;"></span>
                         <label class="radio-label" id="showInteractionModesLabel" style="display: none;">
                             <input type="checkbox" id="showInteractionModes" checked>
                             <span>Show Interaction Modes</span>
@@ -47,6 +59,11 @@
                         <label class="radio-label">
                             <input type="checkbox" id="showCognitiveLoad">
                             <span>🚦 Cognitive Load</span>
+                        </label>
+                        <span class="inline-divider" id="cognitiveLoadBadgesDivider" style="display: none;"></span>
+                        <label class="radio-label" id="teamTypeBadgesLabel" style="display: none;">
+                            <input type="checkbox" id="showTeamTypeBadges">
+                            <span>🏷️ Type Badges</span>
                         </label>
                     </div>
                     <div id="groupingFilterContainer" class="filter-panel" style="display: none;">
@@ -185,7 +202,6 @@
                 </div>
                 
                 <div class="detail-section">
-                    <h3>Description</h3>
                     <div id="detailDescription" class="markdown-content"></div>
                 </div>
                 

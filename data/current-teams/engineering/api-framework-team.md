@@ -2,7 +2,6 @@
 name: API Framework Team
 team_type: platform-team
 dependencies: []
-interaction_modes: {}
 position:
   x: 1180.0
   y: 410.0

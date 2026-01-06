@@ -2,7 +2,6 @@
 name: Example Undefined Team
 team_type: undefined
 dependencies: []
-interaction_modes: {}
 position:
   x: 78.0
   y: 705.0

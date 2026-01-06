@@ -30,7 +30,11 @@ export default [
             'indent': ['error', 4, { SwitchCase: 1 }],
             'no-undef': 'error',
             'no-unreachable': 'error',
-            'no-dupe-keys': 'error'
+            'no-dupe-keys': 'error',
+            'no-restricted-syntax': ['error', {
+                selector: 'CallExpression[callee.name="require"]',
+                message: 'Use ES6 import instead of require()'
+            }]
         }
     },
     {

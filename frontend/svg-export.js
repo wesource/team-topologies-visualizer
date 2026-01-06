@@ -6,6 +6,9 @@ import { getPlatformGroupings } from './tt-platform-grouping.js';
 // SVG Export Module - Separated from runtime rendering
 // Converts current visualization state to downloadable SVG
 export function exportToSVG(state, organizationHierarchy, teams, teamColorMap, currentView, showInteractionModes = true) {
+    // Handle product-lines perspective
+    const isPreTTView = currentView === 'current';
+    const isProductLines = isPreTTView && state.currentPerspective === 'product-lines';
     let width = 2000;
     let height = 1500;
     let viewBox = `0 0 ${width} ${height}`;
@@ -25,7 +28,7 @@ export function exportToSVG(state, organizationHierarchy, teams, teamColorMap, c
   <defs>
     <style>
       .team-box { stroke-width: 3; }
-      .team-text { font-family: sans-serif; font-size: 16px; fill: #000; text-anchor: middle; }
+      .team-text { font-family: sans-serif; fill: #000; text-anchor: middle; }
       .team-text-bold { font-family: sans-serif; font-size: 18px; font-weight: bold; fill: #fff; text-anchor: middle; }
       .hierarchy-line { stroke: #7f8c8d; stroke-width: 1.5; fill: none; }
       .connection-line { stroke-width: 2; fill: none; }
@@ -33,7 +36,9 @@ export function exportToSVG(state, organizationHierarchy, teams, teamColorMap, c
   </defs>
   <rect x="${currentView === 'tt' && teams.length > 0 ? Math.min(...teams.map(t => t.position.x)) - 100 : 0}" y="${currentView === 'tt' && teams.length > 0 ? Math.min(...teams.map(t => t.position.y)) - 100 : 0}" width="${width}" height="${height}" fill="white"/>
 `;
-    if (currentView === 'current' && organizationHierarchy) {
+    if (currentView === 'current' && isProductLines && state.productLinesData) {
+        svg += generateProductLinesSVG(state.productLinesData, teamColorMap);
+    } else if (currentView === 'current' && organizationHierarchy) {
         svg += generateCurrentStateSVG(organizationHierarchy, teams, teamColorMap);
     } else {
         svg += generateTTVisionSVG(teams, teamColorMap, showInteractionModes);
@@ -152,6 +157,135 @@ function generateCurrentStateSVG(organizationHierarchy, teams, teamColorMap) {
     });
     return elements;
 }
+
+function generateProductLinesSVG(productLinesData, teamColorMap) {
+    let elements = '';
+    if (!productLinesData || !productLinesData.products) return elements;
+
+    const PRODUCT_LANE_WIDTH = 300;
+    const PRODUCT_LANE_PADDING = 20;
+    const PRODUCT_HEADER_HEIGHT = 60;
+    const TEAM_CARD_HEIGHT = 50;
+    const TEAM_CARD_SPACING = 15;
+    const SHARED_ROW_HEIGHT = 100;
+    const SHARED_TEAM_WIDTH = 140;
+    const SHARED_TEAM_SPACING = 20;
+
+    const products = productLinesData.products;
+    const sharedTeams = productLinesData.shared_teams || [];
+    const startX = 50;
+    const startY = 100;
+    const totalWidth = products.length * (PRODUCT_LANE_WIDTH + PRODUCT_LANE_PADDING);
+
+    // Build team positions map for communication lines
+    const teamPositions = new Map();
+    
+    // Calculate positions for product teams
+    products.forEach((product, index) => {
+        const laneX = startX + index * (PRODUCT_LANE_WIDTH + PRODUCT_LANE_PADDING);
+        product.teams.forEach((team, teamIndex) => {
+            const teamX = laneX + 20;
+            const teamY = startY + PRODUCT_HEADER_HEIGHT + 20 + teamIndex * (TEAM_CARD_HEIGHT + TEAM_CARD_SPACING);
+            teamPositions.set(team.name, {
+                x: teamX + (PRODUCT_LANE_WIDTH - 40) / 2,
+                y: teamY + TEAM_CARD_HEIGHT / 2
+            });
+        });
+    });
+
+    // Calculate positions for shared teams
+    const maxProductHeight = Math.max(
+        ...products.map(p => PRODUCT_HEADER_HEIGHT + (p.teams.length * (TEAM_CARD_HEIGHT + TEAM_CARD_SPACING)) + 40),
+        200
+    );
+    const sharedRowY = startY + maxProductHeight + 60;
+    const headerHeight = 50;
+    const teamStartX = startX + 20;
+    const teamY = sharedRowY + headerHeight + 20;
+    sharedTeams.forEach((team, index) => {
+        const teamX = teamStartX + index * (SHARED_TEAM_WIDTH + SHARED_TEAM_SPACING);
+        teamPositions.set(team.name, {
+            x: teamX + SHARED_TEAM_WIDTH / 2,
+            y: teamY + 30
+        });
+    });
+
+    // Title
+    elements += `<text x="${startX}" y="${startY - 40}" class="team-text-bold" fill="#333" font-size="24">Product Lines View</text>\n`;
+
+    // Draw each product lane
+    products.forEach((product, index) => {
+        const laneX = startX + index * (PRODUCT_LANE_WIDTH + PRODUCT_LANE_PADDING);
+        
+        // Product header
+        elements += `<rect x="${laneX}" y="${startY}" width="${PRODUCT_LANE_WIDTH}" height="${PRODUCT_HEADER_HEIGHT}" fill="${product.color || '#3498db'}" rx="0" ry="0"/>\n`;
+        elements += `<text x="${laneX + PRODUCT_LANE_WIDTH / 2}" y="${startY + 25}" class="team-text-bold" font-size="18" fill="white">${escapeXml(product.name)}</text>\n`;
+        elements += `<text x="${laneX + PRODUCT_LANE_WIDTH / 2}" y="${startY + 45}" class="team-text" font-size="12" fill="white">${product.teams.length} team${product.teams.length !== 1 ? 's' : ''}</text>\n`;
+
+        // Product lane background
+        const laneHeight = PRODUCT_HEADER_HEIGHT + (product.teams.length * (TEAM_CARD_HEIGHT + TEAM_CARD_SPACING)) + 40;
+        elements += `<rect x="${laneX}" y="${startY + PRODUCT_HEADER_HEIGHT}" width="${PRODUCT_LANE_WIDTH}" height="${laneHeight - PRODUCT_HEADER_HEIGHT}" fill="#f8f9fa" rx="0" ry="0"/>\n`;
+        
+        // Border
+        elements += `<rect x="${laneX}" y="${startY}" width="${PRODUCT_LANE_WIDTH}" height="${laneHeight}" fill="none" stroke="${darkenColor(product.color || '#3498db', 0.7)}" stroke-width="2" rx="0" ry="0"/>\n`;
+    });
+
+    // Shared row header (reuse already calculated teamStartX, teamY, sharedRowY, headerHeight)
+    elements += `<rect x="${startX}" y="${sharedRowY}" width="${totalWidth}" height="${headerHeight}" fill="#95a5a6" rx="0" ry="0"/>`;
+    elements += `<text x="${startX + totalWidth / 2}" y="${sharedRowY + 25}" class="team-text-bold" font-size="18" fill="white">Shared / Platform Teams</text>`;
+    elements += `<text x="${startX + totalWidth / 2}" y="${sharedRowY + 40}" class="team-text" font-size="12" fill="white">${sharedTeams.length} team${sharedTeams.length !== 1 ? 's' : ''}</text>`;
+
+    // Shared row background
+    elements += `<rect x="${startX}" y="${sharedRowY + headerHeight}" width="${totalWidth}" height="${SHARED_ROW_HEIGHT}" fill="#f8f9fa" rx="0" ry="0"/>`;
+    elements += `<rect x="${startX}" y="${sharedRowY}" width="${totalWidth}" height="${headerHeight + SHARED_ROW_HEIGHT}" fill="none" stroke="#7f8c8d" stroke-width="2" rx="0" ry="0"/>`;
+
+    // Draw communication lines (above product/shared boxes, below teams)
+    const allTeams = [...products.flatMap(p => p.teams), ...sharedTeams];
+    allTeams.forEach(team => {
+        if (team.dependencies && team.dependencies.length > 0) {
+            const fromPos = teamPositions.get(team.name);
+            if (!fromPos) return;
+
+            team.dependencies.forEach(targetName => {
+                const toPos = teamPositions.get(targetName);
+                if (!toPos) return;
+
+                // Draw line
+                elements += `<line x1="${fromPos.x}" y1="${fromPos.y}" x2="${toPos.x}" y2="${toPos.y}" stroke="#95a5a6" stroke-width="2" opacity="0.6"/>`;
+            });
+        }
+    });
+
+    // Now draw teams on top of everything
+    products.forEach((product, index) => {
+        const laneX = startX + index * (PRODUCT_LANE_WIDTH + PRODUCT_LANE_PADDING);
+        
+        // Teams in lane
+        product.teams.forEach((team, teamIndex) => {
+            const teamX = laneX + 20;
+            const teamY = startY + PRODUCT_HEADER_HEIGHT + 20 + teamIndex * (TEAM_CARD_HEIGHT + TEAM_CARD_SPACING);
+            const teamColor = teamColorMap[team.team_type] || '#666';
+            
+            // Team card
+            elements += `<rect x="${teamX}" y="${teamY}" width="${PRODUCT_LANE_WIDTH - 40}" height="${TEAM_CARD_HEIGHT}" fill="${teamColor}" rx="0" ry="0"/>\n`;
+            elements += `<rect x="${teamX}" y="${teamY}" width="${PRODUCT_LANE_WIDTH - 40}" height="${TEAM_CARD_HEIGHT}" fill="none" stroke="${darkenColor(teamColor, 0.7)}" stroke-width="2" rx="0" ry="0"/>\n`;
+            elements += `<text x="${teamX + (PRODUCT_LANE_WIDTH - 40) / 2}" y="${teamY + TEAM_CARD_HEIGHT / 2 + 5}" class="team-text" font-size="11" fill="#000">${escapeXml(team.name)}</text>\n`;
+        });
+    });
+
+    // Shared teams (reuse already calculated teamStartX and teamY)
+    sharedTeams.forEach((team, index) => {
+        const teamX = teamStartX + index * (SHARED_TEAM_WIDTH + SHARED_TEAM_SPACING);
+        const teamColor = teamColorMap[team.team_type] || '#666';
+        
+        elements += `<rect x="${teamX}" y="${teamY}" width="${SHARED_TEAM_WIDTH}" height="60" fill="${teamColor}" rx="0" ry="0"/>\n`;
+        elements += `<rect x="${teamX}" y="${teamY}" width="${SHARED_TEAM_WIDTH}" height="60" fill="none" stroke="${darkenColor(teamColor, 0.7)}" stroke-width="2" rx="0" ry="0"/>\n`;
+        elements += `<text x="${teamX + SHARED_TEAM_WIDTH / 2}" y="${teamY + 35}" class="team-text" font-size="11" fill="#000">${escapeXml(team.name)}</text>\n`;
+    });
+
+    return elements;
+}
+
 function generateTTVisionSVG(teams, teamColorMap, showInteractionModes) {
     let elements = '';
 

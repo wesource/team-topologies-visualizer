@@ -9,6 +9,9 @@ export const state = {
     ctx: null,
     teams: [],
     organizationHierarchy: null,
+    productLinesData: null, // NEW: Product lines view data
+    productLinesTeamPositions: new Map(), // NEW: Track team positions in product lines view for click detection
+    currentPerspective: 'hierarchy', // NEW: 'hierarchy' or 'product-lines' (Pre-TT only)
     selectedTeam: null,
     viewOffset: { x: 0, y: 0 },
     scale: 1,
@@ -19,6 +22,7 @@ export const state = {
     showConnections: false,
     showInteractionModes: true, // Interaction mode lines enabled by default
     showCognitiveLoad: false, // Cognitive load indicators disabled by default
+    showTeamTypeBadges: false, // Team type badges (Feature/Platform/etc) in product lines view, disabled by default
     selectedGrouping: 'all', // Legacy format: 'all', 'vs:ValueStreamName', 'pg:PlatformGroupingName'
     selectedFilters: {
         valueStreams: [], // Array of selected value stream names

@@ -101,15 +101,13 @@ export function drawCurrentStateView(ctx, organizationHierarchy, teams, wrapText
     });
 }
 function drawHierarchyBox(ctx, text, x, y, width, height, bgColor, textColor, isLeadership, wrapText) {
-    const radius = 5;
-    // Draw box
+    // Draw box with sharp corners (non-rounded)
     ctx.fillStyle = bgColor;
     ctx.strokeStyle = darkenColor(bgColor, LAYOUT.BORDER_COLOR_DARKEN_FACTOR);
-    ctx.lineWidth = LAYOUT.BORDER_WIDTH_NORMAL;
-    ctx.beginPath();
-    ctx.roundRect(x, y, width, height, radius);
-    ctx.fill();
-    ctx.stroke();
+    ctx.lineWidth = 2; // Thin border
+    ctx.fillRect(x, y, width, height);
+    ctx.strokeRect(x, y, width, height);
+    
     // Draw text (handle undefined or non-string text)
     if (!text || typeof text !== 'string') {
         console.warn('drawHierarchyBox: skipping text render - invalid text:', text, 'type:', typeof text);

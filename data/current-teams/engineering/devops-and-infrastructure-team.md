@@ -1,10 +1,6 @@
 ---
 name: DevOps & Infrastructure Team
 team_type: platform-team
-dependencies:
-- Database Team
-interaction_modes:
-  Database Team: x-as-a-service
 position:
   x: 960.0
   y: 410.0

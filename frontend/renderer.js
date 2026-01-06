@@ -1,5 +1,6 @@
 // Canvas rendering coordination
 import { drawCurrentStateView } from './renderer-current.js';
+import { drawProductLinesView } from './renderer-product-lines.js';
 import { drawTeam, drawConnections, wrapText, drawValueStreamGroupings, drawPlatformGroupings } from './renderer-common.js';
 import { getValueStreamGroupings } from './tt-value-stream-grouping.js';
 import { getPlatformGroupings } from './tt-platform-grouping.js';
@@ -21,9 +22,25 @@ export function draw(state) {
     // Filter teams using new multi-select filter system
     const teamsToRender = getFilteredTeams();
 
-    // Draw organization hierarchy if in current view
-    if (state.currentView === 'current' && state.organizationHierarchy) {
-        drawCurrentStateView(state.ctx, state.organizationHierarchy, teamsToRender, (text, maxWidth) => wrapText(state.ctx, text, maxWidth));
+    // Draw Pre-TT views (hierarchy or product-lines)
+    if (state.currentView === 'current') {
+        if (state.currentPerspective === 'product-lines' && state.productLinesData) {
+            // Product Lines View (hybrid layout)
+            drawProductLinesView(
+                state.ctx,
+                state.productLinesData,
+                teamsToRender,
+                state.teamColorMap,
+                (text, maxWidth) => wrapText(state.ctx, text, maxWidth),
+                state.showCognitiveLoad,
+                state.productLinesTeamPositions,
+                state.showTeamTypeBadges,
+                state.selectedTeam
+            );
+        } else if (state.organizationHierarchy) {
+            // Hierarchy View (org chart)
+            drawCurrentStateView(state.ctx, state.organizationHierarchy, teamsToRender, (text, maxWidth) => wrapText(state.ctx, text, maxWidth));
+        }
     }
 
     // Draw value stream groupings (only in TT Design view)
@@ -36,22 +53,34 @@ export function draw(state) {
         drawPlatformGroupings(state.ctx, platformGroupings);
     }
 
-    // Draw connections first (only if enabled in current view)
-    if (!(state.currentView === 'current' && !state.showConnections)) {
-        drawConnections(state.ctx, teamsToRender, state.currentView, state.showInteractionModes);
-    }
+    // Skip standard team drawing in product-lines perspective
+    // (teams are already rendered inside the product lanes with their own styling)
+    // But still draw connections if enabled
+    if (state.currentView === 'current' && state.currentPerspective === 'product-lines') {
+        // Draw connections if enabled
+        if (state.showConnections) {
+            drawConnections(state.ctx, teamsToRender, state.currentView, state.showInteractionModes, state.currentPerspective, state.productLinesTeamPositions);
+        }
+        // Product lines view handles team rendering - skip standard team drawing
+    } else {
+        // Draw connections first (only if enabled in current view)
+        if (!(state.currentView === 'current' && !state.showConnections)) {
+            drawConnections(state.ctx, teamsToRender, state.currentView, state.showInteractionModes, state.currentPerspective, state.productLinesTeamPositions);
+        }
 
-    // Draw teams
-    teamsToRender.forEach(team => drawTeam(
-        state.ctx,
-        team,
-        state.selectedTeam,
-        state.teamColorMap,
-        (text, maxWidth) => wrapText(state.ctx, text, maxWidth),
-        state.currentView,
-        state.showCognitiveLoad,
-        state.comparisonData // Pass comparison data for highlighting
-    ));
+        // Draw teams
+        teamsToRender.forEach(team => drawTeam(
+            state.ctx,
+            team,
+            state.selectedTeam,
+            state.teamColorMap,
+            (text, maxWidth) => wrapText(state.ctx, text, maxWidth),
+            state.currentView,
+            state.showCognitiveLoad,
+            state.comparisonData, // Pass comparison data for highlighting
+            state.showTeamTypeBadges // Pass team type badges flag
+        ));
+    }
 
     state.ctx.restore();
 

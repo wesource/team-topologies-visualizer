@@ -319,15 +319,27 @@ The **Snapshot Comparison View** allows you to visualize how your team topology 
 
 See [CONCEPTS.md](docs/CONCEPTS.md#evolution-tracking-with-snapshots) for best practices on snapshot naming conventions and versioning strategies.
 
-### Team API Templates
+### Team Templates
 
+This tool provides different templates for Pre-TT (current state) and TT Design (future state) teams.
 
-For TT Design teams, this tool supports **Team API** format following the [official Team Topologies Team API template](https://github.com/TeamTopologies/Team-API-template). **All team markdown files now strictly follow the base Team API template section order and structure.**
+#### Pre-TT Templates (Current Organizational State)
 
-**Two templates available:**
-- **Base Template** (`templates/team-api-template-base.md`) - Follows GitHub Team API template exactly, minimal and focused
+For teams in `data/current-teams/` - documents your current organization BEFORE Team Topologies transformation.
+
+- **Pre-TT Team Template** (`templates/pre-tt-team-template.md`) - Captures current reality: reporting structures, departments, actual dependencies, pain points
+  - Focus: `line_manager`, `department`, `dependencies`, `product_line`, current cognitive load challenges
+  - Example: See `data/current-teams/engineering/backend-services-team.md`
+
+#### TT-Design Templates (Team API Format)
+
+For teams in `data/tt-teams/` - follows **Team API** format from the [official Team Topologies Team API template](https://github.com/TeamTopologies/Team-API-template). Documents your DESIGNED future state with Team Topologies patterns.
+
+- **TT-Design Base Template** (`templates/tt-design-team-api-template-base.md`) - Minimal Team API, follows GitHub template exactly
+  - Focus: `value_stream`, `platform_grouping`, interaction modes, service expectations
   - Example: See `data/tt-teams/observability-platform-team.md`
-- **Extended Template** (`templates/team-api-template-extended.md`) - Adds platform product metrics, roadmap, customer problems, team members
+- **TT-Design Extended Template** (`templates/tt-design-team-api-template-extended.md`) - Comprehensive Team API with platform product thinking
+  - Adds: Platform metrics, roadmap, customer problems, team members, detailed SLAs
   - Example: See `data/tt-teams/cloud-development-platform-team.md`
 
 **Create your own company-specific template:**

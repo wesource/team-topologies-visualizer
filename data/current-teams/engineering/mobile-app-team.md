@@ -5,9 +5,6 @@ product_line: Driver Mobile Apps
 dependencies:
 - Backend Services Team
 - API Framework Team
-interaction_modes:
-  Backend Services Team: collaboration
-  API Framework Team: x-as-a-service
 position:
   x: 300.0
   y: 530.0

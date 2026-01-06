@@ -1,0 +1,28 @@
+{
+  "products": [
+    {
+      "id": "dispatchhub",
+      "name": "DispatchHub",
+      "description": "Fleet dispatch and operations management platform for B2B customers",
+      "color": "#3498db"
+    },
+    {
+      "id": "driver-mobile-apps",
+      "name": "Driver Mobile Apps",
+      "description": "iOS and Android apps for delivery drivers with navigation and proof-of-delivery",
+      "color": "#e74c3c"
+    },
+    {
+      "id": "routeoptix",
+      "name": "RouteOptix",
+      "description": "Route optimization and vehicle routing platform",
+      "color": "#f39c12"
+    },
+    {
+      "id": "customer-solutions",
+      "name": "Customer Solutions",
+      "description": "Custom solutions and integrations for enterprise customers",
+      "color": "#9b59b6"
+    }
+  ]
+}

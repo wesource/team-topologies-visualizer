@@ -1,4 +1,4 @@
-"""API routes for team data management"""
+"""API routes for Pre-TT (current-teams) data management"""
 import json
 from typing import Any
 
@@ -16,21 +16,18 @@ from backend.services import (
     CURRENT_TEAMS_DIR,
     find_all_teams,
     find_team_by_name_or_slug,
-    get_data_dir,
     write_team_file_to_path,
 )
 from backend.snapshot_services import create_snapshot, list_snapshots, load_snapshot
 from backend.validation import validate_all_team_files
 
-router = APIRouter(prefix="/api", tags=["teams"])
+router = APIRouter(prefix="/api/pre-tt", tags=["pre-tt"])
 
 
 @router.get("/team-types")
-async def get_team_types(view: str = "tt"):
-    """Get team type definitions with colors and descriptions for a specific view"""
-    data_dir = get_data_dir(view)
-    config_filename = "tt-team-types.json" if view == "tt" else "current-team-types.json"
-    config_file = data_dir / config_filename
+async def get_team_types():
+    """Get team type definitions with colors and descriptions for Pre-TT view"""
+    config_file = CURRENT_TEAMS_DIR / "current-team-types.json"
 
     if not config_file.exists():
         raise HTTPException(status_code=404, detail="Team types configuration not found")
@@ -43,7 +40,7 @@ async def get_team_types(view: str = "tt"):
 
 @router.get("/organization-hierarchy")
 async def get_organization_hierarchy():
-    """Get the organizational hierarchy for current state view"""
+    """Get the organizational hierarchy for Pre-TT current state view"""
     hierarchy_file = CURRENT_TEAMS_DIR / "organization-hierarchy.json"
 
     if not hierarchy_file.exists():
@@ -57,7 +54,7 @@ async def get_organization_hierarchy():
 
 @router.get("/product-lines")
 async def get_product_lines():
-    """Get teams grouped by product lines for Product Lines view"""
+    """Get teams grouped by product lines for Product Lines view (Pre-TT only)"""
     products_file = CURRENT_TEAMS_DIR / "products.json"
     
     if not products_file.exists():
@@ -104,15 +101,15 @@ async def get_product_lines():
 
 
 @router.get("/teams", response_model=list[TeamData])
-async def get_teams(view: str = "tt"):
-    """Get all teams for a specific view (tt or current)"""
-    return find_all_teams(view)
+async def get_teams():
+    """Get all Pre-TT teams"""
+    return find_all_teams("current")
 
 
 @router.get("/teams/{team_name}", response_model=TeamData)
-async def get_team(team_name: str, view: str = "tt"):
-    """Get a specific team by name or URL-safe slug"""
-    result = find_team_by_name_or_slug(team_name, view)
+async def get_team(team_name: str):
+    """Get a specific Pre-TT team by name or URL-safe slug"""
+    result = find_team_by_name_or_slug(team_name, "current")
 
     if result is None:
         raise HTTPException(status_code=404, detail=f"Team not found: {team_name}")
@@ -122,9 +119,9 @@ async def get_team(team_name: str, view: str = "tt"):
 
 
 @router.patch("/teams/{team_name}/position")
-async def update_team_position(team_name: str, position: PositionUpdate, view: str = "tt"):
-    """Update only the position of a team (for drag-and-drop on canvas)"""
-    result = find_team_by_name_or_slug(team_name, view)
+async def update_team_position(team_name: str, position: PositionUpdate):
+    """Update only the position of a Pre-TT team (for drag-and-drop on canvas)"""
+    result = find_team_by_name_or_slug(team_name, "current")
 
     if result is None:
         raise HTTPException(status_code=404, detail="Team not found")
@@ -141,16 +138,16 @@ async def update_team_position(team_name: str, position: PositionUpdate, view: s
 
 
 @router.get("/validate")
-async def validate_files(view: str = "tt") -> dict[str, Any]:
-    """Validate all team files for common issues"""
-    validation_report = validate_all_team_files(view)
+async def validate_files() -> dict[str, Any]:
+    """Validate all Pre-TT team files for common issues"""
+    validation_report = validate_all_team_files("current")
     return validation_report
 
 
-# Snapshot endpoints
+# Snapshot endpoints (Pre-TT evolution tracking)
 @router.post("/snapshots/create", response_model=Snapshot)
 async def create_new_snapshot(request: CreateSnapshotRequest):
-    """Create a new snapshot of the current TT design state.
+    """Create a new snapshot of the current Pre-TT state.
 
     If team_names is provided, creates a filtered snapshot with only those teams.
     Otherwise, includes all teams.
@@ -169,13 +166,13 @@ async def create_new_snapshot(request: CreateSnapshotRequest):
 
 @router.get("/snapshots", response_model=list[SnapshotMetadata])
 async def get_snapshots():
-    """List all available snapshots with metadata"""
+    """List all available Pre-TT snapshots with metadata"""
     return list_snapshots()
 
 
 @router.get("/snapshots/{snapshot_id}", response_model=Snapshot)
 async def get_snapshot(snapshot_id: str):
-    """Load a specific snapshot by ID"""
+    """Load a specific Pre-TT snapshot by ID"""
     snapshot = load_snapshot(snapshot_id)
 
     if snapshot is None:
@@ -187,7 +184,7 @@ async def get_snapshot(snapshot_id: str):
 @router.get("/snapshots/compare/{before_id}/{after_id}")
 async def compare_snapshot_versions(before_id: str, after_id: str):
     """
-    Compare two snapshots and return differences
+    Compare two Pre-TT snapshots and return differences
 
     Args:
         before_id: ID of the earlier snapshot

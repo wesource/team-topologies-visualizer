@@ -6,10 +6,6 @@ dependencies:
 - Backend Services Team
 - Database Team
 - DevOps & Infrastructure Team
-interaction_modes:
-  Backend Services Team: collaboration
-  Database Team: x-as-a-service
-  DevOps & Infrastructure Team: x-as-a-service
 position:
   x: 80.0
   y: 530.0

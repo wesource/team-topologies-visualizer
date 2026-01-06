@@ -1,12 +1,6 @@
 ---
 name: Architecture & Standards Team
 team_type: support-team
-dependencies: []
-interaction_modes:
-  Backend Services Team: facilitating
-  Web Frontend Team: facilitating
-  Mobile App Team: facilitating
-  Route Optimization Team: facilitating
 position:
   x: 740.0
   y: 410.0

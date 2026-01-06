@@ -5,9 +5,6 @@ product_line: DispatchHub
 dependencies:
 - Database Team
 - API Framework Team
-interaction_modes:
-  Database Team: x-as-a-service
-  API Framework Team: x-as-a-service
 position:
   x: 80.0
   y: 410.0

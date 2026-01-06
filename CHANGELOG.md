@@ -7,7 +7,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Pre-TT Team Template (2026-01-06)**: Created comprehensive template for current organizational state
+  - New `templates/pre-tt-team-template.md` with fields for Pre-TT teams (dependencies, product_line, line_manager, department)
+  - Renamed existing templates: `tt-design-team-api-template-base.md` and `tt-design-team-api-template-extended.md`
+  - Updated README.md with clear Pre-TT vs TT-Design template guidance
+  - **Rationale**: Clear separation between current state (Pre-TT) and designed future state (TT-Design) documentation
+- **Product Lines View Phase 1 (2026-01-06)**: ✅ COMPLETE - Full-featured Pre-TT product visualization
+  - **Core Features**:
+    - Hybrid layout: Vertical product lanes + horizontal shared teams row
+    - Sharp corners throughout (matching hierarchy view styling)
+    - Darker borders with darkenColor (0.7) for visual weight
+    - Cognitive load indicators (top-right position, circle with white outline)
+    - Communication lines showing team dependencies
+    - Team type badges (optional, toggled via checkbox)
+    - Team selection highlighting (4px black border)
+    - Drag prevention with throttled notification
+    - SVG export with all features (communication lines, proper font sizes, 11px text)
+  - **UI/UX Improvements**:
+    - Modal content padding (2rem left/right margins for readability)
+    - Removed redundant "Description" header from team detail modal
+    - SVG export z-layering: Communication lines above product boxes, below team cards
+  - **Data Cleanup**: Removed `interaction_modes` from all Pre-TT teams
+    - Pre-TT uses only `dependencies` (simple team dependencies, not TT patterns)
+    - TT-Design keeps `interaction_modes` (collaboration, x-as-a-service, facilitating)
+    - **Rationale**: Interaction modes are Team Topologies design patterns, not organic dependencies
+  - **Files**: `renderer-product-lines.js`, `svg-export.js`, 12 current-teams markdown files updated
+
 ### Changed
+- **🏗️ Backend Refactoring (2026-01-06)**: Split routes by concern (Pre-TT vs TT-Design)
+  - **New API Structure**: Clear separation between Pre-TT and TT-Design endpoints
+    - `/api/pre-tt/*` - Pre-TT (current-teams) endpoints: teams, product-lines, organization-hierarchy, snapshots
+    - `/api/tt/*` - TT-Design (tt-teams) endpoints: teams, team-types, validate
+  - **Files Changed**:
+    - Split `backend/routes.py` → `backend/routes_pre_tt.py` + `backend/routes_tt.py`
+    - Updated `main.py` to include both routers with prefixes
+    - Updated `frontend/api.js` to use view-based prefixes
+    - Updated `frontend/modals.js` validation endpoint call
+  - **Rationale**: Self-documenting API structure, clearer separation of concerns, enables independent evolution
+  - **models.py remains shared**: `TeamData` works for both views with optional fields
 - **🔧 Naming Convention Consistency (2026-01-06)**: Unified all config files to use `snake_case`
   - Fixed `current-team-types.json`: Changed `teamTypes` → `team_types` (matches TT config)
   - Fixed structure: Changed from object `{"team_types": {key: {...}}}` to array `{"team_types": [{id: "...", ...}]}`
@@ -27,13 +65,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Shows Pre-TT dysfunction: handoffs, bottlenecks, coordination overhead
   - Current approach: YAML frontmatter storage (vs TT-Design markdown tables)
   - Future enhancement: May migrate to markdown table format for consistency (see BACKLOG.md)
-- **Product Lines View Foundation (2026-01-06)**: Started Phase 1 of multi-perspective Pre-TT visualization
-  - Added `product_line` field to 4 Pre-TT teams (Backend Services, Web Frontend, Mobile App, Route Optimization)
-  - Products defined: DispatchHub, Driver Mobile Apps, RouteOptix
-  - Next: Backend API + Hybrid renderer (vertical product lanes + horizontal shared teams row)
-  - See `pre-tt-view-improvements-solution.md` for full design and rationale
+- **Product Lines View Foundation (2026-01-06)**: Phase 1 COMPLETE ✅ - Multi-perspective Pre-TT visualization
+  - **Data Model**: Added `product_line` field to 9 Pre-TT teams:
+    - **DispatchHub** (2 teams): Backend Services, Web Frontend
+    - **Driver Mobile Apps** (1 team): Mobile App
+    - **RouteOptix** (1 team): Route Optimization
+    - **Customer Solutions** (5 teams): European Transport/Logistics/Retail, Americas E-Commerce/Supply Chain
+  - **Shared Teams** (5 teams without product_line): Database, DevOps, QA, API Framework, Architecture
+  - **Configuration**: `products.json` defines 4 products with colors and metadata
+  - **Backend API**: New `/api/pre-tt/product-lines` endpoint groups teams by product
+    - Added `product_line: str | None` field to `TeamData` Pydantic model
+  - **Frontend Implementation**:
+    - **Perspective Selector UI**: Radio buttons toggle between "📊 Hierarchy" and "🏭 Product Lines" (Pre-TT only)
+    - **Hybrid Renderer** (`renderer-product-lines.js`): Vertical product lanes + horizontal shared teams row
+      - Vertical lanes: Teams stacked within each product with color-coded headers
+      - Horizontal row: Shared/Platform teams displayed side-by-side at bottom
+      - Product colors from products.json, team cards show name and type badge
+    - **State Management**: Added `state.currentPerspective` and `state.productLinesData`
+    - **Smart Loading**: Product lines data loaded on-demand when switching perspectives
+  - **Next Phases**: Phase 2 (Value Stream swimlanes), Phase 3 (Alignment scoring/recommendations)
+  - See `pre-tt-view-improvements-solution.md` for design rationale
 
 ### Fixed
+- **🐛 Product Lines View Rendering (2026-01-06)**: Fixed double-rendering bug
+  - Teams from hierarchy view were still visible when switching to product lines perspective
+  - Solution: Skip standard team drawing loop when in product-lines perspective (teams already rendered in lanes)
+  - Canvas now properly clears and redraws when switching perspectives
+- **🎨 Unified Team Styling (2026-01-06)**: Team boxes now consistent across all Pre-TT perspectives
+  - Product Lines view now uses team-type colors (from teamColorMap) instead of product colors
+  - Applies "Rubik's cube" principle: same teams look the same from any perspective
+  - Cleaner, non-rounded rectangular cards with white text on colored backgrounds
+  - Lane backgrounds neutral gray (#f8f9fa) to avoid color confusion
 - **🐛 Frontend Variable Name (2026-01-06)**: Fixed `interactionHandler` undefined error
   - Changed `_interactionHandler` → `interactionHandler` for consistency
   - Pre-TT view now loads without console errors

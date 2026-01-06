@@ -1,12 +1,11 @@
 ---
 name: QA & Testing Team
 team_type: support-team
-dependencies: []
-interaction_modes:
-  Backend Services Team: facilitating
-  Web Frontend Team: facilitating
-  Mobile App Team: facilitating
-  Route Optimization Team: facilitating
+dependencies:
+- Backend Services Team
+- Web Frontend Team
+- Mobile App Team
+- Route Optimization Team
 position:
   x: 520.0
   y: 410.0

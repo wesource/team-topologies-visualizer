@@ -22,6 +22,7 @@ class TeamData(BaseModel):
     dependencies: list[str] | None = []
     interaction_modes: dict[str, str] | None = {}  # {team_name: interaction_mode}
     line_manager: str | None = None  # For current org structure
+    product_line: str | None = None  # For Product Lines view (Pre-TT only)
     position: dict[str, float] | None = {"x": 0, "y": 0}
     metadata: dict[str, Any] | None = {}
     # Team API fields (optional, for TT Design teams)

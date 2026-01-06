@@ -125,7 +125,7 @@ export function getTeamBoxHeight(team, currentView = 'current') {
  * @description Renders team with type-specific shapes: rounded rectangles for stream-aligned/platform,
  * vertical boxes for enabling teams, octagons for complicated-subsystem teams
  */
-export function drawTeam(ctx, team, selectedTeam, teamColorMap, wrapText, currentView = 'current', showCognitiveLoad = false, comparisonData = null) {
+export function drawTeam(ctx, team, selectedTeam, teamColorMap, wrapText, currentView = 'current', showCognitiveLoad = false, comparisonData = null, showTeamTypeBadges = false) {
     const x = team.position.x;
     const y = team.position.y;
     const width = getTeamBoxWidth(team, currentView);
@@ -134,7 +134,7 @@ export function drawTeam(ctx, team, selectedTeam, teamColorMap, wrapText, curren
     // Use shape-specific drawing in TT Design view
     if (currentView === 'tt') {
         if (team.team_type === 'enabling') {
-            drawEnablingTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData);
+            drawEnablingTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData, showTeamTypeBadges);
             return;
         }
         if (team.team_type === 'complicated-subsystem') {
@@ -148,15 +148,15 @@ export function drawTeam(ctx, team, selectedTeam, teamColorMap, wrapText, curren
     }
 
     // Default: draw as rounded rectangle
-    drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData);
+    drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, showTeamTypeBadges);
 }
 
 /**
  * Draw team as default rounded rectangle (for stream-aligned, platform, and Pre-TT view)
  */
-function drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad) {
+function drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, showTeamTypeBadges = false) {
 
-    const radius = 8;
+    const radius = 0; // Sharp corners
     const fillColor = getTeamColor(team, teamColorMap);
     const borderColor = darkenColor(fillColor, LAYOUT.BORDER_COLOR_DARKEN_FACTOR);
 
@@ -183,13 +183,29 @@ function drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamCo
 
     // Team name
     drawTeamName(ctx, team, x, y, width, height, wrapText);
+
+    // Team type badge (if enabled)
+    if (showTeamTypeBadges && team.team_type) {
+        const badges = {
+            'dev-team': 'Dev',
+            'ops-team': 'Ops',
+            'platform-team': 'Platform',
+            'support-team': 'Support',
+            'feature-team': 'Feature'
+        };
+        const badgeText = badges[team.team_type] || team.team_type;
+        ctx.fillStyle = '#666';
+        ctx.font = '10px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText(badgeText, x + width / 2, y + height - 8);
+    }
 }
 
 /**
  * Draw enabling team as vertical rounded rectangle
  * Shape: 80×120 vertical orientation (tall and narrow)
  */
-function drawEnablingTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData) {
+function drawEnablingTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData, showTeamTypeBadges = false) {
     // Check if this team has a comparison badge
     let comparisonBadge = null;
     if (comparisonData) {
@@ -202,7 +218,7 @@ function drawEnablingTeam(ctx, team, x, y, width, height, selectedTeam, teamColo
         }
     }
 
-    const radius = 14; // Larger radius for enabling teams (matches SVG)
+    const radius = 0; // Sharp corners for enabling teams
     const fillColor = getTeamColor(team, teamColorMap);
     const borderColor = darkenColor(fillColor, LAYOUT.BORDER_COLOR_DARKEN_FACTOR);
 
@@ -216,7 +232,7 @@ function drawEnablingTeam(ctx, team, x, y, width, height, selectedTeam, teamColo
     // Background
     ctx.fillStyle = fillColor;
     ctx.beginPath();
-    ctx.roundRect(x, y, width, height, radius);
+    ctx.roundRect(x, y, width, height, radius); // Sharp corners
     ctx.fill();
     ctx.shadowColor = 'transparent';
     // Border
@@ -249,6 +265,18 @@ function drawEnablingTeam(ctx, team, x, y, width, height, selectedTeam, teamColo
     });
 
     ctx.restore();
+
+    // Team type badge (if enabled) - drawn at bottom, not rotated
+    if (showTeamTypeBadges && team.team_type) {
+        const badges = {
+            'enabling-team': 'Enabling'
+        };
+        const badgeText = badges[team.team_type] || team.team_type;
+        ctx.fillStyle = '#666';
+        ctx.font = '9px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText(badgeText, x + width / 2, y + height - 5);
+    }
 
     // Draw comparison badge if in comparison mode
     if (comparisonBadge) {
@@ -455,7 +483,7 @@ function drawTeamName(ctx, team, x, y, width, height, wrapText) {
  * @description In 'current' view, shows simple dependency connections.
  * In 'tt' view, shows styled lines representing interaction modes (collaboration, x-as-a-service, facilitating)
  */
-export function drawConnections(ctx, teams, currentView = 'current', showInteractionModes = true) {
+export function drawConnections(ctx, teams, currentView = 'current', showInteractionModes = true, currentPerspective = 'hierarchy', productLinesTeamPositions = null) {
     if (currentView === 'current') {
         // Current State view: show simple "Actual Comms" from dependencies
         teams.forEach(team => {
@@ -463,7 +491,7 @@ export function drawConnections(ctx, teams, currentView = 'current', showInterac
                 team.dependencies.forEach(targetName => {
                     const target = teams.find(t => t.name === targetName);
                     if (target) {
-                        drawActualCommsConnection(ctx, team, target, currentView);
+                        drawActualCommsConnection(ctx, team, target, currentView, currentPerspective, productLinesTeamPositions);
                     }
                 });
             }
@@ -475,23 +503,47 @@ export function drawConnections(ctx, teams, currentView = 'current', showInterac
                 Object.entries(team.interaction_modes).forEach(([targetName, mode]) => {
                     const target = teams.find(t => t.name === targetName);
                     if (target) {
-                        drawConnection(ctx, team, target, mode, currentView);
+                        drawConnection(ctx, team, target, mode, currentView, currentPerspective, productLinesTeamPositions);
                     }
                 });
             }
         });
     }
 }
-function drawConnection(ctx, from, to, mode, currentView = 'current') {
+function drawConnection(ctx, from, to, mode, currentView = 'current', currentPerspective = 'hierarchy', productLinesTeamPositions = null) {
     const style = INTERACTION_STYLES[mode] || INTERACTION_STYLES['collaboration'];
 
-    // Calculate center points dynamically based on team box width
-    const fromWidth = getTeamBoxWidth(from, currentView);
-    const toWidth = getTeamBoxWidth(to, currentView);
-    const fromX = from.position.x + fromWidth / 2;
-    const fromY = from.position.y + LAYOUT.TEAM_BOX_HEIGHT / 2;
-    const toX = to.position.x + toWidth / 2;
-    const toY = to.position.y + LAYOUT.TEAM_BOX_HEIGHT / 2;
+    let fromX, fromY, toX, toY;
+
+    // Use product lines positions if in product-lines perspective
+    if (currentView === 'current' && currentPerspective === 'product-lines' && productLinesTeamPositions) {
+        const fromBounds = productLinesTeamPositions.get(from.name);
+        const toBounds = productLinesTeamPositions.get(to.name);
+        
+        if (fromBounds && toBounds) {
+            fromX = fromBounds.x + fromBounds.width / 2;
+            fromY = fromBounds.y + fromBounds.height / 2;
+            toX = toBounds.x + toBounds.width / 2;
+            toY = toBounds.y + toBounds.height / 2;
+        } else {
+            // Fall back to standard positions if not found
+            const fromWidth = getTeamBoxWidth(from, currentView);
+            const toWidth = getTeamBoxWidth(to, currentView);
+            fromX = from.position.x + fromWidth / 2;
+            fromY = from.position.y + LAYOUT.TEAM_BOX_HEIGHT / 2;
+            toX = to.position.x + toWidth / 2;
+            toY = to.position.y + LAYOUT.TEAM_BOX_HEIGHT / 2;
+        }
+    } else {
+        // Calculate center points dynamically based on team box width
+        const fromWidth = getTeamBoxWidth(from, currentView);
+        const toWidth = getTeamBoxWidth(to, currentView);
+        fromX = from.position.x + fromWidth / 2;
+        fromY = from.position.y + LAYOUT.TEAM_BOX_HEIGHT / 2;
+        toX = to.position.x + toWidth / 2;
+        toY = to.position.y + LAYOUT.TEAM_BOX_HEIGHT / 2;
+    }
+
     ctx.strokeStyle = style.color;
     ctx.lineWidth = style.width;
     ctx.setLineDash(style.dash);
@@ -511,14 +563,37 @@ function drawConnection(ctx, from, to, mode, currentView = 'current') {
     ctx.setLineDash([]);
 }
 
-function drawActualCommsConnection(ctx, from, to, currentView = 'current') {
+function drawActualCommsConnection(ctx, from, to, currentView = 'current', currentPerspective = 'hierarchy', productLinesTeamPositions = null) {
     // Current State view: simple bidirectional fat arrow called "Actual Comms"
-    const fromWidth = getTeamBoxWidth(from, currentView);
-    const toWidth = getTeamBoxWidth(to, currentView);
-    const fromX = from.position.x + fromWidth / 2;
-    const fromY = from.position.y + LAYOUT.TEAM_BOX_HEIGHT / 2;
-    const toX = to.position.x + toWidth / 2;
-    const toY = to.position.y + LAYOUT.TEAM_BOX_HEIGHT / 2;
+    let fromX, fromY, toX, toY;
+
+    // Use product lines positions if in product-lines perspective
+    if (currentView === 'current' && currentPerspective === 'product-lines' && productLinesTeamPositions) {
+        const fromBounds = productLinesTeamPositions.get(from.name);
+        const toBounds = productLinesTeamPositions.get(to.name);
+        
+        if (fromBounds && toBounds) {
+            fromX = fromBounds.x + fromBounds.width / 2;
+            fromY = fromBounds.y + fromBounds.height / 2;
+            toX = toBounds.x + toBounds.width / 2;
+            toY = toBounds.y + toBounds.height / 2;
+        } else {
+            // Fall back to standard positions
+            const fromWidth = getTeamBoxWidth(from, currentView);
+            const toWidth = getTeamBoxWidth(to, currentView);
+            fromX = from.position.x + fromWidth / 2;
+            fromY = from.position.y + LAYOUT.TEAM_BOX_HEIGHT / 2;
+            toX = to.position.x + toWidth / 2;
+            toY = to.position.y + LAYOUT.TEAM_BOX_HEIGHT / 2;
+        }
+    } else {
+        const fromWidth = getTeamBoxWidth(from, currentView);
+        const toWidth = getTeamBoxWidth(to, currentView);
+        fromX = from.position.x + fromWidth / 2;
+        fromY = from.position.y + LAYOUT.TEAM_BOX_HEIGHT / 2;
+        toX = to.position.x + toWidth / 2;
+        toY = to.position.y + LAYOUT.TEAM_BOX_HEIGHT / 2;
+    }
 
     const angle = Math.atan2(toY - fromY, toX - fromX);
     const arrowLength = 20;
@@ -596,9 +671,25 @@ export function wrapText(ctx, text, maxWidth) {
     lines.push(currentLine);
     return lines;
 }
-export function getTeamAtPosition(teams, x, y, viewOffset, scale, currentView = 'current') {
+export function getTeamAtPosition(teams, x, y, viewOffset, scale, currentView = 'current', currentPerspective = 'hierarchy', productLinesTeamPositions = null) {
     const worldX = (x - viewOffset.x) / scale;
     const worldY = (y - viewOffset.y) / scale;
+
+    // Special handling for product-lines perspective: check tracked positions
+    if (currentView === 'current' && currentPerspective === 'product-lines' && productLinesTeamPositions) {
+        // Check each team in the positions map
+        for (const [teamName, bounds] of productLinesTeamPositions.entries()) {
+            if (worldX >= bounds.x && worldX <= bounds.x + bounds.width &&
+                worldY >= bounds.y && worldY <= bounds.y + bounds.height) {
+                // Find the full team object by name
+                const team = teams.find(t => t.name === teamName);
+                if (team) return team;
+            }
+        }
+        return null;
+    }
+
+    // Standard hit detection using team.position
     return teams.find(team => {
         const teamWidth = getTeamBoxWidth(team, currentView);
         const teamHeight = getTeamBoxHeight(team, currentView);

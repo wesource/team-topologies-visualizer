@@ -3,7 +3,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from backend.routes import router
+from backend.routes_pre_tt import router as pre_tt_router
+from backend.routes_tt import router as tt_router
 
 app = FastAPI(
     title="Team Topologies API",
@@ -20,8 +21,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include API routes
-app.include_router(router)
+# Include API routes with prefixes
+app.include_router(pre_tt_router)  # /api/pre-tt/*
+app.include_router(tt_router)      # /api/tt/*
 
 # Serve static frontend files
 app.mount("/static", StaticFiles(directory="frontend"), name="static")
