@@ -625,6 +625,28 @@ Run with --interactive to fix errors one by one.
 
 ## 📋 v1.2+ - Future Enhancements
 
+### Pre-TT View Phase 3: Team Coordination Perspective (Future)
+**Goal**: Visualize current coordination patterns and communication overhead
+
+**Background**: Phases 1 & 2 implemented (Product Lines ✅, Value Streams ✅). Phase 3 remains unimplemented as it requires additional data modeling and is the most complex visualization. See `docs/historical/pre-tt-view-improvements-solution.md` for complete planning details.
+
+**What to Build**:
+- Network-style renderer showing team connections
+- Coordination mechanisms visualization (standups, dependencies, syncs)
+- Visual indicators of coordination overhead
+- Bridge to TT interaction modes design
+
+**Why Deferred**:
+- Most complex visualization (network graph vs. static groupings)
+- Requires additional data modeling (coordination patterns, meeting schedules)
+- Highest value comes after understanding static groupings first
+- Lower priority than organizational sensing and metrics (v1.0 gaps)
+
+**Estimated Effort**: 1-2 weeks
+**Priority**: LOW (nice-to-have after Phase 1 & 2 success)
+
+---
+
 ### Organizational Sensing (Major Feature)
 **From Expert Reviews**: "Tool doesn't help detect when structures need to change"
 

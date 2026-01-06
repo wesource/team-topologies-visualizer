@@ -143,16 +143,21 @@ This tool provides dual visualizations to make these conversations easier.
 
 ```
 .
-├── main.py                     # FastAPI app setup (42 lines)
+├── main.py                     # FastAPI app setup & route registration
 ├── requirements.txt
 ├── backend/                    # Modular backend architecture
 │   ├── models.py              # Pydantic data models
 │   ├── services.py            # File operations & business logic
-│   └── routes.py              # API endpoints
+│   ├── validation.py          # Team API validation & YAML checks
+│   ├── snapshot_services.py   # Snapshot management for TT Design
+│   ├── comparison.py          # Snapshot comparison logic
+│   ├── routes.py              # Common API endpoints
+│   ├── routes_pre_tt.py       # Pre-TT view endpoints (/api/pre-tt/*)
+│   └── routes_tt.py           # TT Design view endpoints (/api/tt/*)
 ├── frontend/                   # HTML5 Canvas + vanilla JS (modular architecture)
 │   ├── index.html
 │   ├── styles.css
-│   ├── app.js                 # Application coordinator (94 lines)
+│   ├── app.js                 # Application coordinator
 │   ├── state-management.js    # Centralized state management
 │   ├── modals.js              # Modal dialogs & TT educational content
 │   ├── legend.js              # Dynamic legend & filters
@@ -166,36 +171,52 @@ This tool provides dual visualizations to make these conversations easier.
 │   ├── api.js                 # API client layer
 │   ├── canvas-interactions.js # Canvas event handling
 │   ├── renderer-common.js     # Shared rendering utilities
-│   ├── renderer-current.js    # Pre-TT state rendering
+│   ├── renderer-current.js    # Pre-TT state rendering (Hierarchy view)
+│   ├── renderer-product-lines.js      # Pre-TT Product Lines view
+│   ├── renderer-value-streams.js      # Pre-TT Value Streams view
 │   ├── svg-export.js          # SVG export functionality
+│   ├── snapshot-handlers.js   # Snapshot management UI
+│   ├── tt-comparison-view.js  # Side-by-side snapshot comparison
 │   ├── current-state-alignment.js # Auto-align for Pre-TT view
 │   ├── tt-design-alignment.js     # Auto-align for TT Design view
 │   ├── tt-value-stream-grouping.js   # Value stream grouping logic
-│   └── tt-platform-grouping.js   # Platform grouping logic
+│   ├── tt-platform-grouping.js   # Platform grouping logic
+│   ├── vitest.config.js       # Vitest test configuration
+│   └── *.test.js              # Frontend unit tests (195 tests)
 ├── data/
 │   ├── current-teams/         # Your pre-TT baseline state
 │   │   ├── current-team-types.json    # Team type config
+│   │   ├── organization-hierarchy.json # Org structure & line managers
 │   │   └── *.md               # Team files
-│   └── tt-teams/              # Your TT Design vision
-│       ├── tt-team-types.json         # Team type config
-│       └── *.md               # Team files
-├── tests_backend/             # Backend unit tests (10 tests)
+│   ├── tt-teams/              # Your TT Design vision
+│   │   ├── tt-team-types.json         # Team type config
+│   │   └── *.md               # Team files
+│   └── snapshots/             # TT Design snapshots (immutable history)
+│       └── *.json             # Timestamped snapshot files
+├── tests_backend/             # Backend unit tests (55 tests with pytest)
 │   ├── test_main.py
 │   ├── test_team_api_fields.py
 │   ├── test_url_safe_team_names.py
-│   └── test_interaction_table_parsing.py
-├── tests/                     # E2E tests with Playwright (40 tests across 6 files)
-│   ├── api-validation.spec.ts      # API endpoint tests (3 tests)
-│   ├── organization-hierarchy.spec.ts  # Org hierarchy tests (9 tests)
-│   ├── ui-basic.spec.ts           # Basic UI tests (9 tests)
-│   ├── ui-interactions.spec.ts    # Interaction tests (8 tests)
-│   ├── modal-rendering.spec.ts    # Modal tests (1 test)
-│   ├── backend-validation.spec.ts # Backend validation (1 test)
+│   ├── test_interaction_table_parsing.py
+│   └── test_snapshots.py
+├── tests/                     # E2E tests with Playwright (82 tests)
+│   ├── api-validation.spec.ts      # API endpoint validation
+│   ├── organization-hierarchy.spec.ts  # Org hierarchy tests
+│   ├── ui-basic.spec.ts           # Basic UI functionality
+│   ├── ui-interactions.spec.ts    # User interaction tests
+│   ├── modal-rendering.spec.ts    # Modal dialog tests
+│   ├── backend-validation.spec.ts # Backend data validation
+│   ├── tt-comparison-view.spec.ts # Snapshot comparison tests
+│   ├── visualizer.spec.ts         # Core visualization tests
+│   ├── pre-tt-product-lines.spec.ts # Product Lines view tests
 │   └── playwright.config.ts       # Test configuration
 └── docs/
     ├── SETUP.md               # Detailed setup & configuration
-    └── CONCEPTS.md            # TT concepts & example explanation
+    ├── CONCEPTS.md            # TT concepts & example explanation
+    └── svgs/                  # SVG assets for documentation
 ```
+
+**Test Coverage**: 332 tests total (55 backend + 195 frontend + 82 E2E)
 
 ## Documentation
 
