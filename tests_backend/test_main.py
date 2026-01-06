@@ -158,8 +158,8 @@ Content
         file_path = temp_md_file(content)
         result = parse_team_file(file_path)
 
-        assert isinstance(result.position['x'], (int, float))
-        assert isinstance(result.position['y'], (int, float))
+        assert isinstance(result.position['x'], int | float)
+        assert isinstance(result.position['y'], int | float)
         assert result.position['x'] >= 0
         assert result.position['y'] >= 0
 

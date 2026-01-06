@@ -1,50 +1,50 @@
 """Pydantic models for API request/response validation"""
 from datetime import datetime
-from typing import Any, Optional
+from typing import Any
 
 from pydantic import BaseModel
 
 
 # Team API submodel for structured fields (optional, for extended Team API)
 class TeamAPI(BaseModel):
-    purpose: Optional[str] = None
-    services_provided: Optional[list[str]] = None
-    contact: Optional[dict[str, str]] = None  # e.g., {"slack": "#team", "email": "team@company.com", "wiki": "..."}
-    sla: Optional[str] = None
-    consumers: Optional[list[str]] = None
-    working_hours: Optional[str] = None
+    purpose: str | None = None
+    services_provided: list[str] | None = None
+    contact: dict[str, str] | None = None  # e.g., {"slack": "#team", "email": "team@company.com", "wiki": "..."}
+    sla: str | None = None
+    consumers: list[str] | None = None
+    working_hours: str | None = None
 
 class TeamData(BaseModel):
     """Team data model with YAML front matter fields and Team API extensions"""
     name: str
-    team_type: Optional[str] = "other"  # stream-aligned, enabling, complicated-subsystem, platform, OR for current: dev-team, ops-team, etc
-    description: Optional[str] = ""
-    dependencies: Optional[list[str]] = []
-    interaction_modes: Optional[dict[str, str]] = {}  # {team_name: interaction_mode}
-    line_manager: Optional[str] = None  # For current org structure
-    position: Optional[dict[str, float]] = {"x": 0, "y": 0}
-    metadata: Optional[dict[str, Any]] = {}
+    team_type: str | None = "other"  # stream-aligned, enabling, complicated-subsystem, platform, OR for current: dev-team, ops-team, etc
+    description: str | None = ""
+    dependencies: list[str] | None = []
+    interaction_modes: dict[str, str] | None = {}  # {team_name: interaction_mode}
+    line_manager: str | None = None  # For current org structure
+    position: dict[str, float] | None = {"x": 0, "y": 0}
+    metadata: dict[str, Any] | None = {}
     # Team API fields (optional, for TT Design teams)
-    team_api: Optional[TeamAPI] = None
-    purpose: Optional[str] = None  # One-liner mission statement (for quick access)
-    value_stream: Optional[str] = None
-    platform_grouping: Optional[str] = None
-    established: Optional[str] = None  # YYYY-MM
-    cognitive_load: Optional[str] = None  # low | medium | high | very-high
+    team_api: TeamAPI | None = None
+    purpose: str | None = None  # One-liner mission statement (for quick access)
+    value_stream: str | None = None
+    platform_grouping: str | None = None
+    established: str | None = None  # YYYY-MM
+    cognitive_load: str | None = None  # low | medium | high | very-high
 
     # For extended template support (not required for all teams)
-    roadmap: Optional[str] = None
-    current_work: Optional[str] = None
-    software_owned: Optional[list[str]] = None
-    versioning: Optional[str] = None
-    testing_approach: Optional[str] = None
-    practices_principles: Optional[str] = None
-    communication_preferences: Optional[str] = None
-    glossary: Optional[str] = None
-    documentation_links: Optional[list[str]] = None
-    platform_product_metrics: Optional[str] = None
-    customer_problems: Optional[str] = None
-    team_members: Optional[list[str]] = None
+    roadmap: str | None = None
+    current_work: str | None = None
+    software_owned: list[str] | None = None
+    versioning: str | None = None
+    testing_approach: str | None = None
+    practices_principles: str | None = None
+    communication_preferences: str | None = None
+    glossary: str | None = None
+    documentation_links: list[str] | None = None
+    platform_product_metrics: str | None = None
+    customer_problems: str | None = None
+    team_members: list[str] | None = None
 
 
 class PositionUpdate(BaseModel):
@@ -59,12 +59,12 @@ class SnapshotTeamCondensed(BaseModel):
     name: str
     team_type: str
     position: dict[str, float]
-    value_stream: Optional[str] = None
-    platform_grouping: Optional[str] = None
-    dependencies: Optional[list[str]] = []
-    interaction_modes: Optional[dict[str, str]] = {}
-    metadata: Optional[dict[str, Any]] = {}
-    team_api_summary: Optional[dict[str, Any]] = None  # Key Team API fields only
+    value_stream: str | None = None
+    platform_grouping: str | None = None
+    dependencies: list[str] | None = []
+    interaction_modes: dict[str, str] | None = {}
+    metadata: dict[str, Any] | None = {}
+    team_api_summary: dict[str, Any] | None = None  # Key Team API fields only
 
 
 class SnapshotStatistics(BaseModel):
@@ -82,8 +82,8 @@ class SnapshotMetadata(BaseModel):
     """Metadata for a snapshot"""
     snapshot_id: str
     name: str
-    description: Optional[str] = ""
-    author: Optional[str] = ""
+    description: str | None = ""
+    author: str | None = ""
     created_at: datetime
     statistics: SnapshotStatistics
 
@@ -92,8 +92,8 @@ class Snapshot(BaseModel):
     """Complete snapshot with all teams"""
     snapshot_id: str
     name: str
-    description: Optional[str] = ""
-    author: Optional[str] = ""
+    description: str | None = ""
+    author: str | None = ""
     created_at: datetime
     teams: list[SnapshotTeamCondensed]
     statistics: SnapshotStatistics
@@ -102,7 +102,7 @@ class Snapshot(BaseModel):
 class CreateSnapshotRequest(BaseModel):
     """Request model for creating a snapshot"""
     name: str
-    description: Optional[str] = ""
-    author: Optional[str] = ""
-    team_names: Optional[list[str]] = None  # Optional: specific teams to include (for filtered snapshots)
+    description: str | None = ""
+    author: str | None = ""
+    team_names: list[str] | None = None  # Optional: specific teams to include (for filtered snapshots)
 

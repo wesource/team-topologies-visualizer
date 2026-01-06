@@ -2,7 +2,6 @@
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
 
 from backend.models import (
     Snapshot,
@@ -101,7 +100,7 @@ def generate_snapshot_id(name: str, created_at: datetime) -> str:
     return f"{safe_name}-{timestamp}"
 
 
-def create_snapshot(name: str, description: str = "", author: str = "", team_names: Optional[list[str]] = None) -> Snapshot:
+def create_snapshot(name: str, description: str = "", author: str = "", team_names: list[str] | None = None) -> Snapshot:
     """Create a new snapshot of current TT design state
 
     Args:
@@ -178,7 +177,7 @@ def list_snapshots() -> list[SnapshotMetadata]:
     return snapshots
 
 
-def load_snapshot(snapshot_id: str) -> Optional[Snapshot]:
+def load_snapshot(snapshot_id: str) -> Snapshot | None:
     """Load a specific snapshot by ID"""
     snapshot_file = SNAPSHOTS_DIR / f"{snapshot_id}.json"
 

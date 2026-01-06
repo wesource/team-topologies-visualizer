@@ -135,8 +135,8 @@ def test_create_snapshot():
 def test_list_snapshots():
     """Test listing snapshots"""
     # Create two test snapshots
-    snapshot1 = create_snapshot(name="Test Snapshot 1")
-    snapshot2 = create_snapshot(name="Test Snapshot 2")
+    create_snapshot(name="Test Snapshot 1")
+    create_snapshot(name="Test Snapshot 2")
 
     # List snapshots
     snapshots = list_snapshots()
@@ -194,7 +194,7 @@ def test_snapshot_immutability():
     original_mtime = snapshot_file.stat().st_mtime
 
     # Load the snapshot
-    loaded = load_snapshot(snapshot.snapshot_id)
+    load_snapshot(snapshot.snapshot_id)
 
     # Verify file wasn't modified by loading
     new_mtime = snapshot_file.stat().st_mtime
