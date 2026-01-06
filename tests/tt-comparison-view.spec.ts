@@ -2,20 +2,33 @@ import { test, expect } from '@playwright/test';
 
 const BASE_URL = 'http://127.0.0.1:8000';
 
+/**
+ * Helper function to ensure timeline panel is open and snapshots are loaded
+ */
+async function ensureTimelinePanelOpen(page) {
+  const panel = page.locator('#timelinePanel');
+  const isVisible = await panel.isVisible();
+  
+  if (!isVisible) {
+    // Panel is closed, click to open and wait for API response
+    const responsePromise = page.waitForResponse(response => 
+      response.url().includes('/api/snapshots') && response.status() === 200,
+      { timeout: 10000 }
+    );
+    
+    await page.locator('#timelineBtn').click();
+    await responsePromise;
+    await expect(panel).toBeVisible();
+  }
+  
+  // Always wait a bit for rendering
+  await page.waitForTimeout(500);
+}
+
 test.describe('Snapshot Comparison View', () => {
   test('should open comparison view and display two snapshots', async ({ page }) => {
     await page.goto(`${BASE_URL}/static/index.html`);
-    
-    // Open snapshots panel
-    await page.locator('#timelineBtn').click();
-    
-    // Wait for snapshots to load (panel becomes visible and API call completes)
-    await page.waitForResponse(response => 
-      response.url().includes('/api/snapshots') && response.status() === 200
-    );
-    
-    await expect(page.locator('#timelinePanel')).toBeVisible();
-    await page.waitForTimeout(500);
+    await ensureTimelinePanelOpen(page);
     
     // Select two snapshots for comparison
     const snapshotCheckboxes = page.locator('.snapshot-checkbox');
@@ -45,14 +58,7 @@ test.describe('Snapshot Comparison View', () => {
   
   test('should display visibility toggle controls', async ({ page }) => {
     await page.goto(`${BASE_URL}/static/index.html`);
-    
-    // Open snapshots and create comparison
-    await page.locator('#timelineBtn').click();
-    await page.waitForResponse(response => 
-      response.url().includes('/api/snapshots') && response.status() === 200
-    );
-    
-    await page.waitForTimeout(500);
+    await ensureTimelinePanelOpen(page);
     
     const snapshotCheckboxes = page.locator('.snapshot-checkbox');
     const count = await snapshotCheckboxes.count();
@@ -82,13 +88,7 @@ test.describe('Snapshot Comparison View', () => {
   
   test('should toggle groupings visibility', async ({ page }) => {
     await page.goto(`${BASE_URL}/static/index.html`);
-    
-    await page.locator('#timelineBtn').click();
-    await page.waitForResponse(response => 
-      response.url().includes('/api/snapshots') && response.status() === 200
-    );
-    
-    await page.waitForTimeout(500);
+    await ensureTimelinePanelOpen(page);
     
     const snapshotCheckboxes = page.locator('.snapshot-checkbox');
     const count = await snapshotCheckboxes.count();
@@ -113,13 +113,7 @@ test.describe('Snapshot Comparison View', () => {
   
   test('should toggle interactions visibility', async ({ page }) => {
     await page.goto(`${BASE_URL}/static/index.html`);
-    
-    await page.locator('#timelineBtn').click();
-    await page.waitForResponse(response => 
-      response.url().includes('/api/snapshots') && response.status() === 200
-    );
-    
-    await page.waitForTimeout(500);
+    await ensureTimelinePanelOpen(page);
     
     const snapshotCheckboxes = page.locator('.snapshot-checkbox');
     const count = await snapshotCheckboxes.count();
@@ -144,13 +138,7 @@ test.describe('Snapshot Comparison View', () => {
   
   test('should toggle badges visibility', async ({ page }) => {
     await page.goto(`${BASE_URL}/static/index.html`);
-    
-    await page.locator('#timelineBtn').click();
-    await page.waitForResponse(response => 
-      response.url().includes('/api/snapshots') && response.status() === 200
-    );
-    
-    await page.waitForTimeout(500);
+    await ensureTimelinePanelOpen(page);
     
     const snapshotCheckboxes = page.locator('.snapshot-checkbox');
     const count = await snapshotCheckboxes.count();
@@ -175,13 +163,7 @@ test.describe('Snapshot Comparison View', () => {
   
   test('should display zoom controls for both canvases', async ({ page }) => {
     await page.goto(`${BASE_URL}/static/index.html`);
-    
-    await page.locator('#timelineBtn').click();
-    await page.waitForResponse(response => 
-      response.url().includes('/api/snapshots') && response.status() === 200
-    );
-    
-    await page.waitForTimeout(500);
+    await ensureTimelinePanelOpen(page);
     
     const snapshotCheckboxes = page.locator('.snapshot-checkbox');
     const count = await snapshotCheckboxes.count();
@@ -207,13 +189,7 @@ test.describe('Snapshot Comparison View', () => {
   
   test('should zoom in when clicking zoom in button', async ({ page }) => {
     await page.goto(`${BASE_URL}/static/index.html`);
-    
-    await page.locator('#timelineBtn').click();
-    await page.waitForResponse(response => 
-      response.url().includes('/api/snapshots') && response.status() === 200
-    );
-    
-    await page.waitForTimeout(500);
+    await ensureTimelinePanelOpen(page);
     
     const snapshotCheckboxes = page.locator('.snapshot-checkbox');
     const count = await snapshotCheckboxes.count();
@@ -235,13 +211,7 @@ test.describe('Snapshot Comparison View', () => {
   
   test('should close comparison view modal', async ({ page }) => {
     await page.goto(`${BASE_URL}/static/index.html`);
-    
-    await page.locator('#timelineBtn').click();
-    await page.waitForResponse(response => 
-      response.url().includes('/api/snapshots') && response.status() === 200
-    );
-    
-    await page.waitForTimeout(500);
+    await ensureTimelinePanelOpen(page);
     
     const snapshotCheckboxes = page.locator('.snapshot-checkbox');
     const count = await snapshotCheckboxes.count();
