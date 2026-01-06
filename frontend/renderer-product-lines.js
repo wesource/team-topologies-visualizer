@@ -39,7 +39,10 @@ export function drawProductLinesView(ctx, productLinesData, teams, teamColorMap,
     // Calculate layout
     const startX = 50;
     const startY = 100;
-    const totalWidth = products.length * (PRODUCT_LANE_WIDTH + PRODUCT_LANE_PADDING);
+    // Calculate canvas width based on products (minimum width for shared teams)
+    const productsWidth = products.length * (PRODUCT_LANE_WIDTH + PRODUCT_LANE_PADDING);
+    const minWidthForSharedTeams = sharedTeams.length > 0 ? Math.max(800, sharedTeams.length * (SHARED_TEAM_WIDTH + SHARED_TEAM_SPACING) + 40) : 0;
+    const totalWidth = Math.max(productsWidth, minWidthForSharedTeams);
 
     // Draw title
     ctx.font = 'bold 24px Arial';

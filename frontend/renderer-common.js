@@ -30,6 +30,7 @@ const PLATFORM_GROUPING_STYLE = {
 };
 // Utility to darken a hex color
 export function darkenColor(hex, factor = 0.7) {
+    if (!hex || typeof hex !== 'string') return '#333'; // Default dark color
     const rgb = parseInt(hex.slice(1), 16);
     const r = Math.floor(((rgb >> 16) & 255) * factor);
     const g = Math.floor(((rgb >> 8) & 255) * factor);
