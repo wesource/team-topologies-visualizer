@@ -34,11 +34,20 @@ export const state = {
 // Interaction handler (initialized in app.js)
 export let interactionHandler = null;
 
+/**
+ * Set the canvas interaction handler instance
+ * @param {CanvasInteractionHandler} handler - The interaction handler to use for canvas events
+ */
 export function setInteractionHandler(handler) {
     exports.interactionHandler = handler;
 }
 
-// Helper to get filtered teams based on current grouping
+/**
+ * Get filtered teams based on current active filters (value streams, platform groupings, ungrouped)
+ * @returns {Array<Object>} Filtered array of team objects matching the current filter criteria
+ * @description Uses OR logic: teams match if they satisfy ANY selected filter.
+ * If no filters are active, returns all teams.
+ */
 export function getFilteredTeams() {
     // If no filters selected, return all teams
     if (state.selectedFilters.valueStreams.length === 0 && 
@@ -78,19 +87,33 @@ export function getFilteredTeams() {
     });
 }
 
-// Zoom control functions
+/**
+ * Zoom in the canvas view by 20%
+ * @param {Function} [drawCallback] - Optional callback to redraw canvas after zooming
+ */
 export function zoomIn(drawCallback) {
     state.scale = Math.min(3, state.scale * 1.2);
     updateZoomDisplay();
     if (drawCallback) drawCallback();
 }
 
+/**
+ * Zoom out the canvas view by 20%
+ * @param {Function} [drawCallback] - Optional callback to redraw canvas after zooming
+ */
 export function zoomOut(drawCallback) {
     state.scale = Math.max(0.1, state.scale / 1.2);
     updateZoomDisplay();
     if (drawCallback) drawCallback();
 }
 
+/**
+ * Auto-fit all teams into the visible canvas area
+ * @param {HTMLCanvasElement} canvas - The canvas element to fit content within
+ * @param {Array<Object>} teams - Array of team objects with position data
+ * @param {Function} [drawCallback] - Optional callback to redraw canvas after fitting
+ * @description Calculates bounding box of all teams and adjusts zoom/pan to fit them in view with padding
+ */
 export function fitToView(canvas, teams, drawCallback) {
     if (!teams || teams.length === 0) return;
     

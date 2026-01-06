@@ -322,8 +322,6 @@ describe('autoAlignTTDesign', () => {
         // General assertion: team bottoms should not be too close to grouping calculated bottom
         // This test will FAIL initially because the height calculation doesn't properly account
         // for the team box height when there are narrow teams
-        console.log(`Fraud team bottom: ${fraudTeamBottom}, Expected grouping bottom: ${actualGroupingBottom}`);
-        console.log(`DevOps team bottom: ${devopsTeamBottom}, Expected grouping bottom: ${actualEnterpriseGroupingBottom}`);
     });
 
     it('should ensure enabling teams fit within grouping bounding boxes', () => {
@@ -365,11 +363,6 @@ describe('autoAlignTTDesign', () => {
 
         const financialGroupingBottom = financialBounds.y + financialBounds.height;
         const enterpriseGroupingBottom = enterpriseBounds.y + enterpriseBounds.height;
-
-        console.log(`[TEST] Data Enabling Team: Y=${dataEnablingTeam.position.y}, Bottom=${dataEnablingBottom}`);
-        console.log(`[TEST] Financial Services Grouping: Y=${financialBounds.y}, Height=${financialBounds.height}, Bottom=${financialGroupingBottom}`);
-        console.log(`[TEST] DevOps Team: Y=${devopsTeam.position.y}, Bottom=${devopsBottom}`);
-        console.log(`[TEST] Enterprise Sales Grouping: Y=${enterpriseBounds.y}, Height=${enterpriseBounds.height}, Bottom=${enterpriseGroupingBottom}`);
 
         // Teams should fit WITHIN their grouping boxes (with padding already included)
         expect(dataEnablingBottom).toBeLessThanOrEqual(financialGroupingBottom);
@@ -433,8 +426,6 @@ describe('autoAlignTTDesign', () => {
         // Verify: the bounding box bottom should be at least PADDING below the lowest team
         const actualBoundsBottom = expectedBoundsTop + expectedBoundsHeight;
         
-        console.log(`[TEST] minY=${minY}, maxY=${maxY}, expectedBoundsTop=${expectedBoundsTop}, expectedBoundsBottom=${expectedBoundsBottom}, actualBoundsBottom=${actualBoundsBottom}`);
-        
         // The bounds should extend at least PADDING (30px) below the last team
         expect(actualBoundsBottom).toBeGreaterThanOrEqual(maxY + PADDING);
         
@@ -482,8 +473,6 @@ describe('autoAlignTTDesign', () => {
         
         // The key assertion: when we calculate bounding boxes later, these teams should fit
         // This test verifies that the positioning logic accounts for the actual rendered heights
-        console.log(`[TEST] Enabling team: Y=${enablingTeam.position.y}, Bottom=${enablingBottom} (height=140)`);
-        console.log(`[TEST] Complicated team: Y=${complicatedTeam.position.y}, Bottom=${complicatedBottom} (height=100)`);
         
         // Sanity check: teams should be positioned at reasonable Y coordinates
         expect(enablingTeam.position.y).toBeGreaterThan(0);

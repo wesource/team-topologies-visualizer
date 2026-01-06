@@ -112,6 +112,18 @@ export function getTeamBoxHeight(team, currentView = 'current') {
     return LAYOUT.TEAM_BOX_HEIGHT;
 }
 
+/**
+ * Draw a team box on the canvas with appropriate styling and shape
+ * @param {CanvasRenderingContext2D} ctx - Canvas 2D context
+ * @param {Object} team - Team object with position, name, type, etc.
+ * @param {Object|null} selectedTeam - Currently selected team (for highlight styling)
+ * @param {Object} teamColorMap - Map of team types to color hex codes
+ * @param {Function} wrapText - Function to wrap text within a given width
+ * @param {string} [currentView='current'] - Current view mode ('current' or 'tt')
+ * @param {boolean} [showCognitiveLoad=false] - Whether to display cognitive load indicator
+ * @description Renders team with type-specific shapes: rounded rectangles for stream-aligned/platform,
+ * vertical boxes for enabling teams, octagons for complicated-subsystem teams
+ */
 export function drawTeam(ctx, team, selectedTeam, teamColorMap, wrapText, currentView = 'current', showCognitiveLoad = false) {
     const x = team.position.x;
     const y = team.position.y;
@@ -361,6 +373,16 @@ function drawTeamName(ctx, team, x, y, width, height, wrapText) {
         ctx.fillText(line, x + width / 2, y + height / 2 - (lines.length - 1) * 8 + i * 16);
     });
 }
+
+/**
+ * Draw connection lines between teams (dependencies or interaction modes)
+ * @param {CanvasRenderingContext2D} ctx - Canvas 2D context
+ * @param {Array<Object>} teams - Array of all team objects
+ * @param {string} [currentView='current'] - Current view mode ('current' or 'tt')
+ * @param {boolean} [showInteractionModes=true] - Whether to show interaction mode styling in TT view
+ * @description In 'current' view, shows simple dependency connections.
+ * In 'tt' view, shows styled lines representing interaction modes (collaboration, x-as-a-service, facilitating)
+ */
 export function drawConnections(ctx, teams, currentView = 'current', showInteractionModes = true) {
     if (currentView === 'current') {
         // Current State view: show simple "Actual Comms" from dependencies

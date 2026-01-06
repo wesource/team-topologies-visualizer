@@ -148,18 +148,5 @@ export function calculateGroupingBoundingBox(teams, teamBoxHeight, padding, curr
         height: (maxY - minY) + (padding * 2) + labelAreaHeight // Include label area in height
     };
 
-    // Debug logging for specific groupings
-    const groupingName = teams[0]?.metadata?.platform_grouping;
-    if (groupingName === 'Cloud Infrastructure Platform Grouping') {
-        console.log('📐 Bounding Box Calculation:', {
-            groupingName,
-            teamCount: teams.length,
-            minX, minY, maxX, maxY,
-            verticalSpread,
-            result,
-            teamDetails
-        });
-    }
-
     return result;
 }
