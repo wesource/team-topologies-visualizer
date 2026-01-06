@@ -238,8 +238,8 @@ class ComparisonView {
         // Setup visibility toggle controls
         this.setupViewControls();
 
-        // Use requestAnimationFrame to ensure modal is rendered before sizing
-        requestAnimationFrame(() => {
+        // Defer sizing until after modal is rendered (display: flex)
+        setTimeout(() => {
             // Size canvases
             this.resizeCanvases();
 
@@ -250,7 +250,7 @@ class ComparisonView {
             // Render both canvases
             this.renderBefore();
             this.renderAfter();
-        });
+        }, 0);
     }
 
     /**

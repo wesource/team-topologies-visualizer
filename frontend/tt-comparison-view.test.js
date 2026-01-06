@@ -160,7 +160,7 @@ describe('ComparisonView', () => {
 
             comparisonView.open(beforeSnapshot, afterSnapshot, comparison);
 
-            // Wait for requestAnimationFrame to execute
+            // Wait for setTimeout to execute
             await new Promise(resolve => setTimeout(resolve, 0));
 
             // fitSnapshotToView resets scale and centers
