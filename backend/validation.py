@@ -25,6 +25,26 @@ def validate_all_team_files(view: str = "tt") -> dict[str, Any]:
     """
     data_dir = get_data_dir(view)
 
+    # First pass: collect all team names
+    all_team_names = set()
+    for file_path in data_dir.rglob("*.md"):
+        if file_path.name in ['README.md', 'example-undefined-team.md']:
+            continue
+        try:
+            with open(file_path, encoding='utf-8') as f:
+                content = f.read()
+            if content.startswith('---'):
+                parts = content.split('---', 2)
+                if len(parts) >= 3:
+                    try:
+                        data = yaml.safe_load(parts[1])
+                        if data and 'name' in data:
+                            all_team_names.add(data['name'])
+                    except yaml.YAMLError:
+                        pass
+        except Exception:
+            pass
+
     report = {
         "view": view,
         "total_files": 0,
@@ -128,6 +148,28 @@ def validate_all_team_files(view: str = "tt") -> dict[str, Any]:
                                                 f"Team size {size} outside recommended range (5-9 people)"
                                             )
 
+                            # Check 8: Dependencies reference existing teams (Pre-TT view)
+                            if view == "current" and 'dependencies' in data:
+                                deps = data['dependencies']
+                                if isinstance(deps, list):
+                                    for dep in deps:
+                                        if dep not in all_team_names:
+                                            file_issues["warnings"].append(
+                                                f"Dependency '{dep}' not found - team does not exist"
+                                            )
+
+                            # Check 9: Interaction modes reference existing teams (Pre-TT view)
+                            if view == "current" and 'interaction_modes' in data:
+                                modes = data['interaction_modes']
+                                if isinstance(modes, dict):
+                                    for mode, teams in modes.items():
+                                        if isinstance(teams, list):
+                                            for team in teams:
+                                                if team not in all_team_names:
+                                                    file_issues["warnings"].append(
+                                                        f"Interaction mode '{mode}' references unknown team: '{team}'"
+                                                    )
+
                         # Check 7: Interaction table format (TT view only)
                         if view == "tt":
                             markdown_content = parts[2].strip()
@@ -145,6 +187,20 @@ def validate_all_team_files(view: str = "tt") -> dict[str, Any]:
                                     file_issues["warnings"].append(
                                         "Interaction table missing 'Team Name' column header"
                                     )
+                                else:
+                                    # Check 10: Parse interaction table and validate team references
+                                    lines = section.split('\n')
+                                    for line in lines:
+                                        # Skip header and separator rows
+                                        if '|' in line and 'Team Name' not in line and '---' not in line:
+                                            # Extract team name from first column
+                                            parts_row = [p.strip() for p in line.split('|')]
+                                            if len(parts_row) >= 2:
+                                                team_name = parts_row[1]
+                                                if team_name and team_name not in all_team_names:
+                                                    file_issues["warnings"].append(
+                                                        f"Interaction table references unknown team: '{team_name}'"
+                                                    )
 
                     except yaml.YAMLError as e:
                         file_issues["errors"].append(f"YAML parsing error: {str(e)}")
