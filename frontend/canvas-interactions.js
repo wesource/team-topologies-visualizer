@@ -15,7 +15,7 @@ export class CanvasInteractionHandler {
         this.drawCallback = drawCallback;
         this.setupEventListeners();
     }
-    
+
     setupEventListeners() {
         this.canvas.addEventListener('mousedown', (e) => this.handleMouseDown(e));
         this.canvas.addEventListener('mousemove', (e) => this.handleMouseMove(e));
@@ -25,12 +25,12 @@ export class CanvasInteractionHandler {
         this.canvas.addEventListener('wheel', (e) => this.handleWheel(e), { passive: false });
         this.canvas.addEventListener('contextmenu', (e) => e.preventDefault());
     }
-    
+
     handleMouseDown(e) {
         const rect = this.canvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
-        
+
         // Right-click or middle button for panning
         if (e.button === 2 || e.button === 1) {
             e.preventDefault();
@@ -39,12 +39,12 @@ export class CanvasInteractionHandler {
             this.canvas.style.cursor = 'grabbing';
             return;
         }
-        
+
         // Disable dragging when viewing snapshot (read-only mode)
         if (this.state.isViewingSnapshot) {
             return;
         }
-        
+
         // Left-click for team dragging
         const team = getTeamAtPosition(this.state.teams, x, y, this.state.viewOffset, this.state.scale, this.state.currentView);
         if (team) {
@@ -59,7 +59,7 @@ export class CanvasInteractionHandler {
             this.drawCallback();
         }
     }
-    
+
     handleMouseMove(e) {
         // Handle panning
         if (this.isPanning) {
@@ -71,7 +71,7 @@ export class CanvasInteractionHandler {
             this.drawCallback();
             return;
         }
-        
+
         // Handle team dragging
         if (this.draggedTeam && this.dragStartPosition) {
             const rect = this.canvas.getBoundingClientRect();
@@ -81,7 +81,7 @@ export class CanvasInteractionHandler {
             const newY = (y - this.state.viewOffset.y) / this.state.scale - this.dragOffset.y;
             const deltaX = Math.abs(newX - this.dragStartPosition.x);
             const deltaY = Math.abs(newY - this.dragStartPosition.y);
-            
+
             // Check if actually moved (threshold of 2 pixels)
             if (deltaX > 2 || deltaY > 2) {
                 this.hasDragged = true;
@@ -91,7 +91,7 @@ export class CanvasInteractionHandler {
             }
         }
     }
-    
+
     async handleMouseUp(e) {
         // End panning
         if (this.isPanning) {
@@ -99,13 +99,12 @@ export class CanvasInteractionHandler {
             this.canvas.style.cursor = 'move';
             return;
         }
-        
+
         // Handle team drag end
         if (this.draggedTeam && this.hasDragged) {
             try {
                 await updateTeamPosition(this.draggedTeam.name, this.draggedTeam.position.x, this.draggedTeam.position.y, this.state.currentView);
-            }
-            catch (error) {
+            } catch (error) {
                 console.error('Failed to update team position:', error);
             }
         }
@@ -113,7 +112,7 @@ export class CanvasInteractionHandler {
         this.dragStartPosition = null;
         this.hasDragged = false;
     }
-    
+
     handleWheel(e) {
         e.preventDefault();
         const delta = e.deltaY > 0 ? 0.9 : 1.1;
@@ -121,7 +120,7 @@ export class CanvasInteractionHandler {
         this.state.scale = Math.max(0.1, Math.min(3, this.state.scale));
         this.drawCallback();
     }
-    
+
     handleDoubleClick(e) {
         const rect = this.canvas.getBoundingClientRect();
         const x = e.clientX - rect.left;

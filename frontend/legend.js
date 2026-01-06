@@ -9,15 +9,15 @@ export function updateLegend() {
     const legendDiv = document.querySelector('.legend');
     if (!legendDiv)
         return;
-    
+
     // Book-accurate SVG shapes for TT Design team types
     const ttDesignShapes = {
-        'stream-aligned': `<svg width="50" height="18" viewBox="0 0 220 70" style="display: block;"><rect x="10" y="20" width="200" height="30" rx="12" ry="12" fill="#F9E2A0" stroke="#E3B23C" stroke-width="2"></rect></svg>`,
-        'platform': `<svg width="50" height="23" viewBox="0 0 220 100" style="display: block;"><rect x="10" y="20" width="200" height="60" rx="14" ry="14" fill="#9fd3e8" stroke="#4fa3c7" stroke-width="2"></rect></svg>`,
-        'enabling': `<svg width="28" height="64" viewBox="0 0 140 180" style="display: block;"><rect x="30" y="30" width="80" height="120" rx="14" ry="14" fill="#b7a6d9" stroke="#7a5fa6" stroke-width="2"></rect></svg>`,
-        'complicated-subsystem': `<svg width="32" height="32" viewBox="0 0 140 140" style="display: block;"><path d="M40 20 H100 L120 40 V100 L100 120 H40 L20 100 V40 Z" fill="#f4b183" stroke="#c97a2b" stroke-width="2"></path></svg>`
+        'stream-aligned': '<svg width="50" height="18" viewBox="0 0 220 70" style="display: block;"><rect x="10" y="20" width="200" height="30" rx="12" ry="12" fill="#F9E2A0" stroke="#E3B23C" stroke-width="2"></rect></svg>',
+        'platform': '<svg width="50" height="23" viewBox="0 0 220 100" style="display: block;"><rect x="10" y="20" width="200" height="60" rx="14" ry="14" fill="#9fd3e8" stroke="#4fa3c7" stroke-width="2"></rect></svg>',
+        'enabling': '<svg width="28" height="64" viewBox="0 0 140 180" style="display: block;"><rect x="30" y="30" width="80" height="120" rx="14" ry="14" fill="#b7a6d9" stroke="#7a5fa6" stroke-width="2"></rect></svg>',
+        'complicated-subsystem': '<svg width="32" height="32" viewBox="0 0 140 140" style="display: block;"><path d="M40 20 H100 L120 40 V100 L100 120 H40 L20 100 V40 Z" fill="#f4b183" stroke="#c97a2b" stroke-width="2"></path></svg>'
     };
-    
+
     // Build legend from team type config
     let legendHTML = '<div class="legend-section"><h4>Team Types</h4>';
     state.teamTypeConfig.team_types.forEach((type) => {
@@ -25,12 +25,12 @@ export function updateLegend() {
         const displaySymbol = state.currentView === 'tt' && ttDesignShapes[type.id]
             ? ttDesignShapes[type.id]
             : `<span style="width: 20px; height: 20px; background: ${type.color}; border: 2px solid ${darkenColor(type.color, 0.7)}; border-radius: 3px; display: inline-block;"></span>`;
-        
+
         // Only show info icon for TT Design view (Team Topologies concepts have educational modals)
         const infoIcon = state.currentView === 'tt' ? '<span style="color: #999; font-size: 0.9rem; margin-left: 0.5rem;">ℹ️</span>' : '';
         const clickableStyle = state.currentView === 'tt' ? 'cursor: pointer;' : '';
         const hoverEffect = state.currentView === 'tt' ? 'onmouseover="this.style.background=\'rgba(200, 200, 200, 0.1)\'" onmouseout="this.style.background=\'transparent\'"' : '';
-        
+
         legendHTML += `
             <div class="legend-item team-type-item" data-team-type="${type.id}" style="${clickableStyle} padding: 0.3rem; border-radius: 4px; transition: background 0.2s;" ${hoverEffect}>
                 <div class="legend-symbol">${displaySymbol}</div>
@@ -42,7 +42,7 @@ export function updateLegend() {
         `;
     });
     legendHTML += '</div>';
-    
+
     // Add view-specific legend items
     if (state.currentView === 'current') {
         // Current State view shows dependencies (Actual Comms)
@@ -142,7 +142,7 @@ export function updateLegend() {
             </div>
             </div>
         `;
-        
+
         // Add grouping explanations (fractal patterns from 2nd edition)
         const valueStreams = getValueStreamNames(state.teams);
         if (valueStreams.length > 0) {
@@ -171,9 +171,9 @@ export function updateLegend() {
             `;
         }
     }
-    
+
     legendDiv.innerHTML = legendHTML;
-    
+
     // Add event listeners to all info items
     const interactionModeItems = document.querySelectorAll('.interaction-mode-item');
     interactionModeItems.forEach(item => {
@@ -184,7 +184,7 @@ export function updateLegend() {
             }
         });
     });
-    
+
     const teamTypeItems = document.querySelectorAll('.team-type-item');
     teamTypeItems.forEach(item => {
         item.addEventListener('click', () => {
@@ -194,7 +194,7 @@ export function updateLegend() {
             }
         });
     });
-    
+
     const groupingItems = document.querySelectorAll('.grouping-item');
     groupingItems.forEach(item => {
         item.addEventListener('click', () => {
@@ -209,13 +209,13 @@ export function updateLegend() {
 export function updateGroupingFilter() {
     const vsContainer = document.getElementById('valueStreamFilters');
     const pgContainer = document.getElementById('platformGroupingFilters');
-    
+
     if (!vsContainer || !pgContainer) return;
-    
+
     // Get unique value streams and platform groupings from current teams
     const valueStreams = getValueStreamNames(state.teams);
     const platformGroupings = getPlatformGroupingNames(state.teams);
-    
+
     // Populate value stream checkboxes
     vsContainer.innerHTML = '';
     if (valueStreams.length === 0) {
@@ -224,22 +224,22 @@ export function updateGroupingFilter() {
         valueStreams.forEach(vs => {
             const label = document.createElement('label');
             label.className = 'filter-checkbox-label';
-            
+
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
             checkbox.value = vs;
             checkbox.dataset.filterType = 'vs';
             checkbox.checked = state.selectedFilters.valueStreams.includes(vs);
-            
+
             const span = document.createElement('span');
             span.textContent = vs;
-            
+
             label.appendChild(checkbox);
             label.appendChild(span);
             vsContainer.appendChild(label);
         });
     }
-    
+
     // Populate platform grouping checkboxes
     pgContainer.innerHTML = '';
     if (platformGroupings.length === 0) {
@@ -248,22 +248,22 @@ export function updateGroupingFilter() {
         platformGroupings.forEach(pg => {
             const label = document.createElement('label');
             label.className = 'filter-checkbox-label';
-            
+
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
             checkbox.value = pg;
             checkbox.dataset.filterType = 'pg';
             checkbox.checked = state.selectedFilters.platformGroupings.includes(pg);
-            
+
             const span = document.createElement('span');
             span.textContent = pg;
-            
+
             label.appendChild(checkbox);
             label.appendChild(span);
             pgContainer.appendChild(label);
         });
     }
-    
+
     updateFilterCount();
 }
 
@@ -271,10 +271,10 @@ export function updateGroupingFilter() {
 function updateFilterCount() {
     const filterCount = document.getElementById('filterCount');
     if (!filterCount) return;
-    
-    const total = state.selectedFilters.valueStreams.length + 
+
+    const total = state.selectedFilters.valueStreams.length +
                   state.selectedFilters.platformGroupings.length;
-    
+
     if (total > 0) {
         filterCount.textContent = total;
         filterCount.style.display = 'inline-block';

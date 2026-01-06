@@ -27,7 +27,7 @@ export function autoAlignTeamsByManager(teams, organizationHierarchy) {
             const deptStartX = LAYOUT.DEPT_START_X;
             const deptIndex = company.children.findIndex(d => d.id === 'engineering-dept');
             const deptX = deptStartX + deptIndex * LAYOUT.DEPT_SPACING;
-            
+
             const lmCount = engineeringDept.line_managers.length;
             const lmSpacing = LAYOUT.LINE_MANAGER_SPACING;
             const lmStartX = deptX - ((lmCount - 1) * lmSpacing) / 2;
@@ -42,7 +42,7 @@ export function autoAlignTeamsByManager(teams, organizationHierarchy) {
             const baseY = LAYOUT.COMPANY_Y + LAYOUT.LEVEL_HEIGHT * 3; // Company level + 3 levels
             const verticalSpacing = LAYOUT.VERTICAL_SPACING;
             const boxWidth = LAYOUT.DEPT_BOX_WIDTH;
-            
+
             // Position teams at 2/5 offset from line manager box (org-chart style)
             const alignedX = lineManagerX + (boxWidth * LAYOUT.ORG_CHART_TEAM_X_OFFSET);
 
@@ -70,7 +70,7 @@ export function autoAlignTeamsByManager(teams, organizationHierarchy) {
             const deptStartX = LAYOUT.DEPT_START_X;
             const deptIndex = company.children.findIndex(d => d.id === 'customer-solutions-dept');
             const deptX = deptStartX + deptIndex * LAYOUT.DEPT_SPACING;
-            
+
             const regionCount = customerSolutionsDept.regions.length;
             const regionSpacing = LAYOUT.LINE_MANAGER_SPACING;
             const regionStartX = deptX - ((regionCount - 1) * regionSpacing) / 2;
@@ -85,7 +85,7 @@ export function autoAlignTeamsByManager(teams, organizationHierarchy) {
             const baseY = LAYOUT.COMPANY_Y + LAYOUT.LEVEL_HEIGHT * 3; // Company level + 3 levels
             const verticalSpacing = LAYOUT.VERTICAL_SPACING;
             const boxWidth = LAYOUT.DEPT_BOX_WIDTH;
-            
+
             // Position teams at 2/5 offset from region box (org-chart style)
             const alignedX = regionX + (boxWidth * LAYOUT.ORG_CHART_TEAM_X_OFFSET);
 

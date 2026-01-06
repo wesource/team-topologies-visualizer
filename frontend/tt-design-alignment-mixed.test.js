@@ -43,35 +43,35 @@ describe('autoAlignTTDesign - Mixed Team Types', () => {
         ];
 
         const realigned = autoAlignTTDesign(teams);
-        
+
         // Should realign all 6 teams
         expect(realigned.length).toBe(6);
-        
+
         // First 3 teams (wide: stream-aligned x2, platform x1) stack vertically at same X
         const wideTeamX = 204;
         expect(realigned[0].position.x).toBe(wideTeamX);
         expect(realigned[1].position.x).toBe(wideTeamX);
         expect(realigned[2].position.x).toBe(wideTeamX);
-        
+
         // Wide teams Y positions: stacked vertically
         expect(realigned[0].position.y).toBe(165);  // First wide team
         expect(realigned[1].position.y).toBe(305);  // Second wide team (165 + 80 + 60 spacing)
         expect(realigned[2].position.y).toBe(445);  // Third wide team (305 + 80 + 60 spacing)
-        
+
         // Last 3 teams (narrow: enabling x2, complicated-subsystem x1) in grid below
         // Grid starts after wide teams with some spacing
         // New calculation: last wide team at 445, height 80, spacing 60, gap 20 = 605
         // But actually the code adds wideTeamVerticalSpacing (60) + some gap
         // Let's calculate: 445 + 80 + 20 = 545 (last team bottom + gap)
         const narrowStartY = 445 + 80 + 20; // Last wide team Y + height + gap = 545
-        
+
         // Narrow teams in grid: 3 per row
         expect(realigned[3].position.x).toBe(130); // First column
         expect(realigned[3].position.y).toBe(narrowStartY);
-        
+
         expect(realigned[4].position.x).toBe(290); // Second column (130 + 160)
         expect(realigned[4].position.y).toBe(narrowStartY);
-        
+
         expect(realigned[5].position.x).toBe(450); // Third column (290 + 160)
         expect(realigned[5].position.y).toBe(narrowStartY);
     });
@@ -108,21 +108,21 @@ describe('autoAlignTTDesign - Mixed Team Types', () => {
         ];
 
         const realigned = autoAlignTTDesign(teams);
-        
+
         // All teams realigned
         expect(realigned.length).toBe(4);
-        
+
         // Wide teams (stream x2, platform x1) all have same X coordinate
         // This visually shows they span the "whole flow of change"
         const flowX = 204;
         expect(realigned[0].position.x).toBe(flowX);
         expect(realigned[1].position.x).toBe(flowX);
         expect(realigned[2].position.x).toBe(flowX);
-        
+
         // They stack vertically showing the flow from top to bottom
         expect(realigned[0].position.y).toBeLessThan(realigned[1].position.y);
         expect(realigned[1].position.y).toBeLessThan(realigned[2].position.y);
-        
+
         // Enabling team (narrow) is positioned in grid below the flow
         expect(realigned[3].position.y).toBeGreaterThan(realigned[2].position.y);
     });

@@ -59,18 +59,16 @@ async function loadAllTeams() {
         if (state.currentView === 'current') {
             try {
                 state.organizationHierarchy = await loadOrganizationHierarchy();
-            }
-            catch (error) {
+            } catch (error) {
                 console.warn('Failed to load organization hierarchy:', error);
                 state.organizationHierarchy = null;
             }
-        }
-        else {
+        } else {
             state.organizationHierarchy = null;
         }
         // Load teams
         state.teams = await loadTeams(state.currentView);
-        
+
         // Assign random positions if not set
         state.teams.forEach((team, index) => {
             if (!team.position || (team.position.x === 0 && team.position.y === 0)) {
@@ -84,8 +82,7 @@ async function loadAllTeams() {
         updateLegend();
         updateGroupingFilter();
         draw(state);
-    }
-    catch (error) {
+    } catch (error) {
         console.error('Failed to load teams:', error);
     }
 }
@@ -98,12 +95,12 @@ function updateTeamList() {
         const item = document.createElement('div');
         item.className = `team-item ${team.team_type}`;
         item.textContent = team.name;
-        
+
         // Apply color from JSON config dynamically
         if (team.team_type && state.teamColorMap && state.teamColorMap[team.team_type]) {
             item.style.borderLeftColor = state.teamColorMap[team.team_type];
         }
-        
+
         item.addEventListener('click', () => selectTeam(team, state, draw));
         item.addEventListener('dblclick', () => showTeamDetails(team, state.currentView));
         teamList.appendChild(item);

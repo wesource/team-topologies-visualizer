@@ -5,24 +5,24 @@ export const LAYOUT = {
     COMPANY_Y: 50,                  // Y position of company leadership level
     LEVEL_HEIGHT: 120,              // Vertical spacing between hierarchy levels
     VERTICAL_SPACING: 120,          // Spacing between teams under same manager
-    
+
     // Box dimensions
     DEPT_BOX_WIDTH: 200,            // Department/Line Manager box width
     DEPT_BOX_HEIGHT: 80,            // Department/Line Manager box height
     TEAM_BOX_WIDTH: 144,            // Team box width (reduced for better spacing)
     TEAM_BOX_HEIGHT: 80,            // Team box height
-    
+
     // Org-chart positioning
     ORG_CHART_VERTICAL_LINE_OFFSET: 1/5,   // Vertical line position (1/5 from left of manager box)
     ORG_CHART_TEAM_X_OFFSET: 2/5,          // Team X position (2/5 from left of manager box)
-    
+
     // Department/Line Manager spacing
     DEPT_SPACING: 250,              // Horizontal spacing between departments
     LINE_MANAGER_SPACING: 220,      // Horizontal spacing between line managers
-    
+
     // Base positions
     DEPT_START_X: 550,              // Starting X position for departments (500 + 50 margin)
-    
+
     // Border styling
     BORDER_WIDTH_NORMAL: 3,         // Normal border width
     BORDER_WIDTH_SELECTED: 4,       // Selected item border width

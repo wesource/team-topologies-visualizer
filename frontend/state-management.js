@@ -42,7 +42,7 @@ export let interactionHandler = null;
  * @param {CanvasInteractionHandler} handler - The interaction handler to use for canvas events
  */
 export function setInteractionHandler(handler) {
-    exports.interactionHandler = handler;
+    state.interactionHandler = handler;
 }
 
 /**
@@ -53,16 +53,16 @@ export function setInteractionHandler(handler) {
  */
 export function getFilteredTeams() {
     // If no filters selected, return all teams
-    if (state.selectedFilters.valueStreams.length === 0 && 
+    if (state.selectedFilters.valueStreams.length === 0 &&
         state.selectedFilters.platformGroupings.length === 0 &&
         !state.selectedFilters.showUngrouped) {
         return state.teams;
     }
-    
+
     return state.teams.filter(team => {
         // OR logic: team matches if it matches ANY selected filter
         let matches = false;
-        
+
         // Check value stream match (note: it's at top level, not in metadata)
         if (state.selectedFilters.valueStreams.length > 0) {
             const teamValueStream = team.value_stream;
@@ -70,7 +70,7 @@ export function getFilteredTeams() {
                 matches = true;
             }
         }
-        
+
         // Check platform grouping match (note: it's at top level, not in metadata)
         if (state.selectedFilters.platformGroupings.length > 0) {
             const teamPlatformGrouping = team.platform_grouping;
@@ -78,14 +78,14 @@ export function getFilteredTeams() {
                 matches = true;
             }
         }
-        
+
         // Check ungrouped teams (teams without value_stream AND platform_grouping)
         if (state.selectedFilters.showUngrouped) {
             if (!team.value_stream && !team.platform_grouping) {
                 matches = true;
             }
         }
-        
+
         return matches;
     });
 }
@@ -119,11 +119,11 @@ export function zoomOut(drawCallback) {
  */
 export function fitToView(canvas, teams, drawCallback) {
     if (!teams || teams.length === 0) return;
-    
+
     // Calculate bounding box of all teams
     let minX = Infinity, minY = Infinity;
     let maxX = -Infinity, maxY = -Infinity;
-    
+
     teams.forEach(team => {
         const x = team.position?.x || 0;
         const y = team.position?.y || 0;
@@ -132,27 +132,27 @@ export function fitToView(canvas, teams, drawCallback) {
         maxX = Math.max(maxX, x + 200); // Team width
         maxY = Math.max(maxY, y + 80);  // Team height
     });
-    
+
     const contentWidth = maxX - minX;
     const contentHeight = maxY - minY;
     const padding = 50;
-    
+
     // Get sidebar width to adjust canvas visible area
     const sidebar = document.querySelector('.sidebar');
     const sidebarWidth = sidebar ? sidebar.offsetWidth : 250;
     const visibleCanvasWidth = canvas.width - sidebarWidth;
-    
+
     // Calculate scale to fit content in visible canvas area
     const scaleX = (visibleCanvasWidth - padding * 2) / contentWidth;
     const scaleY = (canvas.height - padding * 2) / contentHeight;
     state.scale = Math.min(scaleX, scaleY, 1.5); // Cap at 150% zoom
-    
+
     // Center the content in visible canvas area
     const centerX = (minX + maxX) / 2;
     const centerY = (minY + maxY) / 2;
     state.viewOffset.x = sidebarWidth + visibleCanvasWidth / 2 - centerX * state.scale;
     state.viewOffset.y = canvas.height / 2 - centerY * state.scale;
-    
+
     updateZoomDisplay();
     if (drawCallback) drawCallback();
 }

@@ -44,9 +44,9 @@ export function darkenColor(hex, factor = 0.7) {
  */
 export function getCognitiveLoadIndicator(level) {
     if (!level) return null;
-    
+
     const normalized = level.toLowerCase().trim();
-    
+
     // Traffic light colors: green (low), yellow (medium), red (high)
     const indicators = {
         'low': { color: '#4CAF50', emoji: '🟢' },
@@ -55,7 +55,7 @@ export function getCognitiveLoadIndicator(level) {
         'high': { color: '#FF5722', emoji: '🔴' },
         'very-high': { color: '#D32F2F', emoji: '🔴' }
     };
-    
+
     return indicators[normalized] || null;
 }
 /**
@@ -81,7 +81,7 @@ export function getTeamBoxWidth(team, currentView = 'current') {
         if (team.team_type === 'stream-aligned' || team.team_type === 'platform') {
             // Check if team is in a grouping - if so, make it wide
             // Check top-level first (from YAML root), then metadata (for backwards compatibility)
-            const hasGrouping = team.value_stream || team.platform_grouping || 
+            const hasGrouping = team.value_stream || team.platform_grouping ||
                                 team.metadata?.value_stream || team.metadata?.platform_grouping;
             if (hasGrouping) {
                 // ~80% of grouping width (700px), with 10% margins = ~560px
@@ -130,7 +130,7 @@ export function drawTeam(ctx, team, selectedTeam, teamColorMap, wrapText, curren
     const y = team.position.y;
     const width = getTeamBoxWidth(team, currentView);
     const height = getTeamBoxHeight(team, currentView);
-    
+
     // Check if this team is part of a comparison
     let comparisonBadge = null;
     if (comparisonData && comparisonData.changes) {
@@ -143,7 +143,7 @@ export function drawTeam(ctx, team, selectedTeam, teamColorMap, wrapText, curren
             comparisonBadge = { type: 'type_changed', color: '#2196F3', emoji: '🔵', label: 'CHANGED' };
         }
     }
-    
+
     // Use shape-specific drawing in TT Design view
     if (currentView === 'tt') {
         if (team.team_type === 'enabling') {
@@ -159,7 +159,7 @@ export function drawTeam(ctx, team, selectedTeam, teamColorMap, wrapText, curren
             return;
         }
     }
-    
+
     // Default: draw as rounded rectangle
     drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData);
 }
@@ -179,11 +179,11 @@ function drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamCo
             comparisonBadge = { type: 'changed', color: '#17a2b8', emoji: '🔵', label: 'CHANGED' };
         }
     }
-    
+
     const radius = 8;
     const fillColor = getTeamColor(team, teamColorMap);
     const borderColor = darkenColor(fillColor, LAYOUT.BORDER_COLOR_DARKEN_FACTOR);
-    
+
     // Shadow
     if (selectedTeam === team) {
         ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
@@ -201,10 +201,10 @@ function drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamCo
     ctx.strokeStyle = selectedTeam === team ? '#333' : borderColor;
     ctx.lineWidth = selectedTeam === team ? LAYOUT.BORDER_WIDTH_SELECTED : LAYOUT.BORDER_WIDTH_NORMAL;
     ctx.stroke();
-    
+
     // Cognitive load indicator
     drawCognitiveLoadIndicator(ctx, team, x, y, width, showCognitiveLoad);
-    
+
     // Team name
     drawTeamName(ctx, team, x, y, width, height, wrapText);
 }
@@ -225,11 +225,11 @@ function drawEnablingTeam(ctx, team, x, y, width, height, selectedTeam, teamColo
             comparisonBadge = { type: 'changed', color: '#17a2b8', emoji: '🔵', label: 'CHANGED' };
         }
     }
-    
+
     const radius = 14; // Larger radius for enabling teams (matches SVG)
     const fillColor = getTeamColor(team, teamColorMap);
     const borderColor = darkenColor(fillColor, LAYOUT.BORDER_COLOR_DARKEN_FACTOR);
-    
+
     // Shadow
     if (selectedTeam === team) {
         ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
@@ -247,33 +247,33 @@ function drawEnablingTeam(ctx, team, x, y, width, height, selectedTeam, teamColo
     ctx.strokeStyle = selectedTeam === team ? '#333' : borderColor;
     ctx.lineWidth = selectedTeam === team ? LAYOUT.BORDER_WIDTH_SELECTED : LAYOUT.BORDER_WIDTH_NORMAL;
     ctx.stroke();
-    
+
     // Cognitive load indicator
     drawCognitiveLoadIndicator(ctx, team, x, y, width, showCognitiveLoad);
-    
+
     // Team name (vertical text - rotated 90° counterclockwise for narrow box)
     ctx.save();
     ctx.fillStyle = '#222222';
     ctx.font = 'bold 14px sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    
+
     // Wrap text to fit within height (which becomes width when rotated)
     // Leave some padding (20px total = 10px on each side)
     const lines = wrapText(team.name, height - 20);
-    
+
     // Translate to center of box and rotate
     ctx.translate(x + width / 2, y + height / 2);
     ctx.rotate(-Math.PI / 2); // -90 degrees (counterclockwise)
-    
+
     // Draw each line, vertically centered
     lines.forEach((line, i) => {
         const yOffset = (lines.length - 1) * 8 - i * 16;
         ctx.fillText(line, 0, yOffset);
     });
-    
+
     ctx.restore();
-    
+
     // Draw comparison badge if in comparison mode
     if (comparisonBadge) {
         drawComparisonBadge(ctx, comparisonBadge, x, y, width, height);
@@ -296,14 +296,14 @@ function drawComplicatedSubsystemTeam(ctx, team, x, y, width, height, selectedTe
             comparisonBadge = { type: 'changed', color: '#17a2b8', emoji: '🔵', label: 'CHANGED' };
         }
     }
-    
+
     const fillColor = getTeamColor(team, teamColorMap);
     const borderColor = darkenColor(fillColor, LAYOUT.BORDER_COLOR_DARKEN_FACTOR);
-    
+
     // Octagon dimensions (based on SVG: M40 20, H100, L120 40, V100, L100 120, H40, L20 100, V40, Z)
     // Scaled to fit width×height box
     const cornerSize = width * 0.167; // ~20px for 120px width
-    
+
     // Shadow
     if (selectedTeam === team) {
         ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
@@ -311,7 +311,7 @@ function drawComplicatedSubsystemTeam(ctx, team, x, y, width, height, selectedTe
         ctx.shadowOffsetX = 0;
         ctx.shadowOffsetY = 4;
     }
-    
+
     // Draw octagon path
     ctx.fillStyle = fillColor;
     ctx.beginPath();
@@ -326,18 +326,18 @@ function drawComplicatedSubsystemTeam(ctx, team, x, y, width, height, selectedTe
     ctx.closePath();
     ctx.fill();
     ctx.shadowColor = 'transparent';
-    
+
     // Border
     ctx.strokeStyle = selectedTeam === team ? '#333' : borderColor;
     ctx.lineWidth = selectedTeam === team ? LAYOUT.BORDER_WIDTH_SELECTED : LAYOUT.BORDER_WIDTH_NORMAL;
     ctx.stroke();
-    
+
     // Cognitive load indicator
     drawCognitiveLoadIndicator(ctx, team, x, y, width, showCognitiveLoad);
-    
+
     // Team name
     drawTeamName(ctx, team, x, y, width, height, wrapText);
-    
+
     // Draw comparison badge if in comparison mode
     if (comparisonBadge) {
         drawComparisonBadge(ctx, comparisonBadge, x, y, width, height);
@@ -359,10 +359,10 @@ function drawUndefinedTeam(ctx, team, x, y, width, height, selectedTeam, teamCol
             comparisonBadge = { type: 'changed', color: '#17a2b8', emoji: '🔵', label: 'CHANGED' };
         }
     }
-    
+
     const fillColor = getTeamColor(team, teamColorMap);
     const radius = 8;
-    
+
     // Fill with team color (rounded rectangle)
     ctx.fillStyle = fillColor;
     ctx.beginPath();
@@ -377,7 +377,7 @@ function drawUndefinedTeam(ctx, team, x, y, width, height, selectedTeam, teamCol
     ctx.quadraticCurveTo(x, y, x + radius, y);
     ctx.closePath();
     ctx.fill();
-    
+
     // Dashed border for undefined teams (always gray to indicate neutral/uncertain state)
     ctx.save();
     ctx.setLineDash([8, 4]); // 8px dash, 4px gap
@@ -396,15 +396,15 @@ function drawUndefinedTeam(ctx, team, x, y, width, height, selectedTeam, teamCol
     ctx.closePath();
     ctx.stroke();
     ctx.restore(); // Reset dash pattern
-    
+
     // Draw cognitive load indicator if enabled
     if (showCognitiveLoad) {
         drawCognitiveLoadIndicator(ctx, team, x, y, width, showCognitiveLoad);
     }
-    
+
     // Draw team name
     drawTeamName(ctx, team, x, y, width, height, wrapText);
-    
+
     // Draw comparison badge if in comparison mode
     if (comparisonBadge) {
         drawComparisonBadge(ctx, comparisonBadge, x, y, width, height);
@@ -422,12 +422,12 @@ function drawCognitiveLoadIndicator(ctx, team, x, y, width, showCognitiveLoad) {
             const indicatorSize = 12;
             const indicatorX = x + width - indicatorSize - 8;
             const indicatorY = y + indicatorSize + 8;
-            
+
             ctx.fillStyle = indicator.color;
             ctx.beginPath();
             ctx.arc(indicatorX, indicatorY, indicatorSize / 2, 0, Math.PI * 2);
             ctx.fill();
-            
+
             ctx.strokeStyle = 'white';
             ctx.lineWidth = 1.5;
             ctx.stroke();
@@ -441,11 +441,11 @@ function drawCognitiveLoadIndicator(ctx, team, x, y, width, showCognitiveLoad) {
 function drawComparisonBadge(ctx, badge, x, y, width, height) {
     const badgeHeight = 20;
     const badgeY = y - badgeHeight - 5; // Above the team box
-    
+
     // Background
     ctx.fillStyle = badge.color;
     ctx.fillRect(x, badgeY, width, badgeHeight);
-    
+
     // Text
     ctx.fillStyle = '#fff';
     ctx.font = 'bold 11px sans-serif';
@@ -463,7 +463,7 @@ function drawTeamName(ctx, team, x, y, width, height, wrapText) {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     const lines = wrapText(team.name, width - 20);
-    
+
     // Draw team name lines (centered vertically)
     lines.forEach((line, i) => {
         ctx.fillText(line, x + width / 2, y + height / 2 - (lines.length - 1) * 8 + i * 16);
@@ -508,7 +508,7 @@ export function drawConnections(ctx, teams, currentView = 'current', showInterac
 }
 function drawConnection(ctx, from, to, mode, currentView = 'current') {
     const style = INTERACTION_STYLES[mode] || INTERACTION_STYLES['collaboration'];
-    
+
     // Calculate center points dynamically based on team box width
     const fromWidth = getTeamBoxWidth(from, currentView);
     const toWidth = getTeamBoxWidth(to, currentView);
@@ -543,19 +543,19 @@ function drawActualCommsConnection(ctx, from, to, currentView = 'current') {
     const fromY = from.position.y + LAYOUT.TEAM_BOX_HEIGHT / 2;
     const toX = to.position.x + toWidth / 2;
     const toY = to.position.y + LAYOUT.TEAM_BOX_HEIGHT / 2;
-    
+
     const angle = Math.atan2(toY - fromY, toX - fromX);
     const arrowLength = 20;
-    
+
     // Shorten the line so it doesn't overlap with arrows
     const shortenBy = arrowLength + 2;
     const lineFromX = fromX + shortenBy * Math.cos(angle);
     const lineFromY = fromY + shortenBy * Math.sin(angle);
     const lineToX = toX - shortenBy * Math.cos(angle);
     const lineToY = toY - shortenBy * Math.sin(angle);
-    
+
     ctx.save(); // Save context state
-    
+
     // Fat gray line (realistic, not TT-designed)
     ctx.strokeStyle = '#666666';
     ctx.lineWidth = 4;
@@ -564,12 +564,12 @@ function drawActualCommsConnection(ctx, from, to, currentView = 'current') {
     ctx.moveTo(lineFromX, lineFromY);
     ctx.lineTo(lineToX, lineToY);
     ctx.stroke();
-    
+
     // Draw arrows ON TOP of line for visibility
     ctx.fillStyle = '#666666';
     ctx.strokeStyle = '#666666';
     ctx.lineWidth = 1;
-    
+
     // Filled arrow triangle at 'to' end
     ctx.beginPath();
     ctx.moveTo(toX, toY);
@@ -578,7 +578,7 @@ function drawActualCommsConnection(ctx, from, to, currentView = 'current') {
     ctx.closePath();
     ctx.fill();
     ctx.stroke();
-    
+
     // Filled arrow triangle at 'from' end (opposite direction)
     ctx.beginPath();
     ctx.moveTo(fromX, fromY);
@@ -587,7 +587,7 @@ function drawActualCommsConnection(ctx, from, to, currentView = 'current') {
     ctx.closePath();
     ctx.fill();
     ctx.stroke();
-    
+
     ctx.restore(); // Restore context state
 }
 function getTeamColor(team, teamColorMap) {
@@ -613,8 +613,7 @@ export function wrapText(ctx, text, maxWidth) {
         if (metrics.width > maxWidth) {
             lines.push(currentLine);
             currentLine = words[i];
-        }
-        else {
+        } else {
             currentLine = testLine;
         }
     }
@@ -627,12 +626,12 @@ export function getTeamAtPosition(teams, x, y, viewOffset, scale, currentView = 
     return teams.find(team => {
         const teamWidth = getTeamBoxWidth(team, currentView);
         const teamHeight = getTeamBoxHeight(team, currentView);
-        
+
         // Special hit detection for complicated-subsystem (octagon) in TT Design view
         if (currentView === 'tt' && team.team_type === 'complicated-subsystem') {
             return isPointInOctagon(worldX, worldY, team.position.x, team.position.y, teamWidth, teamHeight);
         }
-        
+
         // Default: rectangular hit detection
         return worldX >= team.position.x &&
             worldX <= team.position.x + teamWidth &&
@@ -647,12 +646,12 @@ export function getTeamAtPosition(teams, x, y, viewOffset, scale, currentView = 
  */
 function isPointInOctagon(px, py, x, y, width, height) {
     const cornerSize = width * 0.167;
-    
+
     // First check: must be in bounding box
     if (px < x || px > x + width || py < y || py > y + height) {
         return false;
     }
-    
+
     // Check if point is in one of the cut-off corners
     // Top-left corner
     if (px < x + cornerSize && py < y + cornerSize) {
@@ -687,7 +686,7 @@ function isPointInOctagon(px, py, x, y, width, height) {
             return false;
         }
     }
-    
+
     return true;
 }
 // Polyfill for roundRect (older browsers)
@@ -733,7 +732,7 @@ export function drawValueStreamGroupings(ctx, groupings) {
         ctx.fillStyle = VALUE_STREAM_STYLE.fillColor;
         ctx.strokeStyle = VALUE_STREAM_STYLE.strokeColor;
         ctx.lineWidth = VALUE_STREAM_STYLE.strokeWidth;
-        
+
         ctx.beginPath();
         ctx.roundRect(x, y, width, height, VALUE_STREAM_STYLE.borderRadius);
         ctx.fill();
@@ -744,10 +743,10 @@ export function drawValueStreamGroupings(ctx, groupings) {
         ctx.font = VALUE_STREAM_STYLE.labelFont;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'top';
-        
+
         const labelX = x + width / 2;
         const labelY = y + VALUE_STREAM_STYLE.labelPadding;
-        
+
         ctx.fillText(grouping.name, labelX, labelY);
     });
 }
@@ -781,7 +780,7 @@ export function drawPlatformGroupings(ctx, groupings) {
         ctx.fillStyle = PLATFORM_GROUPING_STYLE.fillColor;
         ctx.strokeStyle = PLATFORM_GROUPING_STYLE.strokeColor;
         ctx.lineWidth = PLATFORM_GROUPING_STYLE.strokeWidth;
-        
+
         ctx.beginPath();
         ctx.roundRect(x, y, width, height, PLATFORM_GROUPING_STYLE.borderRadius);
         ctx.fill();
@@ -792,10 +791,10 @@ export function drawPlatformGroupings(ctx, groupings) {
         ctx.font = PLATFORM_GROUPING_STYLE.labelFont;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'top';
-        
+
         const labelX = x + width / 2;
         const labelY = y + PLATFORM_GROUPING_STYLE.labelPadding;
-        
+
         ctx.fillText(grouping.name, labelX, labelY);
     });
 }

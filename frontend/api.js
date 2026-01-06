@@ -4,7 +4,7 @@ import { getApiUrl } from './config.js';
 /**
  * Convert team name to URL-safe slug.
  * Must match backend logic in backend/services.py:team_name_to_slug()
- * 
+ *
  * Examples:
  *   "CI/CD Platform Team" -> "ci-cd-platform-team"
  *   "Data & Analytics Team" -> "data-and-analytics-team"
@@ -52,12 +52,12 @@ export async function updateTeamPosition(teamName, x, y, view) {
 // Snapshot API functions
 export async function createSnapshot(name, description = '', author = '', teamNames = undefined) {
     const body = { name, description, author };
-    
+
     // Only include team_names if provided (for filtered snapshots)
     if (teamNames !== undefined) {
         body.team_names = teamNames;
     }
-    
+
     const response = await fetch(getApiUrl('/snapshots/create'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -86,7 +86,7 @@ export async function loadSnapshot(snapshotId) {
 export async function compareSnapshots(beforeId, afterId) {
     const response = await fetch(getApiUrl(`/snapshots/compare/${beforeId}/${afterId}`));
     if (!response.ok) {
-        throw new Error(`Failed to compare snapshots`);
+        throw new Error('Failed to compare snapshots');
     }
     return await response.json();
 }

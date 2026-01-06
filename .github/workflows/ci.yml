@@ -86,12 +86,6 @@ jobs:
         npm ci
         npx playwright install --with-deps chromium
     
-    - name: Start backend server
-      run: |
-        python -m uvicorn main:app --host 127.0.0.1 --port 8000 &
-        sleep 5
-        curl --retry 10 --retry-delay 2 --retry-connrefused http://127.0.0.1:8000/static/index.html
-    
     - name: Run Playwright tests
       working-directory: tests
       run: npx playwright test --reporter=html

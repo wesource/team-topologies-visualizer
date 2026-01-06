@@ -39,18 +39,18 @@ export function drawCurrentStateView(ctx, organizationHierarchy, teams, wrapText
                 const teamsUnderManager = lm.teams
                     .map(teamName => teams.find(t => t.name === teamName))
                     .filter(t => t !== undefined);
-                
+
                 if (teamsUnderManager.length > 0) {
                     // Vertical line position at 1/5 from left of line manager box
                     const verticalLineX = lmX + (boxWidth * LAYOUT.ORG_CHART_VERTICAL_LINE_OFFSET);
                     const verticalLineStartY = lmY + boxHeight - 10;
-                    
+
                     // Find the lowest team position for vertical line
                     const lowestTeamY = Math.max(...teamsUnderManager.map(t => t.position.y + 40));
-                    
+
                     // Draw main vertical line
                     drawHierarchyLine(ctx, verticalLineX, verticalLineStartY, verticalLineX, lowestTeamY);
-                    
+
                     // Draw horizontal connectors to each team
                     teamsUnderManager.forEach(team => {
                         const teamMidLeftY = team.position.y + 40;
@@ -77,18 +77,18 @@ export function drawCurrentStateView(ctx, organizationHierarchy, teams, wrapText
                     const teamsUnderRegion = region.teams
                         .map(teamName => teams.find(t => t.name === teamName))
                         .filter(t => t !== undefined);
-                    
+
                     if (teamsUnderRegion.length > 0) {
                         // Vertical line position at 1/5 from left of region box
                         const verticalLineX = regionX + (boxWidth * LAYOUT.ORG_CHART_VERTICAL_LINE_OFFSET);
                         const verticalLineStartY = regionY + boxHeight - 10;
-                        
+
                         // Find the lowest team position for vertical line
                         const lowestTeamY = Math.max(...teamsUnderRegion.map(t => t.position.y + 40));
-                        
+
                         // Draw main vertical line
                         drawHierarchyLine(ctx, verticalLineX, verticalLineStartY, verticalLineX, lowestTeamY);
-                        
+
                         // Draw horizontal connectors to each team
                         teamsUnderRegion.forEach(team => {
                             const teamMidLeftY = team.position.y + 40;

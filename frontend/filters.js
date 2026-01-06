@@ -14,7 +14,7 @@ export function getFilteredTeams(teams, currentView, selectedGrouping) {
     if (currentView !== 'tt' || selectedGrouping === 'all') {
         return teams;
     }
-    
+
     if (selectedGrouping.startsWith('vs:')) {
         // Filter by value stream
         const valueStream = selectedGrouping.substring(3);
@@ -24,6 +24,6 @@ export function getFilteredTeams(teams, currentView, selectedGrouping) {
         const platformGrouping = selectedGrouping.substring(3);
         return filterTeamsByPlatformGrouping(teams, platformGrouping);
     }
-    
+
     return teams;
 }

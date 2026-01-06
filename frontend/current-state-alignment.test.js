@@ -34,11 +34,11 @@ describe('autoAlignTeamsByManager', () => {
 
         // All three teams should be realigned
         expect(realigned.length).toBe(3);
-        
+
         // Check that all teams have the same X coordinate
         const xPositions = realigned.map(t => t.position.x);
         expect(new Set(xPositions).size).toBe(1);
-        
+
         // Check that Y positions are spaced correctly (120px apart)
         const yPositions = realigned.map(t => t.position.y).sort((a, b) => a - b);
         expect(yPositions[1] - yPositions[0]).toBe(120);
@@ -82,12 +82,12 @@ describe('autoAlignTeamsByManager', () => {
 
         // All four teams should be realigned
         expect(realigned.length).toBe(4);
-        
+
         // Teams under manager 1 should have the same X
         const teamA = teams.find(t => t.name === 'Team A');
         const teamB = teams.find(t => t.name === 'Team B');
         expect(teamA.position.x).toBe(teamB.position.x);
-        
+
         // Teams under manager 2 should have the same X (different from manager 1)
         const teamC = teams.find(t => t.name === 'Team C');
         const teamD = teams.find(t => t.name === 'Team D');
@@ -125,10 +125,10 @@ describe('autoAlignTeamsByManager', () => {
 
         // Both teams should be realigned
         expect(realigned.length).toBe(2);
-        
+
         // Teams should have the same X coordinate
         expect(teams[0].position.x).toBe(teams[1].position.x);
-        
+
         // Teams should be vertically spaced
         expect(teams[1].position.y - teams[0].position.y).toBe(120);
     });

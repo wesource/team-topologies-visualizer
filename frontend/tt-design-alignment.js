@@ -17,38 +17,38 @@ export function autoAlignTTDesign(teams) {
     }
 
     const realignedTeams = [];
-    
+
     // Get all groupings
     const valueStreamGroupings = getValueStreamGroupings(teams);
     const platformGroupings = getPlatformGroupings(teams);
-    
+
     // Separate grouped and ungrouped teams
     const groupedTeamNames = new Set();
-    
+
     // Track teams in value streams
     valueStreamGroupings.forEach(grouping => {
         if (grouping.name !== '(Ungrouped)') {
             grouping.teams.forEach(team => groupedTeamNames.add(team.name));
         }
     });
-    
+
     // Track teams in platform groupings
     platformGroupings.forEach(grouping => {
         grouping.teams.forEach(team => groupedTeamNames.add(team.name));
     });
-    
+
     const ungroupedTeams = teams.filter(team => !groupedTeamNames.has(team.name));
-    
+
     // Separate ungrouped teams into wide and narrow
     // Wide: stream-aligned and platform teams in TT view
     // Narrow: enabling, complicated-subsystem, and undefined teams
-    const wideUngrouped = ungroupedTeams.filter(team => 
+    const wideUngrouped = ungroupedTeams.filter(team =>
         team.team_type === 'stream-aligned' || team.team_type === 'platform'
     );
-    const narrowUngrouped = ungroupedTeams.filter(team => 
+    const narrowUngrouped = ungroupedTeams.filter(team =>
         team.team_type === 'enabling' || team.team_type === 'complicated-subsystem' || team.team_type === 'undefined'
     );
-    
+
     // Layout configuration
     const startX = 100;
     const startY = 100;
@@ -58,18 +58,18 @@ export function autoAlignTTDesign(teams) {
     const groupingsPerRow = 2; // Max groupings per row
     const paddingInGrouping = 30; // Padding inside grouping rectangles
     const labelHeight = 35; // Height reserved for grouping label
-    
+
     // Team dimensions and spacing based on Team Topologies book visualization
     const wideTeamVerticalSpacing = 60; // Vertical spacing between wide teams (stacked) - 75% of team box height
     const narrowTeamSpacingX = 160; // Horizontal spacing between narrow teams
     const narrowTeamSpacingY = 120; // Vertical spacing between rows of narrow teams
     const narrowTeamsPerRow = 3; // Max narrow teams per row
-    
+
     let currentX = startX;
     let currentY = startY;
     let groupingsInCurrentRow = 0;
     let maxHeightInRow = 0;
-    
+
     /**
      * Check if team type should be rendered wide (horizontal flow)
      * Stream-aligned and Platform teams span the flow of change
@@ -79,59 +79,59 @@ export function autoAlignTTDesign(teams) {
         // Narrow teams: enabling, complicated-subsystem, undefined
         return teamType === 'stream-aligned' || teamType === 'platform';
     }
-    
+
     /**
      * Calculate wide team width (~80% of grouping width, leaving 10% margin on each side)
      */
     function getWideTeamWidth() {
         return (groupingWidth - 2 * paddingInGrouping) * 0.8;
     }
-    
+
     // Helper function to position teams within a grouping
     function positionTeamsInGrouping(groupingTeams, groupingStartX, groupingStartY) {
         // Separate wide teams (stream-aligned, platform) from narrow teams (enabling, complicated subsystem)
         const wideTeams = groupingTeams.filter(team => isWideTeamType(team.team_type));
         const narrowTeams = groupingTeams.filter(team => !isWideTeamType(team.team_type));
-        
+
         let currentYPos = groupingStartY + paddingInGrouping + labelHeight;
-        
+
         // Position wide teams first - stacked vertically, centered horizontally
         const wideTeamWidth = getWideTeamWidth();
         const wideTeamCenterX = groupingStartX + paddingInGrouping + (groupingWidth - 2 * paddingInGrouping) * 0.1; // 10% from left
-        
+
         wideTeams.forEach((team, index) => {
             const newX = wideTeamCenterX;
             const newY = currentYPos;
-            
+
             // Only update if position changed significantly
             if (Math.abs(team.position.x - newX) > 5 || Math.abs(team.position.y - newY) > 5) {
                 team.position.x = newX;
                 team.position.y = newY;
                 realignedTeams.push(team);
             }
-            
+
             // Move to next team position (but we'll adjust after the loop if this is the last team)
             currentYPos += LAYOUT.TEAM_BOX_HEIGHT + wideTeamVerticalSpacing;
         });
-        
+
         // After wide teams, currentYPos is spacing pixels below the last team
         // Adjust back: we want currentYPos at the BOTTOM of the last team, not beyond it
         if (wideTeams.length > 0) {
             currentYPos -= wideTeamVerticalSpacing; // Remove the extra spacing after last team
         }
-        
+
         // Position narrow teams below wide teams - in a grid layout
         if (narrowTeams.length > 0) {
             // Add some spacing between wide teams and narrow teams
             if (wideTeams.length > 0) {
                 currentYPos += 20;
             }
-            
+
             // Position narrow teams (enabling, complicated-subsystem)
             narrowTeams.forEach((team, index) => {
                 const row = Math.floor(index / narrowTeamsPerRow);
                 const col = index % narrowTeamsPerRow;
-                
+
                 // Calculate Y position by summing heights of all previous rows
                 let rowYPos = currentYPos;
                 for (let r = 0; r < row; r++) {
@@ -144,10 +144,10 @@ export function autoAlignTTDesign(teams) {
                     const gapBetweenRows = 40; // Fixed gap between rows
                     rowYPos += maxHeightInRow + gapBetweenRows;
                 }
-                
+
                 const newX = groupingStartX + paddingInGrouping + (col * narrowTeamSpacingX);
                 const newY = rowYPos;
-                
+
                 // Only update if position changed significantly
                 if (Math.abs(team.position.x - newX) > 5 || Math.abs(team.position.y - newY) > 5) {
                     team.position.x = newX;
@@ -155,7 +155,7 @@ export function autoAlignTTDesign(teams) {
                     realignedTeams.push(team);
                 }
             });
-            
+
             // Update currentYPos to bottom of narrow teams
             // Need to account for the ACTUAL height of teams, not just LAYOUT.TEAM_BOX_HEIGHT
             // Find the tallest team in the last row
@@ -163,26 +163,26 @@ export function autoAlignTTDesign(teams) {
             const lastRowStartIndex = (narrowRows - 1) * narrowTeamsPerRow;
             const lastRowTeams = narrowTeams.slice(lastRowStartIndex);
             const maxHeightInLastRow = Math.max(...lastRowTeams.map(t => getTeamBoxHeight(t, 'tt')));
-            
+
             currentYPos += (narrowRows - 1) * narrowTeamSpacingY + maxHeightInLastRow;
         }
-        
+
         // Calculate total grouping height
         // currentYPos is now at the bottom of the last team
         // Add extra spacing after last team to ensure padding below all teams
         const bottomSpacing = 40; // Extra space after last team for visual padding
         return currentYPos - groupingStartY + bottomSpacing + paddingInGrouping;
     }
-    
+
     // Position value stream groupings first (excluding ungrouped)
     const actualValueStreamGroupings = valueStreamGroupings.filter(g => g.name !== '(Ungrouped)');
-    
+
     actualValueStreamGroupings.forEach((grouping, index) => {
         const groupingHeight = positionTeamsInGrouping(grouping.teams, currentX, currentY);
         maxHeightInRow = Math.max(maxHeightInRow, groupingHeight);
-        
+
         groupingsInCurrentRow++;
-        
+
         if (groupingsInCurrentRow >= groupingsPerRow) {
             // Move to next row
             currentX = startX;
@@ -194,7 +194,7 @@ export function autoAlignTTDesign(teams) {
             currentX += groupingSpacingX;
         }
     });
-    
+
     // Start new row for platform groupings if needed
     if (groupingsInCurrentRow > 0) {
         currentX = startX;
@@ -202,14 +202,14 @@ export function autoAlignTTDesign(teams) {
         groupingsInCurrentRow = 0;
         maxHeightInRow = 0;
     }
-    
+
     // Position platform groupings
     platformGroupings.forEach((grouping, index) => {
         const groupingHeight = positionTeamsInGrouping(grouping.teams, currentX, currentY);
         maxHeightInRow = Math.max(maxHeightInRow, groupingHeight);
-        
+
         groupingsInCurrentRow++;
-        
+
         if (groupingsInCurrentRow >= groupingsPerRow) {
             // Move to next row
             currentX = startX;
@@ -221,42 +221,42 @@ export function autoAlignTTDesign(teams) {
             currentX += groupingSpacingX;
         }
     });
-    
+
     // Position ungrouped teams in a separate area (bottom right)
     if (ungroupedTeams.length > 0) {
         const ungroupedStartX = startX + (groupingsPerRow * groupingSpacingX);
         const ungroupedStartY = startY;
-        
+
         // Separate wide and narrow ungrouped teams
         const wideUngrouped = ungroupedTeams.filter(team => isWideTeamType(team.team_type));
         const narrowUngrouped = ungroupedTeams.filter(team => !isWideTeamType(team.team_type));
-        
+
         let currentYPos = ungroupedStartY;
-        
+
         // Position wide ungrouped teams stacked vertically
         wideUngrouped.forEach((team, index) => {
             const newX = ungroupedStartX;
             const newY = currentYPos;
-            
+
             if (Math.abs(team.position.x - newX) > 5 || Math.abs(team.position.y - newY) > 5) {
                 team.position.x = newX;
                 team.position.y = newY;
                 realignedTeams.push(team);
             }
-            
+
             currentYPos += LAYOUT.TEAM_BOX_HEIGHT + wideTeamVerticalSpacing;
         });
-        
+
         // Position narrow ungrouped teams in grid below wide teams
         if (narrowUngrouped.length > 0) {
             if (wideUngrouped.length > 0) {
                 currentYPos += 20; // Spacing between wide and narrow
             }
-            
+
             narrowUngrouped.forEach((team, index) => {
                 const row = Math.floor(index / narrowTeamsPerRow);
                 const col = index % narrowTeamsPerRow;
-                
+
                 // Calculate Y position by summing heights of all previous rows
                 let rowYPos = currentYPos;
                 for (let r = 0; r < row; r++) {
@@ -267,10 +267,10 @@ export function autoAlignTTDesign(teams) {
                     const gapBetweenRows = 40;
                     rowYPos += maxHeightInRow + gapBetweenRows;
                 }
-                
+
                 const newX = ungroupedStartX + (col * narrowTeamSpacingX);
                 const newY = rowYPos;
-                
+
                 if (Math.abs(team.position.x - newX) > 5 || Math.abs(team.position.y - newY) > 5) {
                     team.position.x = newX;
                     team.position.y = newY;
@@ -279,6 +279,6 @@ export function autoAlignTTDesign(teams) {
             });
         }
     }
-    
+
     return realignedTeams;
 }

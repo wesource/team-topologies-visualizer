@@ -16,11 +16,11 @@ export function getValueStreamGroupings(teams) {
 
     // Group teams by value stream
     const groupMap = new Map();
-    
+
     teams.forEach(team => {
         // Check top-level first (from YAML root), then metadata (for backwards compatibility)
         const valueStream = team.value_stream || team.metadata?.value_stream || '(Ungrouped)';
-        
+
         if (!groupMap.has(valueStream)) {
             groupMap.set(valueStream, []);
         }
@@ -60,7 +60,7 @@ export function getValueStreamNames(teams) {
     }
 
     const valueStreams = new Set();
-    
+
     teams.forEach(team => {
         // Check top-level first (from YAML root), then metadata (for backwards compatibility)
         const valueStream = team.value_stream || team.metadata?.value_stream;
@@ -115,7 +115,7 @@ export function calculateGroupingBoundingBox(teams, teamBoxHeight, padding, curr
         const { x, y } = team.position;
         const teamWidth = getTeamBoxWidth(team, currentView);
         const teamHeight = getTeamBoxHeight(team, currentView);
-        
+
         minX = Math.min(minX, x);
         minY = Math.min(minY, y);
         maxX = Math.max(maxX, x + teamWidth);

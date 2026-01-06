@@ -8,7 +8,7 @@ describe('Value Stream Grouping', () => {
             const teams = [
                 { name: 'Team A', metadata: { value_stream: 'E-commerce' }, position: { x: 100, y: 100 } },
                 { name: 'Team B', metadata: { value_stream: 'E-commerce' }, position: { x: 200, y: 100 } },
-                { name: 'Team C', metadata: { value_stream: 'Mobile' }, position: { x: 400, y: 100 } },
+                { name: 'Team C', metadata: { value_stream: 'Mobile' }, position: { x: 400, y: 100 } }
             ];
 
             const groupings = getValueStreamGroupings(teams);
@@ -24,7 +24,7 @@ describe('Value Stream Grouping', () => {
             const teams = [
                 { name: 'Team A', metadata: { value_stream: 'E-commerce' }, position: { x: 100, y: 100 } },
                 { name: 'Team B', metadata: {}, position: { x: 200, y: 100 } },
-                { name: 'Team C', position: { x: 300, y: 100 } },
+                { name: 'Team C', position: { x: 300, y: 100 } }
             ];
 
             const groupings = getValueStreamGroupings(teams);
@@ -51,7 +51,7 @@ describe('Value Stream Grouping', () => {
         it('should calculate bounding box for teams in grouping', () => {
             const teams = [
                 { name: 'Team A', team_type: 'stream-aligned', metadata: { value_stream: 'Test' }, position: { x: 100, y: 100 } },
-                { name: 'Team B', team_type: 'stream-aligned', metadata: { value_stream: 'Test' }, position: { x: 400, y: 200 } },
+                { name: 'Team B', team_type: 'stream-aligned', metadata: { value_stream: 'Test' }, position: { x: 400, y: 200 } }
             ];
             const teamBoxHeight = 120;
             const padding = 20;
@@ -67,7 +67,7 @@ describe('Value Stream Grouping', () => {
 
         it('should handle single team', () => {
             const teams = [
-                { name: 'Team A', team_type: 'stream-aligned', metadata: { value_stream: 'Test' }, position: { x: 100, y: 100 } },
+                { name: 'Team A', team_type: 'stream-aligned', metadata: { value_stream: 'Test' }, position: { x: 100, y: 100 } }
             ];
             const teamBoxHeight = 120;
             const padding = 20;
@@ -83,7 +83,7 @@ describe('Value Stream Grouping', () => {
 
         it('should handle empty teams array', () => {
             const bbox = calculateGroupingBoundingBox([], 120, 20, 'tt');
-            
+
             expect(bbox.x).toBe(0);
             expect(bbox.y).toBe(0);
             expect(bbox.width).toBe(0);
@@ -93,7 +93,7 @@ describe('Value Stream Grouping', () => {
         it('should handle teams with negative positions', () => {
             const teams = [
                 { name: 'Team A', team_type: 'stream-aligned', metadata: { value_stream: 'Test' }, position: { x: -100, y: -50 } },
-                { name: 'Team B', team_type: 'stream-aligned', metadata: { value_stream: 'Test' }, position: { x: 100, y: 50 } },
+                { name: 'Team B', team_type: 'stream-aligned', metadata: { value_stream: 'Test' }, position: { x: 100, y: 50 } }
             ];
             const teamBoxHeight = 120;
             const padding = 20;
@@ -114,7 +114,7 @@ describe('Value Stream Grouping', () => {
                 { name: 'Team A', metadata: { value_stream: 'E-commerce Experience' } },
                 { name: 'Team B', metadata: { value_stream: 'Mobile Experience' } },
                 { name: 'Team C', metadata: { value_stream: 'E-commerce Experience' } },
-                { name: 'Team D', metadata: { value_stream: 'Enterprise Sales' } },
+                { name: 'Team D', metadata: { value_stream: 'Enterprise Sales' } }
             ];
 
             const names = getValueStreamNames(teams);
@@ -126,7 +126,7 @@ describe('Value Stream Grouping', () => {
             const teams = [
                 { name: 'Team A', metadata: { value_stream: 'E-commerce Experience' } },
                 { name: 'Team B', metadata: {} },
-                { name: 'Team C' },
+                { name: 'Team C' }
             ];
 
             const names = getValueStreamNames(teams);
@@ -143,7 +143,7 @@ describe('Value Stream Grouping', () => {
         it('should return empty array when no teams have value streams', () => {
             const teams = [
                 { name: 'Team A', metadata: {} },
-                { name: 'Team B' },
+                { name: 'Team B' }
             ];
 
             const names = getValueStreamNames(teams);
@@ -157,7 +157,7 @@ describe('Value Stream Grouping', () => {
             { name: 'Team A', metadata: { value_stream: 'E-commerce Experience' } },
             { name: 'Team B', metadata: { value_stream: 'Mobile Experience' } },
             { name: 'Team C', metadata: { value_stream: 'E-commerce Experience' } },
-            { name: 'Team D', metadata: {} },
+            { name: 'Team D', metadata: {} }
         ];
 
         it('should filter teams by value stream', () => {

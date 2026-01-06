@@ -90,7 +90,7 @@ describe('API functions', () => {
                 json: async () => ({ error: 'Not found' })
             });
             // This depends on how the API handles errors - adjust based on actual implementation
-            const result = await mockApi.loadTeams('current');
+            await mockApi.loadTeams('current');
             // Just verify fetch was called
             expect(fetch).toHaveBeenCalled();
         });

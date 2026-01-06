@@ -16,11 +16,11 @@ export function getPlatformGroupings(teams) {
 
     // Group teams by platform grouping
     const groupMap = new Map();
-    
+
     teams.forEach(team => {
         // Check top-level first (from YAML root), then metadata (for backwards compatibility)
         const platformGrouping = team.platform_grouping || team.metadata?.platform_grouping;
-        
+
         // Only group teams that have a platform_grouping value
         if (platformGrouping) {
             if (!groupMap.has(platformGrouping)) {
@@ -63,7 +63,7 @@ export function getPlatformGroupingNames(teams) {
     }
 
     const platformGroupings = new Set();
-    
+
     teams.forEach(team => {
         // Check top-level first (from YAML root), then metadata (for backwards compatibility)
         const platformGrouping = team.platform_grouping || team.metadata?.platform_grouping;
