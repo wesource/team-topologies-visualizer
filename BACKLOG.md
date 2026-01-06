@@ -1,7 +1,7 @@
 # Team Topologies Visualizer - Development Backlog
 
 **Status**: Pre-release v1.0 development
-**Last updated**: 2026-01-05
+**Last updated**: 2026-01-06
 
 **Note**: The tool now defaults to "TT Design" view. The other view is called "Pre-TT" (previously "Current State") to represent the baseline/starting point before TT transformation.
 
@@ -9,7 +9,14 @@ This backlog tracks enhancements for iterative development. Items are organized 
 
 **Recent Expert Reviews**: See `EXPERT-REVIEW.md` and `TT-EXPERT-REVIEW.md` for detailed analysis from platform engineering and Team Topologies perspectives. Key themes: Team APIs need more detail, organizational sensing is missing, platform product thinking needs improvement.
 
-**AI Deep Analysis** (2026-01-05): Comprehensive codebase review identified 10 key improvements across functionality, architecture, testing, and documentation. See new items below marked with 🤖 AI.
+**Testing & CI/CD Status** (2026-01-06): ✅ Comprehensive test suite implemented (95 tests: 10 backend pytest, 62 frontend Vitest, 23 E2E Playwright). GitHub Actions CI runs all tests on every push. Test-driven development established as standard practice.
+
+**Recent Achievements** (2026-01-06):
+- ✅ Snapshot comparison view (side-by-side TT evolution tracking)
+- ✅ GitHub Actions CI/CD pipeline
+- ✅ 95 comprehensive tests across all layers
+- ✅ File naming conventions (tt- prefix for TT-specific modules)
+- ✅ E2E test flakiness resolution (robust async handling)
 
 ---
 
@@ -1939,28 +1946,383 @@ Shorten the connection line length so arrows render just outside the team box ed
 
 ---
 
-## 📚 Documentation Improvements
+## � Quality & Testing Improvements
 
-- [ ] Video walkthrough / tutorial
-- [ ] Team Topologies concepts primer
-- [ ] Example use cases and scenarios
-- [ ] Migration guide (from other tools)
-- [ ] API documentation improvements
-- [ ] Contributing guide expansion
+These items enhance code quality, testing infrastructure, and maintainability based on recent development experience.
+
+### 1. Frontend State Management Refactoring ⭐⭐⭐ MEDIUM PRIORITY
+**Impact**: MEDIUM | **Effort**: 4-6 hours | **Context**: Technical debt from rapid feature development
+
+**Current State**:
+- State management in `state-management.js` is basic but functional
+- Multiple modules directly mutate state (renderer, filters, snapshots, comparison view)
+- No clear state change tracking or debugging tools
+- Snapshot comparison added new state complexity (view modes, panel visibility)
+
+**Problems**:
+- Hard to debug state-related bugs ("Why did this filter not apply?")
+- No single source of truth for some state (split between modules)
+- State mutations scattered across many files
+- Difficult to implement undo/redo or state persistence
+- Comparison view state isolated from main state (potential sync issues)
+
+**Solution Options**:
+1. **Light refactor** (4 hours): Add state change logging and centralize mutations
+   - Keep existing architecture
+   - Add `setState()` wrapper with console logging in dev mode
+   - Document state shape in comments
+   - Centralize state updates in state-management.js
+
+2. **Redux-lite** (6 hours): Implement reducer pattern without external deps
+   - Create action types and reducers
+   - Single dispatch function for all state changes
+   - Better debugging and time-travel debugging capability
+   - More code but clearer patterns
+
+**Recommendation**: Start with light refactor (#1) for v1.0, consider Redux-lite for v1.1+
+
+**Implementation Tasks** (Light Refactor):
+- [ ] Add comprehensive JSDoc comments documenting state shape
+- [ ] Create `setState(key, value, source)` wrapper with logging
+- [ ] Refactor direct state mutations to use setState()
+- [ ] Add state validation (check for invalid state transitions)
+- [ ] Create state debugging utilities (dump state, compare states)
+- [ ] Document state flow in DEVELOPMENT.md
+
+**User Value**: Fewer state-related bugs, faster debugging, easier feature development
 
 ---
 
-## 🎯 v1.0 Release Checklist
+### 2. Visual Regression Testing ⭐⭐⭐ MEDIUM PRIORITY
+**Impact**: MEDIUM-HIGH | **Effort**: 3-4 hours | **Context**: Canvas rendering bugs found during snapshot comparison
 
-**Target**: Q1 2026
+**Current State**:
+- E2E tests verify functionality but not visual appearance
+- Manual visual testing catches bugs late
+- Recent z-order bug revealed arrows hidden under team boxes
+- No automated way to detect visual regressions
 
-Must-haves for v1.0:
-- [x] Change to "TT Design" naming
-- [x] Value stream visual grouping
-- [x] Platform grouping visualization
-- [x] Book-accurate team shapes
-- [x] Auto-align for both views
-- [ ] Cognitive load indicators
+**Problem Examples**:
+- Arrow triangles hidden under team boxes (discovered accidentally)
+- Color changes not caught until manual review
+- Layout shifts from CSS changes
+- Font rendering differences across browsers
+
+**Solution**: Add Playwright visual regression testing with screenshot comparison
+
+**Implementation**:
+```typescript
+// tests/visual-regression.spec.ts
+test('TT Design view matches baseline', async ({ page }) => {
+  await page.goto(`${BASE_URL}/static/index.html`);
+  await page.waitForLoadState('networkidle');
+  
+  // Take screenshot and compare to baseline
+  await expect(page).toHaveScreenshot('tt-design-view.png', {
+    maxDiffPixels: 100, // Allow small anti-aliasing differences
+    threshold: 0.2      // 20% threshold for pixel differences
+  });
+});
+
+test('Legend renders correctly', async ({ page }) => {
+  await page.goto(`${BASE_URL}/static/index.html`);
+  await expect(page.locator('.legend')).toHaveScreenshot('legend.png');
+});
+
+test('Team detail modal appearance', async ({ page }) => {
+  await page.goto(`${BASE_URL}/static/index.html`);
+  await page.locator('.team-item').first().click();
+  await expect(page.locator('#detailModal')).toHaveScreenshot('team-modal.png');
+});
+```
+
+**Implementation Tasks**:
+- [ ] Create `tests/visual-regression.spec.ts`
+- [ ] Add baseline screenshots for key views:
+  - TT Design full canvas
+  - Pre-TT full canvas
+  - Legend panel
+  - Team detail modal
+  - Snapshot comparison view
+  - Timeline panel
+- [ ] Configure Playwright screenshot comparison thresholds
+- [ ] Add visual regression tests to CI/CD pipeline
+- [ ] Document how to update baselines when intentional changes made
+- [ ] Create separate job in GitHub Actions (optional: only on main branch)
+
+**CI/CD Integration**:
+```yaml
+# .github/workflows/ci.yml
+visual-regression:
+  name: Visual Regression Tests
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v4
+    - name: Run visual tests
+      run: npx playwright test visual-regression.spec.ts
+    - name: Upload diff images on failure
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: visual-diff-images
+        path: tests/test-results/**/diff-*.png
+```
+
+**User Value**: Catch visual bugs before they reach production, maintain consistent visual quality
+
+**Definition of Done**:
+- 5-10 key views have visual regression tests
+- Tests run in CI/CD on every PR
+- Clear process for updating baselines
+- Documentation for developers
+
+---
+
+### 3. API Error Handling Strategy ⭐⭐⭐⭐ HIGH PRIORITY
+**Impact**: HIGH | **Effort**: 3-4 hours | **Context**: Inconsistent error handling found during testing
+
+**Current State**:
+- API calls use try/catch but error handling inconsistent
+- Some errors show notifications, some don't
+- Network errors vs validation errors not distinguished
+- No retry logic for transient failures
+- No loading states for long operations
+
+**Problems from Recent Work**:
+- Snapshot creation: No retry on network failure
+- Position updates: Silent failures if backend down
+- Comparison view: No error state if API fails
+- Test flakiness from timeout errors not handled
+
+**Solution**: Implement consistent error handling strategy across all API calls
+
+**Error Categories**:
+1. **Network errors** (500, timeout, connection refused)
+   - Retry with exponential backoff (3 attempts)
+   - Show "Server unavailable" message
+   
+2. **Validation errors** (400, 422)
+   - Show specific error message from backend
+   - Don't retry
+   
+3. **Not found errors** (404)
+   - Show "Team not found" or similar
+   - Don't retry
+   
+4. **Auth errors** (401, 403) - future
+   - Redirect to login or show permission error
+   
+5. **Rate limiting** (429) - future
+   - Retry after delay specified in header
+
+**Implementation**:
+```javascript
+// api.js - Add error handling wrapper
+async function apiCall(url, options = {}, retries = 3) {
+  for (let attempt = 0; attempt < retries; attempt++) {
+    try {
+      const response = await fetch(url, options);
+      
+      if (!response.ok) {
+        const error = await parseErrorResponse(response);
+        
+        // Don't retry validation errors or 404s
+        if (response.status >= 400 && response.status < 500 && response.status !== 429) {
+          throw new APIError(error.message, response.status, error);
+        }
+        
+        // Retry server errors and rate limiting
+        if (attempt < retries - 1) {
+          const delay = Math.pow(2, attempt) * 1000; // Exponential backoff
+          await sleep(delay);
+          continue;
+        }
+        
+        throw new APIError(error.message, response.status, error);
+      }
+      
+      return response;
+    } catch (error) {
+      if (error instanceof APIError) throw error;
+      
+      // Network error - retry
+      if (attempt < retries - 1) {
+        const delay = Math.pow(2, attempt) * 1000;
+        await sleep(delay);
+        continue;
+      }
+      
+      throw new NetworkError(`Network request failed: ${error.message}`);
+    }
+  }
+}
+
+class APIError extends Error {
+  constructor(message, status, details) {
+    super(message);
+    this.name = 'APIError';
+    this.status = status;
+    this.details = details;
+  }
+}
+
+class NetworkError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'NetworkError';
+  }
+}
+```
+
+**Implementation Tasks**:
+- [ ] Create error handling wrapper in api.js
+- [ ] Add APIError and NetworkError classes
+- [ ] Implement retry logic with exponential backoff
+- [ ] Add loading states to all API-dependent UI
+- [ ] Update notifications.js with error type-specific messages
+- [ ] Add error boundaries for catastrophic failures
+- [ ] Update all API calls to use new wrapper
+- [ ] Add unit tests for error scenarios
+- [ ] Document error handling strategy in DEVELOPMENT.md
+
+**User Value**: Better reliability, clearer error messages, fewer failed operations
+
+**Definition of Done**:
+- All API calls use consistent error handling
+- Network errors retry automatically
+- Users see clear, actionable error messages
+- Loading states show during API calls
+- Tests cover error scenarios
+
+---
+
+### 4. Keyboard Shortcuts Documentation ⭐⭐⭐⭐ HIGH PRIORITY  
+**Impact**: MEDIUM | **Effort**: 2 hours | **Context**: No discoverable keyboard shortcuts
+
+**Current State**:
+- Canvas has zoom with mouse wheel, pan with drag
+- No keyboard shortcuts for common operations
+- Users don't know what keyboard interactions exist
+- Accessibility: Keyboard navigation missing
+
+**Desired Keyboard Shortcuts**:
+- **Zoom**: `+`/`-` or `Ctrl++`/`Ctrl+-`
+- **Fit to view**: `0` or `Ctrl+0`
+- **Pan**: Arrow keys (move canvas)
+- **Select teams**: Tab through teams
+- **Open team detail**: Enter when team focused
+- **Close modals**: Escape
+- **Toggle views**: `1` (Pre-TT), `2` (TT Design)
+- **Create snapshot**: `Ctrl+S` (TT Design only)
+- **Auto-align**: `A` or `Ctrl+L`
+- **Help**: `?` (show keyboard shortcuts modal)
+
+**Implementation Tasks**:
+- [ ] Add keyboard event listeners in canvas-interactions.js
+- [ ] Implement zoom shortcuts (+, -, 0)
+- [ ] Implement pan shortcuts (arrow keys)
+- [ ] Add tab navigation through teams
+- [ ] Add "Keyboard Shortcuts" button to UI (? icon)
+- [ ] Create keyboard shortcuts modal with full list
+- [ ] Add visual focus indicators for keyboard navigation
+- [ ] Update README.md with keyboard shortcuts section
+- [ ] Add accessibility landmarks (ARIA labels)
+
+**Keyboard Shortcuts Modal**:
+```html
+<div id="keyboardShortcutsModal" class="modal">
+  <h2>⌨️ Keyboard Shortcuts</h2>
+  <div class="shortcuts-grid">
+    <div class="shortcut-group">
+      <h3>Canvas Navigation</h3>
+      <div><kbd>+</kbd> or <kbd>Ctrl</kbd>+<kbd>+</kbd> - Zoom in</div>
+      <div><kbd>-</kbd> or <kbd>Ctrl</kbd>+<kbd>-</kbd> - Zoom out</div>
+      <div><kbd>0</kbd> or <kbd>Ctrl</kbd>+<kbd>0</kbd> - Fit to view</div>
+      <div><kbd>←→↑↓</kbd> - Pan canvas</div>
+    </div>
+    <div class="shortcut-group">
+      <h3>Views & Actions</h3>
+      <div><kbd>1</kbd> - Pre-TT view</div>
+      <div><kbd>2</kbd> - TT Design view</div>
+      <div><kbd>A</kbd> - Auto-align teams</div>
+      <div><kbd>Ctrl</kbd>+<kbd>S</kbd> - Create snapshot</div>
+    </div>
+    <div class="shortcut-group">
+      <h3>General</h3>
+      <div><kbd>Tab</kbd> - Navigate teams</div>
+      <div><kbd>Enter</kbd> - Open team detail</div>
+      <div><kbd>Esc</kbd> - Close modal</div>
+      <div><kbd>?</kbd> - Show this help</div>
+    </div>
+  </div>
+</div>
+```
+
+**User Value**: Power users work faster, better accessibility, improved UX
+
+**Definition of Done**:
+- All documented shortcuts work
+- Modal lists all shortcuts
+- Visual focus indicators for keyboard nav
+- README documents shortcuts
+- Accessibility improved (keyboard-only navigation possible)
+
+---
+
+### 5. E2E Test Reliability Improvements ⭐⭐ MEDIUM PRIORITY
+**Impact**: MEDIUM | **Effort**: 2-3 hours | **Status**: PARTIALLY DONE
+
+**Recent Improvements** ✅:
+- Helper functions for async panel opening (ensureTimelinePanelOpen)
+- Fixed element ID mismatches (#snapshotsPanel → #timelinePanel)
+- 95% test pass rate
+
+**Remaining Issues**:
+- [ ] Some tests occasionally timeout on slow CI runners
+- [ ] No test data isolation (tests share same backend data)
+- [ ] No cleanup between test runs
+- [ ] Hardcoded waits (page.waitForTimeout) could be smarter
+
+**Implementation Tasks**:
+- [ ] Replace hardcoded waits with waitForFunction
+- [ ] Add test data fixtures with cleanup
+- [ ] Increase timeouts for CI environment (slower than local)
+- [ ] Add test retries for flaky tests (max 2 retries)
+- [ ] Create test utilities module for common patterns
+- [ ] Document E2E testing best practices in tests/README.md
+
+**User Value**: More reliable CI, faster development, fewer false failures
+
+---
+
+### 6. Frontend Bundle Size Optimization ⭐ LOW PRIORITY
+**Impact**: LOW | **Effort**: 2 hours | **Context**: No bundler, all ES6 modules
+
+**Current State**:
+- No bundling or minification
+- Each JS file loaded separately (~15 files)
+- No tree-shaking or dead code elimination
+- Works fine but could be optimized
+
+**Future Consideration**: 
+- Add Vite for bundling when app grows larger
+- Not urgent for current size
+- Monitor bundle size as features added
+
+---
+
+## 🧹 Technical Debt & Improvements (Existing Section)
+
+### Code Quality
+- [x] Add comprehensive test coverage (95 tests implemented)
+- [x] Add E2E tests for new features (23 Playwright tests)
+- [x] GitHub Actions CI/CD (runs all tests on push)
+- [ ] Add TypeScript (evaluate if worth it)
+- [ ] Refactor large components
+
+### Known Issues
+
+#### Current State Connection Arrows Not Visible 🐛
 - [ ] Platform capabilities display
 - [x] Comprehensive sample data
 - [ ] User documentation improvements
