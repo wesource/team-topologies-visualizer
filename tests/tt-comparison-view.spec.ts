@@ -8,13 +8,13 @@ test.describe('Snapshot Comparison View', () => {
     
     // Open snapshots panel
     await page.locator('#timelineBtn').click();
-    await expect(page.locator('#snapshotsPanel')).toBeVisible();
     
-    // Wait for snapshots to load
+    // Wait for snapshots to load (panel becomes visible and API call completes)
     await page.waitForResponse(response => 
       response.url().includes('/api/snapshots') && response.status() === 200
     );
     
+    await expect(page.locator('#timelinePanel')).toBeVisible();
     await page.waitForTimeout(500);
     
     // Select two snapshots for comparison
