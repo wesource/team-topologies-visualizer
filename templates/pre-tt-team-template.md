@@ -6,12 +6,14 @@ position:  # Canvas position (auto-managed when dragging)
   x: 100
   y: 100
 
-# OPTIONAL FIELDS
+# OPTIONAL FIELDS (but recommended for full visualization features)
 product_line: [Product Name]  # Groups teams in Product Lines view (e.g., DispatchHub, RouteOptix)
 dependencies: []  # Teams this team depends on - creates communication lines (e.g., [Database Team, API Framework Team])
 metadata:
-  size: 7  # Number of team members
+  size: 7  # Number of team members - used for display and validation warnings
   department: [Department]  # e.g., Engineering, Product Management, Customer Solutions
+  product: [Product/Service]  # What products/services this team works on
+  established: 2024-01  # YYYY-MM format - shows team age/maturity in modal (planned feature)
   cognitive_load: medium  # low | medium | high | very-high - shows in visualization indicator
 line_manager: [Manager Name]  # Direct reporting manager
 ---
@@ -26,12 +28,6 @@ Brief description of what this team does and their current responsibilities.
 - [Primary responsibility 2]
 - [Primary responsibility 3]
 
-## Team Structure
-
-- **Size**: [Number] people
-- **Department**: [Department name]
-- **Line Manager**: [Manager name]
-
 ## Dependencies
 
 **Teams We Depend On**:
@@ -45,3 +41,13 @@ Brief description of what this team does and their current responsibilities.
 - **Domain Complexity**: [e.g., Managing multiple customer integrations]
 - **Technical Complexity**: [e.g., Maintaining legacy systems]
 - **Coordination Overhead**: [e.g., Frequent handoffs with multiple teams]
+
+## [Optional] Technologies
+
+- **Technology 1**: [Description]
+- **Technology 2**: [Description]
+
+## [Optional] Key Customers/Users
+
+- [Customer/User 1]
+- [Customer/User 2]

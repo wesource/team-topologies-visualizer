@@ -9,9 +9,6 @@ metadata:
   department: Engineering
   established: 2017-01
   cognitive_load: medium
-  cognitive_load_domain: high
-  cognitive_load_intrinsic: medium
-  cognitive_load_extraneous: medium
 line_manager: Jennifer Williams
 ---
 

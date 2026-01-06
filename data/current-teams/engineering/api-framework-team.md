@@ -11,9 +11,6 @@ metadata:
   product: Internal API Standards
   established: 2019-11
   cognitive_load: medium
-  cognitive_load_domain: medium
-  cognitive_load_intrinsic: low
-  cognitive_load_extraneous: high
 line_manager: Sarah Johnson
 ---
 

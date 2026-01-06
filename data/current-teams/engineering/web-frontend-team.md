@@ -14,9 +14,6 @@ metadata:
   product: DispatchHub, Customer Portal
   established: 2019-06
   cognitive_load: high
-  cognitive_load_domain: very-high
-  cognitive_load_intrinsic: high
-  cognitive_load_extraneous: very-high
 line_manager: Marcus Thompson
 ---
 

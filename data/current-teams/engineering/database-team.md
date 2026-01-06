@@ -9,9 +9,6 @@ metadata:
   department: Engineering
   established: 2017-09
   cognitive_load: high
-  cognitive_load_domain: high
-  cognitive_load_intrinsic: high
-  cognitive_load_extraneous: medium
 line_manager: Robert Miller
 ---
 

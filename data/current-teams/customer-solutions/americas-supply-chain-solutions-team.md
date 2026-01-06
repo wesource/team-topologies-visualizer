@@ -9,7 +9,6 @@ position:
 metadata:
   size: 7
   department: Customer Solutions
-  region: America
   established: 2018-11
 line_manager: Carlos Martinez
 ---

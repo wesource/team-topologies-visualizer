@@ -9,7 +9,6 @@ position:
 metadata:
   size: 5
   department: Customer Solutions
-  region: America
   established: 2020-02
 line_manager: Jennifer Kim
 ---

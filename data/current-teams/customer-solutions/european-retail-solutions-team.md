@@ -9,7 +9,6 @@ position:
 metadata:
   size: 5
   department: Customer Solutions
-  region: Europe
   established: 2020-06
 line_manager: Sophie Dubois
 ---

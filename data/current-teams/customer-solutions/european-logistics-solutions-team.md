@@ -9,7 +9,6 @@ position:
 metadata:
   size: 6
   department: Customer Solutions
-  region: Europe
   established: 2019-03
 line_manager: Hans Schmidt
 ---

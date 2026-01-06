@@ -14,9 +14,6 @@ metadata:
   department: Engineering
   established: 2018-11
   cognitive_load: high
-  cognitive_load_domain: very-high
-  cognitive_load_intrinsic: medium
-  cognitive_load_extraneous: very-high
 line_manager: Lisa Anderson
 ---
 

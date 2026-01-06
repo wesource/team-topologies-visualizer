@@ -14,9 +14,6 @@ metadata:
   product: Driver Mobile Apps, Customer Mobile Apps
   established: 2020-01
   cognitive_load: high
-  cognitive_load_domain: very-high
-  cognitive_load_intrinsic: very-high
-  cognitive_load_extraneous: very-high
 line_manager: Michael Chen
 ---
 

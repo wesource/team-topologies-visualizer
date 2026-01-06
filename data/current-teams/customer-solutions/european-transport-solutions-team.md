@@ -9,7 +9,6 @@ position:
 metadata:
   size: 4
   department: Customer Solutions
-  region: Europe
   established: 2021-09
 line_manager: Marco Rossi
 ---

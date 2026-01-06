@@ -15,9 +15,6 @@ metadata:
   product: RouteOptix Core Algorithms
   established: 2016-03
   cognitive_load: very-high
-  cognitive_load_domain: very-high
-  cognitive_load_intrinsic: very-high
-  cognitive_load_extraneous: high
 line_manager: Marcus Thompson
 ---
 
