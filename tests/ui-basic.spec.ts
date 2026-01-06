@@ -100,7 +100,7 @@ test.describe('UI Basic Features', () => {
     
     // TT Design is default, just wait for teams to load
     await page.waitForResponse(
-      response => response.url().includes('/api/teams?view=tt'),
+      response => response.url().includes('/api/tt/teams'),
       { timeout: 10000 }
     );
     

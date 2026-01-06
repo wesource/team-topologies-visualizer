@@ -1,13 +1,19 @@
 import { test, expect } from '@playwright/test';
 
+const BASE_URL = 'http://127.0.0.1:8000';
+
 test.describe('Pre-TT Product Lines View', () => {
     test.beforeEach(async ({ page }) => {
-        await page.goto('/');
-        await page.waitForLoadState('networkidle');
+        await page.goto(`${BASE_URL}/static/index.html`);
+        // Wait for initial TT teams load
+        await page.waitForResponse(response => response.url().includes('/api/tt/teams'), { timeout: 10000 });
+        await page.waitForTimeout(500);
 
         // Switch to Pre-TT view
         const preTTRadio = page.locator('input[type="radio"][value="current"]');
         await preTTRadio.check();
+        // Wait for Pre-TT data to load
+        await page.waitForResponse(response => response.url().includes('/api/pre-tt/'), { timeout: 10000 });
         await page.waitForTimeout(500);
     });
 

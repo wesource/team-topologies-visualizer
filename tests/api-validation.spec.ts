@@ -4,7 +4,7 @@ const BASE_URL = 'http://127.0.0.1:8000';
 
 test.describe('API Validation', () => {
   test('should load organization hierarchy API', async ({ page }) => {
-    const response = await page.request.get(`${BASE_URL}/api/organization-hierarchy`);
+    const response = await page.request.get(`${BASE_URL}/api/pre-tt/organization-hierarchy`);
     
     expect(response.status()).toBe(200);
     const data = await response.json();
@@ -16,7 +16,7 @@ test.describe('API Validation', () => {
   });
 
   test('should load teams API for current view', async ({ page }) => {
-    const response = await page.request.get(`${BASE_URL}/api/teams?view=current`);
+    const response = await page.request.get(`${BASE_URL}/api/pre-tt/teams`);
     
     expect(response.status()).toBe(200);
     const teams = await response.json();
@@ -25,7 +25,7 @@ test.describe('API Validation', () => {
   });
 
   test('should load teams API for TT Design view', async ({ page }) => {
-    const response = await page.request.get(`${BASE_URL}/api/teams?view=tt`);
+    const response = await page.request.get(`${BASE_URL}/api/tt/teams`);
     
     expect(response.status()).toBe(200);
     const teams = await response.json();
@@ -41,8 +41,8 @@ test.describe('API Validation', () => {
 
   test('API endpoints should return valid JSON', async ({ page }) => {
     const endpoints = [
-      '/api/teams?view=tt',
-      '/api/organization-hierarchy'
+      '/api/tt/teams',
+      '/api/pre-tt/organization-hierarchy'
     ];
 
     for (const endpoint of endpoints) {

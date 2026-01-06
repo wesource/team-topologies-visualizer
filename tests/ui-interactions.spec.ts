@@ -5,7 +5,7 @@ const BASE_URL = 'http://127.0.0.1:8000';
 test.describe('UI Interactions', () => {
   test('should filter teams by value stream', async ({ page }) => {
     await page.goto(`${BASE_URL}/static/index.html`);
-    await page.waitForResponse(response => response.url().includes('/api/teams?view=tt'), { timeout: 5000 });
+    await page.waitForResponse(response => response.url().includes('/api/tt/teams'), { timeout: 5000 });
     await page.waitForTimeout(500);
     
     // Get initial state from hidden test element

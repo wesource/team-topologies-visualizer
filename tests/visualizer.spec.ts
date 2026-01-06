@@ -39,7 +39,7 @@ test.describe('Team Topologies Visualizer', () => {
       
       // Wait for API calls
       const hierarchyResponse = await page.waitForResponse(
-        response => response.url().includes('/api/organization-hierarchy') && response.status() === 200
+        response => response.url().includes('/api/pre-tt/organization-hierarchy') && response.status() === 200
       );
       
       const hierarchyData = await hierarchyResponse.json();
@@ -57,7 +57,7 @@ test.describe('Team Topologies Visualizer', () => {
       await page.locator('input[value="current"]').click();
       
       const teamsResponse = await page.waitForResponse(
-        response => response.url().includes('/api/teams?view=current') && response.status() === 200
+        response => response.url().includes('/api/pre-tt/teams') && response.status() === 200
       );
       
       const teams = await teamsResponse.json();
@@ -98,13 +98,13 @@ test.describe('Team Topologies Visualizer', () => {
     await page.goto(`${BASE_URL}/static/index.html`);
     
     // Wait for initial load (TT Design is default)
-    await page.waitForResponse(response => response.url().includes('/api/teams?view=tt'));
+    await page.waitForResponse(response => response.url().includes('/api/tt/teams'));
     
     // Click Pre-TT (current) radio button
     await page.locator('input[value="current"]').click();
     
     // Wait for current teams to load
-    await page.waitForResponse(response => response.url().includes('/api/teams?view=current'));
+    await page.waitForResponse(response => response.url().includes('/api/pre-tt/teams'));
     
     // Verify current is now checked
     await expect(page.locator('input[value="current"]')).toBeChecked();
@@ -145,8 +145,8 @@ test.describe('Team Topologies Visualizer', () => {
     await page.locator('input[value="current"]').click();
     
     // Wait for all data to load
-    await page.waitForResponse(response => response.url().includes('/api/organization-hierarchy'));
-    await page.waitForResponse(response => response.url().includes('/api/teams?view=current'));
+    await page.waitForResponse(response => response.url().includes('/api/pre-tt/organization-hierarchy'));
+    await page.waitForResponse(response => response.url().includes('/api/pre-tt/teams'));
     await page.waitForTimeout(500); // Minimal wait for rendering
     
     // Take screenshot
@@ -163,7 +163,7 @@ test.describe('Team Topologies Visualizer', () => {
     await page.goto(`${BASE_URL}/static/index.html`);
     
     // Wait for TT data to load (TT Design is default)
-    await page.waitForResponse(response => response.url().includes('/api/teams?view=tt'));
+    await page.waitForResponse(response => response.url().includes('/api/tt/teams'));
     await page.waitForTimeout(500); // Minimal wait for rendering
     
     // Click auto-align button for TT Design view
@@ -197,19 +197,19 @@ test.describe('Team Topologies Visualizer', () => {
 
   test('API endpoints should return valid JSON', async ({ request }) => {
     // Test team types endpoint
-    const teamTypesResponse = await request.get(`${BASE_URL}/api/team-types?view=current`);
+    const teamTypesResponse = await request.get(`${BASE_URL}/api/pre-tt/team-types`);
     expect(teamTypesResponse.ok()).toBeTruthy();
     const teamTypes = await teamTypesResponse.json();
     expect(teamTypes).toHaveProperty('team_types');
     
     // Test organization hierarchy endpoint
-    const hierarchyResponse = await request.get(`${BASE_URL}/api/organization-hierarchy`);
+    const hierarchyResponse = await request.get(`${BASE_URL}/api/pre-tt/organization-hierarchy`);
     expect(hierarchyResponse.ok()).toBeTruthy();
     const hierarchy = await hierarchyResponse.json();
     expect(hierarchy).toHaveProperty('company');
     
     // Test teams endpoint
-    const teamsResponse = await request.get(`${BASE_URL}/api/teams?view=current`);
+    const teamsResponse = await request.get(`${BASE_URL}/api/pre-tt/teams`);
     expect(teamsResponse.ok()).toBeTruthy();
     const teams = await teamsResponse.json();
     expect(Array.isArray(teams)).toBe(true);
@@ -224,7 +224,7 @@ test.describe('Team Topologies Visualizer', () => {
       await page.locator('input[value="current"]').click();
       
       const hierarchyResponse = await page.waitForResponse(
-        response => response.url().includes('/api/organization-hierarchy')
+        response => response.url().includes('/api/pre-tt/organization-hierarchy')
       );
       
       const hierarchyData = await hierarchyResponse.json();
@@ -251,7 +251,7 @@ test.describe('Team Topologies Visualizer', () => {
       await page.locator('input[value="current"]').click();
       
       const hierarchyResponse = await page.waitForResponse(
-        response => response.url().includes('/api/organization-hierarchy')
+        response => response.url().includes('/api/pre-tt/organization-hierarchy')
       );
       
       const hierarchyData = await hierarchyResponse.json();
@@ -271,7 +271,7 @@ test.describe('Team Topologies Visualizer', () => {
       await page.goto(`${BASE_URL}/static/index.html`);
       
       // Wait for teams to load (TT Design is default)
-      await page.waitForResponse(response => response.url().includes('/api/teams?view=tt'));
+      await page.waitForResponse(response => response.url().includes('/api/tt/teams'));
       await page.waitForLoadState('networkidle'); // Wait for all network activity to finish
       await page.waitForTimeout(1500); // Wait for canvas rendering and app initialization
       
@@ -358,7 +358,7 @@ test.describe('Team Topologies Visualizer', () => {
   test.describe('UI Interactions', () => {
     test('should filter teams by value stream', async ({ page }) => {
       await page.goto(`${BASE_URL}/static/index.html`);
-      await page.waitForResponse(response => response.url().includes('/api/teams?view=tt'), { timeout: 5000 });
+      await page.waitForResponse(response => response.url().includes('/api/tt/teams'), { timeout: 5000 });
       await page.waitForTimeout(500);
       
       // Get initial state from hidden test element
@@ -471,7 +471,7 @@ test.describe('Team Topologies Visualizer', () => {
 
     test('should toggle interaction modes visibility', async ({ page }) => {
       await page.goto(`${BASE_URL}/static/index.html`);
-      await page.waitForResponse(response => response.url().includes('/api/teams?view=tt'), { timeout: 5000 });
+      await page.waitForResponse(response => response.url().includes('/api/tt/teams'), { timeout: 5000 });
       await page.waitForTimeout(500);
       
       const checkbox = page.locator('#showInteractionModes');
@@ -531,7 +531,7 @@ test.describe('Team Topologies Visualizer', () => {
 
     test('should use auto-align button', async ({ page }) => {
       await page.goto(`${BASE_URL}/static/index.html`);
-      await page.waitForResponse(response => response.url().includes('/api/teams?view=tt'), { timeout: 5000 });
+      await page.waitForResponse(response => response.url().includes('/api/tt/teams'), { timeout: 5000 });
       await page.waitForTimeout(500);
       
       const autoAlignBtn = page.locator('#autoAlignTTBtn');

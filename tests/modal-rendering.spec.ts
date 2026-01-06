@@ -5,7 +5,8 @@ const BASE_URL = 'http://127.0.0.1:8000';
 test.describe('Modal Rendering', () => {
   test('should render validation modal with content', async ({ page }) => {
     await page.goto(`${BASE_URL}/static/index.html`);
-    await page.waitForResponse(response => response.url().includes('/api/teams'), { timeout: 10000 });
+    // Wait for initial teams load (defaults to TT view)
+    await page.waitForResponse(response => response.url().includes('/api/tt/teams'), { timeout: 10000 });
     await page.waitForTimeout(500);
     
     // Open validation modal
