@@ -4,7 +4,7 @@
  */
 
 import { drawTeam, drawConnections, drawValueStreamGroupings, drawPlatformGroupings } from './renderer-common.js';
-import { LAYOUT } from './constants.js';
+import { LAYOUT as _LAYOUT } from './constants.js';
 import { getValueStreamGroupings } from './tt-value-stream-grouping.js';
 import { getPlatformGroupings } from './tt-platform-grouping.js';
 
@@ -537,7 +537,7 @@ class ComparisonView {
                     // Get team dimensions for badge positioning
                     const isWideTeam = team.team_type === 'stream-aligned' || team.team_type === 'platform';
                     const width = isWideTeam ? 200 : 100;
-                    const height = isWideTeam ? 60 : 80;
+                    const _height = isWideTeam ? 60 : 80;
 
                     // Draw badge above team box
                     const badgeHeight = 20;
@@ -564,7 +564,7 @@ class ComparisonView {
     /**
      * Render canvas with current view state
      */
-    renderCanvas(canvas, viewState) {
+    renderCanvas(canvas, _viewState) {
         if (canvas === this.beforeCanvas) {
             this.renderBefore();
         } else {

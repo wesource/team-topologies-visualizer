@@ -92,7 +92,7 @@ export class CanvasInteractionHandler {
         }
     }
 
-    async handleMouseUp(e) {
+    async handleMouseUp(_e) {
         // End panning
         if (this.isPanning) {
             this.isPanning = false;

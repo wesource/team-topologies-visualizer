@@ -7,7 +7,7 @@ import { exportToSVG } from './svg-export.js';
 import { showWarning, showInfo, showSuccess, showError } from './notifications.js';
 import { showValidationReport } from './modals.js';
 
-export function handleViewChange(e, loadAllTeams, draw) {
+export function handleViewChange(e, loadAllTeams, _draw) {
     const target = e.target;
     state.currentView = target.value;
 
@@ -136,7 +136,7 @@ export async function handleAutoAlignTT(draw) {
     }
 }
 
-export function setupUIEventListeners(loadAllTeams, draw, openAddTeamModal, closeModal, closeDetailModal, closeInteractionModeModal, handleTeamSubmit, selectTeam) {
+export function setupUIEventListeners(loadAllTeams, draw, openAddTeamModal, closeModal, closeDetailModal, closeInteractionModeModal, handleTeamSubmit, _selectTeam) {
     // UI interactions
     document.querySelectorAll('input[name="view"]').forEach(radio => {
         radio.addEventListener('change', (e) => handleViewChange(e, loadAllTeams, draw));

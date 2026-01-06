@@ -42,10 +42,10 @@ export function autoAlignTTDesign(teams) {
     // Separate ungrouped teams into wide and narrow
     // Wide: stream-aligned and platform teams in TT view
     // Narrow: enabling, complicated-subsystem, and undefined teams
-    const wideUngrouped = ungroupedTeams.filter(team =>
+    const _wideUngrouped = ungroupedTeams.filter(team =>
         team.team_type === 'stream-aligned' || team.team_type === 'platform'
     );
-    const narrowUngrouped = ungroupedTeams.filter(team =>
+    const _narrowUngrouped = ungroupedTeams.filter(team =>
         team.team_type === 'enabling' || team.team_type === 'complicated-subsystem' || team.team_type === 'undefined'
     );
 
@@ -96,10 +96,10 @@ export function autoAlignTTDesign(teams) {
         let currentYPos = groupingStartY + paddingInGrouping + labelHeight;
 
         // Position wide teams first - stacked vertically, centered horizontally
-        const wideTeamWidth = getWideTeamWidth();
+        const _wideTeamWidth = getWideTeamWidth();
         const wideTeamCenterX = groupingStartX + paddingInGrouping + (groupingWidth - 2 * paddingInGrouping) * 0.1; // 10% from left
 
-        wideTeams.forEach((team, index) => {
+        wideTeams.forEach((team, _index) => {
             const newX = wideTeamCenterX;
             const newY = currentYPos;
 
@@ -177,7 +177,7 @@ export function autoAlignTTDesign(teams) {
     // Position value stream groupings first (excluding ungrouped)
     const actualValueStreamGroupings = valueStreamGroupings.filter(g => g.name !== '(Ungrouped)');
 
-    actualValueStreamGroupings.forEach((grouping, index) => {
+    actualValueStreamGroupings.forEach((grouping, _index) => {
         const groupingHeight = positionTeamsInGrouping(grouping.teams, currentX, currentY);
         maxHeightInRow = Math.max(maxHeightInRow, groupingHeight);
 
@@ -204,7 +204,7 @@ export function autoAlignTTDesign(teams) {
     }
 
     // Position platform groupings
-    platformGroupings.forEach((grouping, index) => {
+    platformGroupings.forEach((grouping, _index) => {
         const groupingHeight = positionTeamsInGrouping(grouping.teams, currentX, currentY);
         maxHeightInRow = Math.max(maxHeightInRow, groupingHeight);
 
@@ -234,7 +234,7 @@ export function autoAlignTTDesign(teams) {
         let currentYPos = ungroupedStartY;
 
         // Position wide ungrouped teams stacked vertically
-        wideUngrouped.forEach((team, index) => {
+        wideUngrouped.forEach((team, _index) => {
             const newX = ungroupedStartX;
             const newY = currentYPos;
 

@@ -1,5 +1,5 @@
 // Main application - refactored with modular structure
-import { loadTeamTypes, loadOrganizationHierarchy, loadTeams, loadTeamDetails, updateTeamPosition } from './api.js';
+import { loadTeamTypes, loadOrganizationHierarchy, loadTeams } from './api.js';
 import { initCanvasPolyfills } from './renderer-common.js';
 import { CanvasInteractionHandler } from './canvas-interactions.js';
 import { state } from './state-management.js';
@@ -10,7 +10,7 @@ import { draw, selectTeam } from './renderer.js';
 import { initSnapshotHandlers } from './snapshot-handlers.js';
 import { comparisonView } from './tt-comparison-view.js';
 
-let interactionHandler = null;
+let _interactionHandler = null;
 // Initialize
 document.addEventListener('DOMContentLoaded', init);
 function init() {
@@ -21,7 +21,7 @@ function init() {
     window.addEventListener('resize', resizeCanvas);
     // Setup interaction handler
     if (state.canvas && state.ctx) {
-        interactionHandler = new CanvasInteractionHandler(state.canvas, state, () => draw(state));
+        _interactionHandler = new CanvasInteractionHandler(state.canvas, state, () => draw(state));
         state.onTeamDoubleClick = (team) => showTeamDetails(team, state.currentView);
     }
     // Setup UI event listeners

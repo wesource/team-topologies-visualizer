@@ -89,7 +89,7 @@ async function openCreateSnapshotModal() {
             ${stats.enabling} enabling, 
             ${stats.complicatedSubsystem} complicated subsystem
         `;
-    } catch (error) {
+    } catch {
         preview.innerHTML = '<span style="color: #dc3545;">Failed to load preview</span>';
     }
 
@@ -475,7 +475,7 @@ async function handleCompareSnapshots() {
 /**
  * Display comparison results in modal
  */
-function displayComparisonResults(comparison) {
+function _displayComparisonResults(comparison) {
     const resultsDiv = document.getElementById('comparisonResults');
     const changes = comparison.changes;
     const summary = changes.summary;
@@ -543,7 +543,7 @@ function displayComparisonResults(comparison) {
 /**
  * Show comparison banner
  */
-function showComparisonBanner(comparison) {
+function _showComparisonBanner(comparison) {
     const banner = document.getElementById('comparisonBanner');
     const textEl = document.getElementById('comparisonBannerText');
 
