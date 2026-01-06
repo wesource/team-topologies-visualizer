@@ -1,0 +1,149 @@
+import { test, expect } from '@playwright/test';
+
+test.describe('Pre-TT Value Streams View', () => {
+    test.beforeEach(async ({ page }) => {
+        await page.goto('/');
+        await page.waitForLoadState('networkidle');
+
+        // Switch to Pre-TT view
+        const preTTRadio = page.locator('input[type="radio"][value="current"]');
+        await preTTRadio.check();
+        await page.waitForTimeout(500);
+    });
+
+    test('should switch to Value Streams perspective', async ({ page }) => {
+        // Switch to Value Streams perspective
+        const valueStreamsRadio = page.locator('input[type="radio"][value="value-streams"]');
+        await valueStreamsRadio.check();
+        await page.waitForTimeout(1000);
+
+        // Verify canvas is visible
+        const canvas = page.locator('#team-canvas');
+        await expect(canvas).toBeVisible();
+
+        // Verify the perspective is active
+        await expect(valueStreamsRadio).toBeChecked();
+    });
+
+    test('should load value streams data', async ({ page }) => {
+        // Listen for the API call
+        const responsePromise = page.waitForResponse(
+            response => response.url().includes('/api/pre-tt/value-streams') && response.status() === 200
+        );
+
+        // Switch to Value Streams perspective
+        const valueStreamsRadio = page.locator('input[type="radio")[value="value-streams"]');
+        await valueStreamsRadio.check();
+
+        // Wait for API response
+        const response = await responsePromise;
+        const data = await response.json();
+
+        // Verify data structure
+        expect(data).toHaveProperty('value_streams');
+        expect(data).toHaveProperty('products_without_value_stream');
+        expect(data).toHaveProperty('ungrouped_teams');
+        expect(typeof data.value_streams).toBe('object');
+        expect(Array.isArray(data.ungrouped_teams)).toBeTruthy();
+    });
+
+    test('should render value stream swimlanes', async ({ page }) => {
+        // Switch to Value Streams perspective
+        const valueStreamsRadio = page.locator('input[type="radio"][value="value-streams"]');
+        await valueStreamsRadio.check();
+        await page.waitForTimeout(1500);
+
+        // Take screenshot for visual verification
+        await page.screenshot({
+            path: 'tests/screenshots/pre-tt-value-streams-view.png',
+            fullPage: false
+        });
+
+        // Canvas should be visible and have content
+        const canvas = page.locator('#team-canvas');
+        await expect(canvas).toBeVisible();
+
+        // Check canvas has non-zero dimensions
+        const box = await canvas.boundingBox();
+        expect(box).not.toBeNull();
+        if (box) {
+            expect(box.width).toBeGreaterThan(0);
+            expect(box.height).toBeGreaterThan(0);
+        }
+    });
+
+    test('should show value stream metadata', async ({ page }) => {
+        // Switch to Value Streams perspective
+        const valueStreamsRadio = page.locator('input[type="radio"][value="value-streams"]');
+        await valueStreamsRadio.check();
+        await page.waitForTimeout(1500);
+
+        // Get the API response to verify value streams have proper structure
+        const response = await page.request.get('/api/pre-tt/value-streams');
+        const data = await response.json();
+
+        // Each value stream should have metadata
+        const vsNames = Object.keys(data.value_streams);
+        if (vsNames.length > 0) {
+            const firstVS = data.value_streams[vsNames[0]];
+            expect(firstVS).toHaveProperty('id');
+            expect(firstVS).toHaveProperty('name');
+            expect(firstVS).toHaveProperty('description');
+            expect(firstVS).toHaveProperty('color');
+            expect(firstVS).toHaveProperty('products');
+        }
+    });
+
+    test('should handle teams grouped by product within value stream', async ({ page }) => {
+        // Switch to Value Streams perspective
+        const valueStreamsRadio = page.locator('input[type="radio"][value="value-streams"]');
+        await valueStreamsRadio.check();
+        await page.waitForTimeout(1500);
+
+        // Get the API response
+        const response = await page.request.get('/api/pre-tt/value-streams');
+        const data = await response.json();
+
+        // Verify nested structure: value_stream -> products -> teams
+        const vsNames = Object.keys(data.value_streams);
+        if (vsNames.length > 0) {
+            const firstVS = data.value_streams[vsNames[0]];
+            const products = firstVS.products;
+            expect(typeof products).toBe('object');
+
+            // Each product should have an array of teams
+            for (const [productName, teams] of Object.entries(products)) {
+                expect(Array.isArray(teams)).toBeTruthy();
+            }
+        }
+    });
+
+    test('should support switching between all three Pre-TT perspectives', async ({ page }) => {
+        // Test full perspective switching workflow
+
+        // Start with Hierarchy (default)
+        const hierarchyRadio = page.locator('input[type="radio"][value="hierarchy"]');
+        await expect(hierarchyRadio).toBeChecked();
+
+        // Switch to Product Lines
+        const productLinesRadio = page.locator('input[type="radio"][value="product-lines"]');
+        await productLinesRadio.check();
+        await page.waitForTimeout(1000);
+        await expect(productLinesRadio).toBeChecked();
+
+        // Switch to Value Streams
+        const valueStreamsRadio = page.locator('input[type="radio"][value="value-streams"]');
+        await valueStreamsRadio.check();
+        await page.waitForTimeout(1000);
+        await expect(valueStreamsRadio).toBeChecked();
+
+        // Switch back to Hierarchy
+        await hierarchyRadio.check();
+        await page.waitForTimeout(1000);
+        await expect(hierarchyRadio).toBeChecked();
+
+        // Canvas should still be visible throughout
+        const canvas = page.locator('#team-canvas');
+        await expect(canvas).toBeVisible();
+    });
+});
