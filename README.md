@@ -97,6 +97,10 @@ This tool provides dual visualizations to make these conversations easier.
 - 📊 **Interactive Canvas** - Drag-and-drop teams, zoom (Ctrl+/- or mouse wheel), pan (right-click drag), fit-to-view (Ctrl+0)
 - 🔍 **Search & Filter** - Instant team search (Esc to clear), multi-select filters for value streams and platform groupings (TT Design view)
 - 🔄 **Dual Views** - Toggle between "Pre-TT" and "TT Design" (TT Design is default)
+- 🎭 **Multiple Pre-TT Perspectives** - Visualize current state three ways:
+  - **📊 Hierarchy**: Traditional org chart with line managers and departments
+  - **🏭 Product Lines**: Hybrid layout with vertical product lanes + horizontal shared teams
+  - **🌊 Value Streams**: Swimlane visualization showing teams grouped by value stream
 - 📝 **Git-Friendly Storage** - Teams stored as markdown files with YAML front matter (structured metadata at the top of files between `---` delimiters, followed by markdown content)
 - ✅ **File Validation** - "✓ Validate Files" button checks for YAML errors, missing fields, filename mismatches, team size issues, and more
 - 🎨 **Customizable Team Types** - Define your own team classifications and colors via JSON config
@@ -425,15 +429,76 @@ The API provides **read-only endpoints** for visualization purposes:
 - `PATCH /api/teams/{name}/position?view=current` - Update team position on canvas (drag-and-drop)
 
 **Note**: Create, update, and delete operations for team data are intentionally not implemented via API. Teams should be managed by editing the markdown files directly in `data/current-teams/` and `data/tt-teams/` folders. The PATCH position endpoint is the only write operation and only updates the x/y coordinates for canvas positioning.
+## Linting
 
+**CRITICAL**: Always run linters before committing to catch errors early.
+
+### Python (Ruff)
+```powershell
+python -m ruff check backend/ tests_backend/ main.py --fix
+```
+
+**Common rules to avoid:**
+- **F401**: Remove unused imports
+- **B007**: Prefix unused loop variables with underscore (e.g., `for _key, value in items()`)
+- **Trailing whitespace**: Auto-fixed with `--fix`
+
+### JavaScript (ESLint)
+```powershell
+cd frontend
+npm run lint            # Check for issues
+npm run lint -- --fix   # Auto-fix issues
+```
+
+**Configuration:** See `ruff.toml` (backend) and `frontend/eslint.config.js` (frontend)
 ## Testing
 
-The project includes comprehensive automated testing (~112 tests total across 3 layers: backend unit, frontend unit, and E2E tests).
+The project includes comprehensive automated testing (332 tests total across 3 layers: backend unit, frontend unit, and E2E tests).
 
 ### Test Coverage
-- **Backend**: 10 tests with pytest (~0.5s) - API validation, file parsing, URL-safe names
-- **Frontend**: 62 tests with Vitest (~1.3s) - Rendering, state, filters, groupings, SVG export
-- **E2E**: 40 tests with Playwright (~11s) - Full user workflows, UI interactions, canvas rendering
+- **Backend**: 55 tests with pytest (~3.5s) - API validation, file parsing, URL-safe names, team API fields, snapshots, routes
+- **Frontend**: 195 tests with Vitest (~5.6s) - Rendering, state, filters, groupings, SVG export, alignment, comparison view
+- **E2E**: 82 tests with Playwright (~45s) - Full user workflows, UI interactions, canvas rendering, Pre-TT perspectives
+
+### Coverage Reporting
+- **Backend coverage**: 50% (pytest-cov) - HTML reports generated in `htmlcov/`
+- **Frontend coverage**: Vitest with v8 provider - HTML reports in `frontend/coverage/`
+- **CI Pipeline**: Coverage reports automatically uploaded as GitHub Actions artifacts (7-day retention)
+  - Download `backend-coverage-report` and `frontend-coverage-report` from Actions runs
+  - Also includes `playwright-report` for E2E test results
+
+### Running Tests Locally
+
+**Backend tests:**
+```powershell
+# Windows with venv (CORRECT way)
+.\venv\Scripts\python.exe -m pytest tests_backend/ -v
+
+# With coverage
+.\venv\Scripts\python.exe -m pytest tests_backend/ --cov=backend --cov=main --cov-report=html --cov-report=term
+```
+
+**Frontend tests:**
+```powershell
+cd frontend
+npm test                    # Run once
+npm run test:watch          # Watch mode
+npm run test:coverage       # With coverage
+```
+
+**E2E tests (Playwright):**
+```powershell
+cd tests
+npx playwright test         # Run all E2E tests
+npx playwright test --ui    # Interactive UI mode
+```
+
+**Run all tests:**
+```powershell
+.\run-all-tests.ps1         # Runs backend + frontend + E2E in sequence
+```
+
+**Note**: E2E tests automatically start/stop the uvicorn backend server on port 8000.
 
 ### E2E Testing Architecture
 

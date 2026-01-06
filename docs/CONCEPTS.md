@@ -17,6 +17,170 @@
 
 Based on the [official Team Topologies Shape Templates](https://github.com/TeamTopologies/Team-Shape-Templates), teams are rendered with different widths to reflect their relationship to the flow of change:
 
+## Pre-TT View: Visualizing Your Current State
+
+Before designing a Team Topologies transformation, you need to **understand your current organizational reality**. The Pre-TT view provides three different perspectives on your existing team structure, each revealing different aspects of how teams are organized today.
+
+### Why Multiple Perspectives?
+
+> **"The Rubik's Cube Principle"**: The same teams look different from different angles, but they're still the same teams.
+
+Most organizations have **overlapping structures**:
+- Reporting hierarchy (who reports to whom)
+- Product/project assignments (who works on what)
+- Value streams (which customer journeys teams support)
+
+Pre-TT perspectives let you visualize all three without changing the underlying team data. This helps identify misalignments and transformation opportunities.
+
+### The Three Pre-TT Perspectives
+
+#### 1. 📊 Hierarchy View (Traditional Org Chart)
+
+**What it shows:**
+- Line manager reporting structure
+- Department groupings
+- Traditional organizational hierarchy
+
+**Visual layout:**
+- Teams positioned vertically under their line managers
+- Departments shown as grouping boxes
+- Clear visualization of reporting chains
+
+**When to use:**
+- Documenting current reporting structure
+- Identifying spans of control issues (too many/few direct reports)
+- Understanding organizational silos
+- Communicating with HR and executives familiar with org charts
+
+**Key insight:** Often reveals **Conway's Law violations** - teams structured by reporting lines rather than value flow.
+
+#### 2. 🏭 Product Lines View (Hybrid Layout)
+
+**What it shows:**
+- Teams grouped by product or project
+- Shared/platform teams serving multiple products
+- Product-centric organization
+
+**Visual layout:**
+- **Vertical product lanes**: Each product has its own column with teams stacked inside
+- **Horizontal shared row**: Platform/shared teams displayed side-by-side at bottom
+- Product headers show team count (e.g., "DispatchHub - 3 teams")
+
+**When to use:**
+- Organizations structured around products/projects (common in enterprise)
+- Identifying which teams are product-specific vs. shared
+- Spotting shared service bottlenecks (teams everyone depends on)
+- Planning product-to-value-stream migrations
+
+**Common patterns revealed:**
+- **Over-shared teams**: Database, DevOps, QA teams serving 10+ products (bottleneck risk)
+- **Product silos**: Teams locked to single products (can't share learnings)
+- **Ambiguous ownership**: Teams appearing in multiple product lanes (split focus)
+
+**Configuration:**
+- `products.json` defines product names, colors, and metadata
+- Teams with `product_line` field appear in product lanes
+- Teams without `product_line` appear in shared row
+
+#### 3. 🌊 Value Streams View (Swimlane Layout)
+
+**What it shows:**
+- Teams grouped by customer-facing value stream
+- Products nested within value streams
+- End-to-end flow from customer need to delivered value
+
+**Visual layout:**
+- **Value stream swimlanes**: Horizontal containers for each value stream
+- **Nested products**: Products shown as sections within value streams
+- **Teams within products**: Teams positioned inside their product sections
+- **Right column**: Teams and products without value stream assignment
+
+**When to use:**
+- Organizations with clear customer journeys (e.g., B2B vs B2C)
+- Planning value stream-aligned transformation
+- Identifying cross-value-stream dependencies
+- Executive presentations showing business domain alignment
+
+**Common patterns revealed:**
+- **Missing value streams**: Teams not assigned to any customer-facing flow
+- **Fragmented ownership**: Single value stream split across many teams
+- **Cross-stream coupling**: Dependencies between value streams (should be minimized)
+
+**Configuration:**
+- `value-streams.json` defines value stream names, colors, and product mappings
+- Teams with `value_stream` field appear in swimlanes
+- Products can be mapped to value streams
+- Ungrouped content appears in right column
+
+### Comparison: When to Use Each Perspective
+
+| Perspective | Best For | Reveals |
+|-------------|----------|----------|
+| **📊 Hierarchy** | Current reporting structure, HR alignment | Spans of control, organizational silos, reporting bottlenecks |
+| **🏭 Product Lines** | Product-centric organizations, portfolio management | Shared service bottlenecks, product silos, team allocation |
+| **🌊 Value Streams** | Customer journey focus, TT transformation planning | Value stream gaps, cross-stream dependencies, flow alignment |
+
+### Communication Lines vs. Interaction Modes
+
+**Critical distinction**: Pre-TT and TT Design use different concepts for team relationships:
+
+#### Pre-TT: Communication Lines (Current Reality)
+- **What they show**: Dependencies and communication patterns that **organically exist today**
+- **Data source**: `dependencies` field in team YAML (simple list of team names)
+- **Meaning**: "This team needs to coordinate with that team to deliver"
+- **No prescribed modes**: Just shows the dependency exists, not how it should work
+- **Visual**: Thin gray lines between teams (toggle with "Show Communication Lines" checkbox)
+- **Purpose**: Reveal coordination overhead and bottlenecks in current structure
+
+**Example Pre-TT dependencies:**
+```yaml
+dependencies:
+  - Database Platform Team      # We wait for schema changes
+  - QA & Testing Team           # Handoff for testing
+  - DevOps Team                 # Handoff for deployment
+```
+
+#### TT Design: Interaction Modes (Designed Future)
+- **What they show**: **Prescribed patterns** for how teams **should** interact
+- **Data source**: `interaction_modes` field (team name + mode type)
+- **Three modes**: Collaboration, X-as-a-Service, Facilitating
+- **Visual**: Different line styles (solid purple, dashed black, dotted green)
+- **Purpose**: Intentional design for reducing cognitive load and enabling fast flow
+
+**Example TT interaction modes:**
+```yaml
+interaction_modes:
+  Payment Platform Team: x-as-a-service     # Self-service API
+  Checkout Team: collaboration               # Joint design for 3 months
+  DevOps Enablement Team: facilitating      # Coaching on CI/CD
+```
+
+**Key insight**: Pre-TT shows **dysfunction** (handoffs, bottlenecks, coordination overhead). TT Design shows **intent** (self-service, temporary collaboration, capability building).
+
+### Switching Between Perspectives
+
+**UI Controls:**
+1. **View selector** (top toolbar): Toggle between "Pre-TT" and "TT Design"
+2. **Perspective selector** (Pre-TT only): Radio buttons for Hierarchy / Product Lines / Value Streams
+3. **Visibility toggles**: Show/hide communication lines (Pre-TT) or interaction modes (TT)
+
+**Data consistency:**
+- Same team markdown files used for all Pre-TT perspectives
+- Teams don't move between files - they just render differently
+- Positions stored per-team in YAML front matter
+- Grouping metadata (product_line, value_stream, line_manager) determines perspective appearance
+
+**Best practice workflow:**
+1. Start with **Hierarchy** - document current reporting structure
+2. Switch to **Product Lines** - understand product assignments and shared teams
+3. Switch to **Value Streams** - map to customer journeys (may not exist yet!)
+4. Identify misalignments between perspectives
+5. Design TT transformation to align value streams
+
+### Team Shape Visualization (TT Design View)
+
+Based on the [official Team Topologies Shape Templates](https://github.com/TeamTopologies/Team-Shape-Templates), teams are rendered with different widths to reflect their relationship to the flow of change:
+
 #### Wide Teams (Stream-aligned & Platform)
 - **Visual style**: Wide horizontal boxes (~80% of grouping width) stacked vertically
 - **Rationale**: These teams support the **"whole flow of change"** from idea to production
