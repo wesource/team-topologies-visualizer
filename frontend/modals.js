@@ -22,8 +22,24 @@ document.addEventListener('keydown', (e) => {
         closeModal();
         closeDetailModal();
         closeInteractionModeModal();
+        closeKeyboardShortcutsModal();
+    }
+    // Show keyboard shortcuts on '?' key
+    if (e.key === '?' && !isInputFocused()) {
+        e.preventDefault();
+        openKeyboardShortcutsModal();
     }
 });
+
+// Helper to check if an input element is focused
+function isInputFocused() {
+    const activeElement = document.activeElement;
+    return activeElement && (
+        activeElement.tagName === 'INPUT' ||
+        activeElement.tagName === 'TEXTAREA' ||
+        activeElement.isContentEditable
+    );
+}
 
 /**
  * Open add team modal (currently disabled)
@@ -501,6 +517,38 @@ const validationModalClose = document.getElementById('validationModalClose');
 if (validationModalClose) {
     validationModalClose.addEventListener('click', closeValidationModal);
 }
+
+/**
+ * Open keyboard shortcuts modal
+ */
+export function openKeyboardShortcutsModal() {
+    const modal = document.getElementById('keyboardShortcutsModal');
+    if (modal) {
+        modal.style.display = 'block';
+    }
+}
+
+/**
+ * Close keyboard shortcuts modal
+ */
+export function closeKeyboardShortcutsModal() {
+    const modal = document.getElementById('keyboardShortcutsModal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// Setup keyboard shortcuts modal close handlers
+const keyboardShortcutsModalClose = document.getElementById('keyboardShortcutsModalClose');
+if (keyboardShortcutsModalClose) {
+    keyboardShortcutsModalClose.addEventListener('click', closeKeyboardShortcutsModal);
+}
+
+const keyboardShortcutsBtn = document.getElementById('keyboardShortcutsBtn');
+if (keyboardShortcutsBtn) {
+    keyboardShortcutsBtn.addEventListener('click', openKeyboardShortcutsModal);
+}
+
 
 window.addEventListener('click', (event) => {
     const validationModal = document.getElementById('validationModal');

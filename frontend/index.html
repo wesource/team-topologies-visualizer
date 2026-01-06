@@ -18,6 +18,7 @@
                     </div>
                     <button id="exportSVGBtn" class="btn">📥 Export SVG</button>
                     <button id="validateBtn" class="btn">✓ Validate</button>
+                    <button id="keyboardShortcutsBtn" class="btn" title="Keyboard Shortcuts">?</button>
                     <button id="refreshBtn" class="btn">🔄 Refresh</button>
                 </div>
             </div>
@@ -222,6 +223,46 @@
             <span class="close" id="validationModalClose">&times;</span>
             <h2>File Validation Report</h2>
             <div id="validationReport"></div>
+        </div>
+    </div>
+
+    <!-- Keyboard Shortcuts Modal -->
+    <div id="keyboardShortcutsModal" class="modal">
+        <div class="modal-content modal-medium">
+            <span class="close" id="keyboardShortcutsModalClose">&times;</span>
+            <h2>⌨️ Keyboard Shortcuts</h2>
+            <div class="shortcuts-grid">
+                <div class="shortcut-group">
+                    <h3>Canvas Navigation</h3>
+                    <div class="shortcut-row">
+                        <span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>+</kbd></span>
+                        <span class="shortcut-desc">Zoom in</span>
+                    </div>
+                    <div class="shortcut-row">
+                        <span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>-</kbd></span>
+                        <span class="shortcut-desc">Zoom out</span>
+                    </div>
+                    <div class="shortcut-row">
+                        <span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>0</kbd></span>
+                        <span class="shortcut-desc">Fit to view</span>
+                    </div>
+                    <div class="shortcut-row">
+                        <span class="shortcut-keys">Mouse drag</span>
+                        <span class="shortcut-desc">Pan canvas</span>
+                    </div>
+                </div>
+                <div class="shortcut-group">
+                    <h3>General</h3>
+                    <div class="shortcut-row">
+                        <span class="shortcut-keys"><kbd>Esc</kbd></span>
+                        <span class="shortcut-desc">Close modal</span>
+                    </div>
+                    <div class="shortcut-row">
+                        <span class="shortcut-keys"><kbd>?</kbd></span>
+                        <span class="shortcut-desc">Show this help</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
