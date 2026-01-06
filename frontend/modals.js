@@ -262,6 +262,35 @@ export async function showTeamDetails(team, currentView) {
             typeBadge.className = `team-badge ${teamData.team_type}`;
         }
 
+        // Show established date if available
+        const established = teamData.metadata?.established;
+        if (established) {
+            // Remove existing established section if any
+            const existingEstablished = document.getElementById('detailEstablishedSection');
+            if (existingEstablished) existingEstablished.remove();
+
+            const establishedSection = document.createElement('div');
+            establishedSection.id = 'detailEstablishedSection';
+            establishedSection.style.cssText = 'margin: 15px 0; padding: 10px; background: #f0f7ff; border-left: 3px solid #4a9fd8; border-radius: 4px;';
+
+            const age = calculateTeamAge(established);
+            const isNew = age.totalMonths < 3;
+            const badgeEmoji = isNew ? '🆕 ' : '📅 ';
+            const ageText = formatTeamAge(age);
+            
+            establishedSection.innerHTML = `
+                <div style="font-size: 13px; color: #555;">
+                    <strong>${badgeEmoji}Established:</strong> ${formatEstablishedDate(established)} ${ageText}
+                </div>
+            `;
+
+            // Insert after type badge, before description
+            const detailTeamName = document.getElementById('detailTeamName');
+            if (detailTeamName && detailTeamName.parentNode) {
+                detailTeamName.parentNode.insertBefore(establishedSection, detailTeamName.nextSibling);
+            }
+        }
+
         // Render description as HTML with Team API formatting
         const detailDescription = document.getElementById('detailDescription');
         if (detailDescription) {
@@ -563,3 +592,59 @@ document.addEventListener('keydown', (e) => {
         closeValidationModal();
     }
 });
+
+/**
+ * Calculate team age from established date (YYYY-MM format)
+ * @param {string} established - Date in YYYY-MM format (e.g., "2024-03")
+ * @returns {Object} Age object with years, months, and totalMonths
+ */
+function calculateTeamAge(established) {
+    const [year, month] = established.split('-').map(Number);
+    const establishedDate = new Date(year, month - 1, 1);
+    const today = new Date();
+    
+    let years = today.getFullYear() - establishedDate.getFullYear();
+    let months = today.getMonth() - establishedDate.getMonth();
+    
+    if (months < 0) {
+        years--;
+        months += 12;
+    }
+    
+    const totalMonths = years * 12 + months;
+    
+    return { years, months, totalMonths };
+}
+
+/**
+ * Format established date from YYYY-MM to "Month Year"
+ * @param {string} established - Date in YYYY-MM format
+ * @returns {string} Formatted date (e.g., "March 2024")
+ */
+function formatEstablishedDate(established) {
+    const [year, month] = established.split('-').map(Number);
+    const date = new Date(year, month - 1, 1);
+    const monthName = date.toLocaleString('en-US', { month: 'long' });
+    return `${monthName} ${year}`;
+}
+
+/**
+ * Format team age as human-readable text
+ * @param {Object} age - Age object from calculateTeamAge
+ * @returns {string} Formatted age text (e.g., "(2 years, 3 months ago)")
+ */
+function formatTeamAge(age) {
+    if (age.totalMonths === 0) {
+        return '(established this month)';
+    } else if (age.totalMonths === 1) {
+        return '(1 month ago)';
+    } else if (age.years === 0) {
+        return `(${age.months} months ago)`;
+    } else if (age.months === 0) {
+        return age.years === 1 ? '(1 year ago)' : `(${age.years} years ago)`;
+    } else {
+        const yearText = age.years === 1 ? '1 year' : `${age.years} years`;
+        const monthText = age.months === 1 ? '1 month' : `${age.months} months`;
+        return `(${yearText}, ${monthText} ago)`;
+    }
+}

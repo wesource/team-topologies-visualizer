@@ -406,6 +406,9 @@ function drawUndefinedTeam(ctx, team, x, y, width, height, selectedTeam, teamCol
         drawCognitiveLoadIndicator(ctx, team, x, y, width, showCognitiveLoad);
     }
 
+    // Draw new team badge if team is less than 3 months old
+    drawNewTeamBadge(ctx, team, x, y, width);
+
     // Draw team name
     drawTeamName(ctx, team, x, y, width, height, wrapText);
 
@@ -437,6 +440,36 @@ function drawCognitiveLoadIndicator(ctx, team, x, y, width, showCognitiveLoad) {
             ctx.stroke();
         }
     }
+}
+
+/**
+ * Helper: Draw "New Team" badge for teams less than 3 months old
+ */
+function drawNewTeamBadge(ctx, team, x, y, width) {
+    const established = team.metadata?.established;
+    if (!established) return;
+
+    // Calculate team age
+    const [year, month] = established.split('-').map(Number);
+    const establishedDate = new Date(year, month - 1, 1);
+    const today = new Date();
+    
+    const totalMonths = (today.getFullYear() - establishedDate.getFullYear()) * 12 + 
+                        (today.getMonth() - establishedDate.getMonth());
+    
+    // Only show badge if team is less than 3 months old
+    if (totalMonths >= 3) return;
+
+    // Position badge in top-left corner
+    const badgeSize = 24;
+    const badgeX = x + 8;
+    const badgeY = y + 8;
+
+    // Draw emoji badge
+    ctx.font = `${badgeSize}px sans-serif`;
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    ctx.fillText('🆕', badgeX, badgeY);
 }
 
 /**

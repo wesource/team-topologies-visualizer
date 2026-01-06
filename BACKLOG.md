@@ -178,7 +178,7 @@ These items are critical for v1.0 release. They address core business value gaps
 
 ---
 
-### 5. Add "Established" Date to Teams ⭐⭐⭐ MEDIUM
+### 5. ✅ Add "Established" Date to Teams ⭐⭐⭐ MEDIUM [DONE 2026-01-06]
 **Impact**: MEDIUM | **Effort**: 30 minutes | **From**: DevOps Expert Review
 
 **Why This Matters**:
@@ -196,15 +196,21 @@ metadata:
 - Badge for new teams (<3 months): "🆕 New team"
 
 **Tasks**:
-- [ ] Add `established` to all example teams
-- [ ] Calculate and display age in modal
-- [ ] "New Team" badge for <3 months
-- [ ] Add to templates
+- [x] Add `established` to all example teams (all 31 TT teams have dates)
+- [x] Calculate and display age in modal (formatEstablishedDate, calculateTeamAge functions)
+- [x] "New Team" badge for <3 months (canvas badge in top-left corner)
+- [x] Add to templates (already in TT design templates)
 
 **Definition of Done**:
-- All examples have dates
-- Age displays correctly
-- New team badges appear
+- [x] All examples have dates (2023-01 to 2025-01)
+- [x] Age displays correctly (human-readable format with edge cases)
+- [x] New team badges appear (🆕 emoji for < 3 months, 📅 for older)
+
+**Implementation Notes**:
+- Backend parsing already existed in services.py (metadata.established flattened)
+- Frontend changes only: modals.js (date section) + renderer-common.js (canvas badge)
+- Date format: YYYY-MM converted to "Month Year (X months ago)"
+- Canvas badge threshold: < 3 months shows 🆕 emoji in top-left corner
 
 ---
 
