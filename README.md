@@ -277,6 +277,48 @@ The **"✓ Validate Files"** button checks all team markdown files for common er
 
 This helps catch errors before they cause rendering issues or API failures when editing team files manually.
 
+### Comparing Snapshots
+
+The **Snapshot Comparison View** allows you to visualize how your team topology has evolved over time by displaying two snapshots side-by-side with interactive controls.
+
+**Creating Snapshots:**
+1. Click the **"📜 Snapshots & Timeline"** button in the toolbar
+2. Enter a descriptive snapshot name (e.g., "Q1 2024 State", "Post-Platform-Team-Creation")
+3. Click **"📸 Take Snapshot"** to capture the current state
+4. Snapshots are immutable JSON files stored in `data/snapshots/`
+
+**Comparing Snapshots:**
+1. Open the Snapshots panel
+2. Select **two snapshots** using the checkboxes
+3. Click **"🔄 Compare Snapshots"** to open the comparison view
+4. The modal displays:
+   - **Before** canvas (left) - Earlier snapshot
+   - **After** canvas (right) - Later snapshot
+   - **Changes summary** - Statistics of added, removed, moved, and type-changed teams
+   - **Change badges** - Visual indicators on the "after" canvas:
+     - 🟢 **NEW** (green) - Teams added since the before snapshot
+     - 🟡 **MOVED** (yellow) - Teams repositioned
+     - 🔵 **CHANGED** (blue) - Teams with changed types
+
+**Interactive Features:**
+- **Independent zoom/pan** - Each canvas has its own zoom controls (+ / - / Reset) and supports:
+  - Mouse wheel zoom
+  - Click-and-drag panning
+- **Visibility toggles** - Three checkboxes to control what's displayed (all enabled by default):
+  - **Show Groupings** - Value stream and platform grouping boxes
+  - **Show Interactions** - Collaboration lines between teams
+  - **Show Change Badges** - NEW/MOVED/CHANGED indicators
+- **Automatic fit-to-view** - Both canvases automatically scale and center content when opened
+
+**Use Cases:**
+- Track quarterly transformation progress
+- Communicate organizational changes to stakeholders
+- Audit trail for compliance (immutable snapshot files)
+- Experiment with different designs by comparing multiple "what-if" snapshots
+- Present before/after views in executive presentations
+
+See [CONCEPTS.md](docs/CONCEPTS.md#evolution-tracking-with-snapshots) for best practices on snapshot naming conventions and versioning strategies.
+
 ### Team API Templates
 
 

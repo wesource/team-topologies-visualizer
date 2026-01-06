@@ -789,6 +789,173 @@ Jul 2026: "TT Design v2.0 - Platform Maturity"
 - Or click "▶ Current (Live)" in timeline panel
 - Switches back to editable, current team data
 
+### Comparing Snapshots
+
+**Side-by-side visualization of team topology evolution**
+
+The Snapshot Comparison View provides an interactive, side-by-side visualization to understand how your organization has evolved over time. This feature transforms temporal evolution from abstract concept to concrete visual evidence.
+
+**Opening Comparison View:**
+
+1. Open the "📜 Snapshots & Timeline" panel
+2. Select **exactly two snapshots** using checkboxes
+3. Click **"🔄 Compare Snapshots"** button
+4. Comparison modal opens with before/after canvases
+
+**The Comparison Interface:**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                   Snapshot Comparison View                          │
+│                                                                     │
+│  Before: TT Design v1.0 (Jan 2026)  │  After: TT Design v2.0 (Jul 2026) │
+│                                                                     │
+│  [Canvas with teams, groupings,    │  [Canvas with teams, groupings,  │
+│   interactions - BEFORE state]     │   interactions - AFTER state     │
+│                                     │   + change badges: 🟢🟡🔵]        │
+│                                                                     │
+│  🔍 Zoom Controls: [+ - Reset]     │  🔍 Zoom Controls: [+ - Reset]   │
+│                                                                     │
+│  Visibility Controls (both canvases):                               │
+│  ☑ Show Groupings  ☑ Show Interactions  ☑ Show Change Badges      │
+│                                                                     │
+│  Changes Summary:                                                   │
+│  • 4 teams added    • 2 teams removed    • 5 teams moved          │
+│  • 3 type changes   • 2 new value streams                          │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+**Visual Layer System:**
+
+The comparison view renders content in **four distinct layers** (bottom to top):
+
+1. **Groupings** - Value stream and platform grouping boxes (background)
+2. **Connections** - Interaction mode lines between teams
+3. **Teams** - All team boxes with proper shapes and colors
+4. **Change Badges** - NEW/MOVED/CHANGED indicators (top layer, "after" canvas only)
+
+This z-ordering ensures change badges are always visible on top of team boxes, while interactions render behind teams for clarity.
+
+**Change Badge Meanings:**
+
+- **🟢 NEW (green)** - Teams that exist in "after" snapshot but not in "before"
+  - Indicates new teams added during transformation
+  - Examples: New platform team created, enabling team formed
+  
+- **🟡 MOVED (yellow)** - Teams repositioned between snapshots
+  - Position coordinates changed (x/y)
+  - May indicate value stream reassignment or organizational restructuring
+  
+- **🔵 CHANGED (blue)** - Teams with changed types
+  - Type transformation (e.g., stream-aligned → platform)
+  - Examples: Feature team becoming platform team as it matures
+
+**Badges appear only on "after" canvas** - the "before" canvas shows the baseline state without annotations for clean comparison.
+
+**Interactive Features:**
+
+**Independent Zoom & Pan:**
+- Each canvas has its own view state (scale, offset, pan position)
+- **Mouse wheel zoom** - Scroll to zoom in/out (0.1x to 3.0x scale)
+- **Click-and-drag pan** - Left or right-click drag to reposition
+- **Zoom buttons** - Click + / - / Reset for each canvas independently
+- **Automatic fit-to-view** - Both canvases auto-scale and center on open
+
+**Visibility Toggles:**
+Three checkboxes control what's displayed (all enabled by default):
+
+1. **Show Groupings** - Value stream and platform grouping boxes
+   - Toggle off to focus on teams without grouping context
+   - Useful for presentations emphasizing team changes over groupings
+
+2. **Show Interactions** - Collaboration lines between teams
+   - Toggle off to reduce visual clutter
+   - Helpful when focusing on structural changes rather than interactions
+
+3. **Show Change Badges** - NEW/MOVED/CHANGED indicators
+   - Toggle off to see "clean" after state without annotations
+   - Useful for comparing pure topology without highlighting changes
+
+**Use Cases by Role:**
+
+**Engineering Leaders:**
+- "Show executives our 6-month platform team evolution"
+- "Demonstrate value stream consolidation (5 streams → 3)"
+- "Prove interaction modes evolved (collaboration → X-as-a-Service)"
+- "Quarterly board presentations with before/after visuals"
+
+**Transformation Coaches:**
+- "Track cognitive load reduction as teams split"
+- "Measure platform team adoption (new X-as-a-Service connections)"
+- "Identify stagnant teams (unchanged across multiple snapshots)"
+- "Validate hypotheses about team sizing changes"
+
+**Compliance/Audit:**
+- "Historical evidence of organizational changes"
+- "Timestamp-based audit trail (immutable snapshots)"
+- "Regulatory documentation of team responsibilities"
+- "SOC2/ISO compliance org structure evolution"
+
+**Strategy Teams:**
+- "Model different structural scenarios (compare experiments)"
+- "Analyze team topology trends across multiple quarters"
+- "Communicate transformation roadmap (current → target state)"
+- "Stakeholder alignment on structural changes"
+
+**Technical Patterns in Evolution:**
+
+Common patterns you'll see when comparing snapshots:
+
+1. **Platform Team Emergence**
+   - Before: Multiple stream-aligned teams with duplicated infrastructure work
+   - After: New platform team (🟢 NEW badge), X-as-a-Service connections appear
+   - Badge story: "🟢 Cloud Platform Team (NEW)" + 🔵 badges on teams now consuming it
+
+2. **Value Stream Consolidation**
+   - Before: Many small, fragmented value streams
+   - After: Fewer, clearer value streams with 🟡 MOVED badges on realigned teams
+   - Badge story: Multiple teams with 🟡 MOVED as they shift to consolidated streams
+
+3. **Team Type Maturation**
+   - Before: Teams still figuring out their type (or marked "undefined")
+   - After: Clear types assigned with 🔵 CHANGED badges
+   - Badge story: "🔵 Data Team" changed from stream-aligned → complicated-subsystem
+
+4. **Enabling Team Cycle**
+   - Before: Permanent enabling team
+   - After: Enabling team removed (successful capability transfer)
+   - Badge story: No visible badge (team removed from "after")
+
+**Best Practices:**
+
+**DO:**
+- Compare quarterly snapshots to track transformation progress
+- Use visibility toggles during presentations to focus audience attention
+- Screenshot comparison view for executive documentation
+- Compare experiments ("what-if" snapshots) before committing to changes
+- Zoom in on specific areas (value streams) to show detailed changes
+
+**DON'T:**
+- Compare snapshots too close in time (< 1 month apart) - not enough meaningful change
+- Try to compare snapshots from different views (Pre-TT vs TT Design) - incompatible
+- Manually edit snapshot JSON to "fix" comparisons - create new snapshots instead
+- Forget to explain badge meanings to stakeholders (not everyone knows the color code)
+
+**Technical Implementation Notes:**
+
+- Comparison uses **snapshot JSON**, not live markdown files
+- Change detection runs on backend comparing two snapshot states
+- Badge positioning calculated per-team (top-right corner of team box)
+- Two-pass rendering ensures badges always appear on top of team boxes
+- Each canvas maintains independent view state for smooth interactions
+
+**Future Enhancements (v1.3+):**
+- **Multi-snapshot timeline** - Compare 3+ snapshots simultaneously
+- **Animated transitions** - Smooth visual playback showing team movements over time
+- **Diff export** - Generate PowerPoint/PDF report of changes
+- **Team-level history** - Click team to see its journey across all snapshots
+- **Change filtering** - Show only teams with specific change types (NEW/MOVED/CHANGED)
+
 ### Snapshot Data Format
 
 Snapshots use a condensed JSON format (not full markdown) for efficiency:
@@ -884,12 +1051,12 @@ git push
 
 ### Future Enhancements (v1.2+)
 
-- **Snapshot comparison view**: Side-by-side diff showing changes between two snapshots
 - **Animated transitions**: Visual playback of evolution from v1.0 → v1.1 → v2.0
 - **Automatic snapshots**: Schedule monthly/quarterly snapshots automatically
 - **Team-level history**: Track individual team's journey through multiple snapshots
 - **Export timeline to PowerPoint**: Multi-slide presentation showing transformation journey
 - **Snapshot annotations**: Add comments and lessons learned to snapshots after creation
+- **Multi-snapshot comparison**: Compare 3+ snapshots simultaneously in comparison view
 
 - [Large-Scale Scrum (LeSS)](https://less.works/) - Scaling Scrum while keeping simplicity
 - [Spotify Engineering Culture](https://engineering.atspotify.com/2014/03/spotify-engineering-culture-part-1/) - Squads, tribes, chapters, and guilds model

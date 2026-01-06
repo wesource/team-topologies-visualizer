@@ -14,7 +14,7 @@
                 <div class="header-actions">
                     <div class="snapshot-controls-group">
                         <button id="createSnapshotBtn" class="btn" style="display: none;">📸 Create Snapshot</button>
-                        <button id="timelineBtn" class="btn" style="display: none;">� Snapshots & Timeline</button>
+                        <button id="timelineBtn" class="btn" style="display: none;">📜 Snapshots & Timeline</button>
                     </div>
                     <button id="exportSVGBtn" class="btn">📥 Export SVG</button>
                     <button id="validateBtn" class="btn">✓ Validate</button>
@@ -258,7 +258,7 @@
     <!-- Timeline/Snapshot Browser Panel -->
     <div id="timelinePanel" class="timeline-panel" style="display: none;">
         <div class="timeline-header">
-            <h3>📸 Snapshots & Timeline</h3>
+            <h3>📜 Snapshots & Timeline</h3>
             <button class="close-panel-btn" id="closeTimelineBtn">&times;</button>
         </div>
         <div class="timeline-actions">
@@ -302,6 +302,79 @@
             
             <div id="comparisonResults" style="display: none;">
                 <!-- Comparison results will be displayed here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Side-by-Side Comparison View Modal -->
+    <div id="comparisonViewModal" class="comparison-view-modal" style="display: none;">
+        <div class="comparison-view-container">
+            <div class="comparison-view-header">
+                <div class="comparison-view-title">
+                    <span class="comparison-icon">🔄</span>
+                    <div class="comparison-names">
+                        <span id="comparisonBeforeName" class="snapshot-name before"></span>
+                        <span class="arrow">→</span>
+                        <span id="comparisonAfterName" class="snapshot-name after"></span>
+                    </div>
+                </div>
+                <button class="close-btn" id="closeComparisonViewBtn">&times;</button>
+            </div>
+            
+            <div class="comparison-view-controls">
+                <label class="comparison-control-label">
+                    <input type="checkbox" id="showGroupingsComparison" checked>
+                    <span>Show Groupings</span>
+                </label>
+                <label class="comparison-control-label">
+                    <input type="checkbox" id="showInteractionsComparison" checked>
+                    <span>Show Interactions</span>
+                </label>
+                <label class="comparison-control-label">
+                    <input type="checkbox" id="showBadgesComparison" checked>
+                    <span>Show Change Badges</span>
+                </label>
+            </div>
+            
+            <div class="comparison-view-content">
+                <div class="comparison-canvas-panels">
+                    <div class="comparison-panel before">
+                        <div class="panel-header">
+                            <h3>📸 Before</h3>
+                            <span class="snapshot-date" id="comparisonBeforeDate"></span>
+                        </div>
+                        <div class="canvas-container">
+                            <canvas id="comparisonBeforeCanvas"></canvas>
+                            <div class="canvas-controls">
+                                <button class="canvas-control-btn" id="beforeZoomIn" title="Zoom In">🔍+</button>
+                                <button class="canvas-control-btn" id="beforeZoomOut" title="Zoom Out">🔍−</button>
+                                <button class="canvas-control-btn" id="beforeResetView" title="Reset View">⟲</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="comparison-panel after">
+                        <div class="panel-header">
+                            <h3>📸 After</h3>
+                            <span class="snapshot-date" id="comparisonAfterDate"></span>
+                        </div>
+                        <div class="canvas-container">
+                            <canvas id="comparisonAfterCanvas"></canvas>
+                            <div class="canvas-controls">
+                                <button class="canvas-control-btn" id="afterZoomIn" title="Zoom In">🔍+</button>
+                                <button class="canvas-control-btn" id="afterZoomOut" title="Zoom Out">🔍−</button>
+                                <button class="canvas-control-btn" id="afterResetView" title="Reset View">⟲</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="comparison-details-panel">
+                    <h3>Changes Summary</h3>
+                    <div id="comparisonChangesSummary" class="changes-summary-sidebar">
+                        <!-- Changes will be populated here -->
+                    </div>
+                </div>
             </div>
         </div>
     </div>

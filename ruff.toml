@@ -1,0 +1,29 @@
+# Ruff configuration for Team Topologies Visualizer
+# https://docs.astral.sh/ruff/
+
+line-length = 100
+target-version = "py312"
+
+[lint]
+# Select rules to check
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes (undefined names, unused imports, etc.)
+    "I",   # isort (import sorting)
+    "B",   # flake8-bugbear (common bugs and design problems)
+    "C90", # mccabe (code complexity)
+    "UP",  # pyupgrade (modern Python syntax)
+]
+
+# Ignore specific rules
+ignore = [
+    "E501",  # Line too long (handled by formatter)
+]
+
+[lint.mccabe]
+# Flag functions with complexity > 15
+max-complexity = 15
+
+[lint.isort]
+known-first-party = ["backend"]

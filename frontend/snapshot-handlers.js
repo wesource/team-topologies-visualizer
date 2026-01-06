@@ -5,6 +5,7 @@ import { state, getFilteredTeams } from './state-management.js';
 import { createSnapshot, loadSnapshots, loadSnapshot, compareSnapshots } from './api.js';
 import { showError, showSuccess, showInfo } from './notifications.js';
 import { draw } from './renderer.js';
+import { comparisonView } from './comparison-view.js';
 
 let timelinePanelOpen = false;
 
@@ -449,32 +450,23 @@ async function handleCompareSnapshots() {
     }
     
     try {
-        showInfo('Comparing snapshots...');
+        showInfo('Loading snapshots for comparison...');
         
-        // Call API
+        // Load both snapshots
+        const beforeSnapshot = await loadSnapshot(beforeId);
+        const afterSnapshot = await loadSnapshot(afterId);
+        
+        // Call comparison API
         const comparison = await compareSnapshots(beforeId, afterId);
         
-        // Display results
-        displayComparisonResults(comparison);
-        
-        // Store in state for canvas rendering
-        state.isComparingSnapshots = true;
-        state.comparisonData = comparison;
-        
-        // Load the "after" snapshot to display with highlights
-        const afterSnapshot = await loadSnapshot(afterId);
-        state.isViewingSnapshot = true;
-        state.currentSnapshot = afterSnapshot;
-        state.teams = afterSnapshot.teams;
-        
-        // Re-render canvas with diff highlighting
-        draw(state);
-        
-        // Don't close modal immediately - let user review changes
-        // Modal will stay open showing the comparison results
+        // Close the modal
+        closeCompareModal();
         closeTimelinePanel();
         
-        showSuccess('Comparison complete - see highlighted changes on canvas');
+        // Open the side-by-side comparison view
+        comparisonView.open(beforeSnapshot, afterSnapshot, comparison);
+        
+        showSuccess('Comparison view opened');
     } catch (error) {
         showError('Failed to compare snapshots', error);
     }

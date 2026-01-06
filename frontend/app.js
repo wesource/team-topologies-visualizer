@@ -8,6 +8,7 @@ import { updateLegend, updateGroupingFilter } from './legend.js';
 import { setupUIEventListeners } from './ui-handlers.js';
 import { draw, selectTeam } from './renderer.js';
 import { initSnapshotHandlers } from './snapshot-handlers.js';
+import { comparisonView } from './comparison-view.js';
 
 let interactionHandler = null;
 // Initialize
@@ -27,6 +28,8 @@ function init() {
     setupUIEventListeners(loadAllTeams, () => draw(state), openAddTeamModal, closeModal, closeDetailModal, closeInteractionModeModal, handleTeamSubmit, (team) => selectTeam(team, state, draw));
     // Initialize snapshot handlers
     initSnapshotHandlers();
+    // Initialize comparison view
+    comparisonView.init();
     // Expose for E2E testing
     window._testHelpers = {
         showTeamDetails
