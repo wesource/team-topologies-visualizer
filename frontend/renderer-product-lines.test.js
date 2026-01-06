@@ -459,7 +459,6 @@ describe('drawProductLinesView', () => {
                 ],
                 shared_teams: []
             };
-            const callsBefore = ctx.fillText.mock.calls.length;
             drawProductLinesView(ctx, data, [], mockTeamColorMap, mockWrapText, false, teamPositions, false);
             // Fewer fillText calls without badges
             expect(ctx.fillText).toHaveBeenCalled();
