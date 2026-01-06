@@ -4,7 +4,6 @@
  */
 
 import { drawTeam, drawConnections, drawValueStreamGroupings, drawPlatformGroupings } from './renderer-common.js';
-import { LAYOUT as _LAYOUT } from './constants.js';
 import { getValueStreamGroupings } from './tt-value-stream-grouping.js';
 import { getPlatformGroupings } from './tt-platform-grouping.js';
 

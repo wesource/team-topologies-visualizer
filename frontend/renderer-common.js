@@ -131,19 +131,6 @@ export function drawTeam(ctx, team, selectedTeam, teamColorMap, wrapText, curren
     const width = getTeamBoxWidth(team, currentView);
     const height = getTeamBoxHeight(team, currentView);
 
-    // Check if this team is part of a comparison
-    let _comparisonBadge = null;
-    if (comparisonData && comparisonData.changes) {
-        const changes = comparisonData.changes;
-        if (changes.added_teams.includes(team.name)) {
-            _comparisonBadge = { type: 'added', color: '#4CAF50', emoji: '🟢', label: 'NEW' };
-        } else if (changes.moved_teams.find(t => t.name === team.name)) {
-            _comparisonBadge = { type: 'moved', color: '#FFC107', emoji: '🟡', label: 'MOVED' };
-        } else if (changes.type_changed_teams.find(t => t.name === team.name)) {
-            _comparisonBadge = { type: 'type_changed', color: '#2196F3', emoji: '🔵', label: 'CHANGED' };
-        }
-    }
-
     // Use shape-specific drawing in TT Design view
     if (currentView === 'tt') {
         if (team.team_type === 'enabling') {
@@ -167,18 +154,7 @@ export function drawTeam(ctx, team, selectedTeam, teamColorMap, wrapText, curren
 /**
  * Draw team as default rounded rectangle (for stream-aligned, platform, and Pre-TT view)
  */
-function drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData) {
-    // Check if this team has a comparison badge
-    let _comparisonBadge = null;
-    if (comparisonData) {
-        if (comparisonData.added_teams?.some(t => t.name === team.name)) {
-            _comparisonBadge = { type: 'added', color: '#28a745', emoji: '🟢', label: 'NEW' };
-        } else if (comparisonData.moved_teams?.some(t => t.name === team.name)) {
-            _comparisonBadge = { type: 'moved', color: '#ffc107', emoji: '🟡', label: 'MOVED' };
-        } else if (comparisonData.type_changed_teams?.some(t => t.name === team.name)) {
-            _comparisonBadge = { type: 'changed', color: '#17a2b8', emoji: '🔵', label: 'CHANGED' };
-        }
-    }
+function drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad) {
 
     const radius = 8;
     const fillColor = getTeamColor(team, teamColorMap);

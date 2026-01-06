@@ -139,8 +139,6 @@ export function calculateGroupingBoundingBox(teams, teamBoxHeight, padding, curr
     });
 
     // Always render grouping boxes, even if teams are spread out after manual dragging
-    const _verticalSpread = maxY - minY;
-
     const result = {
         x: minX - padding,
         y: minY - padding - labelAreaHeight, // Extra space for label at top

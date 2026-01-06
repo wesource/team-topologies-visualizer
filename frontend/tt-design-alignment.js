@@ -40,15 +40,6 @@ export function autoAlignTTDesign(teams) {
     const ungroupedTeams = teams.filter(team => !groupedTeamNames.has(team.name));
 
     // Separate ungrouped teams into wide and narrow
-    // Wide: stream-aligned and platform teams in TT view
-    // Narrow: enabling, complicated-subsystem, and undefined teams
-    const _wideUngrouped = ungroupedTeams.filter(team =>
-        team.team_type === 'stream-aligned' || team.team_type === 'platform'
-    );
-    const _narrowUngrouped = ungroupedTeams.filter(team =>
-        team.team_type === 'enabling' || team.team_type === 'complicated-subsystem' || team.team_type === 'undefined'
-    );
-
     // Layout configuration
     const startX = 100;
     const startY = 100;
@@ -80,13 +71,6 @@ export function autoAlignTTDesign(teams) {
         return teamType === 'stream-aligned' || teamType === 'platform';
     }
 
-    /**
-     * Calculate wide team width (~80% of grouping width, leaving 10% margin on each side)
-     */
-    function getWideTeamWidth() {
-        return (groupingWidth - 2 * paddingInGrouping) * 0.8;
-    }
-
     // Helper function to position teams within a grouping
     function positionTeamsInGrouping(groupingTeams, groupingStartX, groupingStartY) {
         // Separate wide teams (stream-aligned, platform) from narrow teams (enabling, complicated subsystem)
@@ -96,7 +80,6 @@ export function autoAlignTTDesign(teams) {
         let currentYPos = groupingStartY + paddingInGrouping + labelHeight;
 
         // Position wide teams first - stacked vertically, centered horizontally
-        const _wideTeamWidth = getWideTeamWidth();
         const wideTeamCenterX = groupingStartX + paddingInGrouping + (groupingWidth - 2 * paddingInGrouping) * 0.1; // 10% from left
 
         wideTeams.forEach((team, _index) => {
