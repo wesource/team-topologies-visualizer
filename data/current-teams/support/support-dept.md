@@ -1,6 +1,6 @@
 ---
 name: Customer Support Department
-type: department
+team_type: department
 reports_to: VP Customer Success
 metadata:
   department: Support

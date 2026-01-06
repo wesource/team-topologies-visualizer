@@ -1,6 +1,6 @@
 ---
 name: LogiCore Systems Leadership
-type: executive
+team_type: executive
 metadata:
   level: C-Suite
   size: 5

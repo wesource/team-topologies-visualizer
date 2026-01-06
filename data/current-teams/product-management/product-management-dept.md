@@ -1,6 +1,6 @@
 ---
 name: Product Management Department
-type: department
+team_type: department
 reports_to: VP Product
 metadata:
   department: Product Management

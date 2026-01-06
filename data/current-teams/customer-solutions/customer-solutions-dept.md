@@ -1,6 +1,6 @@
 ---
 name: Customer Solutions Department
-type: department
+team_type: department
 reports_to: VP Professional Services
 metadata:
   department: Customer Solutions

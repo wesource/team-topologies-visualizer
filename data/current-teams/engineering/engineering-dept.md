@@ -1,6 +1,6 @@
 ---
 name: Engineering Department
-type: department
+team_type: department
 reports_to: CTO
 metadata:
   department: Engineering

@@ -1,6 +1,6 @@
 ---
 name: Infrastructure & Operations Department
-type: department
+team_type: department
 reports_to: CTO
 metadata:
   department: Infrastructure
