@@ -1,14 +1,17 @@
 """Service layer for snapshot operations"""
 import json
-from pathlib import Path
 from datetime import datetime
-from typing import List, Optional
+from pathlib import Path
+from typing import Optional
+
 from backend.models import (
-    Snapshot, SnapshotMetadata, SnapshotTeamCondensed, 
-    SnapshotStatistics, TeamData
+    Snapshot,
+    SnapshotMetadata,
+    SnapshotStatistics,
+    SnapshotTeamCondensed,
+    TeamData,
 )
 from backend.services import find_all_teams
-
 
 # Snapshots directory
 SNAPSHOTS_DIR = Path("data/tt-snapshots")
@@ -27,7 +30,7 @@ def condense_team_for_snapshot(team: TeamData) -> SnapshotTeamCondensed:
         }
     elif team.purpose:  # Fallback to top-level purpose
         team_api_summary = {"purpose": team.purpose}
-    
+
     return SnapshotTeamCondensed(
         name=team.name,
         team_type=team.team_type or "other",
@@ -45,7 +48,7 @@ def condense_team_for_snapshot(team: TeamData) -> SnapshotTeamCondensed:
     )
 
 
-def calculate_statistics(teams: List[TeamData]) -> SnapshotStatistics:
+def calculate_statistics(teams: list[TeamData]) -> SnapshotStatistics:
     """Calculate statistics for a snapshot"""
     stats = {
         "total_teams": len(teams),
@@ -56,7 +59,7 @@ def calculate_statistics(teams: List[TeamData]) -> SnapshotStatistics:
         "value_streams": set(),
         "platform_groupings": set(),
     }
-    
+
     for team in teams:
         # Count team types
         if team.team_type == "stream-aligned":
@@ -67,13 +70,13 @@ def calculate_statistics(teams: List[TeamData]) -> SnapshotStatistics:
             stats["enabling"] += 1
         elif team.team_type == "complicated-subsystem":
             stats["complicated_subsystem"] += 1
-        
+
         # Collect unique value streams and platform groupings
         if team.value_stream:
             stats["value_streams"].add(team.value_stream)
         if team.platform_grouping:
             stats["platform_groupings"].add(team.platform_grouping)
-    
+
     return SnapshotStatistics(
         total_teams=stats["total_teams"],
         stream_aligned=stats["stream_aligned"],
@@ -91,16 +94,16 @@ def generate_snapshot_id(name: str, created_at: datetime) -> str:
     safe_name = name.lower()
     safe_name = safe_name.replace(" ", "-")
     safe_name = ''.join(c for c in safe_name if c.isalnum() or c == '-')
-    
+
     # Add timestamp for uniqueness
     timestamp = created_at.strftime("%Y%m%d-%H%M%S")
-    
+
     return f"{safe_name}-{timestamp}"
 
 
-def create_snapshot(name: str, description: str = "", author: str = "", team_names: Optional[List[str]] = None) -> Snapshot:
+def create_snapshot(name: str, description: str = "", author: str = "", team_names: Optional[list[str]] = None) -> Snapshot:
     """Create a new snapshot of current TT design state
-    
+
     Args:
         name: Snapshot name
         description: Optional description
@@ -110,23 +113,23 @@ def create_snapshot(name: str, description: str = "", author: str = "", team_nam
     """
     # Load all current teams
     all_teams = find_all_teams(view="tt")
-    
+
     # Filter teams if specific names provided
     if team_names is not None:
         teams = [team for team in all_teams if team.name in team_names]
     else:
         teams = all_teams
-    
+
     # Create snapshot metadata
     created_at = datetime.now()
     snapshot_id = generate_snapshot_id(name, created_at)
-    
+
     # Condense teams
     condensed_teams = [condense_team_for_snapshot(team) for team in teams]
-    
+
     # Calculate statistics
     statistics = calculate_statistics(teams)
-    
+
     # Create snapshot object
     snapshot = Snapshot(
         snapshot_id=snapshot_id,
@@ -137,24 +140,24 @@ def create_snapshot(name: str, description: str = "", author: str = "", team_nam
         teams=condensed_teams,
         statistics=statistics
     )
-    
+
     # Save to file
     snapshot_file = SNAPSHOTS_DIR / f"{snapshot_id}.json"
     with open(snapshot_file, 'w', encoding='utf-8') as f:
         json.dump(snapshot.model_dump(mode='json'), f, indent=2, default=str)
-    
+
     return snapshot
 
 
-def list_snapshots() -> List[SnapshotMetadata]:
+def list_snapshots() -> list[SnapshotMetadata]:
     """List all available snapshots with metadata"""
     snapshots = []
-    
+
     for snapshot_file in SNAPSHOTS_DIR.glob("*.json"):
         try:
-            with open(snapshot_file, 'r', encoding='utf-8') as f:
+            with open(snapshot_file, encoding='utf-8') as f:
                 data = json.load(f)
-            
+
             # Extract metadata only
             metadata = SnapshotMetadata(
                 snapshot_id=data["snapshot_id"],
@@ -168,27 +171,27 @@ def list_snapshots() -> List[SnapshotMetadata]:
         except Exception as e:
             print(f"Warning: Could not load snapshot {snapshot_file}: {e}")
             continue
-    
+
     # Sort by creation date (newest first)
     snapshots.sort(key=lambda s: s.created_at, reverse=True)
-    
+
     return snapshots
 
 
 def load_snapshot(snapshot_id: str) -> Optional[Snapshot]:
     """Load a specific snapshot by ID"""
     snapshot_file = SNAPSHOTS_DIR / f"{snapshot_id}.json"
-    
+
     if not snapshot_file.exists():
         return None
-    
+
     try:
-        with open(snapshot_file, 'r', encoding='utf-8') as f:
+        with open(snapshot_file, encoding='utf-8') as f:
             data = json.load(f)
-        
+
         # Parse datetime string
         data["created_at"] = datetime.fromisoformat(data["created_at"])
-        
+
         return Snapshot(**data)
     except Exception as e:
         print(f"Error loading snapshot {snapshot_id}: {e}")

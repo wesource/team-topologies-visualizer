@@ -8,6 +8,60 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **📊 Snapshot Comparison View**: Side-by-side comparison of snapshots to visualize Team Topologies evolution
+  - **Split-Screen Canvas**: Independent before/after canvases with separate zoom/pan controls
+    - Click "Compare" button on any two snapshots in Timeline panel
+    - Two HTML5 canvases render snapshots side-by-side
+    - Each canvas has independent view state (scale, offsetX, offsetY, panning)
+  - **Independent Controls**: Full interactive control for each snapshot view
+    - Mouse wheel zoom on each canvas (0.1x to 3.0x scale)
+    - Click-and-drag panning per canvas
+    - Six zoom buttons: +/-/Reset for before and after views
+    - Center-based zoom maintains focal point during scale changes
+  - **Visibility Toggles**: Three checkboxes control visual layers on both canvases
+    - Show/Hide Groupings (value streams, platform groupings) - default ON
+    - Show/Hide Interactions (collaboration, X-as-a-Service, facilitating lines) - default ON
+    - Show/Hide Change Badges (new/moved/changed indicators) - default ON
+    - All toggles affect both canvases simultaneously for consistent comparison
+  - **Change Detection & Badges**: Visual indicators highlight differences between snapshots
+    - 🟢 NEW badge (green #4CAF50): Teams added in "after" snapshot
+    - 🟡 MOVED badge (yellow #ffc107): Teams repositioned between snapshots
+    - 🔵 CHANGED badge (blue #17a2b8): Teams with type/metadata changes
+    - Two-pass rendering ensures badges always appear on top (not covered by team boxes)
+    - Only displayed on "after" canvas (right side)
+  - **Four-Layer Rendering**: Proper z-ordering for complex visualizations
+    1. Grouping boxes (value streams, platform groupings) - background layer
+    2. Connection lines (interaction modes) - behind teams
+    3. Team boxes - middle layer
+    4. Change badges - always on top
+  - **Team Dimensions**: Hardcoded dimensions prevent NaN scale bug
+    - Stream-aligned/Platform: 200×60 pixels
+    - Enabling/Complicated-subsystem: 100×80 pixels
+    - Cannot use LAYOUT constants (org-chart specific)
+  - **Canvas Interactions**: Proper event handling with CSS pointer-events
+    - Controls container: `pointer-events: none` (mouse-transparent)
+    - Buttons: `pointer-events: auto` (clickable overlays)
+    - Prevents controls from blocking canvas mouse events
+  - **Modal Timing**: `requestAnimationFrame` ensures proper canvas sizing
+    - Waits for modal to be visible before measuring canvas dimensions
+    - Prevents getBoundingClientRect() errors with hidden elements
+  - **Implementation**: New `comparison-view.js` module (602 lines)
+    - `ComparisonView` class with full lifecycle management
+    - Integration with `snapshot-handlers.js` for timeline UI
+    - Shared rendering functions from `renderer-common.js`
+    - Independent from main canvas rendering pipeline
+  - **Testing**: 51 new tests ensuring quality and correctness
+    - 43 unit tests (Vitest): visibility toggles, zoom calculations, pan calculations, fit-to-view, badge detection, rendering conditions, team dimensions, view state management
+    - 8 E2E tests (Playwright): comparison opening, toggle controls, zoom controls, modal interactions
+  - **Documentation**: Comprehensive guides for all users
+    - README.md: "Comparing Snapshots" usage guide (50+ lines) with workflows, badge meanings, interactive features, use cases
+    - CONCEPTS.md: Deep-dive "Comparing Snapshots" section (150+ lines) with visual layers, change detection, patterns, best practices, DO/DON'T guidelines
+  - **Use Cases**:
+    - Track transformation progress: "Q1 had 28 teams, Q2 added 4 platform teams"
+    - Stakeholder communication: Visual before/after for executive presentations
+    - Audit trails: Regulatory compliance with visual evidence of changes
+    - Pattern recognition: Identify consolidation, platform emergence, team maturation
+    - Strategic planning: Forecast future states based on past evolution patterns
 - **Vertical Text for Enabling Teams**: Enabling teams now display their name vertically rotated to visually distinguish their temporary/facilitating role
   - Canvas rendering: Teams with type "enabling" display vertical text rotation
   - SVG export: Vertical text preserved in exported SVG files

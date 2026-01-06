@@ -2,8 +2,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from backend.routes import router
 
+from backend.routes import router
 
 app = FastAPI(
     title="Team Topologies API",
@@ -31,8 +31,8 @@ app.mount("/static", StaticFiles(directory="frontend"), name="static")
 async def root():
     """Redirect to static frontend"""
     return {
-        "message": "Team Topologies API", 
-        "docs": "/docs", 
+        "message": "Team Topologies API",
+        "docs": "/docs",
         "frontend": "/static/index.html"
     }
 

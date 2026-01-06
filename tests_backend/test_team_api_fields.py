@@ -1,7 +1,8 @@
-import pytest
-from backend.services import parse_team_file
-from pathlib import Path
 import tempfile
+from pathlib import Path
+
+from backend.services import parse_team_file
+
 
 # Test parsing of new Team API fields (team_api, purpose, established, cognitive_load, etc.)
 def test_parse_team_api_fields():

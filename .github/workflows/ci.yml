@@ -25,6 +25,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     
+    - name: Run Ruff linter
+      run: |
+        python -m ruff check backend/ tests_backend/ main.py
+    
     - name: Run pytest
       run: |
         python -m pytest tests_backend/ -v --tb=short
@@ -46,6 +50,10 @@ jobs:
     - name: Install dependencies
       working-directory: frontend
       run: npm ci
+    
+    - name: Run ESLint
+      working-directory: frontend
+      run: npm run lint
     
     - name: Run Vitest
       working-directory: frontend

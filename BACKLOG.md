@@ -234,16 +234,7 @@ These are high-value features for v1.1, identified in expert reviews.
 - [ ] Banner: "📸 Viewing Snapshot: TT Design v1.0 (2026-01-15) - Read-only"
 - [ ] "Return to Live View" button
 
-**3. Snapshot Comparison View** (Future Enhancement)
-- [ ] Split screen: v1.0 vs v1.1 side-by-side
-- [ ] Highlight changes:
-  - 🟢 New teams (4 added)
-  - 🔴 Removed teams (0 removed)
-  - 🟡 Moved teams (5 repositioned)
-  - 🔵 Changed interactions (3 mode changes)
-- [ ] Summary: "From Q1 to Q2: Added 4 teams, split Platform Team into 2, transitioned 3 collaborations to X-as-a-Service"
-
-**4. Export Snapshot Timeline** (Future Enhancement)
+**3. Export Snapshot Timeline** (Future Enhancement)
 - [ ] Export to PowerPoint: Multi-slide timeline showing evolution
 - [ ] Export to PDF: "Our 18-Month TT Transformation Journey"
 - [ ] Export to GIF: Animated transition from v1.0 → v1.1 → v2.0
@@ -1899,16 +1890,23 @@ metadata:
 
 #### Current State Connection Arrows Not Visible 🐛
 **Priority**: Low (UX/Nice-to-have)
-**Effort**: Medium (needs investigation)
+**Effort**: Small (root cause identified, simple fix)
 
 **Problem**: Bidirectional arrow triangles at ends of "Actual Comms" lines in Current State view are not rendering on canvas, despite working perfectly in legend SVG.
+
+**Root Cause** (Identified 2026-01-06):
+Connection lines currently end in the **middle of team boxes** rather than at the **edges/borders**. The arrow triangles are being drawn but are completely **covered by the team boxes** themselves. This was discovered during snapshot comparison view implementation when z-ordering was temporarily incorrect, revealing the arrows were there but hidden.
+
+**Solution**: 
+Shorten the connection line length so arrows render just outside the team box edges instead of under them. The arrows themselves are rendering correctly - they just need to be positioned where they're visible.
 
 **Symptoms**:
 - Legend shows arrows correctly (70px SVG with triangles at both ends)
 - Canvas only shows fat gray line without arrow triangles
-- Code appears correct: `ctx.fill()` with proper triangle geometry
+- Code geometry is correct: `ctx.fill()` with proper triangle shape
+- Arrows ARE being drawn, but covered by team boxes drawn on top
 
-**Attempted Fixes**:
+**Previous Attempted Fixes** (before root cause known):
 1. ✗ Reordered drawing (arrows after line) to avoid overlap
 2. ✗ Shortened line by arrow length to prevent covering
 3. ✗ Increased arrow size from 10px → 16px → 20px
@@ -1920,20 +1918,13 @@ metadata:
 
 **Code Location**: `frontend/renderer-common.js` - `drawActualCommsConnection()` function (lines ~197-255)
 
-**Hypotheses to Explore**:
-- Canvas z-index or layering issue (team boxes drawn after connections?)
-- Global canvas transform/clip affecting arrow rendering
-- Arrow coordinates landing outside visible canvas area
-- Browser rendering quirk with canvas fill operations
-- Need to call `ctx.beginPath()` before each triangle separately
+**Implementation Plan**:
+1. Calculate proper line endpoints at team box boundaries (not centers)
+2. Position arrow triangles just outside the box edges
+3. Similar to how TT Design view connection anchors work
+4. Test with various team box sizes and positions
 
 **Workaround**: Legend clearly shows the connection type, so functionality is not impaired.
-
-**Next Steps**:
-- Add console.log to verify arrow coordinates are reasonable
-- Try drawing test rectangles at arrow positions to verify visibility
-- Check if team boxes or other elements are obscuring arrows
-- Review canvas rendering order in renderer-current.js
 
 ### Performance
 - [ ] Optimize canvas rendering for 50+ teams

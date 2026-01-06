@@ -1,14 +1,19 @@
 """Tests for snapshot functionality"""
-import pytest
 import json
-from pathlib import Path
 from datetime import datetime
+
+import pytest
+
+from backend.models import SnapshotMetadata, TeamData
 from backend.snapshot_services import (
-    create_snapshot, list_snapshots, load_snapshot,
-    generate_snapshot_id, condense_team_for_snapshot,
-    calculate_statistics, SNAPSHOTS_DIR
+    SNAPSHOTS_DIR,
+    calculate_statistics,
+    condense_team_for_snapshot,
+    create_snapshot,
+    generate_snapshot_id,
+    list_snapshots,
+    load_snapshot,
 )
-from backend.models import TeamData, SnapshotMetadata
 
 
 # Cleanup fixture
@@ -25,9 +30,9 @@ def test_generate_snapshot_id():
     """Test snapshot ID generation"""
     name = "Test Snapshot v1.0"
     created_at = datetime(2026, 1, 15, 10, 30, 0)
-    
+
     snapshot_id = generate_snapshot_id(name, created_at)
-    
+
     assert snapshot_id.startswith("test-snapshot-v10-")
     assert "20260115" in snapshot_id
     assert "103000" in snapshot_id
@@ -45,9 +50,9 @@ def test_condense_team_for_snapshot():
         metadata={"size": 7, "cognitive_load": "medium"},
         purpose="Own checkout experience"
     )
-    
+
     condensed = condense_team_for_snapshot(team)
-    
+
     assert condensed.name == "Test Team"
     assert condensed.team_type == "stream-aligned"
     assert condensed.position == {"x": 100.0, "y": 200.0}
@@ -83,9 +88,9 @@ def test_calculate_statistics():
             position={"x": 0, "y": 0}
         ),
     ]
-    
+
     stats = calculate_statistics(teams)
-    
+
     assert stats.total_teams == 4
     assert stats.stream_aligned == 2
     assert stats.platform == 1
@@ -102,7 +107,7 @@ def test_create_snapshot():
         description="Test description",
         author="Test Author"
     )
-    
+
     # Verify snapshot object
     assert snapshot.name == "Test Snapshot"
     assert snapshot.description == "Test description"
@@ -110,15 +115,15 @@ def test_create_snapshot():
     assert isinstance(snapshot.created_at, datetime)
     assert len(snapshot.teams) > 0  # Should have loaded teams from data/tt-teams
     assert snapshot.statistics.total_teams == len(snapshot.teams)
-    
+
     # Verify file was created
     snapshot_file = SNAPSHOTS_DIR / f"{snapshot.snapshot_id}.json"
     assert snapshot_file.exists()
-    
+
     # Verify file content
-    with open(snapshot_file, 'r', encoding='utf-8') as f:
+    with open(snapshot_file, encoding='utf-8') as f:
         data = json.load(f)
-    
+
     assert data["name"] == "Test Snapshot"
     assert data["description"] == "Test description"
     assert data["author"] == "Test Author"
@@ -132,20 +137,20 @@ def test_list_snapshots():
     # Create two test snapshots
     snapshot1 = create_snapshot(name="Test Snapshot 1")
     snapshot2 = create_snapshot(name="Test Snapshot 2")
-    
+
     # List snapshots
     snapshots = list_snapshots()
-    
+
     # Should have at least our 2 test snapshots
     test_snapshots = [s for s in snapshots if s.name.startswith("Test Snapshot")]
     assert len(test_snapshots) >= 2
-    
+
     # Verify metadata
     assert all(isinstance(s, SnapshotMetadata) for s in snapshots)
     assert all(hasattr(s, 'snapshot_id') for s in snapshots)
     assert all(hasattr(s, 'name') for s in snapshots)
     assert all(hasattr(s, 'statistics') for s in snapshots)
-    
+
     # Snapshots should be sorted by date (newest first)
     if len(snapshots) > 1:
         for i in range(len(snapshots) - 1):
@@ -160,10 +165,10 @@ def test_load_snapshot():
         description="Test load",
         author="Test"
     )
-    
+
     # Load it back
     loaded = load_snapshot(original.snapshot_id)
-    
+
     assert loaded is not None
     assert loaded.snapshot_id == original.snapshot_id
     assert loaded.name == original.name
@@ -184,13 +189,13 @@ def test_snapshot_immutability():
     # Create a snapshot
     snapshot = create_snapshot(name="Test Immutable Snapshot")
     snapshot_file = SNAPSHOTS_DIR / f"{snapshot.snapshot_id}.json"
-    
+
     # Get file modified time
     original_mtime = snapshot_file.stat().st_mtime
-    
+
     # Load the snapshot
     loaded = load_snapshot(snapshot.snapshot_id)
-    
+
     # Verify file wasn't modified by loading
     new_mtime = snapshot_file.stat().st_mtime
     assert new_mtime == original_mtime
@@ -199,13 +204,13 @@ def test_snapshot_immutability():
 def test_snapshot_team_count_accuracy():
     """Test that snapshot captures correct number of teams"""
     from backend.services import find_all_teams
-    
+
     # Get current live team count
     live_teams = find_all_teams(view="tt")
-    
+
     # Create snapshot
     snapshot = create_snapshot(name="Test Team Count")
-    
+
     # Verify counts match
     assert len(snapshot.teams) == len(live_teams)
     assert snapshot.statistics.total_teams == len(live_teams)
@@ -214,26 +219,26 @@ def test_snapshot_team_count_accuracy():
 def test_snapshot_with_filtered_teams():
     """Test that snapshot can capture only specific teams (filtered view)"""
     from backend.services import find_all_teams
-    
+
     # Get all teams
     all_teams = find_all_teams(view="tt")
-    
+
     # Filter to first 3 teams
     filtered_team_names = [team.name for team in all_teams[:3]]
-    
+
     # Create filtered snapshot
     snapshot = create_snapshot(
         name="Test Filtered Snapshot",
         team_names=filtered_team_names
     )
-    
+
     # Verify only filtered teams are included
     assert len(snapshot.teams) == 3
     assert snapshot.statistics.total_teams == 3
-    
+
     # Verify correct teams are captured
     snapshot_team_names = {team.name for team in snapshot.teams}
     assert snapshot_team_names == set(filtered_team_names)
-    
+
     # Verify it's less than total teams
     assert len(snapshot.teams) < len(all_teams)

@@ -1,10 +1,10 @@
 """Service layer for file operations and data parsing"""
-import yaml
 import re
 from pathlib import Path
-from typing import List
-from backend.models import TeamData
 
+import yaml
+
+from backend.models import TeamData
 
 # Data directories
 TT_TEAMS_DIR = Path("data/tt-teams")
@@ -15,7 +15,7 @@ CURRENT_TEAMS_DIR.mkdir(parents=True, exist_ok=True)
 
 def team_name_to_slug(team_name: str) -> str:
     """Convert team name to URL-safe slug.
-    
+
     Examples:
         "CI/CD Platform Team" -> "cicd-platform-team"
         "Data & Analytics Team" -> "data-and-analytics-team"
@@ -38,9 +38,9 @@ def get_data_dir(view: str = "tt") -> Path:
 
 def parse_team_file(file_path: Path) -> TeamData:
     """Parse a markdown file with YAML front matter and extract Team API interactions from markdown tables"""
-    with open(file_path, 'r', encoding='utf-8') as f:
+    with open(file_path, encoding='utf-8') as f:
         content = f.read()
-    
+
     # Split YAML front matter and markdown content
     if content.startswith('---'):
         parts = content.split('---', 2)
@@ -101,31 +101,31 @@ def parse_team_file(file_path: Path) -> TeamData:
 
 def _parse_interaction_tables(markdown_content: str) -> tuple[list[str], dict[str, str]]:
     """Parse interaction tables from markdown content to extract dependencies and interaction modes.
-    
+
     Looks for tables under "## Teams we currently interact with" section.
     Expected format:
     | Team Name | Interaction Mode | Purpose | Duration |
     |-----------|------------------|---------|----------|
     | Some Team | X-as-a-Service  | ...     | ...      |
-    
+
     Returns:
         Tuple of (dependencies: list of team names, interaction_modes: dict mapping team name to mode)
     """
     dependencies = []
     interaction_modes = {}
-    
+
     # Find the "Teams we currently interact with" section
     current_interactions_match = re.search(
         r'## Teams we currently interact with\s*\n(.*?)(?=\n## |$)',
         markdown_content,
         re.DOTALL | re.IGNORECASE
     )
-    
+
     if not current_interactions_match:
         return dependencies, interaction_modes
-    
+
     table_content = current_interactions_match.group(1)
-    
+
     # Parse markdown table rows (skip header and separator)
     lines = table_content.strip().split('\n')
     for line in lines:
@@ -136,7 +136,7 @@ def _parse_interaction_tables(markdown_content: str) -> tuple[list[str], dict[st
             if len(cols) >= 2:
                 team_name = cols[0].strip()
                 interaction_mode = cols[1].strip().lower()
-                
+
                 if team_name and interaction_mode:
                     dependencies.append(team_name)
                     # Normalize interaction mode names
@@ -148,7 +148,7 @@ def _parse_interaction_tables(markdown_content: str) -> tuple[list[str], dict[st
                         interaction_modes[team_name] = 'facilitating'
                     else:
                         interaction_modes[team_name] = interaction_mode
-    
+
     return dependencies, interaction_modes
 
 
@@ -197,14 +197,14 @@ def write_team_file_to_path(team: TeamData, file_path: Path) -> Path:
     return file_path
 
 
-def find_all_teams(view: str = "tt") -> List[TeamData]:
+def find_all_teams(view: str = "tt") -> list[TeamData]:
     """Find and parse all team files for a specific view"""
     data_dir = get_data_dir(view)
     teams = []
-    
+
     if not data_dir.exists():
         return teams
-    
+
     # Files to exclude (hierarchy/department files)
     exclude_files = {
         'company-leadership.md',
@@ -217,7 +217,7 @@ def find_all_teams(view: str = "tt") -> List[TeamData]:
         'current-team-types.json',
         'tt-team-types.json'
     }
-    
+
     # Recursively find all .md files (supports nested folder structure)
     for file_path in data_dir.rglob("*.md"):
         # Skip hierarchy/department files
@@ -226,24 +226,24 @@ def find_all_teams(view: str = "tt") -> List[TeamData]:
         # Skip hidden directories like .pytest_cache
         if any(part.startswith('.') for part in file_path.parts):
             continue
-            
+
         try:
             team = parse_team_file(file_path)
             teams.append(team)
         except Exception as e:
             print(f"Error parsing {file_path}: {e}")
-    
+
     return teams
 
 
 def find_team_by_name(team_name: str, view: str = "tt") -> tuple[TeamData, Path] | None:
     """Find a team by name and return the team data and file path
-    
+
     Searches by actual team name in file content, not by filename.
     This handles cases where filename doesn't match team name.
     """
     data_dir = get_data_dir(view)
-    
+
     # Files to exclude (hierarchy/department files)
     exclude_files = {
         'company-leadership.md',
@@ -256,34 +256,34 @@ def find_team_by_name(team_name: str, view: str = "tt") -> tuple[TeamData, Path]
         'current-team-types.json',
         'tt-team-types.json'
     }
-    
+
     # Search through all .md files and match by team name in content
     for file_path in data_dir.rglob("*.md"):
         # Skip excluded files
         if file_path.name in exclude_files:
             continue
-            
+
         try:
             team = parse_team_file(file_path)
             if team.name == team_name:
                 return team, file_path
         except Exception as e:
             print(f"Error parsing {file_path} while searching for {team_name}: {e}")
-    
+
     return None
 
 
 def find_team_by_name_or_slug(identifier: str, view: str = "tt") -> tuple[TeamData, Path] | None:
     """Find a team by exact name OR by URL-safe slug.
-    
+
     This allows API endpoints to work with both:
     - Exact team names: "CI/CD Platform Team"
     - URL-safe slugs: "cicd-platform-team"
-    
+
     Args:
         identifier: Team name or slug
         view: "tt" or "current"
-        
+
     Returns:
         Tuple of (TeamData, file_path) or None if not found
     """
@@ -291,7 +291,7 @@ def find_team_by_name_or_slug(identifier: str, view: str = "tt") -> tuple[TeamDa
     result = find_team_by_name(identifier, view)
     if result:
         return result
-    
+
     # If not found, try matching by slug (handles URL-encoded names with special chars)
     data_dir = get_data_dir(view)
     exclude_files = {
@@ -305,13 +305,13 @@ def find_team_by_name_or_slug(identifier: str, view: str = "tt") -> tuple[TeamDa
         'current-team-types.json',
         'tt-team-types.json'
     }
-    
+
     identifier_slug = team_name_to_slug(identifier)
-    
+
     for file_path in data_dir.rglob("*.md"):
         if file_path.name in exclude_files:
             continue
-            
+
         try:
             team = parse_team_file(file_path)
             team_slug = team_name_to_slug(team.name)
@@ -319,5 +319,5 @@ def find_team_by_name_or_slug(identifier: str, view: str = "tt") -> tuple[TeamDa
                 return team, file_path
         except Exception as e:
             print(f"Error parsing {file_path} while searching for slug {identifier}: {e}")
-    
+
     return None
