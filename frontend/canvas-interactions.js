@@ -47,10 +47,10 @@ export class CanvasInteractionHandler {
         }
 
         // Left-click for team dragging
-        const customPositions = this.state.currentPerspective === 'value-streams' 
-            ? this.state.valueStreamsTeamPositions 
+        const customPositions = this.state.currentPerspective === 'value-streams'
+            ? this.state.valueStreamsTeamPositions
             : this.state.productLinesTeamPositions;
-        
+
         const team = getTeamAtPosition(
             this.state.teams,
             x,
@@ -157,11 +157,11 @@ export class CanvasInteractionHandler {
         const rect = this.canvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
-        
-        const customPositions = this.state.currentPerspective === 'value-streams' 
-            ? this.state.valueStreamsTeamPositions 
+
+        const customPositions = this.state.currentPerspective === 'value-streams'
+            ? this.state.valueStreamsTeamPositions
             : this.state.productLinesTeamPositions;
-        
+
         const team = getTeamAtPosition(
             this.state.teams,
             x,

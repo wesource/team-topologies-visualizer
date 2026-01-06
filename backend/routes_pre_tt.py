@@ -128,7 +128,7 @@ async def get_value_streams():
             # Initialize value stream dict if needed
             if value_stream not in value_streams_with_teams:
                 value_streams_with_teams[value_stream] = {}
-            
+
             if product_line:
                 # Group by product within value stream
                 if product_line not in value_streams_with_teams[value_stream]:
@@ -159,7 +159,7 @@ async def get_value_streams():
 
     for vs_config in value_streams_config["value_streams"]:
         vs_name = vs_config["name"]
-        
+
         result["value_streams"][vs_name] = {
             "id": vs_config["id"],
             "name": vs_name,

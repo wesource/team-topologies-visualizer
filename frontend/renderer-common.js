@@ -445,7 +445,7 @@ function drawCognitiveLoadIndicator(ctx, team, x, y, width, showCognitiveLoad) {
 /**
  * Helper: Draw "New Team" badge for teams less than 3 months old
  */
-function drawNewTeamBadge(ctx, team, x, y, width) {
+function drawNewTeamBadge(ctx, team, x, y, _width) {
     const established = team.metadata?.established;
     if (!established) return;
 
@@ -453,10 +453,10 @@ function drawNewTeamBadge(ctx, team, x, y, width) {
     const [year, month] = established.split('-').map(Number);
     const establishedDate = new Date(year, month - 1, 1);
     const today = new Date();
-    
-    const totalMonths = (today.getFullYear() - establishedDate.getFullYear()) * 12 + 
+
+    const totalMonths = (today.getFullYear() - establishedDate.getFullYear()) * 12 +
                         (today.getMonth() - establishedDate.getMonth());
-    
+
     // Only show badge if team is less than 3 months old
     if (totalMonths >= 3) return;
 

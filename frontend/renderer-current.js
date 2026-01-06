@@ -9,12 +9,12 @@ export function drawCurrentStateView(ctx, organizationHierarchy, teams, wrapText
     const levelHeight = LAYOUT.LEVEL_HEIGHT;
     const boxWidth = LAYOUT.DEPT_BOX_WIDTH;
     const boxHeight = LAYOUT.DEPT_BOX_HEIGHT;
-    
+
     // Draw title
     ctx.font = 'bold 24px Arial';
     ctx.fillStyle = '#333';
     ctx.fillText('Hierarchy View', startX + 50, startY - 40);
-    
+
     // Draw company leadership
     const company = organizationHierarchy.company;
     drawHierarchyBox(ctx, company.name, startX + 400, startY, boxWidth + 100, boxHeight, '#E8E8E8', 'black', true, wrapText);

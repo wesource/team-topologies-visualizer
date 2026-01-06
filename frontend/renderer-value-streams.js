@@ -32,7 +32,7 @@ export function renderValueStreamsView(ctx, data) {
     state.valueStreamsTeamPositions.clear();
 
     let currentY = LAYOUT.startY;
-    
+
     // Draw title
     ctx.font = 'bold 24px Arial';
     ctx.fillStyle = '#333';
@@ -43,36 +43,36 @@ export function renderValueStreamsView(ctx, data) {
     let rightColumnY = LAYOUT.startY;
 
     // Render each Value Stream as a large container (left column)
-    for (const [vsName, vsData] of Object.entries(value_streams)) {
+    for (const [_vsName, vsData] of Object.entries(value_streams)) {
         const vsHeight = calculateValueStreamHeight(vsData.products);
-        
+
         // Draw value stream container
         drawValueStreamContainer(ctx, LAYOUT.startX, currentY, LAYOUT.valueStreamWidth, vsHeight, vsData);
-        
+
         // Draw products within value stream
         let productY = currentY + LAYOUT.headerHeight + LAYOUT.valueStreamPadding;
-        
+
         for (const [productName, productTeams] of Object.entries(vsData.products)) {
-            if (productName === "_no_product") continue; // Skip teams without products
-            
+            if (productName === '_no_product') continue; // Skip teams without products
+
             const productHeight = calculateProductSectionHeight(productTeams);
-            
+
             // Draw product section
-            drawProductSection(ctx, LAYOUT.startX + LAYOUT.valueStreamPadding, productY, 
-                              LAYOUT.valueStreamWidth - (LAYOUT.valueStreamPadding * 2), 
-                              productHeight, productName, productTeams, state.teams);
-            
+            drawProductSection(ctx, LAYOUT.startX + LAYOUT.valueStreamPadding, productY,
+                LAYOUT.valueStreamWidth - (LAYOUT.valueStreamPadding * 2),
+                productHeight, productName, productTeams, state.teams);
+
             productY += productHeight + LAYOUT.productPadding;
         }
-        
+
         currentY += vsHeight + LAYOUT.valueStreamSpacing;
     }
 
     // Render "Ungrouped Products" section in right column if there are products without value streams
     if (Object.keys(products_without_value_stream).length > 0) {
         const ungroupedHeight = calculateUngroupedProductsHeight(products_without_value_stream);
-        drawUngroupedProductsSection(ctx, rightColumnX, rightColumnY, LAYOUT.valueStreamWidth, 
-                                     ungroupedHeight, products_without_value_stream, teams);
+        drawUngroupedProductsSection(ctx, rightColumnX, rightColumnY, LAYOUT.valueStreamWidth,
+            ungroupedHeight, products_without_value_stream, teams);
         rightColumnY += ungroupedHeight + LAYOUT.valueStreamSpacing;
     }
 
@@ -136,34 +136,34 @@ function drawProductSection(ctx, x, y, width, height, productName, teams, allTea
     // Render teams as cards
     let teamX = x + LAYOUT.productPadding;
     let teamY = y + LAYOUT.sectionHeaderHeight + LAYOUT.productPadding;
-    
+
     for (const teamData of teams) {
         // Wrap to next row if needed (check before positioning)
         if (teamX + LAYOUT.teamWidth > x + width - LAYOUT.productPadding && teamX > x + LAYOUT.productPadding) {
             teamX = x + LAYOUT.productPadding;
             teamY += LAYOUT.teamHeight + LAYOUT.teamSpacing;
         }
-        
+
         // Look up the actual team object from state.teams for selection to work
         const team = allTeams.find(t => t.name === teamData.name) || teamData;
-        
+
         // Temporarily set position for rendering
         const originalX = team.position?.x;
         const originalY = team.position?.y;
         team.position = { x: teamX, y: teamY };
-        
+
         // Track position for click detection and selection
         state.valueStreamsTeamPositions.set(team.name, { x: teamX, y: teamY, width: LAYOUT.teamWidth, height: LAYOUT.teamHeight });
-        
-        drawTeam(ctx, team, state.selectedTeam, state.teamColorMap, 
-                (text, maxWidth) => wrapText(ctx, text, maxWidth), 
-                'current', state.showCognitiveLoad, null, state.showTeamTypeBadges);
-        
+
+        drawTeam(ctx, team, state.selectedTeam, state.teamColorMap,
+            (text, maxWidth) => wrapText(ctx, text, maxWidth),
+            'current', state.showCognitiveLoad, null, state.showTeamTypeBadges);
+
         // Restore original position
         if (originalX !== undefined && originalY !== undefined) {
             team.position = { x: originalX, y: originalY };
         }
-        
+
         teamX += LAYOUT.teamWidth + LAYOUT.teamSpacing;
     }
 }
@@ -188,14 +188,14 @@ function drawUngroupedProductsSection(ctx, x, y, width, height, products, allTea
     ctx.fillText('⚠ Products not assigned to a value stream', x + 20, y + 30);
 
     let productY = y + 70;
-    
+
     for (const [productName, productTeams] of Object.entries(products)) {
         const productHeight = calculateProductSectionHeight(productTeams);
-        
-        drawProductSection(ctx, x + LAYOUT.valueStreamPadding, productY, 
-                          width - (LAYOUT.valueStreamPadding * 2), 
-                          productHeight, productName, productTeams, allTeams);
-        
+
+        drawProductSection(ctx, x + LAYOUT.valueStreamPadding, productY,
+            width - (LAYOUT.valueStreamPadding * 2),
+            productHeight, productName, productTeams, allTeams);
+
         productY += productHeight + LAYOUT.productPadding;
     }
 }
@@ -211,7 +211,7 @@ function drawUngroupedTeams(ctx, x, y, teams, allTeams) {
 
     let teamX = x;
     let teamY = y + 40;
-    
+
     for (const teamData of teams) {
         // Look up the actual team object from state.teams for selection to work
         const team = allTeams.find(t => t.name === teamData.name) || teamData;
@@ -219,21 +219,21 @@ function drawUngroupedTeams(ctx, x, y, teams, allTeams) {
         const originalX = team.position?.x;
         const originalY = team.position?.y;
         team.position = { x: teamX, y: teamY };
-        
+
         // Track position for click detection
         state.valueStreamsTeamPositions.set(team.name, { x: teamX, y: teamY, width: LAYOUT.teamWidth, height: LAYOUT.teamHeight });
-        
-        drawTeam(ctx, team, state.selectedTeam, state.teamColorMap, 
-                (text, maxWidth) => wrapText(ctx, text, maxWidth), 
-                'current', state.showCognitiveLoad, null, state.showTeamTypeBadges);
-        
+
+        drawTeam(ctx, team, state.selectedTeam, state.teamColorMap,
+            (text, maxWidth) => wrapText(ctx, text, maxWidth),
+            'current', state.showCognitiveLoad, null, state.showTeamTypeBadges);
+
         // Restore original position
         if (originalX !== undefined && originalY !== undefined) {
             team.position = { x: originalX, y: originalY };
         }
-        
+
         teamX += LAYOUT.teamWidth + LAYOUT.teamSpacing;
-        
+
         if (teamX + LAYOUT.teamWidth > x + LAYOUT.valueStreamWidth) {
             teamX = x;
             teamY += LAYOUT.teamHeight + LAYOUT.teamSpacing;
@@ -246,12 +246,12 @@ function drawUngroupedTeams(ctx, x, y, teams, allTeams) {
  */
 function calculateValueStreamHeight(products) {
     let totalHeight = LAYOUT.headerHeight + LAYOUT.valueStreamPadding;
-    
+
     for (const [productName, teams] of Object.entries(products)) {
-        if (productName === "_no_product") continue;
+        if (productName === '_no_product') continue;
         totalHeight += calculateProductSectionHeight(teams) + LAYOUT.productPadding;
     }
-    
+
     return totalHeight + LAYOUT.valueStreamPadding;
 }
 
@@ -259,11 +259,11 @@ function calculateValueStreamHeight(products) {
  * Calculate product section height based on number of teams
  */
 function calculateProductSectionHeight(teams) {
-    const teamsPerRow = Math.floor((LAYOUT.valueStreamWidth - (LAYOUT.valueStreamPadding * 2) - (LAYOUT.productPadding * 2)) / 
+    const teamsPerRow = Math.floor((LAYOUT.valueStreamWidth - (LAYOUT.valueStreamPadding * 2) - (LAYOUT.productPadding * 2)) /
                                    (LAYOUT.teamWidth + LAYOUT.teamSpacing));
     const rows = Math.ceil(teams.length / teamsPerRow);
-    
-    return LAYOUT.sectionHeaderHeight + (LAYOUT.productPadding * 2) + 
+
+    return LAYOUT.sectionHeaderHeight + (LAYOUT.productPadding * 2) +
            (rows * LAYOUT.teamHeight) + ((rows - 1) * LAYOUT.teamSpacing);
 }
 
@@ -272,10 +272,10 @@ function calculateProductSectionHeight(teams) {
  */
 function calculateUngroupedProductsHeight(products) {
     let totalHeight = 70; // Header area
-    
+
     for (const teams of Object.values(products)) {
         totalHeight += calculateProductSectionHeight(teams) + LAYOUT.productPadding;
     }
-    
+
     return totalHeight + LAYOUT.valueStreamPadding;
 }

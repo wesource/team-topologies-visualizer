@@ -131,7 +131,7 @@ async def get_value_streams():
             # Team has value_stream assignment
             if value_stream not in value_streams_data:
                 value_streams_data[value_stream] = {}
-            
+
             if product_line:
                 if product_line not in value_streams_data[value_stream]:
                     value_streams_data[value_stream][product_line] = []
@@ -141,13 +141,13 @@ async def get_value_streams():
                 if "_no_product" not in value_streams_data[value_stream]:
                     value_streams_data[value_stream]["_no_product"] = []
                 value_streams_data[value_stream]["_no_product"].append(team_dict)
-        
+
         elif product_line:
             # Team has product_line but no value_stream
             if product_line not in products_without_value_stream:
                 products_without_value_stream[product_line] = []
             products_without_value_stream[product_line].append(team_dict)
-        
+
         else:
             # Team has neither value_stream nor product_line
             ungrouped_teams.append(team_dict)
@@ -164,7 +164,7 @@ async def get_value_streams():
     for vs_config in value_streams_config["value_streams"]:
         vs_name = vs_config["name"]
         vs_products = value_streams_data.get(vs_name, {})
-        
+
         result["value_streams"][vs_name] = {
             "id": vs_config["id"],
             "name": vs_name,

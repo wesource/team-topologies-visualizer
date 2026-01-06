@@ -277,7 +277,7 @@ export async function showTeamDetails(team, currentView) {
             const isNew = age.totalMonths < 3;
             const badgeEmoji = isNew ? '🆕 ' : '📅 ';
             const ageText = formatTeamAge(age);
-            
+
             establishedSection.innerHTML = `
                 <div style="font-size: 13px; color: #555;">
                     <strong>${badgeEmoji}Established:</strong> ${formatEstablishedDate(established)} ${ageText}
@@ -602,17 +602,17 @@ function calculateTeamAge(established) {
     const [year, month] = established.split('-').map(Number);
     const establishedDate = new Date(year, month - 1, 1);
     const today = new Date();
-    
+
     let years = today.getFullYear() - establishedDate.getFullYear();
     let months = today.getMonth() - establishedDate.getMonth();
-    
+
     if (months < 0) {
         years--;
         months += 12;
     }
-    
+
     const totalMonths = years * 12 + months;
-    
+
     return { years, months, totalMonths };
 }
 

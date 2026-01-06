@@ -74,7 +74,7 @@ def parse_team_file(file_path: Path) -> TeamData:
                 data['value_stream'] = metadata['value_stream']
             if 'platform_grouping' not in data and 'platform_grouping' in metadata:
                 data['platform_grouping'] = metadata['platform_grouping']
-            
+
             # Support line_manager at top-level or in metadata (prefer metadata)
             if 'line_manager' not in data and 'line_manager' in metadata:
                 data['line_manager'] = metadata['line_manager']

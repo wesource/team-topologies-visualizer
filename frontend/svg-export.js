@@ -11,7 +11,7 @@ export function exportToSVG(state, organizationHierarchy, teams, teamColorMap, c
     const isProductLines = isPreTTView && state.currentPerspective === 'product-lines';
     const isValueStreams = isPreTTView && state.currentPerspective === 'value-streams';
     const isHierarchy = isPreTTView && state.currentPerspective === 'hierarchy';
-    
+
     let width = 2000;
     let height = 1500;
     let viewBox = `0 0 ${width} ${height}`;
@@ -68,10 +68,10 @@ function generateCurrentStateSVG(organizationHierarchy, teams, teamColorMap) {
     const levelHeight = LAYOUT.LEVEL_HEIGHT;
     const boxWidth = LAYOUT.DEPT_BOX_WIDTH;
     const boxHeight = LAYOUT.DEPT_BOX_HEIGHT;
-    
+
     // Title
-    elements += `<text x="50" y="60" style="font-family: sans-serif; font-size: 24px; font-weight: bold; fill: #333;" text-anchor="start">Hierarchy View</text>\n`;
-    
+    elements += '<text x="50" y="60" style="font-family: sans-serif; font-size: 24px; font-weight: bold; fill: #333;" text-anchor="start">Hierarchy View</text>\n';
+
     // Draw company leadership
     const company = organizationHierarchy.company;
     elements += drawSVGBox(company.name, startX + 400, startY, boxWidth + 100, boxHeight, '#5D6D7E', 'white', true);
@@ -631,7 +631,7 @@ function generateValueStreamsSVG(valueStreamsData, teamColorMap) {
         // Value stream container
         const vsColor = vsData.color || '#3498db';
         elements += `<rect x="${startX}" y="${currentY}" width="${VS_WIDTH}" height="${vsHeight}" fill="${vsColor}20" stroke="${vsColor}" stroke-width="3" rx="0" ry="0"/>\n`;
-        
+
         // Header
         elements += `<rect x="${startX}" y="${currentY}" width="${VS_WIDTH}" height="${VS_HEADER_HEIGHT}" fill="${vsColor}40" rx="0" ry="0"/>\n`;
         const teamCount = Object.values(vsData.products).reduce((sum, teams) => sum + teams.length, 0);
@@ -641,28 +641,28 @@ function generateValueStreamsSVG(valueStreamsData, teamColorMap) {
         // Draw product sections
         let productY = currentY + VS_HEADER_HEIGHT + VS_PADDING;
         products.forEach(([productName, teams]) => {
-            if (productName === "_no_product") return;
+            if (productName === '_no_product') return;
 
             // Product section background
             elements += `<rect x="${startX + VS_PADDING}" y="${productY}" width="${VS_WIDTH - (VS_PADDING * 2)}" height="${PRODUCT_SECTION_HEIGHT}" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1" rx="0" ry="0"/>\n`;
-            
+
             // Product header
             elements += `<text x="${startX + VS_PADDING + 10}" y="${productY + 22}" style="font-family: sans-serif; font-size: 14px; font-weight: bold; fill: #495057;" text-anchor="start">${escapeXml(productName)}</text>\n`;
 
             // Teams in product
             let teamX = startX + VS_PADDING + 10;
             let teamY = productY + 40;
-            teams.forEach((team, index) => {
+            teams.forEach((team, _index) => {
                 // Wrap check BEFORE positioning
                 if (teamX + TEAM_WIDTH > startX + VS_WIDTH - VS_PADDING - 10 && teamX > startX + VS_PADDING + 10) {
                     teamX = startX + VS_PADDING + 10;
                     teamY += TEAM_HEIGHT + TEAM_SPACING;
                 }
-                
+
                 const teamColor = teamColorMap[team.team_type] || '#666';
                 elements += `<rect x="${teamX}" y="${teamY}" width="${TEAM_WIDTH}" height="${TEAM_HEIGHT}" fill="${teamColor}" stroke="${darkenColor(teamColor, 0.7)}" stroke-width="2" rx="0" ry="0"/>\n`;
                 elements += `<text x="${teamX + TEAM_WIDTH / 2}" y="${teamY + TEAM_HEIGHT / 2 + 5}" class="team-text" text-anchor="middle" font-size="11" fill="#000">${escapeXml(team.name)}</text>\n`;
-                
+
                 teamX += TEAM_WIDTH + TEAM_SPACING;
             });
 
@@ -675,17 +675,17 @@ function generateValueStreamsSVG(valueStreamsData, teamColorMap) {
     // Draw products without value stream (right column)
     if (valueStreamsData.products_without_value_stream && Object.keys(valueStreamsData.products_without_value_stream).length > 0) {
         const ungroupedProductsHeight = Object.keys(valueStreamsData.products_without_value_stream).length * (PRODUCT_SECTION_HEIGHT + PRODUCT_PADDING) + 70;
-        
+
         // Container
         elements += `<rect x="${rightColumnX}" y="${rightColumnY}" width="${VS_WIDTH}" height="${ungroupedProductsHeight}" fill="#fff3cd20" stroke="#ffc107" stroke-width="2" stroke-dasharray="5,5" rx="0" ry="0"/>\n`;
-        
+
         // Header
         elements += `<text x="${rightColumnX + 20}" y="${rightColumnY + 30}" style="font-family: sans-serif; font-size: 16px; font-weight: bold; fill: #856404;" text-anchor="start">⚠ Products not assigned to a value stream</text>\n`;
-        
+
         let productY = rightColumnY + 70;
         Object.entries(valueStreamsData.products_without_value_stream).forEach(([productName, teams]) => {
             const productHeight = PRODUCT_SECTION_HEIGHT;
-            
+
             // Product section
             elements += `<rect x="${rightColumnX + VS_PADDING}" y="${productY}" width="${VS_WIDTH - (VS_PADDING * 2)}" height="${productHeight}" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1" rx="0" ry="0"/>\n`;
             elements += `<text x="${rightColumnX + VS_PADDING + 10}" y="${productY + 22}" style="font-family: sans-serif; font-size: 14px; font-weight: bold; fill: #495057;" text-anchor="start">${escapeXml(productName)}</text>\n`;
@@ -699,24 +699,24 @@ function generateValueStreamsSVG(valueStreamsData, teamColorMap) {
                     teamX = rightColumnX + VS_PADDING + 10;
                     teamY += TEAM_HEIGHT + TEAM_SPACING;
                 }
-                
+
                 const teamColor = teamColorMap[team.team_type] || '#666';
                 elements += `<rect x="${teamX}" y="${teamY}" width="${TEAM_WIDTH}" height="${TEAM_HEIGHT}" fill="${teamColor}" stroke="${darkenColor(teamColor, 0.7)}" stroke-width="2" rx="0" ry="0"/>\n`;
                 elements += `<text x="${teamX + TEAM_WIDTH / 2}" y="${teamY + TEAM_HEIGHT / 2 + 5}" class="team-text" text-anchor="middle" font-size="11" fill="#000">${escapeXml(team.name)}</text>\n`;
-                
+
                 teamX += TEAM_WIDTH + TEAM_SPACING;
             });
 
             productY += productHeight + PRODUCT_PADDING;
         });
-        
+
         rightColumnY += ungroupedProductsHeight + VS_SPACING;
     }
 
     // Draw ungrouped teams (right column, below ungrouped products)
     if (valueStreamsData.ungrouped_teams && valueStreamsData.ungrouped_teams.length > 0) {
         elements += `<text x="${rightColumnX}" y="${rightColumnY + 20}" style="font-family: sans-serif; font-size: 14px; font-weight: bold; fill: #6c757d;" text-anchor="start">⚠ Teams Without Product or Value Stream</text>\n`;
-        
+
         let teamX = rightColumnX;
         let teamY = rightColumnY + 40;
         valueStreamsData.ungrouped_teams.forEach((team) => {
@@ -725,11 +725,11 @@ function generateValueStreamsSVG(valueStreamsData, teamColorMap) {
                 teamX = rightColumnX;
                 teamY += TEAM_HEIGHT + TEAM_SPACING;
             }
-            
+
             const teamColor = teamColorMap[team.team_type] || '#666';
             elements += `<rect x="${teamX}" y="${teamY}" width="${TEAM_WIDTH}" height="${TEAM_HEIGHT}" fill="${teamColor}" stroke="${darkenColor(teamColor, 0.7)}" stroke-width="2" rx="0" ry="0"/>\n`;
             elements += `<text x="${teamX + TEAM_WIDTH / 2}" y="${teamY + TEAM_HEIGHT / 2 + 5}" class="team-text" text-anchor="middle" font-size="11" fill="#000">${escapeXml(team.name)}</text>\n`;
-            
+
             teamX += TEAM_WIDTH + TEAM_SPACING;
         });
     }

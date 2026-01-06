@@ -62,8 +62,8 @@ export function draw(state) {
     if (state.currentView === 'current' && (state.currentPerspective === 'product-lines' || state.currentPerspective === 'value-streams')) {
         // Draw connections if enabled (use appropriate position map)
         if (state.showConnections) {
-            const positionMap = state.currentPerspective === 'value-streams' 
-                ? state.valueStreamsTeamPositions 
+            const positionMap = state.currentPerspective === 'value-streams'
+                ? state.valueStreamsTeamPositions
                 : state.productLinesTeamPositions;
             drawConnections(state.ctx, teamsToRender, state.currentView, state.showInteractionModes, state.currentPerspective, positionMap);
         }
