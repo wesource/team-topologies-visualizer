@@ -27,8 +27,9 @@ export default defineConfig({
   // Run local dev server before starting tests
   webServer: {
     command: process.platform === 'win32' 
-      ? 'cd .. && .\\venv\\Scripts\\python.exe -m uvicorn main:app --port 8000'
+      ? '.\\venv\\Scripts\\python.exe -m uvicorn main:app --port 8000'
       : 'python -m uvicorn main:app --port 8000',
+    cwd: '..',
     url: 'http://127.0.0.1:8000',
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000, // 2 minutes timeout

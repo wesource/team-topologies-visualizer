@@ -43,6 +43,14 @@ describe('ComparisonView', () => {
                 <canvas id="comparisonAfterCanvas" width="800" height="600"></canvas>
                 <div id="comparisonChangesSummary"></div>
                 <button id="closeComparisonViewBtn"></button>
+                <button id="beforeZoomIn"></button>
+                <button id="beforeZoomOut"></button>
+                <button id="beforeResetView"></button>
+                <button id="afterZoomIn"></button>
+                <button id="afterZoomOut"></button>
+                <button id="afterResetView"></button>
+                <input type="checkbox" id="showGroupingsComparison" checked />
+                <input type="checkbox" id="showInteractionsComparison" checked />
             </div>
         `;
 
@@ -145,16 +153,18 @@ describe('ComparisonView', () => {
             expect(summaryHtml).toContain('Team A');
         });
 
-        it('should reset view states', () => {
+        it('should reset view states', async () => {
             // Set some view offset/scale
             comparisonView.beforeView.offsetX = 100;
             comparisonView.beforeView.scale = 1.5;
 
             comparisonView.open(beforeSnapshot, afterSnapshot, comparison);
 
-            expect(comparisonView.beforeView.offsetX).toBe(0);
+            // Wait for requestAnimationFrame to execute
+            await new Promise(resolve => setTimeout(resolve, 0));
+
+            // fitSnapshotToView resets scale and centers
             expect(comparisonView.beforeView.scale).toBe(1);
-            expect(comparisonView.afterView.offsetX).toBe(0);
             expect(comparisonView.afterView.scale).toBe(1);
         });
     });
@@ -352,19 +362,22 @@ describe('ComparisonView', () => {
             const canvas = { width: 800, height: 600 };
             const factor = 1.2;
 
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
+            const centerX = canvas.width / 2;  // 400
+            const centerY = canvas.height / 2;  // 300
 
-            const worldX = (centerX - viewState.offsetX) / viewState.scale;
-            const worldY = (centerY - viewState.offsetY) / viewState.scale;
+            // Before zoom: world coordinates at center
+            const worldX = (centerX - viewState.offsetX) / viewState.scale;  // 400
+            const worldY = (centerY - viewState.offsetY) / viewState.scale;  // 300
 
-            viewState.scale *= factor;
-            viewState.offsetX = centerX - worldX * viewState.scale;
-            viewState.offsetY = centerY - worldY * viewState.scale;
+            // Apply zoom
+            viewState.scale *= factor;  // 1.2
+            // After zoom, keep same world point at center
+            viewState.offsetX = centerX - worldX * viewState.scale;  // 400 - 400*1.2 = 400 - 480 = -80
+            viewState.offsetY = centerY - worldY * viewState.scale;  // 300 - 300*1.2 = 300 - 360 = -60
 
             expect(viewState.scale).toBe(1.2);
-            expect(viewState.offsetX).toBe(40);
-            expect(viewState.offsetY).toBe(30);
+            expect(viewState.offsetX).toBe(-80);
+            expect(viewState.offsetY).toBe(-60);
         });
     });
 
