@@ -2,7 +2,7 @@
 name: Security Engineering Enablement Team
 team_type: enabling
 position:
-  x: 1800.0
+  x: 1960.0
   y: 280.0
 metadata:
   size: 4

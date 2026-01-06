@@ -104,11 +104,11 @@ export async function handlePerspectiveChange(e, draw) {
     const target = e.target;
     state.currentPerspective = target.value;
 
-    // Show team type badges checkbox for both Pre-TT perspectives (always visible)
+    // Show team type badges checkbox for all Pre-TT perspectives
     const teamTypeBadgesLabel = document.getElementById('teamTypeBadgesLabel');
     const cognitiveLoadBadgesDivider = document.getElementById('cognitiveLoadBadgesDivider');
     if (teamTypeBadgesLabel && cognitiveLoadBadgesDivider) {
-        // Always show in Pre-TT view (both hierarchy and product-lines)
+        // Always show in Pre-TT view (hierarchy, product-lines, value-streams)
         teamTypeBadgesLabel.style.display = 'flex';
         cognitiveLoadBadgesDivider.style.display = 'block';
     }
@@ -116,7 +116,7 @@ export async function handlePerspectiveChange(e, draw) {
     // Show/hide and enable/disable auto-align based on perspective
     const autoAlignBtn = document.getElementById('autoAlignBtn');
     if (autoAlignBtn) {
-        if (state.currentPerspective === 'product-lines') {
+        if (state.currentPerspective === 'product-lines' || state.currentPerspective === 'value-streams') {
             autoAlignBtn.disabled = true;
             autoAlignBtn.style.opacity = '0.5';
             autoAlignBtn.style.cursor = 'not-allowed';
@@ -135,6 +135,21 @@ export async function handlePerspectiveChange(e, draw) {
         } catch (error) {
             console.error('Failed to load product lines data:', error);
             showError('Failed to load product lines view');
+            // Fall back to hierarchy
+            document.getElementById('perspectiveHierarchy').checked = true;
+            state.currentPerspective = 'hierarchy';
+            return;
+        }
+    }
+
+    // Load value streams data if switching to that perspective
+    if (state.currentPerspective === 'value-streams' && !state.valueStreamsData) {
+        try {
+            const { loadValueStreams } = await import('./api.js');
+            state.valueStreamsData = await loadValueStreams();
+        } catch (error) {
+            console.error('Failed to load value streams data:', error);
+            showError('Failed to load value streams view');
             // Fall back to hierarchy
             document.getElementById('perspectiveHierarchy').checked = true;
             state.currentPerspective = 'hierarchy';

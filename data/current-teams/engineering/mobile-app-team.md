@@ -2,6 +2,7 @@
 name: Mobile App Team
 team_type: feature-team
 product_line: Driver Mobile Apps
+value_stream: B2C Driver Experience
 dependencies:
 - Backend Services Team
 - API Framework Team

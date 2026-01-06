@@ -47,6 +47,10 @@ export class CanvasInteractionHandler {
         }
 
         // Left-click for team dragging
+        const customPositions = this.state.currentPerspective === 'value-streams' 
+            ? this.state.valueStreamsTeamPositions 
+            : this.state.productLinesTeamPositions;
+        
         const team = getTeamAtPosition(
             this.state.teams,
             x,
@@ -55,18 +59,19 @@ export class CanvasInteractionHandler {
             this.state.scale,
             this.state.currentView,
             this.state.currentPerspective,
-            this.state.productLinesTeamPositions
+            customPositions
         );
         if (team) {
-            // Disable dragging in Product Lines view (teams are positioned by product lane)
-            if (this.state.currentView === 'current' && this.state.currentPerspective === 'product-lines') {
+            // Disable dragging in Product Lines and Value Streams views
+            if (this.state.currentView === 'current' && (this.state.currentPerspective === 'product-lines' || this.state.currentPerspective === 'value-streams')) {
+                const viewName = this.state.currentPerspective === 'product-lines' ? 'Product Lines' : 'Value Streams';
                 // Show info message on first drag attempt
-                if (!this._productLinesDragWarningShown) {
-                    showInfo('Teams cannot be repositioned in Product Lines view. Switch to Hierarchy view to move teams.');
-                    this._productLinesDragWarningShown = true;
+                if (!this._customViewDragWarningShown) {
+                    showInfo(`Teams cannot be repositioned in ${viewName} view. Switch to Hierarchy view to move teams.`);
+                    this._customViewDragWarningShown = true;
                     // Reset flag after 5 seconds to allow message to show again if needed
                     setTimeout(() => {
-                        this._productLinesDragWarningShown = false;
+                        this._customViewDragWarningShown = false;
                     }, 5000);
                 }
                 // Still select the team for viewing details
@@ -152,6 +157,11 @@ export class CanvasInteractionHandler {
         const rect = this.canvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
+        
+        const customPositions = this.state.currentPerspective === 'value-streams' 
+            ? this.state.valueStreamsTeamPositions 
+            : this.state.productLinesTeamPositions;
+        
         const team = getTeamAtPosition(
             this.state.teams,
             x,
@@ -160,7 +170,7 @@ export class CanvasInteractionHandler {
             this.state.scale,
             this.state.currentView,
             this.state.currentPerspective,
-            this.state.productLinesTeamPositions
+            customPositions
         );
         if (team && this.state.onTeamDoubleClick) {
             this.state.onTeamDoubleClick(team);

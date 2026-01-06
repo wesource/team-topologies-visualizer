@@ -2,6 +2,7 @@
 name: Backend Services Team
 team_type: feature-team
 product_line: DispatchHub
+value_stream: B2B Fleet Management
 dependencies:
 - Database Team
 - API Framework Team

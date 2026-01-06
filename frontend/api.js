@@ -43,6 +43,11 @@ export async function loadProductLines() {
     return await response.json();
 }
 
+export async function loadValueStreams() {
+    const response = await fetch(getApiUrl('/pre-tt/value-streams'));
+    return await response.json();
+}
+
 export async function loadTeams(view) {
     const prefix = getViewPrefix(view);
     const response = await fetch(getApiUrl(`${prefix}/teams`));

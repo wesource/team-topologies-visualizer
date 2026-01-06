@@ -2,6 +2,7 @@
 name: Route Optimization Team
 team_type: feature-team
 product_line: RouteOptix
+value_stream: B2B Fleet Management
 dependencies:
 - Backend Services Team
 - Database Team

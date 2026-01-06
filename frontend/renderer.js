@@ -1,6 +1,7 @@
 // Canvas rendering coordination
 import { drawCurrentStateView } from './renderer-current.js';
 import { drawProductLinesView } from './renderer-product-lines.js';
+import { renderValueStreamsView } from './renderer-value-streams.js';
 import { drawTeam, drawConnections, wrapText, drawValueStreamGroupings, drawPlatformGroupings } from './renderer-common.js';
 import { getValueStreamGroupings } from './tt-value-stream-grouping.js';
 import { getPlatformGroupings } from './tt-platform-grouping.js';
@@ -22,9 +23,12 @@ export function draw(state) {
     // Filter teams using new multi-select filter system
     const teamsToRender = getFilteredTeams();
 
-    // Draw Pre-TT views (hierarchy or product-lines)
+    // Draw Pre-TT views (hierarchy, product-lines, or value-streams)
     if (state.currentView === 'current') {
-        if (state.currentPerspective === 'product-lines' && state.productLinesData) {
+        if (state.currentPerspective === 'value-streams' && state.valueStreamsData) {
+            // Value Streams View (nested layout)
+            renderValueStreamsView(state.ctx, state.valueStreamsData);
+        } else if (state.currentPerspective === 'product-lines' && state.productLinesData) {
             // Product Lines View (hybrid layout)
             drawProductLinesView(
                 state.ctx,
@@ -53,15 +57,17 @@ export function draw(state) {
         drawPlatformGroupings(state.ctx, platformGroupings);
     }
 
-    // Skip standard team drawing in product-lines perspective
-    // (teams are already rendered inside the product lanes with their own styling)
-    // But still draw connections if enabled
-    if (state.currentView === 'current' && state.currentPerspective === 'product-lines') {
-        // Draw connections if enabled
+    // Skip standard team drawing in product-lines and value-streams perspectives
+    // (teams are already rendered inside their respective containers)
+    if (state.currentView === 'current' && (state.currentPerspective === 'product-lines' || state.currentPerspective === 'value-streams')) {
+        // Draw connections if enabled (use appropriate position map)
         if (state.showConnections) {
-            drawConnections(state.ctx, teamsToRender, state.currentView, state.showInteractionModes, state.currentPerspective, state.productLinesTeamPositions);
+            const positionMap = state.currentPerspective === 'value-streams' 
+                ? state.valueStreamsTeamPositions 
+                : state.productLinesTeamPositions;
+            drawConnections(state.ctx, teamsToRender, state.currentView, state.showInteractionModes, state.currentPerspective, positionMap);
         }
-        // Product lines view handles team rendering - skip standard team drawing
+        // Product lines and value streams views handle team rendering - skip standard team drawing
     } else {
         // Draw connections first (only if enabled in current view)
         if (!(state.currentView === 'current' && !state.showConnections)) {

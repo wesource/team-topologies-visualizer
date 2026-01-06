@@ -483,7 +483,7 @@ function drawTeamName(ctx, team, x, y, width, height, wrapText) {
  * @description In 'current' view, shows simple dependency connections.
  * In 'tt' view, shows styled lines representing interaction modes (collaboration, x-as-a-service, facilitating)
  */
-export function drawConnections(ctx, teams, currentView = 'current', showInteractionModes = true, currentPerspective = 'hierarchy', productLinesTeamPositions = null) {
+export function drawConnections(ctx, teams, currentView = 'current', showInteractionModes = true, currentPerspective = 'hierarchy', customTeamPositions = null) {
     if (currentView === 'current') {
         // Current State view: show simple "Actual Comms" from dependencies
         teams.forEach(team => {
@@ -491,7 +491,7 @@ export function drawConnections(ctx, teams, currentView = 'current', showInterac
                 team.dependencies.forEach(targetName => {
                     const target = teams.find(t => t.name === targetName);
                     if (target) {
-                        drawActualCommsConnection(ctx, team, target, currentView, currentPerspective, productLinesTeamPositions);
+                        drawActualCommsConnection(ctx, team, target, currentView, currentPerspective, customTeamPositions);
                     }
                 });
             }
@@ -503,22 +503,22 @@ export function drawConnections(ctx, teams, currentView = 'current', showInterac
                 Object.entries(team.interaction_modes).forEach(([targetName, mode]) => {
                     const target = teams.find(t => t.name === targetName);
                     if (target) {
-                        drawConnection(ctx, team, target, mode, currentView, currentPerspective, productLinesTeamPositions);
+                        drawConnection(ctx, team, target, mode, currentView, currentPerspective, customTeamPositions);
                     }
                 });
             }
         });
     }
 }
-function drawConnection(ctx, from, to, mode, currentView = 'current', currentPerspective = 'hierarchy', productLinesTeamPositions = null) {
+function drawConnection(ctx, from, to, mode, currentView = 'current', currentPerspective = 'hierarchy', customTeamPositions = null) {
     const style = INTERACTION_STYLES[mode] || INTERACTION_STYLES['collaboration'];
 
     let fromX, fromY, toX, toY;
 
-    // Use product lines positions if in product-lines perspective
-    if (currentView === 'current' && currentPerspective === 'product-lines' && productLinesTeamPositions) {
-        const fromBounds = productLinesTeamPositions.get(from.name);
-        const toBounds = productLinesTeamPositions.get(to.name);
+    // Use custom positions if in product-lines or value-streams perspective
+    if (currentView === 'current' && (currentPerspective === 'product-lines' || currentPerspective === 'value-streams') && customTeamPositions) {
+        const fromBounds = customTeamPositions.get(from.name);
+        const toBounds = customTeamPositions.get(to.name);
 
         if (fromBounds && toBounds) {
             fromX = fromBounds.x + fromBounds.width / 2;
@@ -563,20 +563,20 @@ function drawConnection(ctx, from, to, mode, currentView = 'current', currentPer
     ctx.setLineDash([]);
 }
 
-function drawActualCommsConnection(ctx, from, to, currentView = 'current', currentPerspective = 'hierarchy', productLinesTeamPositions = null) {
+function drawActualCommsConnection(ctx, from, to, currentView = 'current', currentPerspective = 'hierarchy', customTeamPositions = null) {
     // Current State view: simple bidirectional fat arrow called "Actual Comms"
     let fromX, fromY, toX, toY;
 
-    // Use product lines positions if in product-lines perspective
-    if (currentView === 'current' && currentPerspective === 'product-lines' && productLinesTeamPositions) {
-        const fromBounds = productLinesTeamPositions.get(from.name);
-        const toBounds = productLinesTeamPositions.get(to.name);
+    // Use custom positions if in product-lines or value-streams perspective
+    if (currentView === 'current' && (currentPerspective === 'product-lines' || currentPerspective === 'value-streams') && customTeamPositions) {
+        const fromPos = customTeamPositions.get(from.name);
+        const toPos = customTeamPositions.get(to.name);
 
-        if (fromBounds && toBounds) {
-            fromX = fromBounds.x + fromBounds.width / 2;
-            fromY = fromBounds.y + fromBounds.height / 2;
-            toX = toBounds.x + toBounds.width / 2;
-            toY = toBounds.y + toBounds.height / 2;
+        if (fromPos && toPos) {
+            fromX = fromPos.x + (fromPos.width || 120) / 2;
+            fromY = fromPos.y + (fromPos.height || 50) / 2;
+            toX = toPos.x + (toPos.width || 120) / 2;
+            toY = toPos.y + (toPos.height || 50) / 2;
         } else {
             // Fall back to standard positions
             const fromWidth = getTeamBoxWidth(from, currentView);
@@ -671,14 +671,14 @@ export function wrapText(ctx, text, maxWidth) {
     lines.push(currentLine);
     return lines;
 }
-export function getTeamAtPosition(teams, x, y, viewOffset, scale, currentView = 'current', currentPerspective = 'hierarchy', productLinesTeamPositions = null) {
+export function getTeamAtPosition(teams, x, y, viewOffset, scale, currentView = 'current', currentPerspective = 'hierarchy', customTeamPositions = null) {
     const worldX = (x - viewOffset.x) / scale;
     const worldY = (y - viewOffset.y) / scale;
 
-    // Special handling for product-lines perspective: check tracked positions
-    if (currentView === 'current' && currentPerspective === 'product-lines' && productLinesTeamPositions) {
+    // Special handling for product-lines and value-streams perspectives: check tracked positions
+    if (currentView === 'current' && (currentPerspective === 'product-lines' || currentPerspective === 'value-streams') && customTeamPositions) {
         // Check each team in the positions map
-        for (const [teamName, bounds] of productLinesTeamPositions.entries()) {
+        for (const [teamName, bounds] of customTeamPositions.entries()) {
             if (worldX >= bounds.x && worldX <= bounds.x + bounds.width &&
                 worldY >= bounds.y && worldY <= bounds.y + bounds.height) {
                 // Find the full team object by name

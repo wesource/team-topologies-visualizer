@@ -2,8 +2,8 @@
 name: Security Compliance Team
 team_type: enabling
 position:
-  x: 2120.0
-  y: 100.0
+  x: 1800.0
+  y: 280.0
 metadata:
   size: 4
   cognitive_load: medium

@@ -17,6 +17,7 @@ This backlog tracks enhancements for iterative development. Items are organized 
 - ✅ 95 comprehensive tests across all layers
 - ✅ File naming conventions (tt- prefix for TT-specific modules)
 - ✅ E2E test flakiness resolution (robust async handling)
+- ✅ Value Streams view (Phase 2 - final Pre-TT organizational perspective)
 
 ## Configuration & Data Structure Decisions
 
@@ -49,6 +50,66 @@ This backlog tracks enhancements for iterative development. Items are organized 
 
 **Future consideration**: May want to unify Pre-TT to use markdown tables like TT-Design
 - See backlog item in "Data & Configuration Management" section below
+
+---
+
+## 🔧 Code Structure & Developer Experience
+
+### Refactor Frontend File Structure with Subfolders ⭐⭐⭐ MEDIUM
+**Impact**: MEDIUM (DX improvement) | **Effort**: 2-3 hours | **Added**: 2026-01-06
+
+**Why This Matters**:
+Current flat file structure with prefix-based naming is getting hard to navigate:
+- `renderer-current.js`, `renderer-product-lines.js`, `renderer-value-streams.js`
+- `tt-value-stream-grouping.js`, `tt-platform-grouping.js`
+- Mix of Pre-TT and TT files in same directory
+
+**Proposed Structure**:
+```
+frontend/
+  renderers/
+    pre-tt/
+      hierarchy.js          (was renderer-current.js)
+      product-lines.js      (was renderer-product-lines.js)
+      value-streams.js      (was renderer-value-streams.js)
+    tt/
+      value-stream-grouping.js  (was tt-value-stream-grouping.js)
+      platform-grouping.js      (was tt-platform-grouping.js)
+  state/
+    management.js         (was state-management.js)
+  utils/
+    canvas-interactions.js
+    layout-utils.js
+  api/
+    api.js
+```
+
+**Benefits**:
+- Clear separation between Pre-TT and TT-specific code
+- Easier to find related files
+- Scalable as more renderers/groupings are added
+- Standard JavaScript project structure
+
+**Tasks**:
+- [ ] Design folder structure (get consensus)
+- [ ] Move files to new locations
+- [ ] Update all import statements
+- [ ] Update build/test configurations if needed
+- [ ] Update documentation to reference new paths
+- [ ] Verify all tests still pass
+
+**Considerations**:
+- Requires updating imports in ~20+ files
+- Need to update any tooling that references paths
+- Could break local dev setups temporarily
+- Consider doing alongside other breaking changes
+
+**Definition of Done**:
+- Files organized in logical folders
+- All imports work correctly
+- All tests pass
+- Documentation updated
+- No broken references
 
 ---
 

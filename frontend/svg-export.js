@@ -6,14 +6,17 @@ import { getPlatformGroupings } from './tt-platform-grouping.js';
 // SVG Export Module - Separated from runtime rendering
 // Converts current visualization state to downloadable SVG
 export function exportToSVG(state, organizationHierarchy, teams, teamColorMap, currentView, showInteractionModes = true) {
-    // Handle product-lines perspective
+    // Handle product-lines and value-streams perspectives
     const isPreTTView = currentView === 'current';
     const isProductLines = isPreTTView && state.currentPerspective === 'product-lines';
+    const isValueStreams = isPreTTView && state.currentPerspective === 'value-streams';
+    const isHierarchy = isPreTTView && state.currentPerspective === 'hierarchy';
+    
     let width = 2000;
     let height = 1500;
     let viewBox = `0 0 ${width} ${height}`;
-    // For TT vision, calculate bounding box to fit all teams
-    if (currentView === 'tt' && teams.length > 0) {
+    // For TT vision or hierarchy view, calculate bounding box to fit all teams
+    if ((currentView === 'tt' || isHierarchy) && teams.length > 0) {
         const padding = 100;
         const minX = Math.min(...teams.map(t => t.position.x)) - padding;
         const minY = Math.min(...teams.map(t => t.position.y)) - padding;
@@ -29,7 +32,7 @@ export function exportToSVG(state, organizationHierarchy, teams, teamColorMap, c
     <style>
       .team-box { stroke-width: 3; }
       .team-text { font-family: sans-serif; fill: #000; text-anchor: middle; }
-      .team-text-bold { font-family: sans-serif; font-size: 18px; font-weight: bold; fill: #fff; text-anchor: middle; }
+      .team-text-bold { font-family: sans-serif; font-size: 18px; font-weight: bold; text-anchor: middle; }
       .hierarchy-line { stroke: #7f8c8d; stroke-width: 1.5; fill: none; }
       .connection-line { stroke-width: 2; fill: none; }
     </style>
@@ -38,6 +41,8 @@ export function exportToSVG(state, organizationHierarchy, teams, teamColorMap, c
 `;
     if (currentView === 'current' && isProductLines && state.productLinesData) {
         svg += generateProductLinesSVG(state.productLinesData, teamColorMap);
+    } else if (currentView === 'current' && isValueStreams && state.valueStreamsData) {
+        svg += generateValueStreamsSVG(state.valueStreamsData, teamColorMap);
     } else if (currentView === 'current' && organizationHierarchy) {
         svg += generateCurrentStateSVG(organizationHierarchy, teams, teamColorMap);
     } else {
@@ -63,6 +68,10 @@ function generateCurrentStateSVG(organizationHierarchy, teams, teamColorMap) {
     const levelHeight = LAYOUT.LEVEL_HEIGHT;
     const boxWidth = LAYOUT.DEPT_BOX_WIDTH;
     const boxHeight = LAYOUT.DEPT_BOX_HEIGHT;
+    
+    // Title
+    elements += `<text x="50" y="60" style="font-family: sans-serif; font-size: 24px; font-weight: bold; fill: #333;" text-anchor="start">Hierarchy View</text>\n`;
+    
     // Draw company leadership
     const company = organizationHierarchy.company;
     elements += drawSVGBox(company.name, startX + 400, startY, boxWidth + 100, boxHeight, '#5D6D7E', 'white', true);
@@ -211,7 +220,7 @@ function generateProductLinesSVG(productLinesData, teamColorMap) {
     });
 
     // Title
-    elements += `<text x="${startX}" y="${startY - 40}" class="team-text-bold" fill="#333" font-size="24">Product Lines View</text>\n`;
+    elements += `<text x="${startX}" y="${startY - 40}" style="font-family: sans-serif; font-size: 24px; font-weight: bold; fill: #333;" text-anchor="start">Product Lines View</text>\n`;
 
     // Draw each product lane
     products.forEach((product, index) => {
@@ -588,3 +597,143 @@ function downloadSVG(svgContent, filename) {
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
 }
+
+function generateValueStreamsSVG(valueStreamsData, teamColorMap) {
+    let elements = '';
+    if (!valueStreamsData || !valueStreamsData.value_streams) return elements;
+
+    const VS_WIDTH = 600;
+    const VS_PADDING = 20;
+    const VS_HEADER_HEIGHT = 50;
+    const PRODUCT_SECTION_HEIGHT = 150;
+    const PRODUCT_PADDING = 10;
+    const TEAM_WIDTH = 120;
+    const TEAM_HEIGHT = 50;
+    const TEAM_SPACING = 10;
+    const VS_SPACING = 30;
+
+    const value_streams = Object.values(valueStreamsData.value_streams);
+    const startX = 50;
+    let currentY = 100;
+
+    // Title
+    elements += `<text x="${startX}" y="${currentY - 40}" style="font-family: sans-serif; font-size: 24px; font-weight: bold; fill: #333;" text-anchor="start">Value Streams View</text>\n`;
+
+    // Calculate right column X position
+    const rightColumnX = startX + VS_WIDTH + VS_SPACING;
+    let rightColumnY = currentY;
+
+    // Draw each value stream (left column)
+    value_streams.forEach(vsData => {
+        const products = Object.entries(vsData.products);
+        const vsHeight = VS_HEADER_HEIGHT + (products.length * (PRODUCT_SECTION_HEIGHT + PRODUCT_PADDING)) + VS_PADDING;
+
+        // Value stream container
+        const vsColor = vsData.color || '#3498db';
+        elements += `<rect x="${startX}" y="${currentY}" width="${VS_WIDTH}" height="${vsHeight}" fill="${vsColor}20" stroke="${vsColor}" stroke-width="3" rx="0" ry="0"/>\n`;
+        
+        // Header
+        elements += `<rect x="${startX}" y="${currentY}" width="${VS_WIDTH}" height="${VS_HEADER_HEIGHT}" fill="${vsColor}40" rx="0" ry="0"/>\n`;
+        const teamCount = Object.values(vsData.products).reduce((sum, teams) => sum + teams.length, 0);
+        elements += `<text x="${startX + 20}" y="${currentY + 30}" style="font-family: sans-serif; font-size: 18px; font-weight: bold; fill: #1a1a1a;" text-anchor="start">${escapeXml(vsData.name)}</text>\n`;
+        elements += `<text x="${startX + VS_WIDTH - 100}" y="${currentY + 30}" style="font-family: sans-serif; font-size: 13px; fill: #666;" text-anchor="start">${teamCount} team${teamCount !== 1 ? 's' : ''}</text>\n`;
+
+        // Draw product sections
+        let productY = currentY + VS_HEADER_HEIGHT + VS_PADDING;
+        products.forEach(([productName, teams]) => {
+            if (productName === "_no_product") return;
+
+            // Product section background
+            elements += `<rect x="${startX + VS_PADDING}" y="${productY}" width="${VS_WIDTH - (VS_PADDING * 2)}" height="${PRODUCT_SECTION_HEIGHT}" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1" rx="0" ry="0"/>\n`;
+            
+            // Product header
+            elements += `<text x="${startX + VS_PADDING + 10}" y="${productY + 22}" style="font-family: sans-serif; font-size: 14px; font-weight: bold; fill: #495057;" text-anchor="start">${escapeXml(productName)}</text>\n`;
+
+            // Teams in product
+            let teamX = startX + VS_PADDING + 10;
+            let teamY = productY + 40;
+            teams.forEach((team, index) => {
+                // Wrap check BEFORE positioning
+                if (teamX + TEAM_WIDTH > startX + VS_WIDTH - VS_PADDING - 10 && teamX > startX + VS_PADDING + 10) {
+                    teamX = startX + VS_PADDING + 10;
+                    teamY += TEAM_HEIGHT + TEAM_SPACING;
+                }
+                
+                const teamColor = teamColorMap[team.team_type] || '#666';
+                elements += `<rect x="${teamX}" y="${teamY}" width="${TEAM_WIDTH}" height="${TEAM_HEIGHT}" fill="${teamColor}" stroke="${darkenColor(teamColor, 0.7)}" stroke-width="2" rx="0" ry="0"/>\n`;
+                elements += `<text x="${teamX + TEAM_WIDTH / 2}" y="${teamY + TEAM_HEIGHT / 2 + 5}" class="team-text" text-anchor="middle" font-size="11" fill="#000">${escapeXml(team.name)}</text>\n`;
+                
+                teamX += TEAM_WIDTH + TEAM_SPACING;
+            });
+
+            productY += PRODUCT_SECTION_HEIGHT + PRODUCT_PADDING;
+        });
+
+        currentY += vsHeight + VS_SPACING;
+    });
+
+    // Draw products without value stream (right column)
+    if (valueStreamsData.products_without_value_stream && Object.keys(valueStreamsData.products_without_value_stream).length > 0) {
+        const ungroupedProductsHeight = Object.keys(valueStreamsData.products_without_value_stream).length * (PRODUCT_SECTION_HEIGHT + PRODUCT_PADDING) + 70;
+        
+        // Container
+        elements += `<rect x="${rightColumnX}" y="${rightColumnY}" width="${VS_WIDTH}" height="${ungroupedProductsHeight}" fill="#fff3cd20" stroke="#ffc107" stroke-width="2" stroke-dasharray="5,5" rx="0" ry="0"/>\n`;
+        
+        // Header
+        elements += `<text x="${rightColumnX + 20}" y="${rightColumnY + 30}" style="font-family: sans-serif; font-size: 16px; font-weight: bold; fill: #856404;" text-anchor="start">⚠ Products not assigned to a value stream</text>\n`;
+        
+        let productY = rightColumnY + 70;
+        Object.entries(valueStreamsData.products_without_value_stream).forEach(([productName, teams]) => {
+            const productHeight = PRODUCT_SECTION_HEIGHT;
+            
+            // Product section
+            elements += `<rect x="${rightColumnX + VS_PADDING}" y="${productY}" width="${VS_WIDTH - (VS_PADDING * 2)}" height="${productHeight}" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1" rx="0" ry="0"/>\n`;
+            elements += `<text x="${rightColumnX + VS_PADDING + 10}" y="${productY + 22}" style="font-family: sans-serif; font-size: 14px; font-weight: bold; fill: #495057;" text-anchor="start">${escapeXml(productName)}</text>\n`;
+
+            // Teams
+            let teamX = rightColumnX + VS_PADDING + 10;
+            let teamY = productY + 40;
+            teams.forEach((team) => {
+                // Wrap check BEFORE positioning
+                if (teamX + TEAM_WIDTH > rightColumnX + VS_WIDTH - VS_PADDING - 10 && teamX > rightColumnX + VS_PADDING + 10) {
+                    teamX = rightColumnX + VS_PADDING + 10;
+                    teamY += TEAM_HEIGHT + TEAM_SPACING;
+                }
+                
+                const teamColor = teamColorMap[team.team_type] || '#666';
+                elements += `<rect x="${teamX}" y="${teamY}" width="${TEAM_WIDTH}" height="${TEAM_HEIGHT}" fill="${teamColor}" stroke="${darkenColor(teamColor, 0.7)}" stroke-width="2" rx="0" ry="0"/>\n`;
+                elements += `<text x="${teamX + TEAM_WIDTH / 2}" y="${teamY + TEAM_HEIGHT / 2 + 5}" class="team-text" text-anchor="middle" font-size="11" fill="#000">${escapeXml(team.name)}</text>\n`;
+                
+                teamX += TEAM_WIDTH + TEAM_SPACING;
+            });
+
+            productY += productHeight + PRODUCT_PADDING;
+        });
+        
+        rightColumnY += ungroupedProductsHeight + VS_SPACING;
+    }
+
+    // Draw ungrouped teams (right column, below ungrouped products)
+    if (valueStreamsData.ungrouped_teams && valueStreamsData.ungrouped_teams.length > 0) {
+        elements += `<text x="${rightColumnX}" y="${rightColumnY + 20}" style="font-family: sans-serif; font-size: 14px; font-weight: bold; fill: #6c757d;" text-anchor="start">⚠ Teams Without Product or Value Stream</text>\n`;
+        
+        let teamX = rightColumnX;
+        let teamY = rightColumnY + 40;
+        valueStreamsData.ungrouped_teams.forEach((team) => {
+            // Wrap check BEFORE positioning
+            if (teamX + TEAM_WIDTH > rightColumnX + VS_WIDTH && teamX > rightColumnX) {
+                teamX = rightColumnX;
+                teamY += TEAM_HEIGHT + TEAM_SPACING;
+            }
+            
+            const teamColor = teamColorMap[team.team_type] || '#666';
+            elements += `<rect x="${teamX}" y="${teamY}" width="${TEAM_WIDTH}" height="${TEAM_HEIGHT}" fill="${teamColor}" stroke="${darkenColor(teamColor, 0.7)}" stroke-width="2" rx="0" ry="0"/>\n`;
+            elements += `<text x="${teamX + TEAM_WIDTH / 2}" y="${teamY + TEAM_HEIGHT / 2 + 5}" class="team-text" text-anchor="middle" font-size="11" fill="#000">${escapeXml(team.name)}</text>\n`;
+            
+            teamX += TEAM_WIDTH + TEAM_SPACING;
+        });
+    }
+
+    return elements;
+}
+

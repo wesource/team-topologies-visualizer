@@ -2,7 +2,7 @@
 name: Route Optimization Platform Team
 team_type: complicated-subsystem
 position:
-  x: 290.0
+  x: 450.0
   y: 1770.0
 metadata:
   size: 6

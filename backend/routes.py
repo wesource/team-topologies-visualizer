@@ -55,7 +55,7 @@ async def get_organization_hierarchy():
     return hierarchy
 
 
-@router.get("/product-lines")
+@router.get("/pre-tt/product-lines")
 async def get_product_lines():
     """Get teams grouped by product lines for Product Lines view"""
     products_file = CURRENT_TEAMS_DIR / "products.json"
@@ -103,7 +103,85 @@ async def get_product_lines():
     return result
 
 
+@router.get("/pre-tt/value-streams")
+async def get_value_streams():
+    """Get teams grouped by value streams for Value Streams view"""
+    value_streams_file = CURRENT_TEAMS_DIR / "value-streams.json"
+
+    if not value_streams_file.exists():
+        raise HTTPException(status_code=404, detail="Value streams configuration not found")
+
+    with open(value_streams_file, encoding='utf-8') as f:
+        value_streams_config = json.load(f)
+
+    # Get all teams from current view
+    all_teams = find_all_teams("current")
+
+    # Group teams first by value_stream, then by product_line
+    value_streams_data = {}
+    products_without_value_stream = {}
+    ungrouped_teams = []
+
+    for team in all_teams:
+        value_stream = team.value_stream
+        product_line = team.product_line
+        team_dict = team.model_dump()
+
+        if value_stream:
+            # Team has value_stream assignment
+            if value_stream not in value_streams_data:
+                value_streams_data[value_stream] = {}
+            
+            if product_line:
+                if product_line not in value_streams_data[value_stream]:
+                    value_streams_data[value_stream][product_line] = []
+                value_streams_data[value_stream][product_line].append(team_dict)
+            else:
+                # Team has value_stream but no product_line
+                if "_no_product" not in value_streams_data[value_stream]:
+                    value_streams_data[value_stream]["_no_product"] = []
+                value_streams_data[value_stream]["_no_product"].append(team_dict)
+        
+        elif product_line:
+            # Team has product_line but no value_stream
+            if product_line not in products_without_value_stream:
+                products_without_value_stream[product_line] = []
+            products_without_value_stream[product_line].append(team_dict)
+        
+        else:
+            # Team has neither value_stream nor product_line
+            ungrouped_teams.append(team_dict)
+
+    # Build response with value stream metadata and nested product structure
+    result = {
+        "perspective": "value-streams",
+        "value_streams": {},
+        "products_without_value_stream": products_without_value_stream,
+        "ungrouped_teams": ungrouped_teams,
+        "teams": [team.model_dump() for team in all_teams]
+    }
+
+    for vs_config in value_streams_config["value_streams"]:
+        vs_name = vs_config["name"]
+        vs_products = value_streams_data.get(vs_name, {})
+        
+        result["value_streams"][vs_name] = {
+            "id": vs_config["id"],
+            "name": vs_name,
+            "description": vs_config["description"],
+            "color": vs_config["color"],
+            "products": vs_products,
+            "metadata": {
+                "expected_products": vs_config.get("products", []),
+                "team_count": sum(len(teams) for teams in vs_products.values())
+            }
+        }
+
+    return result
+
+
 @router.get("/teams", response_model=list[TeamData])
+
 async def get_teams(view: str = "tt"):
     """Get all teams for a specific view (tt or current)"""
     return find_all_teams(view)
