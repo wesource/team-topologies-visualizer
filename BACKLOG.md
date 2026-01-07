@@ -19,6 +19,235 @@ This backlog tracks enhancements for iterative development. Items are organized 
 - ✅ E2E test flakiness resolution (robust async handling)
 - ✅ Value Streams view (Phase 2 - final Pre-TT organizational perspective)
 
+---
+
+## 🚀 HIGHEST PRIORITY - Visual Improvements (Expert Analysis 2026-01-07)
+
+### Line Thickness by Interaction Mode ⭐⭐⭐⭐⭐ HIGHEST - QUICK WIN
+**Impact**: HIGH (visual clarity) | **Effort**: 1-2 hours | **Priority**: 🥇 START HERE | **Added**: 2026-01-07
+
+**Why This Matters**:
+Canvas becomes cluttered with 20+ teams showing all interaction modes. Visual hierarchy helps users distinguish between different relationship types at a glance. High-touch collaboration should be more prominent than lightweight facilitating.
+
+**Current State**:
+- All interaction mode lines use same thickness
+- Harder to distinguish importance/intensity of relationships
+- Visual noise when many teams visible
+
+**Proposed Solution**:
+- **Collaboration** = 2px thick (solid purple) - High touch, temporary, needs attention
+- **X-as-a-Service** = 1px medium (dashed black) - Standard operational relationship
+- **Facilitating** = 0.5px thin (dotted green) - Lightweight coaching
+
+**Technical Implementation**:
+1. Update `renderer.js` (or `renderer-common.js`) line drawing logic:
+   ```javascript
+   function drawInteractionLine(ctx, from, to, mode) {
+     // Set line width based on interaction mode
+     if (mode === 'collaboration') {
+       ctx.lineWidth = 2;
+       ctx.strokeStyle = COLLABORATION_COLOR;
+       ctx.setLineDash([]);  // Solid
+     } else if (mode === 'x-as-a-service') {
+       ctx.lineWidth = 1;
+       ctx.strokeStyle = XAAS_COLOR;
+       ctx.setLineDash([5, 5]);  // Dashed
+     } else if (mode === 'facilitating') {
+       ctx.lineWidth = 0.5;
+       ctx.strokeStyle = FACILITATING_COLOR;
+       ctx.setLineDash([2, 3]);  // Dotted
+     }
+     // ... existing line drawing code
+   }
+   ```
+
+2. Update legend to show line thickness visually
+3. Test with different zoom levels to ensure visibility
+
+**Tasks**:
+- [ ] Update line drawing function in renderer to set `ctx.lineWidth` based on mode
+- [ ] Test at various zoom levels (ensure 0.5px visible when zoomed in)
+- [ ] Update legend to show thickness differences
+- [ ] Update documentation/screenshots showing new visual hierarchy
+- [ ] Add test case verifying line thickness is applied correctly
+
+**Related Files**:
+- `frontend/renderer.js` - Main rendering coordination
+- `frontend/renderer-common.js` - Shared line drawing utilities
+- `frontend/constants.js` - Color definitions
+
+**Success Criteria**:
+- Collaboration lines clearly thicker than X-as-a-Service
+- Facilitating lines visible but subtle (don't dominate canvas)
+- Users can distinguish relationship types by thickness alone
+- Works well at all zoom levels (100%, 50%, 150%)
+
+---
+
+### Focus Mode - Click to Dim Unrelated Teams ⭐⭐⭐⭐⭐ HIGHEST - QUICK WIN
+**Impact**: HIGH (reduces cognitive load) | **Effort**: 4-6 hours | **Priority**: 🥇 START HERE | **Added**: 2026-01-07
+
+**Why This Matters**:
+With 20-40 teams on canvas, users need to focus on one team's relationships without distraction. Current "Show Interaction Modes" checkbox is all-or-nothing. Focus mode provides middle ground: see structure but highlight specific team's network.
+
+**User Story**:
+"As a transformation coach, I want to click a team and see only its direct relationships, so I can explain its dependencies without visual clutter from unrelated teams."
+
+**Current State**:
+- All teams always shown at 100% opacity
+- "Show Interaction Modes" checkbox controls all lines (binary: show all or none)
+- Hard to trace specific team's relationships in dense canvas
+
+**Proposed Solution**:
+- **Single-click** on team → enter focus mode:
+  - Selected team: 100% opacity (full color)
+  - Direct dependencies: 100% opacity (teams this team depends on)
+  - Direct consumers: 100% opacity (teams that depend on this team)
+  - Connection lines to/from focused team: 100% opacity
+  - All other teams: 20% opacity (dimmed/grayed)
+  - All other lines: 10% opacity (barely visible)
+- Click same team again (or empty canvas) → exit focus mode (restore all to 100%)
+- Works in both TT Design and Pre-TT views
+
+**Technical Implementation**:
+
+1. **State Management** (`frontend/state-management.js`):
+   ```javascript
+   export const state = {
+     // ... existing state
+     focusedTeam: null,              // Team object or null
+     focusedConnections: new Set(),  // Set of team names in focus network
+   };
+   ```
+
+2. **Canvas Interactions** (`frontend/canvas-interactions.js`):
+   ```javascript
+   function handleCanvasClick(e) {
+     const clickedTeam = getTeamAtPosition(x, y);
+     
+     if (clickedTeam) {
+       // Toggle focus mode
+       if (state.focusedTeam === clickedTeam) {
+         // Exit focus mode (clicked same team)
+         state.focusedTeam = null;
+         state.focusedConnections.clear();
+       } else {
+         // Enter focus mode
+         state.focusedTeam = clickedTeam;
+         state.focusedConnections = getDirectRelationships(clickedTeam);
+       }
+       draw(state);
+     } else {
+       // Clicked empty canvas - exit focus mode
+       if (state.focusedTeam) {
+         state.focusedTeam = null;
+         state.focusedConnections.clear();
+         draw(state);
+       }
+     }
+   }
+   
+   function getDirectRelationships(team) {
+     const connected = new Set([team.name]);
+     
+     // Add teams this team depends on
+     if (team.dependencies) {
+       team.dependencies.forEach(dep => connected.add(dep));
+     }
+     
+     // Add teams that depend on this team
+     state.teams.forEach(t => {
+       if (t.dependencies && t.dependencies.includes(team.name)) {
+         connected.add(t.name);
+       }
+     });
+     
+     return connected;
+   }
+   ```
+
+3. **Renderer Updates** (`frontend/renderer.js` or `renderer-common.js`):
+   ```javascript
+   function drawTeam(ctx, team) {
+     // Calculate opacity based on focus mode
+     let opacity = 1.0;
+     if (state.focusedTeam) {
+       if (state.focusedConnections.has(team.name)) {
+         opacity = 1.0;  // Full opacity for focused network
+       } else {
+         opacity = 0.2;  // Dimmed for unrelated teams
+       }
+     }
+     
+     // Apply opacity to team box
+     ctx.globalAlpha = opacity;
+     // ... existing team drawing code
+     ctx.globalAlpha = 1.0;  // Reset
+   }
+   
+   function drawInteractionLine(ctx, fromTeam, toTeam, mode) {
+     // Calculate opacity for lines
+     let opacity = 1.0;
+     if (state.focusedTeam) {
+       if (state.focusedConnections.has(fromTeam.name) && 
+           state.focusedConnections.has(toTeam.name)) {
+         opacity = 1.0;  // Full opacity for focused lines
+       } else {
+         opacity = 0.1;  // Nearly invisible for unrelated lines
+       }
+     }
+     
+     ctx.globalAlpha = opacity;
+     // ... existing line drawing code
+     ctx.globalAlpha = 1.0;  // Reset
+   }
+   ```
+
+4. **UI Indicator** (optional but recommended):
+   - Show small badge in toolbar when focus mode active: "👁️ Focus: [Team Name] (click to exit)"
+   - Helps users understand current state
+
+**Tasks**:
+- [ ] Add `focusedTeam` and `focusedConnections` to state management
+- [ ] Implement `getDirectRelationships()` helper function
+- [ ] Update click handler in `canvas-interactions.js` to toggle focus mode
+- [ ] Update team rendering to apply opacity based on focus state
+- [ ] Update line rendering to apply opacity based on focus state
+- [ ] Add visual indicator in toolbar showing focused team (optional)
+- [ ] Test with various team sizes (5 teams, 20 teams, 40 teams)
+- [ ] Test interaction with zoom/pan (ensure focus persists)
+- [ ] Add keyboard shortcut: Escape to exit focus mode
+- [ ] Update user documentation with focus mode instructions
+- [ ] Add E2E test for focus mode interaction
+
+**Edge Cases to Handle**:
+- Team with no dependencies (should just show team itself)
+- Orphaned team with no consumers (should just show team itself)
+- Focus mode + search filter (should they work together or be mutually exclusive?)
+- Focus mode + cognitive load overlay (both visual features - ensure readable)
+
+**Related Files**:
+- `frontend/state-management.js` - State structure
+- `frontend/canvas-interactions.js` - Click handling
+- `frontend/renderer.js` - Team rendering coordination
+- `frontend/renderer-common.js` - Shared drawing utilities
+
+**Success Criteria**:
+- Single click on team dims all unrelated teams to 20% opacity
+- Direct dependencies and consumers remain at 100% opacity
+- Connection lines appropriately dimmed/shown
+- Click same team or empty canvas exits focus mode
+- Performance remains smooth with 40+ teams
+- Works in both TT Design and Pre-TT views
+- Intuitive for first-time users (no tutorial needed)
+
+**Future Enhancements** (not in scope for this ticket):
+- Multi-team focus (Ctrl+click to add teams to focus set)
+- Focus on value stream grouping (show all teams in value stream)
+- Hover preview (temporary focus on hover, full focus on click)
+
+---
+
 ## Configuration & Data Structure Decisions
 
 ### Naming Conventions (2026-01-06)

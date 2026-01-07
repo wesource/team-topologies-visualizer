@@ -151,15 +151,17 @@ export function drawTeam(ctx, team, selectedTeam, teamColorMap, wrapText, curren
     }
 
     // Default: draw as rounded rectangle
-    drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, showTeamTypeBadges, platformMetrics);
+    drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, showTeamTypeBadges, platformMetrics, currentView);
 }
 
 /**
- * Draw team as default rounded rectangle (for stream-aligned, platform, and Pre-TT view)
+ * Draw team as default box (rounded corners in TT Design, sharp corners in Pre-TT view)
  */
-function drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, showTeamTypeBadges = false, platformMetrics = null) {
+function drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, showTeamTypeBadges = false, platformMetrics = null, currentView = 'current') {
 
-    const radius = 0; // Sharp corners
+    // Rounded corners for stream-aligned and platform teams in TT Design view
+    // Sharp corners in Pre-TT view (hierarchy, product lines, value streams)
+    const radius = currentView === 'tt' ? 15 : 0;
     const fillColor = getTeamColor(team, teamColorMap);
     const borderColor = darkenColor(fillColor, LAYOUT.BORDER_COLOR_DARKEN_FACTOR);
 

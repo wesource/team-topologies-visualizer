@@ -397,13 +397,13 @@ function drawSVGBox(text, x, y, width, height, bgColor, textColor, isBold, teamT
     }
 
     // Default: rounded rectangle
-    return drawSVGDefaultBox(text, x, y, width, height, bgColor, textColor, fontSize, fontWeight, borderColor);
+    return drawSVGDefaultBox(text, x, y, width, height, bgColor, textColor, fontSize, fontWeight, borderColor, currentView);
 }
 
 /**
- * Draw default team box as rounded rectangle (for stream-aligned, platform, and Pre-TT view)
+ * Draw default team box (rounded corners in TT Design, sharp corners in Pre-TT view)
  */
-function drawSVGDefaultBox(text, x, y, width, height, bgColor, textColor, fontSize, fontWeight, borderColor) {
+function drawSVGDefaultBox(text, x, y, width, height, bgColor, textColor, fontSize, fontWeight, borderColor, currentView = 'current') {
     // Wrap text
     const words = text.split(' ');
     const lines = [];
@@ -420,8 +420,13 @@ function drawSVGDefaultBox(text, x, y, width, height, bgColor, textColor, fontSi
     });
     if (currentLine)
         lines.push(currentLine);
+
+    // Rounded corners for TT Design view (stream-aligned, platform teams)
+    // Sharp corners for Pre-TT view
+    const rx = currentView === 'tt' ? '8' : '0';
+
     let box = `<g>
-    <rect x="${x}" y="${y}" width="${width}" height="${height}" rx="8" fill="${bgColor}" stroke="${borderColor}" stroke-width="2" class="team-box"/>`;
+    <rect x="${x}" y="${y}" width="${width}" height="${height}" rx="${rx}" fill="${bgColor}" stroke="${borderColor}" stroke-width="2" class="team-box"/>`;
     // Add text lines
     const lineHeight = 14;
     const startY = y + height / 2 - (lines.length - 1) * lineHeight / 2;
