@@ -2,6 +2,8 @@
 import { getTeamAtPosition } from './renderer-common.js';
 import { updateTeamPosition } from './api.js';
 import { showInfo } from './notifications.js';
+import { pushPositionSnapshot } from './state-management.js';
+import { updateUndoButtonState } from './ui-handlers.js';
 
 export class CanvasInteractionHandler {
     constructor(canvas, state, drawCallback) {
@@ -83,6 +85,9 @@ export class CanvasInteractionHandler {
             this.draggedTeam = team;
             this.dragStartPosition = { x: team.position.x, y: team.position.y };
             this.hasDragged = false;
+            // Capture position snapshot before drag starts (for undo)
+            pushPositionSnapshot();
+            updateUndoButtonState();
             this.dragOffset = {
                 x: (x - this.state.viewOffset.x) / this.state.scale - team.position.x,
                 y: (y - this.state.viewOffset.y) / this.state.scale - team.position.y

@@ -1,5 +1,5 @@
 // UI event handlers - manages button clicks and control interactions
-import { state, zoomIn, zoomOut, fitToView, getFilteredTeams } from './state-management.js';
+import { state, zoomIn, zoomOut, fitToView, getFilteredTeams, pushPositionSnapshot, popPositionSnapshot, canUndo, clearPositionHistory } from './state-management.js';
 import { updateTeamPosition } from './api.js';
 import { autoAlignTeamsByManager } from './current-state-alignment.js';
 import { autoAlignTTDesign } from './tt-design-alignment.js';
@@ -10,6 +10,10 @@ import { showValidationReport } from './modals.js';
 export function handleViewChange(e, loadAllTeams, _draw) {
     const target = e.target;
     state.currentView = target.value;
+
+    // Clear position history when switching views (different team sets)
+    clearPositionHistory();
+    updateUndoButtonState();
 
     // Show/hide perspective selector (Pre-TT only)
     const perspectiveSelector = document.getElementById('perspectiveSelector');
@@ -84,6 +88,16 @@ export function handleViewChange(e, loadAllTeams, _draw) {
             autoAlignTTBtnView.style.display = 'inline-block';
         } else {
             autoAlignTTBtnView.style.display = 'none';
+        }
+    }
+
+    // Show/hide undo button (visible in both views that allow position changes)
+    const undoBtnView = document.getElementById('undoBtn');
+    if (undoBtnView) {
+        if (state.currentView === 'current' || state.currentView === 'tt') {
+            undoBtnView.style.display = 'inline-block';
+        } else {
+            undoBtnView.style.display = 'none';
         }
     }
 
@@ -171,6 +185,10 @@ export async function handleAutoAlign(draw) {
         return;
     }
 
+    // Capture position snapshot before auto-align (for undo)
+    pushPositionSnapshot();
+    updateUndoButtonState();
+
     // Perform alignment - use filtered teams if filters are active
     const teamsToAlign = getFilteredTeams();
     const realignedTeams = autoAlignTeamsByManager(teamsToAlign, state.organizationHierarchy);
@@ -199,6 +217,10 @@ export async function handleAutoAlign(draw) {
 }
 
 export async function handleAutoAlignTT(draw) {
+    // Capture position snapshot before auto-align (for undo)
+    pushPositionSnapshot();
+    updateUndoButtonState();
+
     // Perform alignment for TT Design view - use filtered teams if filters are active
     const teamsToAlign = getFilteredTeams();
     const realignedTeams = autoAlignTTDesign(teamsToAlign);
@@ -223,6 +245,78 @@ export async function handleAutoAlignTT(draw) {
     } catch (error) {
         console.error('Failed to save team positions:', error);
         showError('Failed to save team positions. Please try again.');
+    }
+}
+
+/**
+ * Handle undo position changes
+ * Restores team positions from the last captured snapshot
+ * @param {Function} draw - Callback to redraw canvas after restoring positions
+ */
+export async function handleUndo(draw) {
+    if (!canUndo()) {
+        showInfo('No position changes to undo.');
+        return;
+    }
+
+    const snapshot = popPositionSnapshot();
+    if (!snapshot) {
+        showInfo('No position changes to undo.');
+        return;
+    }
+
+    // Check if snapshot is for current view
+    if (snapshot.view !== state.currentView) {
+        showWarning('Cannot undo - snapshot is from a different view.');
+        // Don't restore snapshot, let it stay removed
+        return;
+    }
+
+    // Restore positions
+    try {
+        const updatePromises = snapshot.teams.map(teamSnapshot => {
+            // Find team in current state
+            const team = state.teams.find(t => t.name === teamSnapshot.name);
+            if (team) {
+                // Update local position first for immediate feedback
+                team.position.x = teamSnapshot.x;
+                team.position.y = teamSnapshot.y;
+                // Save to backend
+                return updateTeamPosition(team.name, teamSnapshot.x, teamSnapshot.y, state.currentView);
+            }
+            return Promise.resolve();
+        });
+
+        await Promise.all(updatePromises);
+
+        // Redraw canvas with restored positions
+        draw();
+
+        showSuccess(`Undo: Restored ${snapshot.teams.length} team position(s).`);
+    } catch (error) {
+        console.error('Failed to restore team positions:', error);
+        showError('Failed to restore team positions. Please try again.');
+    }
+
+    // Update undo button state
+    updateUndoButtonState();
+}
+
+/**
+ * Update undo button enabled/disabled state based on history availability
+ */
+export function updateUndoButtonState() {
+    const undoBtn = document.getElementById('undoBtn');
+    if (undoBtn) {
+        if (canUndo()) {
+            undoBtn.disabled = false;
+            undoBtn.style.opacity = '1';
+            undoBtn.style.cursor = 'pointer';
+        } else {
+            undoBtn.disabled = true;
+            undoBtn.style.opacity = '0.5';
+            undoBtn.style.cursor = 'not-allowed';
+        }
     }
 }
 
@@ -251,9 +345,19 @@ export function setupUIEventListeners(loadAllTeams, draw, openAddTeamModal, clos
     if (autoAlignTTBtn)
         autoAlignTTBtn.addEventListener('click', () => handleAutoAlignTT(draw));
 
+    const undoBtn = document.getElementById('undoBtn');
+    if (undoBtn)
+        undoBtn.addEventListener('click', () => handleUndo(draw));
+
     const refreshBtn = document.getElementById('refreshBtn');
-    if (refreshBtn)
-        refreshBtn.addEventListener('click', () => loadAllTeams());
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', () => {
+            // Clear position history on refresh (data reload means positions might be stale)
+            clearPositionHistory();
+            updateUndoButtonState();
+            loadAllTeams();
+        });
+    }
 
     const cancelBtn = document.getElementById('cancelBtn');
     if (cancelBtn)
@@ -404,6 +508,11 @@ export function setupUIEventListeners(loadAllTeams, draw, openAddTeamModal, clos
 
     // Keyboard shortcuts for zoom
     document.addEventListener('keydown', (e) => {
+        // Ctrl/Cmd + Z for undo
+        if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
+            e.preventDefault();
+            handleUndo(draw);
+        }
         // Ctrl/Cmd + Plus/Equals for zoom in
         if ((e.ctrlKey || e.metaKey) && (e.key === '+' || e.key === '=')) {
             e.preventDefault();
@@ -475,6 +584,13 @@ export function setupUIEventListeners(loadAllTeams, draw, openAddTeamModal, clos
     if (groupingFilterContainerInit) {
         groupingFilterContainerInit.style.display = 'flex'; // Shown in TT view
     }
+
+    // Initialize undo button visibility and state
+    const undoBtnInit = document.getElementById('undoBtn');
+    if (undoBtnInit) {
+        undoBtnInit.style.display = 'inline-block'; // Shown in TT view (default)
+    }
+    updateUndoButtonState();
 
     // Validate files button
     const validateBtn = document.getElementById('validateBtn');

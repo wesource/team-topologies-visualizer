@@ -37,7 +37,10 @@ export const state = {
     snapshotMetadata: null,
     // Comparison state
     isComparingSnapshots: false,
-    comparisonData: null
+    comparisonData: null,
+    // Position history for undo functionality
+    positionHistory: [],
+    maxHistorySize: 10 // Keep last 10 position changes
 };
 
 // Interaction handler (initialized in app.js)
@@ -168,6 +171,53 @@ export function updateZoomDisplay() {
     if (zoomLevel) {
         zoomLevel.textContent = `${Math.round(state.scale * 100)}%`;
     }
+}
+
+/**
+ * Capture current team positions for undo functionality
+ * Stores a snapshot of all team positions before making changes
+ * @description Called before drag operations and auto-align to enable undo
+ */
+export function pushPositionSnapshot() {
+    const snapshot = {
+        timestamp: Date.now(),
+        view: state.currentView,
+        teams: state.teams.map(team => ({
+            name: team.name,
+            x: team.position?.x || 0,
+            y: team.position?.y || 0
+        }))
+    };
+
+    state.positionHistory.push(snapshot);
+
+    // Keep only last N snapshots
+    if (state.positionHistory.length > state.maxHistorySize) {
+        state.positionHistory.shift();
+    }
+}
+
+/**
+ * Get the most recent position snapshot
+ * @returns {Object|null} Last position snapshot or null if history is empty
+ */
+export function popPositionSnapshot() {
+    return state.positionHistory.pop();
+}
+
+/**
+ * Check if undo is available
+ * @returns {boolean} True if there are position snapshots to undo
+ */
+export function canUndo() {
+    return state.positionHistory.length > 0;
+}
+
+/**
+ * Clear position history (called on view switch or data refresh)
+ */
+export function clearPositionHistory() {
+    state.positionHistory = [];
 }
 
 export default state;
