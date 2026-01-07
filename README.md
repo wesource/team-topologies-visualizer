@@ -110,7 +110,12 @@ This tool provides dual visualizations to make these conversations easier.
   - **TT Design**: Organize teams within value stream and platform groupings with book-accurate shapes
   - **Pre-TT**: Align teams under line managers in org-chart layout
 - 🎯 **Fractal Groupings** (TT 2nd edition) - Visual grouping of teams into Value Stream Groupings and Platform Groupings for team-of-teams patterns. Platform grouping boxes now always render and dynamically resize, even when teams are dragged far apart.
-- � **Cognitive Load Indicators** - Optional traffic light visualization (🟢🟡🔴) showing team cognitive load levels
+- 👥 **Platform Consumer Dashboard** - Identify bottlenecks and adoption patterns (TT Design view only):
+  - Badge on canvas showing consumer count (e.g., "👥 12")
+  - Warning indicator (⚠️) when platform serves >15 teams
+  - Detailed dashboard in team modal with value stream breakdown
+  - Visual adoption charts and full consumer list
+- 🚦 **Cognitive Load Indicators** - Optional traffic light visualization (🟢🟡🔴) showing team cognitive load levels
   - Toggle on/off to reduce visual clutter
   - Identify overloaded teams at a glance
   - Detailed breakdown of domain, intrinsic, and extraneous complexity
@@ -280,6 +285,15 @@ See [CONCEPTS.md](docs/CONCEPTS.md) for detailed explanation of the example orga
   - Quickly identify overloaded teams at a glance
   - Double-click teams to see detailed breakdown (domain, intrinsic, extraneous complexity)
   - See [CONCEPTS.md](docs/CONCEPTS.md#cognitive-load-management) for detailed explanation
+- **Platform Consumer Dashboard** (TT Design view) - Identify which teams consume each platform:
+  - **Canvas badge**: Platform teams show consumer count (e.g., **👥 12**) in bottom-left corner
+  - **Warning indicator**: ⚠️ appears if platform serves >15 teams (potential bottleneck)
+  - **Detail modal**: Double-click platform team to see full dashboard:
+    - Total consumer count
+    - Overload warning if serving too many teams
+    - Breakdown by value stream with visual bar charts
+    - Complete list of consuming teams with interaction modes
+  - Helps identify bottlenecks and understand platform adoption
 - **Groupings Filter** (TT Design view) - Filter teams by value stream or platform grouping to focus on specific areas
 - **Refresh** button - Reload all team markdown files and configurations from disk without losing your zoom/pan position
 

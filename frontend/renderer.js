@@ -77,8 +77,13 @@ export function draw(state) {
 
         // Draw teams
         teamsToRender.forEach(team => {
-            // Calculate platform metrics for TT Design view only
-            const platformMetrics = state.currentView === 'tt'
+            // Calculate platform metrics ONLY when:
+            // 1. In TT Design view
+            // 2. Checkbox is enabled
+            // 3. Team is a Platform team
+            const platformMetrics = (state.currentView === 'tt' &&
+                                    state.showPlatformConsumers &&
+                                    team.team_type === 'platform')
                 ? calculatePlatformConsumers(team.name, state.teams)
                 : null;
 

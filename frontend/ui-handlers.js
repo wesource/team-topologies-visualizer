@@ -73,6 +73,23 @@ export function handleViewChange(e, loadAllTeams, _draw) {
         }
     }
 
+    // Show/hide Platform Consumers checkbox (TT Design view only)
+    const showPlatformConsumersLabel = document.getElementById('showPlatformConsumersLabel');
+    const cognitiveLoadConsumersDivider = document.getElementById('cognitiveLoadConsumersDivider');
+    if (showPlatformConsumersLabel) {
+        if (state.currentView === 'tt') {
+            showPlatformConsumersLabel.style.display = 'flex';
+            if (cognitiveLoadConsumersDivider) {
+                cognitiveLoadConsumersDivider.style.display = 'block';
+            }
+        } else {
+            showPlatformConsumersLabel.style.display = 'none';
+            if (cognitiveLoadConsumersDivider) {
+                cognitiveLoadConsumersDivider.style.display = 'none';
+            }
+        }
+    }
+
     const autoAlignBtnView = document.getElementById('autoAlignBtn');
     if (autoAlignBtnView) {
         if (state.currentView === 'current') {
@@ -416,6 +433,14 @@ export function setupUIEventListeners(loadAllTeams, draw, openAddTeamModal, clos
         });
     }
 
+    const showPlatformConsumersCheckbox = document.getElementById('showPlatformConsumers');
+    if (showPlatformConsumersCheckbox) {
+        showPlatformConsumersCheckbox.addEventListener('change', (e) => {
+            state.showPlatformConsumers = e.target.checked;
+            draw();
+        });
+    }
+
     const showTeamTypeBadgesCheckbox = document.getElementById('showTeamTypeBadges');
     if (showTeamTypeBadgesCheckbox) {
         showTeamTypeBadgesCheckbox.addEventListener('change', (e) => {
@@ -580,6 +605,11 @@ export function setupUIEventListeners(loadAllTeams, draw, openAddTeamModal, clos
     const showInteractionModesLabelInit = document.getElementById('showInteractionModesLabel');
     if (showInteractionModesLabelInit) {
         showInteractionModesLabelInit.style.display = 'flex'; // Shown in TT view
+    }
+
+    const showPlatformConsumersLabelInit = document.getElementById('showPlatformConsumersLabel');
+    if (showPlatformConsumersLabelInit) {
+        showPlatformConsumersLabelInit.style.display = 'flex'; // Shown in TT view (disabled by default)
     }
 
     const autoAlignBtnInit = document.getElementById('autoAlignBtn');

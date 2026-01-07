@@ -856,6 +856,35 @@ This tool supports the **"sensing organization"** approach from Team Topologies:
 - **Facilitate informed discussions** - Use visualization to align stakeholder understanding
 - **Identify pain points** - Make bottlenecks, handoffs, and cognitive overload visible
 
+### Platform Adoption Visibility (Sensing Platform Health)
+
+> **"Platforms should be treated as products with customers (the consuming teams)"**  
+> — Team Topologies 2nd Edition
+
+**Platform Consumer Dashboard** provides organizational sensing for platform team health:
+
+**Why track platform consumers?**
+- **Detect bottlenecks early**: Platforms serving >15 teams risk becoming overloaded
+- **Validate platform adoption**: Are teams actually using your platform as intended?
+- **Inform scaling decisions**: High consumer counts signal need to split or expand platforms
+- **Measure X-as-a-Service maturity**: Successful platforms naturally attract more consumers
+
+**In TT Design view:**
+- **Canvas badge**: Platform teams show consumer count (e.g., 👥 12) in bottom-left corner
+- **Warning indicator**: ⚠️ appears when platform serves >15 teams (potential bottleneck)
+- **Detail modal**: Double-click platform team to see full adoption dashboard:
+  - Total consumer count and overload warning
+  - Breakdown by value stream (which parts of organization depend on this?)
+  - Complete list of consuming teams with interaction modes
+  - Visual bar charts showing adoption distribution
+
+**Adoption thresholds:**
+- **0-10 teams**: Light adoption - platform establishing itself
+- **11-15 teams**: Moderate adoption - healthy platform usage
+- **16+ teams**: Heavy adoption - consider scaling team or splitting platform capabilities
+
+**Key insight**: Platform consumer tracking is an **organizational sensing mechanism** that reveals platform health, adoption patterns, and potential scaling needs before they become transformation blockers.
+
 ### Team Topologies Adoption Pattern
 
 Follows the recommended **incremental adoption approach**:
