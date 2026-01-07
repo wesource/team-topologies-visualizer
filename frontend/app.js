@@ -13,6 +13,24 @@ import { comparisonView } from './tt-comparison-view.js';
 let _interactionHandler = null;
 // Initialize
 document.addEventListener('DOMContentLoaded', init);
+
+// Add Escape key handler for focus mode
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && state.focusedTeam) {
+        // Exit focus mode
+        state.focusedTeam = null;
+        state.focusedConnections.clear();
+
+        // Update UI indicator
+        if (_interactionHandler && _interactionHandler.updateFocusModeIndicator) {
+            _interactionHandler.updateFocusModeIndicator();
+        }
+
+        // Redraw canvas
+        draw(state);
+    }
+});
+
 function init() {
     state.canvas = document.getElementById('teamCanvas');
     state.ctx = state.canvas.getContext('2d');

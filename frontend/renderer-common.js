@@ -130,30 +130,45 @@ export function getTeamBoxHeight(team, currentView = 'current') {
  * @description Renders team with type-specific shapes: rounded rectangles for stream-aligned/platform,
  * vertical boxes for enabling teams, octagons for complicated-subsystem teams
  */
-export function drawTeam(ctx, team, selectedTeam, teamColorMap, wrapText, currentView = 'current', showCognitiveLoad = false, comparisonData = null, showTeamTypeBadges = false, platformMetrics = null, showFlowMetrics = false) {
+export function drawTeam(ctx, team, selectedTeam, teamColorMap, wrapText, currentView = 'current', showCognitiveLoad = false, comparisonData = null, showTeamTypeBadges = false, platformMetrics = null, showFlowMetrics = false, focusedTeam = null, focusedConnections = null) {
     const x = team.position.x;
     const y = team.position.y;
     const width = getTeamBoxWidth(team, currentView);
     const height = getTeamBoxHeight(team, currentView);
 
+    // Apply opacity based on focus mode
+    let opacity = 1.0;
+    if (focusedTeam && focusedConnections) {
+        if (focusedConnections.has(team.name)) {
+            opacity = 1.0; // Full opacity for focused network
+        } else {
+            opacity = 0.2; // Dimmed for unrelated teams
+        }
+    }
+    ctx.globalAlpha = opacity;
+
     // Use shape-specific drawing in TT Design view
     if (currentView === 'tt') {
         if (team.team_type === 'enabling') {
             drawEnablingTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData, showTeamTypeBadges, platformMetrics, showFlowMetrics);
+            ctx.globalAlpha = 1.0; // Reset
             return;
         }
         if (team.team_type === 'complicated-subsystem') {
             drawComplicatedSubsystemTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData, platformMetrics, showFlowMetrics);
+            ctx.globalAlpha = 1.0; // Reset
             return;
         }
         if (team.team_type === 'undefined') {
             drawUndefinedTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData, platformMetrics, showFlowMetrics);
+            ctx.globalAlpha = 1.0; // Reset
             return;
         }
     }
 
     // Default: draw as rounded rectangle
     drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, showTeamTypeBadges, platformMetrics, currentView, showFlowMetrics);
+    ctx.globalAlpha = 1.0; // Reset
 }
 
 /**
@@ -652,7 +667,7 @@ function drawTeamName(ctx, team, x, y, width, height, wrapText) {
  * @description In 'current' view, shows simple dependency connections.
  * In 'tt' view, shows styled lines representing interaction modes (collaboration, x-as-a-service, facilitating)
  */
-export function drawConnections(ctx, teams, currentView = 'current', showInteractionModes = true, currentPerspective = 'hierarchy', customTeamPositions = null) {
+export function drawConnections(ctx, teams, currentView = 'current', showInteractionModes = true, currentPerspective = 'hierarchy', customTeamPositions = null, focusedTeam = null, focusedConnections = null) {
     if (currentView === 'current') {
         // Current State view: show simple "Actual Comms" from dependencies
         teams.forEach(team => {
@@ -660,7 +675,7 @@ export function drawConnections(ctx, teams, currentView = 'current', showInterac
                 team.dependencies.forEach(targetName => {
                     const target = teams.find(t => t.name === targetName);
                     if (target) {
-                        drawActualCommsConnection(ctx, team, target, currentView, currentPerspective, customTeamPositions);
+                        drawActualCommsConnection(ctx, team, target, currentView, currentPerspective, customTeamPositions, focusedTeam, focusedConnections);
                     }
                 });
             }
@@ -672,15 +687,27 @@ export function drawConnections(ctx, teams, currentView = 'current', showInterac
                 Object.entries(team.interaction_modes).forEach(([targetName, mode]) => {
                     const target = teams.find(t => t.name === targetName);
                     if (target) {
-                        drawConnection(ctx, team, target, mode, currentView, currentPerspective, customTeamPositions);
+                        drawConnection(ctx, team, target, mode, currentView, currentPerspective, customTeamPositions, focusedTeam, focusedConnections);
                     }
                 });
             }
         });
     }
 }
-function drawConnection(ctx, from, to, mode, currentView = 'current', currentPerspective = 'hierarchy', customTeamPositions = null) {
+function drawConnection(ctx, from, to, mode, currentView = 'current', currentPerspective = 'hierarchy', customTeamPositions = null, focusedTeam = null, focusedConnections = null) {
     const style = INTERACTION_STYLES[mode] || INTERACTION_STYLES['collaboration'];
+
+    // Apply opacity based on focus mode
+    let opacity = 1.0;
+    if (focusedTeam && focusedConnections) {
+        // Check if both endpoints are in focused network
+        if (focusedConnections.has(from.name) && focusedConnections.has(to.name)) {
+            opacity = 1.0; // Full opacity for focused connections
+        } else {
+            opacity = 0.1; // Nearly invisible for unrelated connections
+        }
+    }
+    ctx.globalAlpha = opacity;
 
     let fromX, fromY, toX, toY;
 
@@ -730,9 +757,20 @@ function drawConnection(ctx, from, to, mode, currentView = 'current', currentPer
     ctx.lineTo(toX - arrowLength * Math.cos(angle + Math.PI / 6), toY - arrowLength * Math.sin(angle + Math.PI / 6));
     ctx.stroke();
     ctx.setLineDash([]);
+    ctx.globalAlpha = 1.0; // Reset
 }
 
-function drawActualCommsConnection(ctx, from, to, currentView = 'current', currentPerspective = 'hierarchy', customTeamPositions = null) {
+function drawActualCommsConnection(ctx, from, to, currentView = 'current', currentPerspective = 'hierarchy', customTeamPositions = null, focusedTeam = null, focusedConnections = null) {
+    // Apply opacity based on focus mode
+    let opacity = 1.0;
+    if (focusedTeam && focusedConnections) {
+        if (focusedConnections.has(from.name) && focusedConnections.has(to.name)) {
+            opacity = 1.0; // Full opacity for focused connections
+        } else {
+            opacity = 0.1; // Nearly invisible for unrelated connections
+        }
+    }
+    ctx.globalAlpha = opacity;
     // Current State view: simple bidirectional fat arrow called "Actual Comms"
     let fromX, fromY, toX, toY;
 
@@ -809,6 +847,7 @@ function drawActualCommsConnection(ctx, from, to, currentView = 'current', curre
     ctx.stroke();
 
     ctx.restore(); // Restore context state
+    ctx.globalAlpha = 1.0; // Reset
 }
 function getTeamColor(team, teamColorMap) {
     // Try to get color from team type config

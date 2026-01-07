@@ -124,7 +124,16 @@ This tool provides dual visualizations to make these conversations easier.
   - Click "View details" to expand full metrics with warning indicators (⚠️) for concerning values
   - Optional canvas overlay: "Flow Metrics" checkbox displays compact metrics box on team cards
   - Health color-coding: Green (elite performers), Yellow (medium performers), Red (needs attention)
-  - Transforms tool from structure-only to outcomes-focused - measure whether TT transformation is improving delivery speed- �🔍 **Team Details** - Double-click for full team information with rendered markdown
+  - Transforms tool from structure-only to outcomes-focused - measure whether TT transformation is improving delivery speed
+- 👁️ **Focus Mode** - Click to highlight team relationships and reduce visual clutter:
+  - Single-click any team to enter focus mode
+  - Focused team + direct dependencies/consumers at 100% opacity
+  - Unrelated teams dimmed to 20%, unrelated lines to 10%
+  - Click same team or empty canvas to exit
+  - Press Escape to exit focus mode
+  - Badge indicator shows focused team name
+  - Works in both TT Design and Pre-TT views
+- 🔍 **Team Details** - Double-click for full team information with rendered markdown
 - 📋 **Team API Compatible** - Uses Team Topologies Team API template format
 - 📥 **SVG Export** - Export visualizations to SVG for presentations and documentation (respects connection visibility settings)
 - 👁️ **Connection Toggles** - Control visual complexity:

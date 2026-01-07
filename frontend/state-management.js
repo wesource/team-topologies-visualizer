@@ -42,7 +42,10 @@ export const state = {
     comparisonData: null,
     // Position history for undo functionality
     positionHistory: [],
-    maxHistorySize: 10 // Keep last 10 position changes
+    maxHistorySize: 10, // Keep last 10 position changes
+    // Focus mode state
+    focusedTeam: null, // Team object or null
+    focusedConnections: new Set() // Set of team names in focus network
 };
 
 // Interaction handler (initialized in app.js)

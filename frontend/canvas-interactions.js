@@ -5,6 +5,46 @@ import { showInfo } from './notifications.js';
 import { pushPositionSnapshot } from './state-management.js';
 import { updateUndoButtonState } from './ui-handlers.js';
 
+/**
+ * Get direct relationships for a team (dependencies and consumers)
+ * @param {Object} team - Team object
+ * @param {Array} allTeams - All teams in current view
+ * @returns {Set} Set of team names in focus network (team + direct dependencies + direct consumers)
+ */
+export function getDirectRelationships(team, allTeams) {
+    const connected = new Set([team.name]);
+
+    // Add teams this team depends on
+    if (team.dependencies && Array.isArray(team.dependencies)) {
+        team.dependencies.forEach(dep => connected.add(dep));
+    }
+
+    // Add teams that depend on this team
+    allTeams.forEach(t => {
+        if (t.dependencies && Array.isArray(t.dependencies) && t.dependencies.includes(team.name)) {
+            connected.add(t.name);
+        }
+    });
+
+    // Add teams with interaction modes (TT Design view)
+    if (team.interaction_modes && typeof team.interaction_modes === 'object') {
+        Object.keys(team.interaction_modes).forEach(teamName => {
+            connected.add(teamName);
+        });
+    }
+
+    // Add teams that have interaction modes with this team
+    allTeams.forEach(t => {
+        if (t.interaction_modes && typeof t.interaction_modes === 'object') {
+            if (t.interaction_modes[team.name]) {
+                connected.add(t.name);
+            }
+        }
+    });
+
+    return connected;
+}
+
 export class CanvasInteractionHandler {
     constructor(canvas, state, drawCallback) {
         this.draggedTeam = null;
@@ -145,9 +185,82 @@ export class CanvasInteractionHandler {
                 console.error('Failed to update team position:', error);
             }
         }
+
+        // Handle focus mode toggle (single-click without drag)
+        if (this.draggedTeam && !this.hasDragged) {
+            const clickedTeam = this.draggedTeam;
+
+            // Toggle focus mode
+            if (this.state.focusedTeam === clickedTeam) {
+                // Exit focus mode (clicked same team)
+                this.state.focusedTeam = null;
+                this.state.focusedConnections.clear();
+            } else {
+                // Enter focus mode (new team)
+                this.state.focusedTeam = clickedTeam;
+                this.state.focusedConnections = getDirectRelationships(clickedTeam, this.state.teams);
+            }
+
+            // Update UI indicator
+            this.updateFocusModeIndicator();
+
+            this.drawCallback();
+        } else if (!this.draggedTeam && !this.hasDragged) {
+            // Clicked empty canvas - exit focus mode if active
+            if (this.state.focusedTeam) {
+                this.state.focusedTeam = null;
+                this.state.focusedConnections.clear();
+                this.updateFocusModeIndicator();
+                this.drawCallback();
+            }
+        }
+
         this.draggedTeam = null;
         this.dragStartPosition = null;
         this.hasDragged = false;
+    }
+
+    /**
+     * Update focus mode indicator in UI
+     */
+    updateFocusModeIndicator() {
+        let indicator = document.getElementById('focusModeIndicator');
+
+        if (this.state.focusedTeam) {
+            // Show indicator
+            if (!indicator) {
+                indicator = document.createElement('div');
+                indicator.id = 'focusModeIndicator';
+                indicator.style.cssText = `
+                    position: fixed;
+                    top: 10px;
+                    right: 10px;
+                    background: rgba(74, 159, 216, 0.95);
+                    color: white;
+                    padding: 8px 12px;
+                    border-radius: 6px;
+                    font-size: 14px;
+                    font-weight: 500;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+                    z-index: 1000;
+                    cursor: pointer;
+                `;
+                indicator.title = 'Click to exit focus mode';
+                indicator.addEventListener('click', () => {
+                    this.state.focusedTeam = null;
+                    this.state.focusedConnections.clear();
+                    this.updateFocusModeIndicator();
+                    this.drawCallback();
+                });
+                document.body.appendChild(indicator);
+            }
+            indicator.innerHTML = `👁️ Focus: <strong>${this.state.focusedTeam.name}</strong> (click to exit)`;
+        } else {
+            // Hide indicator
+            if (indicator) {
+                indicator.remove();
+            }
+        }
     }
 
     handleWheel(e) {
