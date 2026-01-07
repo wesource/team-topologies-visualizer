@@ -25,7 +25,7 @@ test.describe('UI Basic Features', () => {
 
   test('should switch between Pre-TT and TT Design', async ({ page }) => {
     await page.goto(`${BASE_URL}/static/index.html`);
-    await page.waitForResponse(response => response.url().includes('/api/teams'), { timeout: 10000 });
+    await page.waitForResponse(response => response.url().includes('/api/tt/teams'), { timeout: 10000 });
     
     const currentStateRadio = page.locator('input[value="current"]');
     const ttVisionRadio = page.locator('input[value="tt"]');
@@ -43,7 +43,7 @@ test.describe('UI Basic Features', () => {
 
   test('should display teams in sidebar', async ({ page }) => {
     await page.goto(`${BASE_URL}/static/index.html`);
-    await page.waitForResponse(response => response.url().includes('/api/teams'), { timeout: 10000 });
+    await page.waitForResponse(response => response.url().includes('/api/tt/teams'), { timeout: 10000 });
     await page.waitForTimeout(500);
     
     const teamList = page.locator('#teamList');
@@ -72,7 +72,7 @@ test.describe('UI Basic Features', () => {
 
   test('should display legend with team types', async ({ page }) => {
     await page.goto(`${BASE_URL}/static/index.html`);
-    await page.waitForResponse(response => response.url().includes('/api/teams'), { timeout: 10000 });
+    await page.waitForResponse(response => response.url().includes('/api/tt/teams'), { timeout: 10000 });
     
     const legend = page.locator('.legend');
     await expect(legend).toBeVisible();
@@ -110,7 +110,7 @@ test.describe('UI Basic Features', () => {
 
   test('should handle refresh button', async ({ page }) => {
     await page.goto(`${BASE_URL}/static/index.html`);
-    await page.waitForResponse(response => response.url().includes('/api/teams'), { timeout: 10000 });
+    await page.waitForResponse(response => response.url().includes('/api/tt/teams'), { timeout: 10000 });
     
     const refreshBtn = page.locator('#refreshBtn');
     await expect(refreshBtn).toBeVisible();
@@ -118,7 +118,7 @@ test.describe('UI Basic Features', () => {
     await refreshBtn.click();
     
     // Wait for API to be called again
-    await page.waitForResponse(response => response.url().includes('/api/teams'), { timeout: 10000 });
+    await page.waitForResponse(response => response.url().includes('/api/tt/teams'), { timeout: 10000 });
     await page.waitForTimeout(500);
   });
 });

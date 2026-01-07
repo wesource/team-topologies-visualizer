@@ -54,7 +54,7 @@ test.describe('UI Interactions', () => {
 
   test('should search teams in sidebar', async ({ page }) => {
     await page.goto(`${BASE_URL}/static/index.html`);
-    await page.waitForResponse(response => response.url().includes('/api/teams'), { timeout: 5000 });
+    await page.waitForResponse(response => response.url().includes('/api/tt/teams'), { timeout: 5000 });
     await page.waitForTimeout(500);
     
     const searchBox = page.locator('#teamSearch');
@@ -76,7 +76,7 @@ test.describe('UI Interactions', () => {
 
   test('should use zoom controls', async ({ page }) => {
     await page.goto(`${BASE_URL}/static/index.html`);
-    await page.waitForResponse(response => response.url().includes('/api/teams'), { timeout: 5000 });
+    await page.waitForResponse(response => response.url().includes('/api/tt/teams'), { timeout: 5000 });
     await page.waitForTimeout(500);
     
     const zoomInBtn = page.locator('#zoomInBtn');
@@ -94,7 +94,7 @@ test.describe('UI Interactions', () => {
 
   test('should open validation modal', async ({ page }) => {
     await page.goto(`${BASE_URL}/static/index.html`);
-    await page.waitForResponse(response => response.url().includes('/api/teams'), { timeout: 5000 });
+    await page.waitForResponse(response => response.url().includes('/api/tt/teams'), { timeout: 5000 });
     await page.waitForTimeout(500);
     
     const validateBtn = page.locator('#validateBtn');
@@ -116,7 +116,7 @@ test.describe('UI Interactions', () => {
 
   test('should toggle interaction modes visibility', async ({ page }) => {
     await page.goto(`${BASE_URL}/static/index.html`);
-    await page.waitForResponse(response => response.url().includes('/api/teams'), { timeout: 5000 });
+    await page.waitForResponse(response => response.url().includes('/api/tt/teams'), { timeout: 5000 });
     await page.waitForTimeout(500);
     
     const toggleBtn = page.locator('#toggleInteractionModes');
@@ -131,7 +131,7 @@ test.describe('UI Interactions', () => {
 
   test('should toggle cognitive load indicators', async ({ page }) => {
     await page.goto(`${BASE_URL}/static/index.html`);
-    await page.waitForResponse(response => response.url().includes('/api/teams'), { timeout: 5000 });
+    await page.waitForResponse(response => response.url().includes('/api/tt/teams'), { timeout: 5000 });
     await page.waitForTimeout(500);
     
     const toggleBtn = page.locator('#toggleCognitiveLoad');
@@ -146,7 +146,7 @@ test.describe('UI Interactions', () => {
 
   test('should open team details from sidebar double-click', async ({ page }) => {
     await page.goto(`${BASE_URL}/static/index.html`);
-    await page.waitForResponse(response => response.url().includes('/api/teams'), { timeout: 5000 });
+    await page.waitForResponse(response => response.url().includes('/api/tt/teams'), { timeout: 5000 });
     await page.waitForTimeout(500);
     
     const firstTeam = page.locator('#teamList .team-item').first();
@@ -169,7 +169,7 @@ test.describe('UI Interactions', () => {
 
   test('should use auto-align button', async ({ page }) => {
     await page.goto(`${BASE_URL}/static/index.html`);
-    await page.waitForResponse(response => response.url().includes('/api/teams'), { timeout: 5000 });
+    await page.waitForResponse(response => response.url().includes('/api/tt/teams'), { timeout: 5000 });
     await page.waitForTimeout(500);
     
     const autoAlignBtn = page.locator('#autoAlignBtn');

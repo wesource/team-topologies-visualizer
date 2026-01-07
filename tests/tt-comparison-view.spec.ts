@@ -12,7 +12,7 @@ async function ensureTimelinePanelOpen(page) {
   if (!isVisible) {
     // Panel is closed, click to open and wait for API response
     const responsePromise = page.waitForResponse(response => 
-      response.url().includes('/api/snapshots') && response.status() === 200,
+      response.url().includes('/api/pre-tt/snapshots') && response.status() === 200,
       { timeout: 10000 }
     );
     

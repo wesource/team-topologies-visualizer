@@ -24,7 +24,7 @@ test.describe('Pre-TT Product Lines View', () => {
         await page.waitForTimeout(1000);
 
         // Verify canvas is visible
-        const canvas = page.locator('#team-canvas');
+        const canvas = page.locator('#teamCanvas');
         await expect(canvas).toBeVisible();
 
         // Verify the perspective is active
@@ -65,7 +65,7 @@ test.describe('Pre-TT Product Lines View', () => {
         });
 
         // Canvas should be visible and have content
-        const canvas = page.locator('#team-canvas');
+        const canvas = page.locator('#teamCanvas');
         await expect(canvas).toBeVisible();
 
         // Check canvas has non-zero dimensions

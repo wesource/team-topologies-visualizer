@@ -52,13 +52,13 @@ test.describe('Organization Hierarchy', () => {
     expect(customerSolutions.regions.length).toBe(4);
   });
 
-  test('Engineering department has 5 line managers', async ({ page }) => {
+  test('Engineering department has 6 line managers', async ({ page }) => {
     const response = await page.request.get(`${BASE_URL}/api/pre-tt/organization-hierarchy`);
     const data = await response.json();
     
     const engineering = data.company.children.find((d: any) => d.name === 'Engineering Department');
     expect(engineering).toBeTruthy();
-    expect(engineering.line_managers.length).toBe(5);
+    expect(engineering.line_managers.length).toBe(6);
   });
 
   test('all department names should be defined', async ({ page }) => {

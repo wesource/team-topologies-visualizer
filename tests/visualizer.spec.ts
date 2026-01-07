@@ -80,7 +80,7 @@ test.describe('Team Topologies Visualizer', () => {
     await page.goto(`${BASE_URL}/static/index.html`);
     
     // Wait for teams to load
-    await page.waitForResponse(response => response.url().includes('/api/teams'));
+    await page.waitForResponse(response => response.url().includes('/api/tt/teams'));
     
     // Wait a bit for UI to update
     await page.waitForTimeout(500);
@@ -127,7 +127,7 @@ test.describe('Team Topologies Visualizer', () => {
     await page.goto(`${BASE_URL}/static/index.html`);
     
     // Wait for config to load
-    await page.waitForResponse(response => response.url().includes('/api/team-types'));
+    await page.waitForResponse(response => response.url().includes('/api/tt/team-types'));
     await page.waitForTimeout(500);
     
     const legend = page.locator('.legend');
@@ -182,13 +182,13 @@ test.describe('Team Topologies Visualizer', () => {
     await page.goto(`${BASE_URL}/static/index.html`);
     
     // Wait for initial load
-    await page.waitForResponse(response => response.url().includes('/api/teams'));
+    await page.waitForResponse(response => response.url().includes('/api/tt/teams'));
     
     // Click refresh button
     await page.locator('#refreshBtn').click();
     
     // Wait for reload
-    await page.waitForResponse(response => response.url().includes('/api/teams'));
+    await page.waitForResponse(response => response.url().includes('/api/tt/teams'));
     
     // Teams should still be visible
     const teamItems = page.locator('#teamList .team-item');
@@ -244,7 +244,7 @@ test.describe('Team Topologies Visualizer', () => {
       expect(regionNames).toContain('America Region');
     });
 
-    test('should verify Engineering department has 5 line managers', async ({ page }) => {
+    test('should verify Engineering department has 6 line managers', async ({ page }) => {
       await page.goto(`${BASE_URL}/static/index.html`);
       
       // Switch to current view to trigger organization hierarchy load
@@ -261,7 +261,7 @@ test.describe('Team Topologies Visualizer', () => {
       
       expect(engineeringDept).toBeDefined();
       expect(engineeringDept.line_managers).toBeDefined();
-      expect(engineeringDept.line_managers.length).toBe(5);
+      expect(engineeringDept.line_managers.length).toBe(6);
     });
   });
 
@@ -277,7 +277,7 @@ test.describe('Team Topologies Visualizer', () => {
       
       // Fetch team data and call showTeamDetails directly
       await page.evaluate(async () => {
-        const response = await fetch('/api/teams/Cloud%20Development%20Platform%20Team?view=tt');
+        const response = await fetch('/api/tt/teams/cloud-development-platform-team');
         const team = await response.json();
         
         // Use the exposed test helper
@@ -407,7 +407,7 @@ test.describe('Team Topologies Visualizer', () => {
 
     test('should search teams in sidebar', async ({ page }) => {
       await page.goto(`${BASE_URL}/static/index.html`);
-      await page.waitForResponse(response => response.url().includes('/api/teams'), { timeout: 5000 });
+      await page.waitForResponse(response => response.url().includes('/api/tt/teams'), { timeout: 5000 });
       await page.waitForTimeout(500);
       
       const searchBox = page.locator('#teamSearch');
@@ -429,7 +429,7 @@ test.describe('Team Topologies Visualizer', () => {
 
     test('should use zoom controls', async ({ page }) => {
       await page.goto(`${BASE_URL}/static/index.html`);
-      await page.waitForResponse(response => response.url().includes('/api/teams'), { timeout: 5000 });
+      await page.waitForResponse(response => response.url().includes('/api/tt/teams'), { timeout: 5000 });
       
       const zoomLevel = page.locator('#zoomLevel');
       await expect(zoomLevel).toContainText('100%');
@@ -451,12 +451,12 @@ test.describe('Team Topologies Visualizer', () => {
 
     test('should open validation modal', async ({ page }) => {
       await page.goto(`${BASE_URL}/static/index.html`);
-      await page.waitForResponse(response => response.url().includes('/api/teams'), { timeout: 5000 });
+      await page.waitForResponse(response => response.url().includes('/api/tt/teams'), { timeout: 5000 });
       
       await page.locator('#validateBtn').click();
       
       // Wait for validation API call
-      await page.waitForResponse(response => response.url().includes('/api/validate'), { timeout: 10000 });
+      await page.waitForResponse(response => response.url().includes('/api/tt/validate'), { timeout: 10000 });
       
       const modal = page.locator('#validationModal');
       await expect(modal).toBeVisible({ timeout: 3000 });
@@ -491,7 +491,7 @@ test.describe('Team Topologies Visualizer', () => {
 
     test('should toggle cognitive load indicators', async ({ page }) => {
       await page.goto(`${BASE_URL}/static/index.html`);
-      await page.waitForResponse(response => response.url().includes('/api/teams'), { timeout: 5000 });
+      await page.waitForResponse(response => response.url().includes('/api/tt/teams'), { timeout: 5000 });
       await page.waitForTimeout(500);
       
       const checkbox = page.locator('#showCognitiveLoad');
@@ -511,7 +511,7 @@ test.describe('Team Topologies Visualizer', () => {
 
     test('should open team details from sidebar double-click', async ({ page }) => {
       await page.goto(`${BASE_URL}/static/index.html`);
-      await page.waitForResponse(response => response.url().includes('/api/teams'), { timeout: 5000 });
+      await page.waitForResponse(response => response.url().includes('/api/tt/teams'), { timeout: 5000 });
       await page.waitForTimeout(500);
       
       const firstTeam = page.locator('#teamList .team-item').first();

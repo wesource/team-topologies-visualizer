@@ -1,13 +1,19 @@
 import { test, expect } from '@playwright/test';
 
+const BASE_URL = 'http://127.0.0.1:8000';
+
 test.describe('Pre-TT Value Streams View', () => {
     test.beforeEach(async ({ page }) => {
-        await page.goto('/');
-        await page.waitForLoadState('networkidle');
+        await page.goto(`${BASE_URL}/static/index.html`);
+        // Wait for initial TT teams load
+        await page.waitForResponse(response => response.url().includes('/api/tt/teams'), { timeout: 10000 });
+        await page.waitForTimeout(500);
 
         // Switch to Pre-TT view
         const preTTRadio = page.locator('input[type="radio"][value="current"]');
         await preTTRadio.check();
+        // Wait for Pre-TT data to load
+        await page.waitForResponse(response => response.url().includes('/api/pre-tt/'), { timeout: 10000 });
         await page.waitForTimeout(500);
     });
 
@@ -18,7 +24,7 @@ test.describe('Pre-TT Value Streams View', () => {
         await page.waitForTimeout(1000);
 
         // Verify canvas is visible
-        const canvas = page.locator('#team-canvas');
+        const canvas = page.locator('#teamCanvas');
         await expect(canvas).toBeVisible();
 
         // Verify the perspective is active
@@ -32,7 +38,7 @@ test.describe('Pre-TT Value Streams View', () => {
         );
 
         // Switch to Value Streams perspective
-        const valueStreamsRadio = page.locator('input[type="radio")[value="value-streams"]');
+        const valueStreamsRadio = page.locator('input[type="radio"][value="value-streams"]');
         await valueStreamsRadio.check();
 
         // Wait for API response
@@ -60,7 +66,7 @@ test.describe('Pre-TT Value Streams View', () => {
         });
 
         // Canvas should be visible and have content
-        const canvas = page.locator('#team-canvas');
+        const canvas = page.locator('#teamCanvas');
         await expect(canvas).toBeVisible();
 
         // Check canvas has non-zero dimensions
@@ -143,7 +149,7 @@ test.describe('Pre-TT Value Streams View', () => {
         await expect(hierarchyRadio).toBeChecked();
 
         // Canvas should still be visible throughout
-        const canvas = page.locator('#team-canvas');
+        const canvas = page.locator('#teamCanvas');
         await expect(canvas).toBeVisible();
     });
 });
