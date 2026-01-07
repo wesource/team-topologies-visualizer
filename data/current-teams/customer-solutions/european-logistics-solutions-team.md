@@ -1,8 +1,6 @@
 ---
 name: European Logistics Solutions Team
 team_type: feature-team
-product_line: Customer Solutions
-dependencies: []
 position:
   x: 1990.0
   y: 410.0

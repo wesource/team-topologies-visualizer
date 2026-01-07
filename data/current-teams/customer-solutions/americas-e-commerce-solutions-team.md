@@ -1,8 +1,6 @@
 ---
 name: Americas E-commerce Solutions Team
 team_type: feature-team
-product_line: Customer Solutions
-dependencies: []
 position:
   x: 2210.0
   y: 530.0

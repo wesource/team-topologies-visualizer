@@ -263,6 +263,7 @@ See [CONCEPTS.md](docs/CONCEPTS.md) for detailed explanation of the example orga
 
 - The canvas displays all teams with color-coded boxes based on their type
 - **Drag teams** to reposition them (positions are auto-saved)
+- **Undo position changes** - Press **Ctrl+Z** (Cmd+Z on Mac) or click the **↶ Undo** button to restore teams to their previous positions. Only restores teams that actually moved, with no disruptive notifications.
 - **Double-click teams** to view full details including description, dependencies, and metadata
 - **Click teams** in the sidebar to select them
 - **Zoom** using mouse wheel

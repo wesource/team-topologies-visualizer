@@ -272,19 +272,28 @@ export async function handleUndo(draw) {
         return;
     }
 
-    // Restore positions
+    // Restore positions (only for teams that actually moved)
     try {
-        const updatePromises = snapshot.teams.map(teamSnapshot => {
+        const updatePromises = [];
+        let movedCount = 0;
+
+        snapshot.teams.forEach(teamSnapshot => {
             // Find team in current state
             const team = state.teams.find(t => t.name === teamSnapshot.name);
             if (team) {
-                // Update local position first for immediate feedback
-                team.position.x = teamSnapshot.x;
-                team.position.y = teamSnapshot.y;
-                // Save to backend
-                return updateTeamPosition(team.name, teamSnapshot.x, teamSnapshot.y, state.currentView);
+                // Check if position actually changed (tolerance of 1px for rounding)
+                const hasMoved = Math.abs(team.position.x - teamSnapshot.x) > 1 ||
+                               Math.abs(team.position.y - teamSnapshot.y) > 1;
+
+                if (hasMoved) {
+                    movedCount++;
+                    // Update local position first for immediate feedback
+                    team.position.x = teamSnapshot.x;
+                    team.position.y = teamSnapshot.y;
+                    // Save to backend
+                    updatePromises.push(updateTeamPosition(team.name, teamSnapshot.x, teamSnapshot.y, state.currentView));
+                }
             }
-            return Promise.resolve();
         });
 
         await Promise.all(updatePromises);
@@ -292,7 +301,10 @@ export async function handleUndo(draw) {
         // Redraw canvas with restored positions
         draw();
 
-        showSuccess(`Undo: Restored ${snapshot.teams.length} team position(s).`);
+        // Visual feedback is enough - no notification needed unless nothing changed
+        if (movedCount === 0) {
+            showInfo('No position changes to undo.');
+        }
     } catch (error) {
         console.error('Failed to restore team positions:', error);
         showError('Failed to restore team positions. Please try again.');

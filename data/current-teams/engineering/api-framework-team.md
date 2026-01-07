@@ -1,7 +1,6 @@
 ---
 name: API Framework Team
 team_type: platform-team
-dependencies: []
 position:
   x: 1180.0
   y: 410.0

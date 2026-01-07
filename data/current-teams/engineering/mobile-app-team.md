@@ -1,11 +1,6 @@
 ---
 name: Mobile App Team
 team_type: feature-team
-product_line: Driver Mobile Apps
-value_stream: B2C Driver Experience
-dependencies:
-- Backend Services Team
-- API Framework Team
 position:
   x: 300.0
   y: 530.0
@@ -15,6 +10,7 @@ metadata:
   line_manager: Michael Chen
   established: 2020-01
   cognitive_load: high
+value_stream: B2C Driver Experience
 ---
 
 # Mobile App Team

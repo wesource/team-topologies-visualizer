@@ -1,11 +1,6 @@
 ---
 name: QA & Testing Team
 team_type: support-team
-dependencies:
-- Backend Services Team
-- Web Frontend Team
-- Mobile App Team
-- Route Optimization Team
 position:
   x: 520.0
   y: 410.0

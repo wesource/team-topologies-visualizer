@@ -1,11 +1,6 @@
 ---
 name: Backend Services Team
 team_type: feature-team
-product_line: DispatchHub
-value_stream: B2B Fleet Management
-dependencies:
-- Database Team
-- API Framework Team
 position:
   x: 80.0
   y: 410.0
@@ -15,6 +10,7 @@ metadata:
   line_manager: Rachel Martinez
   established: 2018-06
   cognitive_load: very-high
+value_stream: B2B Fleet Management
 ---
 
 # Backend Services Team

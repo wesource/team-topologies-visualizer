@@ -1,7 +1,6 @@
 ---
 name: Example Undefined Team
 team_type: undefined
-dependencies: []
 position:
   x: 78.0
   y: 705.0

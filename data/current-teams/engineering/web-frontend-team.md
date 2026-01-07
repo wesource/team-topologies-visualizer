@@ -1,11 +1,6 @@
 ---
 name: Web Frontend Team
 team_type: feature-team
-product_line: DispatchHub
-value_stream: B2B Fleet Management
-dependencies:
-- Backend Services Team
-- API Framework Team
 position:
   x: 300.0
   y: 410.0
@@ -15,6 +10,7 @@ metadata:
   line_manager: Marcus Thompson
   established: 2019-06
   cognitive_load: high
+value_stream: B2B Fleet Management
 ---
 
 # Web Frontend Team
