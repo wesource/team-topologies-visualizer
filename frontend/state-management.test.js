@@ -326,7 +326,7 @@ describe('state-management.js', () => {
         beforeEach(() => {
             state.scale = 1;
             state.viewOffset = { x: 0, y: 0 };
-            
+
             mockCanvas = { width: 1200, height: 800 };
             mockSidebar = document.createElement('div');
             mockSidebar.className = 'sidebar';
