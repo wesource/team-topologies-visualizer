@@ -1,10 +1,11 @@
 import { LAYOUT } from './constants.js';
 
 // Interaction mode styles (colors match Team Topologies book symbols)
+// Line thickness reflects interaction intensity: Collaboration (high-touch) > X-as-a-Service (standard) > Facilitating (lightweight)
 export const INTERACTION_STYLES = {
-    'collaboration': { dash: [], width: 3, color: '#7a5fa6' },        // Purple (matches cross-hatch symbol)
-    'x-as-a-service': { dash: [10, 5], width: 3, color: '#222222' },  // Near-black (matches bracket symbol)
-    'facilitating': { dash: [5, 5], width: 2, color: '#6fa98c' }      // Green (matches dotted circle symbol)
+    'collaboration': { dash: [], width: 2, color: '#7a5fa6' },        // Purple, thick line (high-touch, temporary)
+    'x-as-a-service': { dash: [10, 5], width: 1, color: '#222222' },  // Near-black, medium line (standard operational)
+    'facilitating': { dash: [5, 5], width: 0.5, color: '#6fa98c' }    // Green, thin line (lightweight coaching)
 };
 
 // Value stream grouping style

@@ -21,7 +21,209 @@ This backlog tracks enhancements for iterative development. Items are organized 
 
 ---
 
-## 🚀 HIGHEST PRIORITY - Visual Improvements (Expert Analysis 2026-01-07)
+## 🚀 HIGHEST PRIORITY - Outcomes & Visual Improvements (Expert Analysis 2026-01-07)
+
+### Flow Metrics - Visualize Team/Value Stream Performance ⭐⭐⭐⭐⭐ HIGHEST - CRITICAL UNLOCK
+**Impact**: CRITICAL (transforms tool from structure-only to outcomes-focused) | **Effort**: 12-18 hours total (phased) | **Priority**: 🥇 START HERE | **Added**: 2026-01-07
+
+**Why This Matters**:
+Team Topologies is ultimately about **accelerating flow of change**, not just reorganizing boxes. Without flow metrics, this tool shows *where teams sit* but not *how well they deliver*. Organizations need to answer: "Is our TT transformation actually improving delivery speed?"
+
+**The Critical Question**: "Which value stream has the longest lead time? Where are the bottlenecks? Are we getting faster?"
+
+**Current State**:
+- Tool visualizes team structure (types, interactions, groupings)
+- No visibility into delivery performance (lead time, deployment frequency, reliability)
+- Can't track whether TT transformation improves outcomes
+- Organizations struggle to justify transformation investment without metrics
+
+**Proposed Solution (Phased Approach)**:
+
+Add optional flow metrics to team YAML (based on DORA metrics):
+```yaml
+metadata:
+  flow_metrics:
+    lead_time_days: 14              # Median time from commit to production
+    deployment_frequency: daily      # daily, weekly, monthly, quarterly
+    change_fail_rate: 0.05          # 5% (0.0 to 1.0)
+    mttr_hours: 2                   # Mean time to recovery
+```
+
+**Phase 1: Backend + Modal Display (Week 1-2) - 8-12 hours**
+
+Start simple: Parse metrics and show in team detail modal. No canvas changes yet.
+
+**Tasks**:
+- [ ] Backend: Update `backend/services.py` to parse `flow_metrics` from YAML
+- [ ] Backend: Add `flow_metrics` field to `TeamData` Pydantic model
+- [ ] Backend: Add validation for metric values (lead_time >= 0, change_fail_rate 0.0-1.0, etc.)
+- [ ] Frontend: Update team detail modal to show metrics section:
+  ```
+  📊 Flow Metrics
+  ─────────────────────────────────────
+  Lead Time: 14 days
+  Deployment Frequency: Daily
+  Change Fail Rate: 5% ✅
+  MTTR: 2 hours
+  ```
+- [ ] Add warning emoji (⚠️) for concerning values:
+  - Lead time >30 days: ⚠️ "Slow delivery - aim for <14 days"
+  - Change fail rate >15%: ⚠️ "High risk - aim for <15%"
+  - Deployment frequency <weekly: ⚠️ "Infrequent deployments - aim for daily"
+  - MTTR >4 hours: ⚠️ "Slow recovery - aim for <2 hours"
+- [ ] Test: Add example flow metrics to 3-4 teams (good, medium, poor)
+- [ ] Test: Backend unit tests for metric parsing and validation
+- [ ] Test: Frontend test for modal rendering with metrics
+- [ ] Documentation: Update team markdown templates with flow_metrics example
+
+**Success Criteria (Phase 1)**:
+- Double-click team → see flow metrics in modal
+- Warning emojis appear for poor values
+- Metrics optional (teams without metrics show "No metrics available")
+- Backend validation prevents invalid values (negative days, >100% fail rate)
+
+**Phase 2: Optional Canvas Overlay (Week 3) - 4-6 hours**
+
+Add opt-in visualization on canvas. Default OFF to avoid clutter.
+
+**Tasks**:
+- [ ] UI: Add "📊 Show Metrics" checkbox in toolbar (default unchecked)
+- [ ] State: Add `showFlowMetrics` boolean to state management
+- [ ] Renderer: When enabled, show small metrics box on each team card:
+  ```
+  ┌─────────────────┐
+  │ Team Name       │
+  │ Stream-aligned  │
+  ├─────────────────┤  ← Metrics box (only if checkbox enabled)
+  │ 📊 14d ⚠️ 18%   │  ← Lead time + change fail rate with warning
+  └─────────────────┘
+  ```
+- [ ] Color-code metric box background:
+  - 🟢 Green: All metrics good (lead time <14d, fail rate <10%, daily deploys, MTTR <2h)
+  - 🟡 Yellow: Some concerns (lead time 14-30d, fail rate 10-15%, weekly deploys, MTTR 2-4h)
+  - 🔴 Red: Needs attention (lead time >30d, fail rate >15%, monthly deploys, MTTR >4h)
+- [ ] Show compact format: "📊 14d 🟢" (lead time + overall health indicator)
+- [ ] Hover over metrics box → tooltip with full details
+- [ ] Test: Canvas rendering with metrics overlay
+- [ ] Test: Checkbox toggle works correctly
+- [ ] Test: Metrics box positions correctly on different team sizes
+- [ ] Documentation: Update user guide with metrics overlay feature
+
+**Success Criteria (Phase 2)**:
+- Checkbox toggles metrics visibility on/off
+- Metrics box appears below team name (doesn't obscure team info)
+- Color coding instantly shows team health (green/yellow/red)
+- Compact format works at all zoom levels
+- Performance remains smooth with 40+ teams
+
+**Phase 3: Value Stream Aggregation (Future - 8-12 hours)**
+
+Aggregate metrics at value stream level. Show bottleneck value streams.
+
+**Tasks (deferred to future sprint)**:
+- [ ] Calculate average/median metrics per value stream
+- [ ] Show aggregated metrics on value stream grouping boxes
+- [ ] Highlight slowest value stream in red
+- [ ] Comparison view: Show metric changes between snapshots ("Lead time improved from 21d to 14d")
+- [ ] Export: Include metrics in SVG export
+- [ ] API: Add endpoint to retrieve aggregated metrics per value stream
+
+**Technical Details**:
+
+**Backend Changes** (`backend/services.py`):
+```python
+def parse_team_file(file_path: Path) -> TeamData:
+    # ... existing parsing
+    metadata = data.get('metadata', {}) or {}
+    
+    # Parse flow metrics
+    if 'flow_metrics' in metadata:
+        flow_metrics = metadata['flow_metrics']
+        # Validate
+        if 'lead_time_days' in flow_metrics:
+            assert flow_metrics['lead_time_days'] >= 0, "Lead time must be non-negative"
+        if 'change_fail_rate' in flow_metrics:
+            assert 0 <= flow_metrics['change_fail_rate'] <= 1.0, "Fail rate must be 0.0-1.0"
+        data['flow_metrics'] = flow_metrics
+```
+
+**Frontend Modal Updates** (`frontend/modals.js`):
+```javascript
+function renderFlowMetrics(team) {
+    if (!team.flow_metrics) {
+        return '<p><em>No flow metrics available</em></p>';
+    }
+    
+    const metrics = team.flow_metrics;
+    let html = '<h3>📊 Flow Metrics</h3><div class="flow-metrics">';
+    
+    // Lead time
+    if (metrics.lead_time_days !== undefined) {
+        const warning = metrics.lead_time_days > 30 ? ' ⚠️ Slow delivery' : '';
+        html += `<div>Lead Time: ${metrics.lead_time_days} days${warning}</div>`;
+    }
+    
+    // Deployment frequency
+    if (metrics.deployment_frequency) {
+        const warning = metrics.deployment_frequency === 'monthly' || 
+                       metrics.deployment_frequency === 'quarterly' ? ' ⚠️ Infrequent' : '';
+        html += `<div>Deployment Frequency: ${metrics.deployment_frequency}${warning}</div>`;
+    }
+    
+    // Change fail rate
+    if (metrics.change_fail_rate !== undefined) {
+        const percentage = (metrics.change_fail_rate * 100).toFixed(1);
+        const warning = metrics.change_fail_rate > 0.15 ? ' ⚠️ High risk' : ' ✅';
+        html += `<div>Change Fail Rate: ${percentage}%${warning}</div>`;
+    }
+    
+    // MTTR
+    if (metrics.mttr_hours !== undefined) {
+        const warning = metrics.mttr_hours > 4 ? ' ⚠️ Slow recovery' : '';
+        html += `<div>MTTR: ${metrics.mttr_hours} hours${warning}</div>`;
+    }
+    
+    html += '</div>';
+    return html;
+}
+```
+
+**Related Files**:
+- `backend/services.py` - YAML parsing
+- `backend/models.py` - Pydantic model with flow_metrics field
+- `frontend/modals.js` - Team detail modal rendering
+- `frontend/renderer.js` - Canvas overlay (Phase 2)
+- `frontend/state-management.js` - showFlowMetrics checkbox state
+- `templates/tt-design-team-api-template-*.md` - Example metrics in template
+
+**Example Team Markdown** (for testing):
+```yaml
+---
+name: E-commerce Checkout Team
+team_type: stream-aligned
+value_stream: E-commerce Experience
+metadata:
+  size: 7
+  cognitive_load: medium
+  flow_metrics:
+    lead_time_days: 3
+    deployment_frequency: daily
+    change_fail_rate: 0.02
+    mttr_hours: 1
+---
+# Fast-flowing team with excellent metrics
+```
+
+**Why This Is Critical**:
+Without flow metrics, the tool is just a fancy org chart. **With metrics**, it becomes a transformation dashboard showing:
+- Which teams are fast vs slow
+- Which value streams are bottlenecks
+- Whether TT changes actually improve delivery
+- Data to justify transformation investment to executives
+
+This is the **#1 gap** identified by expert analysis. It transforms the tool from "visualize structure" to "measure outcomes."
+
+---
 
 ### Line Thickness by Interaction Mode ⭐⭐⭐⭐⭐ HIGHEST - QUICK WIN
 **Impact**: HIGH (visual clarity) | **Effort**: 1-2 hours | **Priority**: 🥇 START HERE | **Added**: 2026-01-07

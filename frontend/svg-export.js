@@ -339,6 +339,7 @@ function generateTTVisionSVG(teams, teamColorMap, showInteractionModes) {
                     if (targetTeam) {
                         const color = getInteractionColorForSVG(mode);
                         const dashArray = getInteractionDashForSVG(mode);
+                        const strokeWidth = getInteractionWidthForSVG(mode);
                         // Use dynamic team width and height for center calculation
                         const fromWidth = getTeamBoxWidth(team, 'tt');
                         const fromHeight = getTeamBoxHeight(team, 'tt');
@@ -348,7 +349,7 @@ function generateTTVisionSVG(teams, teamColorMap, showInteractionModes) {
                         const fromY = team.position.y + fromHeight / 2;
                         const toX = targetTeam.position.x + toWidth / 2;
                         const toY = targetTeam.position.y + toHeight / 2;
-                        elements += `<line x1="${fromX}" y1="${fromY}" x2="${toX}" y2="${toY}" class="connection-line" stroke="${color}" stroke-dasharray="${dashArray}"/>`;
+                        elements += `<line x1="${fromX}" y1="${fromY}" x2="${toX}" y2="${toY}" class="connection-line" stroke="${color}" stroke-dasharray="${dashArray}" stroke-width="${strokeWidth}"/>`;
                     }
                 });
             }
@@ -582,6 +583,15 @@ function getInteractionDashForSVG(mode) {
         'facilitating': '5,5'
     };
     return dashArrays[mode] || 'none';
+}
+
+function getInteractionWidthForSVG(mode) {
+    const widths = {
+        'collaboration': '2',         // Thick line for high-touch interaction
+        'x-as-a-service': '1',        // Medium line for standard operational
+        'facilitating': '0.5'         // Thin line for lightweight coaching
+    };
+    return widths[mode] || '1';
 }
 function escapeXml(text) {
     return text
