@@ -123,10 +123,12 @@ export function getTeamBoxHeight(team, currentView = 'current') {
  * @param {string} [currentView='current'] - Current view mode ('current' or 'tt')
  * @param {boolean} [showCognitiveLoad=false] - Whether to display cognitive load indicator
  * @param {Object|null} [comparisonData=null] - Snapshot comparison data for highlighting changes
+ * @param {boolean} [showTeamTypeBadges=false] - Whether to show team type badges
+ * @param {Object|null} [platformMetrics=null] - Platform consumer metrics (TT Design view only)
  * @description Renders team with type-specific shapes: rounded rectangles for stream-aligned/platform,
  * vertical boxes for enabling teams, octagons for complicated-subsystem teams
  */
-export function drawTeam(ctx, team, selectedTeam, teamColorMap, wrapText, currentView = 'current', showCognitiveLoad = false, comparisonData = null, showTeamTypeBadges = false) {
+export function drawTeam(ctx, team, selectedTeam, teamColorMap, wrapText, currentView = 'current', showCognitiveLoad = false, comparisonData = null, showTeamTypeBadges = false, platformMetrics = null) {
     const x = team.position.x;
     const y = team.position.y;
     const width = getTeamBoxWidth(team, currentView);
@@ -135,27 +137,27 @@ export function drawTeam(ctx, team, selectedTeam, teamColorMap, wrapText, curren
     // Use shape-specific drawing in TT Design view
     if (currentView === 'tt') {
         if (team.team_type === 'enabling') {
-            drawEnablingTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData, showTeamTypeBadges);
+            drawEnablingTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData, showTeamTypeBadges, platformMetrics);
             return;
         }
         if (team.team_type === 'complicated-subsystem') {
-            drawComplicatedSubsystemTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData);
+            drawComplicatedSubsystemTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData, platformMetrics);
             return;
         }
         if (team.team_type === 'undefined') {
-            drawUndefinedTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData);
+            drawUndefinedTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData, platformMetrics);
             return;
         }
     }
 
     // Default: draw as rounded rectangle
-    drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, showTeamTypeBadges);
+    drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, showTeamTypeBadges, platformMetrics);
 }
 
 /**
  * Draw team as default rounded rectangle (for stream-aligned, platform, and Pre-TT view)
  */
-function drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, showTeamTypeBadges = false) {
+function drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, showTeamTypeBadges = false, platformMetrics = null) {
 
     const radius = 0; // Sharp corners
     const fillColor = getTeamColor(team, teamColorMap);
@@ -182,6 +184,11 @@ function drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamCo
     // Cognitive load indicator
     drawCognitiveLoadIndicator(ctx, team, x, y, width, showCognitiveLoad);
 
+    // Platform consumer badge (TT Design view only)
+    if (platformMetrics) {
+        drawPlatformConsumerBadge(ctx, team, platformMetrics, x, y, height);
+    }
+
     // Team name
     drawTeamName(ctx, team, x, y, width, height, wrapText);
 
@@ -206,7 +213,7 @@ function drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamCo
  * Draw enabling team as vertical rounded rectangle
  * Shape: 80×120 vertical orientation (tall and narrow)
  */
-function drawEnablingTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData, showTeamTypeBadges = false) {
+function drawEnablingTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData, showTeamTypeBadges = false, _platformMetrics = null) {
     // Check if this team has a comparison badge
     let comparisonBadge = null;
     if (comparisonData) {
@@ -289,7 +296,7 @@ function drawEnablingTeam(ctx, team, x, y, width, height, selectedTeam, teamColo
  * Draw complicated-subsystem team as octagon
  * Shape: 8-sided polygon representing internal complexity
  */
-function drawComplicatedSubsystemTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData) {
+function drawComplicatedSubsystemTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData, _platformMetrics = null) {
     // Check if this team has a comparison badge
     let comparisonBadge = null;
     if (comparisonData) {
@@ -352,7 +359,7 @@ function drawComplicatedSubsystemTeam(ctx, team, x, y, width, height, selectedTe
 /**
  * Draw undefined team with dashed border (TT Design view only)
  */
-function drawUndefinedTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData) {
+function drawUndefinedTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData, _platformMetrics = null) {
     // Check if this team has a comparison badge
     let comparisonBadge = null;
     if (comparisonData) {
@@ -471,6 +478,44 @@ function drawNewTeamBadge(ctx, team, x, y, _width) {
     ctx.textAlign = 'left';
     ctx.textBaseline = 'top';
     ctx.fillText('🆕', badgeX, badgeY);
+}
+
+/**
+ * Helper: Draw platform consumer count badge (TT Design view only)
+ * Shows number of teams consuming this platform with warning if overloaded
+ */
+function drawPlatformConsumerBadge(ctx, team, platformMetrics, x, y, height) {
+    if (!platformMetrics || platformMetrics.totalCount === 0) return;
+
+    const { totalCount, isOverloaded } = platformMetrics;
+
+    // Position badge in bottom-left corner
+    const badgeHeight = 22;
+    const badgePadding = 8;
+    const badgeY = y + height - badgeHeight - badgePadding;
+    const badgeX = x + badgePadding;
+
+    // Calculate badge width based on text
+    ctx.font = 'bold 12px sans-serif';
+    const text = `👥 ${totalCount}${isOverloaded ? ' ⚠️' : ''}`;
+    const textWidth = ctx.measureText(text).width;
+    const badgeWidth = textWidth + 16;
+
+    // Background (semi-transparent white)
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+    ctx.fillRect(badgeX, badgeY, badgeWidth, badgeHeight);
+
+    // Border
+    ctx.strokeStyle = isOverloaded ? '#ff9800' : '#666';
+    ctx.lineWidth = isOverloaded ? 2 : 1;
+    ctx.strokeRect(badgeX, badgeY, badgeWidth, badgeHeight);
+
+    // Text
+    ctx.fillStyle = isOverloaded ? '#ff6600' : '#333';
+    ctx.font = 'bold 12px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(text, badgeX + 8, badgeY + badgeHeight / 2);
 }
 
 /**

@@ -6,6 +6,7 @@
 import { loadTeamDetails } from './api.js';
 import { showError } from './notifications.js';
 import { getCognitiveLoadIndicator } from './renderer-common.js';
+import { calculatePlatformConsumers } from './platform-metrics.js';
 import { marked } from 'https://cdn.jsdelivr.net/npm/marked@14.1.3/+esm';
 
 // Configure marked with safe defaults
@@ -247,8 +248,9 @@ export function showInfoModal(type, id) {
  * Show comprehensive team details in modal
  * @param {Object} team - Team object to show details for
  * @param {string} currentView - Current view ('current' or 'tt-design')
+ * @param {Array} allTeams - All teams (for platform consumer calculation)
  */
-export async function showTeamDetails(team, currentView) {
+export async function showTeamDetails(team, currentView, allTeams = []) {
     try {
         const teamData = await loadTeamDetails(team.name, currentView);
 
@@ -424,6 +426,80 @@ export async function showTeamDetails(team, currentView) {
 
                     // Insert before metadata section
                     metadataSection.parentNode.insertBefore(cogLoadSection, metadataSection);
+                }
+
+                // Platform Consumer Dashboard (TT Design view only)
+                if (currentView === 'tt' && allTeams.length > 0) {
+                    const platformMetrics = calculatePlatformConsumers(teamData.name, allTeams);
+
+                    if (platformMetrics.totalCount > 0) {
+                        // Remove existing platform section if any
+                        const existingPlatform = document.getElementById('detailPlatformSection');
+                        if (existingPlatform) existingPlatform.remove();
+
+                        // Create platform consumer section
+                        const platformSection = document.createElement('div');
+                        platformSection.id = 'detailPlatformSection';
+                        platformSection.className = 'detail-section';
+                        platformSection.style.cssText = 'background: #f0f7ff; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #4a9fd8;';
+
+                        const overloadWarning = platformMetrics.isOverloaded ?
+                            '<div style="background: #fff3cd; border: 1px solid #ff9800; padding: 10px; border-radius: 4px; margin: 10px 0;"><strong>⚠️ Platform Overload Warning</strong><br>This platform is serving many teams. Consider splitting into multiple platforms or adding capacity.</div>' :
+                            '';
+
+                        // Create value stream breakdown
+                        const vsBreakdown = Object.entries(platformMetrics.byValueStream)
+                            .sort((a, b) => b[1] - a[1])
+                            .map(([vs, count]) => {
+                                const barWidth = Math.min((count / platformMetrics.totalCount) * 100, 100);
+                                return `
+                                    <div style="margin: 8px 0;">
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                                            <span style="font-size: 13px;">${vs}</span>
+                                            <span style="font-weight: bold; font-size: 13px;">${count} team${count !== 1 ? 's' : ''}</span>
+                                        </div>
+                                        <div style="background: #e0e0e0; height: 8px; border-radius: 4px; overflow: hidden;">
+                                            <div style="background: #4a9fd8; height: 100%; width: ${barWidth}%;"></div>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('');
+
+                        // Create consumer list
+                        const consumerList = platformMetrics.consumers
+                            .sort((a, b) => a.name.localeCompare(b.name))
+                            .map(consumer => `
+                                <li style="margin: 6px 0; font-size: 13px;">
+                                    <span>${consumer.name}</span>
+                                    <span style="color: #666; font-size: 11px; margin-left: 8px;">(${consumer.mode})</span>
+                                </li>
+                            `).join('');
+
+                        platformSection.innerHTML = `
+                            <h3>👥 Platform Consumers</h3>
+                            <div style="font-size: 20px; font-weight: bold; color: #1976d2; margin: 10px 0;">
+                                ${platformMetrics.totalCount} team${platformMetrics.totalCount !== 1 ? 's' : ''}
+                            </div>
+                            ${overloadWarning}
+                            ${vsBreakdown ? `
+                                <div style="margin: 15px 0;">
+                                    <div style="font-weight: bold; margin-bottom: 10px; font-size: 14px;">By Value Stream:</div>
+                                    ${vsBreakdown}
+                                </div>
+                            ` : ''}
+                            <details style="margin-top: 15px;">
+                                <summary style="cursor: pointer; font-weight: bold; padding: 8px; background: rgba(74, 159, 216, 0.1); border-radius: 4px; font-size: 14px;">
+                                    View all consuming teams
+                                </summary>
+                                <ul style="margin: 10px 0; padding-left: 20px; max-height: 200px; overflow-y: auto;">
+                                    ${consumerList}
+                                </ul>
+                            </details>
+                        `;
+
+                        // Insert before metadata section
+                        metadataSection.parentNode.insertBefore(platformSection, metadataSection);
+                    }
                 }
 
                 // Show remaining metadata (excluding cognitive load fields)

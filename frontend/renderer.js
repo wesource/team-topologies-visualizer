@@ -6,6 +6,7 @@ import { drawTeam, drawConnections, wrapText, drawValueStreamGroupings, drawPlat
 import { getValueStreamGroupings } from './tt-value-stream-grouping.js';
 import { getPlatformGroupings } from './tt-platform-grouping.js';
 import { getFilteredTeams } from './state-management.js';
+import { calculatePlatformConsumers } from './platform-metrics.js';
 
 /**
  * Main draw function - renders entire canvas
@@ -75,17 +76,25 @@ export function draw(state) {
         }
 
         // Draw teams
-        teamsToRender.forEach(team => drawTeam(
-            state.ctx,
-            team,
-            state.selectedTeam,
-            state.teamColorMap,
-            (text, maxWidth) => wrapText(state.ctx, text, maxWidth),
-            state.currentView,
-            state.showCognitiveLoad,
-            state.comparisonData, // Pass comparison data for highlighting
-            state.showTeamTypeBadges // Pass team type badges flag
-        ));
+        teamsToRender.forEach(team => {
+            // Calculate platform metrics for TT Design view only
+            const platformMetrics = state.currentView === 'tt'
+                ? calculatePlatformConsumers(team.name, state.teams)
+                : null;
+
+            drawTeam(
+                state.ctx,
+                team,
+                state.selectedTeam,
+                state.teamColorMap,
+                (text, maxWidth) => wrapText(state.ctx, text, maxWidth),
+                state.currentView,
+                state.showCognitiveLoad,
+                state.comparisonData, // Pass comparison data for highlighting
+                state.showTeamTypeBadges, // Pass team type badges flag
+                platformMetrics // Pass platform consumer metrics
+            );
+        });
     }
 
     state.ctx.restore();

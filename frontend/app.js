@@ -22,7 +22,7 @@ function init() {
     // Setup interaction handler
     if (state.canvas && state.ctx) {
         _interactionHandler = new CanvasInteractionHandler(state.canvas, state, () => draw(state));
-        state.onTeamDoubleClick = (team) => showTeamDetails(team, state.currentView);
+        state.onTeamDoubleClick = (team) => showTeamDetails(team, state.currentView, state.teams);
     }
     // Setup UI event listeners
     setupUIEventListeners(loadAllTeams, () => draw(state), openAddTeamModal, closeModal, closeDetailModal, closeInteractionModeModal, handleTeamSubmit, (team) => selectTeam(team, state, draw));
@@ -102,7 +102,7 @@ function updateTeamList() {
         }
 
         item.addEventListener('click', () => selectTeam(team, state, draw));
-        item.addEventListener('dblclick', () => showTeamDetails(team, state.currentView));
+        item.addEventListener('dblclick', () => showTeamDetails(team, state.currentView, state.teams));
         teamList.appendChild(item);
     });
 }
