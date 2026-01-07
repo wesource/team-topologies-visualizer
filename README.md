@@ -118,8 +118,13 @@ This tool provides dual visualizations to make these conversations easier.
 - 🚦 **Cognitive Load Indicators** - Optional traffic light visualization (🟢🟡🔴) showing team cognitive load levels
   - Toggle on/off to reduce visual clutter
   - Identify overloaded teams at a glance
-  - Detailed breakdown of domain, intrinsic, and extraneous complexity
-- �🔍 **Team Details** - Double-click for full team information with rendered markdown
+  - Detailed breakdown of domain, intrinsic, and extraneous complexity- 📊 **Flow Metrics (DORA Metrics)** - Track and visualize team performance outcomes (TT Design view only):
+  - Add optional flow metrics to team YAML: lead time, deployment frequency, change fail rate, MTTR
+  - **Collapsible details in team modal**: One-liner summary at top of modal showing key metrics with color-coded health indicators (🟢🟡🔴)
+  - Click "View details" to expand full metrics with warning indicators (⚠️) for concerning values
+  - Optional canvas overlay: "Flow Metrics" checkbox displays compact metrics box on team cards
+  - Health color-coding: Green (elite performers), Yellow (medium performers), Red (needs attention)
+  - Transforms tool from structure-only to outcomes-focused - measure whether TT transformation is improving delivery speed- �🔍 **Team Details** - Double-click for full team information with rendered markdown
 - 📋 **Team API Compatible** - Uses Team Topologies Team API template format
 - 📥 **SVG Export** - Export visualizations to SVG for presentations and documentation (respects connection visibility settings)
 - 👁️ **Connection Toggles** - Control visual complexity:

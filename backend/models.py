@@ -14,6 +14,14 @@ class TeamAPI(BaseModel):
     consumers: list[str] | None = None
     working_hours: str | None = None
 
+# Flow Metrics submodel for DORA metrics (optional)
+class FlowMetrics(BaseModel):
+    """Flow metrics based on DORA metrics for measuring team/value stream performance"""
+    lead_time_days: float | None = None  # Median time from commit to production
+    deployment_frequency: str | None = None  # daily, weekly, monthly, quarterly
+    change_fail_rate: float | None = None  # 0.0 to 1.0 (e.g., 0.05 = 5%)
+    mttr_hours: float | None = None  # Mean time to recovery
+
 class TeamData(BaseModel):
     """Team data model with YAML front matter fields and Team API extensions"""
     name: str
@@ -32,6 +40,7 @@ class TeamData(BaseModel):
     platform_grouping: str | None = None
     established: str | None = None  # YYYY-MM
     cognitive_load: str | None = None  # low | medium | high | very-high
+    flow_metrics: FlowMetrics | None = None  # DORA metrics for team performance
 
     # For extended template support (not required for all teams)
     roadmap: str | None = None

@@ -9,6 +9,12 @@ position:
 metadata:
   size: 7  # Number of people on the team (5-9 recommended)
   cognitive_load: medium  # low | medium | high | very-high
+  established: 2024-01  # YYYY-MM format (when team was formed)
+  flow_metrics:  # Optional: DORA metrics for team performance
+    lead_time_days: 10  # Median days from commit to production
+    deployment_frequency: weekly  # daily | weekly | monthly | quarterly
+    change_fail_rate: 0.10  # 0.0 to 1.0 (e.g., 0.10 = 10%)
+    mttr_hours: 3  # Mean time to recovery in hours
 value_stream: [Value Stream Name]  # Optional: Grouping by value stream
 platform_grouping: [Platform Grouping Name]  # Optional: Grouping by platform or capability area
 ---
@@ -217,3 +223,5 @@ See real examples in this repository:
 ## License
 
 This template is based on the [Team Topologies Team API Template](https://github.com/TeamTopologies/Team-API-template) and is licensed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
+
+The YAML front matter extensions (metadata fields like cognitive_load, flow_metrics, value_stream, platform_grouping) are based on Team Topologies book (2nd edition, 2025) and presentation materials.

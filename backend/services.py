@@ -61,6 +61,33 @@ def parse_team_file(file_path: Path) -> TeamData:
             if 'size' in metadata:
                 data['size'] = metadata['size']
 
+            # Parse and validate flow metrics
+            if 'flow_metrics' in metadata:
+                flow_metrics = metadata['flow_metrics']
+                if isinstance(flow_metrics, dict):
+                    # Validate lead_time_days
+                    if 'lead_time_days' in flow_metrics:
+                        if not isinstance(flow_metrics['lead_time_days'], int | float) or flow_metrics['lead_time_days'] < 0:
+                            raise ValueError(f"Invalid lead_time_days in {file_path.name}: must be non-negative number")
+
+                    # Validate change_fail_rate
+                    if 'change_fail_rate' in flow_metrics:
+                        if not isinstance(flow_metrics['change_fail_rate'], int | float) or not (0 <= flow_metrics['change_fail_rate'] <= 1.0):
+                            raise ValueError(f"Invalid change_fail_rate in {file_path.name}: must be between 0.0 and 1.0")
+
+                    # Validate mttr_hours
+                    if 'mttr_hours' in flow_metrics:
+                        if not isinstance(flow_metrics['mttr_hours'], int | float) or flow_metrics['mttr_hours'] < 0:
+                            raise ValueError(f"Invalid mttr_hours in {file_path.name}: must be non-negative number")
+
+                    # Validate deployment_frequency
+                    if 'deployment_frequency' in flow_metrics:
+                        valid_frequencies = ['daily', 'weekly', 'monthly', 'quarterly']
+                        if flow_metrics['deployment_frequency'].lower() not in valid_frequencies:
+                            raise ValueError(f"Invalid deployment_frequency in {file_path.name}: must be one of {valid_frequencies}")
+
+                    data['flow_metrics'] = flow_metrics
+
             # Support top-level purpose for quick access
             if 'purpose' not in data:
                 # Try to extract from team_api or metadata

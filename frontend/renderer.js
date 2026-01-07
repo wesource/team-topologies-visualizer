@@ -97,7 +97,8 @@ export function draw(state) {
                 state.showCognitiveLoad,
                 state.comparisonData, // Pass comparison data for highlighting
                 state.showTeamTypeBadges, // Pass team type badges flag
-                platformMetrics // Pass platform consumer metrics
+                platformMetrics, // Pass platform consumer metrics
+                state.showFlowMetrics // Pass flow metrics flag
             );
         });
     }

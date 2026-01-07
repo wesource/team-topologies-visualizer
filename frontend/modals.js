@@ -64,7 +64,13 @@ export function closeModal() {
  */
 export function closeDetailModal() {
     const modal = document.getElementById('detailModal');
-    if (modal) modal.style.display = 'none';
+    if (modal) {
+        // Close any open <details> elements (e.g., flow metrics)
+        modal.querySelectorAll('details[open]').forEach(details => {
+            details.removeAttribute('open');
+        });
+        modal.style.display = 'none';
+    }
 }
 
 /**
@@ -286,10 +292,111 @@ export async function showTeamDetails(team, currentView, allTeams = []) {
                 </div>
             `;
 
-            // Insert after type badge, before description
-            const detailTeamName = document.getElementById('detailTeamName');
-            if (detailTeamName && detailTeamName.parentNode) {
-                detailTeamName.parentNode.insertBefore(establishedSection, detailTeamName.nextSibling);
+            // Insert after detail-header div (contains team name and type badge)
+            const detailHeader = document.querySelector('#teamDetails .detail-header');
+            if (detailHeader && detailHeader.nextSibling) {
+                detailHeader.parentNode.insertBefore(establishedSection, detailHeader.nextSibling);
+            }
+        } else {
+            // Remove established section if no date
+            const existingEstablished = document.getElementById('detailEstablishedSection');
+            if (existingEstablished) existingEstablished.remove();
+        }
+
+        // Flow metrics section - INSERT EARLY (outcomes are most important)
+        if (teamData.flow_metrics) {
+            // Remove existing flow metrics section if any
+            const existingFlowMetrics = document.getElementById('detailFlowMetricsSection');
+            if (existingFlowMetrics) existingFlowMetrics.remove();
+
+            const flowMetricsSection = document.createElement('div');
+            flowMetricsSection.id = 'detailFlowMetricsSection';
+            flowMetricsSection.style.cssText = 'background: #f0f9ff; padding: 15px; border-radius: 8px; margin: 15px -20px 20px -20px; border-left: 4px solid #0ea5e9; width: calc(100% + 40px);';
+
+            const metrics = teamData.flow_metrics;
+
+            // Build summary one-liner
+            const summaryParts = [];
+            if (metrics.lead_time_days !== undefined && metrics.lead_time_days !== null) {
+                const icon = metrics.lead_time_days <= 14 ? '🟢' : metrics.lead_time_days <= 30 ? '🟡' : '🔴';
+                summaryParts.push(`${icon} ${metrics.lead_time_days}d lead time`);
+            }
+            if (metrics.deployment_frequency) {
+                const freq = metrics.deployment_frequency.toLowerCase();
+                summaryParts.push(`${freq} deploys`);
+            }
+            if (metrics.change_fail_rate !== undefined && metrics.change_fail_rate !== null) {
+                const percentage = (metrics.change_fail_rate * 100).toFixed(1);
+                summaryParts.push(`${percentage}% fail rate`);
+            }
+            if (metrics.mttr_hours !== undefined && metrics.mttr_hours !== null) {
+                summaryParts.push(`${metrics.mttr_hours}h MTTR`);
+            }
+            const summaryText = summaryParts.join(' • ');
+
+            // Build detailed view
+            let detailsHtml = '';
+
+            // Lead time
+            if (metrics.lead_time_days !== undefined && metrics.lead_time_days !== null) {
+                const leadTimeWarning = metrics.lead_time_days > 30 ?
+                    ' <span style="color: #ff6b6b;">⚠️ Slow delivery - aim for &lt;14 days</span>' :
+                    metrics.lead_time_days <= 14 ? ' <span style="color: #51cf66;">✅</span>' : '';
+                detailsHtml += `<div style="margin: 8px 0;"><strong>Lead Time:</strong> ${metrics.lead_time_days} days${leadTimeWarning}</div>`;
+            }
+
+            // Deployment frequency
+            if (metrics.deployment_frequency) {
+                const freq = metrics.deployment_frequency.toLowerCase();
+                const freqWarning = (freq === 'monthly' || freq === 'quarterly') ?
+                    ' <span style="color: #ff6b6b;">⚠️ Infrequent deployments - aim for daily</span>' :
+                    freq === 'daily' ? ' <span style="color: #51cf66;">✅</span>' : '';
+                const freqDisplay = freq.charAt(0).toUpperCase() + freq.slice(1);
+                detailsHtml += `<div style="margin: 8px 0;"><strong>Deployment Frequency:</strong> ${freqDisplay}${freqWarning}</div>`;
+            }
+
+            // Change fail rate
+            if (metrics.change_fail_rate !== undefined && metrics.change_fail_rate !== null) {
+                const percentage = (metrics.change_fail_rate * 100).toFixed(1);
+                const failWarning = metrics.change_fail_rate > 0.15 ?
+                    ' <span style="color: #ff6b6b;">⚠️ High risk - aim for &lt;15%</span>' :
+                    ' <span style="color: #51cf66;">✅</span>';
+                detailsHtml += `<div style="margin: 8px 0;"><strong>Change Fail Rate:</strong> ${percentage}%${failWarning}</div>`;
+            }
+
+            // MTTR
+            if (metrics.mttr_hours !== undefined && metrics.mttr_hours !== null) {
+                const mttrWarning = metrics.mttr_hours > 4 ?
+                    ' <span style="color: #ff6b6b;">⚠️ Slow recovery - aim for &lt;2 hours</span>' :
+                    metrics.mttr_hours <= 2 ? ' <span style="color: #51cf66;">✅</span>' : '';
+                detailsHtml += `<div style="margin: 8px 0;"><strong>MTTR:</strong> ${metrics.mttr_hours} hours${mttrWarning}</div>`;
+            }
+
+            // Collapsible flow metrics with one-liner summary
+            flowMetricsSection.innerHTML = `
+                <h3>📊 Flow Metrics</h3>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin: 10px 0;">
+                    <div style="font-size: 14px; color: #333; font-weight: 500;">
+                        ${summaryText}
+                    </div>
+                    <details style="margin: 0; position: relative;">
+                        <summary style="cursor: pointer; font-weight: bold; padding: 6px 12px; background: rgba(14, 165, 233, 0.1); border-radius: 4px; font-size: 13px; list-style: none;">
+                            View details
+                        </summary>
+                        <div style="position: absolute; top: calc(100% + 8px); right: 0; background: white; border: 2px solid #0ea5e9; border-radius: 12px; padding: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); z-index: 10000; min-width: 450px; max-width: 600px;">
+                            <div style="margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #f0f9ff;">
+                                <h4 style="margin: 0; color: #0ea5e9;">📊 Detailed Flow Metrics</h4>
+                            </div>
+                            ${detailsHtml}
+                        </div>
+                    </details>
+                </div>
+            `;
+
+            // Insert before description section
+            const detailDescription = document.getElementById('detailDescription');
+            if (detailDescription && detailDescription.parentNode) {
+                detailDescription.parentNode.insertBefore(flowMetricsSection, detailDescription);
             }
         }
 
@@ -369,8 +476,9 @@ export async function showTeamDetails(team, currentView, allTeams = []) {
             if (teamData.metadata && Object.keys(teamData.metadata).length > 0) {
                 // Separate cognitive load fields from other metadata
                 const cognitiveLoadFields = ['cognitive_load', 'cognitive_load_domain', 'cognitive_load_intrinsic', 'cognitive_load_extraneous'];
+                const flowMetricsFields = ['flow_metrics'];
                 const otherMetadata = Object.entries(teamData.metadata)
-                    .filter(([key]) => !cognitiveLoadFields.includes(key));
+                    .filter(([key]) => !cognitiveLoadFields.includes(key) && !flowMetricsFields.includes(key));
 
                 // Check if we have cognitive load data
                 const cognitiveLoad = teamData.metadata.cognitive_load;
@@ -476,7 +584,7 @@ export async function showTeamDetails(team, currentView, allTeams = []) {
                             `).join('');
 
                         platformSection.innerHTML = `
-                            <h3>👥 Platform Consumers</h3>
+                            <h3>Platform Consumers</h3>
                             <div style="font-size: 20px; font-weight: bold; color: #1976d2; margin: 10px 0;">
                                 ${platformMetrics.totalCount} team${platformMetrics.totalCount !== 1 ? 's' : ''}
                             </div>

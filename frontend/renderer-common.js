@@ -126,10 +126,11 @@ export function getTeamBoxHeight(team, currentView = 'current') {
  * @param {Object|null} [comparisonData=null] - Snapshot comparison data for highlighting changes
  * @param {boolean} [showTeamTypeBadges=false] - Whether to show team type badges
  * @param {Object|null} [platformMetrics=null] - Platform consumer metrics (TT Design view only)
+ * @param {boolean} [showFlowMetrics=false] - Whether to show flow metrics overlay (TT Design view only)
  * @description Renders team with type-specific shapes: rounded rectangles for stream-aligned/platform,
  * vertical boxes for enabling teams, octagons for complicated-subsystem teams
  */
-export function drawTeam(ctx, team, selectedTeam, teamColorMap, wrapText, currentView = 'current', showCognitiveLoad = false, comparisonData = null, showTeamTypeBadges = false, platformMetrics = null) {
+export function drawTeam(ctx, team, selectedTeam, teamColorMap, wrapText, currentView = 'current', showCognitiveLoad = false, comparisonData = null, showTeamTypeBadges = false, platformMetrics = null, showFlowMetrics = false) {
     const x = team.position.x;
     const y = team.position.y;
     const width = getTeamBoxWidth(team, currentView);
@@ -138,27 +139,27 @@ export function drawTeam(ctx, team, selectedTeam, teamColorMap, wrapText, curren
     // Use shape-specific drawing in TT Design view
     if (currentView === 'tt') {
         if (team.team_type === 'enabling') {
-            drawEnablingTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData, showTeamTypeBadges, platformMetrics);
+            drawEnablingTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData, showTeamTypeBadges, platformMetrics, showFlowMetrics);
             return;
         }
         if (team.team_type === 'complicated-subsystem') {
-            drawComplicatedSubsystemTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData, platformMetrics);
+            drawComplicatedSubsystemTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData, platformMetrics, showFlowMetrics);
             return;
         }
         if (team.team_type === 'undefined') {
-            drawUndefinedTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData, platformMetrics);
+            drawUndefinedTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData, platformMetrics, showFlowMetrics);
             return;
         }
     }
 
     // Default: draw as rounded rectangle
-    drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, showTeamTypeBadges, platformMetrics, currentView);
+    drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, showTeamTypeBadges, platformMetrics, currentView, showFlowMetrics);
 }
 
 /**
  * Draw team as default box (rounded corners in TT Design, sharp corners in Pre-TT view)
  */
-function drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, showTeamTypeBadges = false, platformMetrics = null, currentView = 'current') {
+function drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, showTeamTypeBadges = false, platformMetrics = null, currentView = 'current', showFlowMetrics = false) {
 
     // Rounded corners for stream-aligned and platform teams in TT Design view
     // Sharp corners in Pre-TT view (hierarchy, product lines, value streams)
@@ -190,6 +191,11 @@ function drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamCo
     // Platform consumer badge (TT Design view only)
     if (platformMetrics) {
         drawPlatformConsumerBadge(ctx, team, platformMetrics, x, y, height);
+    }
+
+    // Flow metrics box (TT Design view only, when checkbox enabled)
+    if (showFlowMetrics && currentView === 'tt') {
+        drawFlowMetricsBox(ctx, team, x, y, width, height);
     }
 
     // Team name
@@ -519,6 +525,87 @@ function drawPlatformConsumerBadge(ctx, team, platformMetrics, x, y, height) {
     ctx.textAlign = 'left';
     ctx.textBaseline = 'middle';
     ctx.fillText(text, badgeX + 8, badgeY + badgeHeight / 2);
+}
+
+/**
+ * Helper: Calculate flow metrics health status
+ * Returns color code based on metric values: green (good), yellow (medium), red (poor)
+ */
+export function calculateFlowMetricsHealth(flowMetrics) {
+    if (!flowMetrics) return null;
+
+    let redCount = 0;
+    let yellowCount = 0;
+
+    // Lead time thresholds
+    if (flowMetrics.lead_time_days !== undefined && flowMetrics.lead_time_days !== null) {
+        if (flowMetrics.lead_time_days > 30) redCount++;
+        else if (flowMetrics.lead_time_days > 14) yellowCount++;
+    }
+
+    // Deployment frequency thresholds
+    if (flowMetrics.deployment_frequency) {
+        const freq = flowMetrics.deployment_frequency.toLowerCase();
+        if (freq === 'monthly' || freq === 'quarterly') redCount++;
+        else if (freq === 'weekly') yellowCount++;
+    }
+
+    // Change fail rate thresholds
+    if (flowMetrics.change_fail_rate !== undefined && flowMetrics.change_fail_rate !== null) {
+        if (flowMetrics.change_fail_rate > 0.15) redCount++;
+        else if (flowMetrics.change_fail_rate > 0.10) yellowCount++;
+    }
+
+    // MTTR thresholds
+    if (flowMetrics.mttr_hours !== undefined && flowMetrics.mttr_hours !== null) {
+        if (flowMetrics.mttr_hours > 4) redCount++;
+        else if (flowMetrics.mttr_hours > 2) yellowCount++;
+    }
+
+    // Determine overall health
+    if (redCount > 0) return { status: 'red', color: '#ff6b6b', emoji: '🔴' };
+    if (yellowCount > 0) return { status: 'yellow', color: '#ffd43b', emoji: '🟡' };
+    return { status: 'green', color: '#51cf66', emoji: '🟢' };
+}
+
+/**
+ * Helper: Draw flow metrics box (TT Design view only, when checkbox enabled)
+ * Shows compact metrics with health indicator
+ */
+export function drawFlowMetricsBox(ctx, team, x, y, width, height) {
+    if (!team.flow_metrics) return;
+
+    const health = calculateFlowMetricsHealth(team.flow_metrics);
+    if (!health) return;
+
+    // Position metrics box below team name
+    const boxHeight = 24;
+    const boxPadding = 8;
+    const boxY = y + height - boxHeight - boxPadding;
+    const boxX = x + boxPadding;
+    const boxWidth = width - (boxPadding * 2);
+
+    // Background with health color
+    ctx.fillStyle = health.color;
+    ctx.globalAlpha = 0.15; // Subtle background
+    ctx.fillRect(boxX, boxY, boxWidth, boxHeight);
+    ctx.globalAlpha = 1.0;
+
+    // Border
+    ctx.strokeStyle = health.color;
+    ctx.lineWidth = 2;
+    ctx.strokeRect(boxX, boxY, boxWidth, boxHeight);
+
+    // Compact text: "📊 14d 🟢" (lead time + health indicator)
+    const leadTime = team.flow_metrics.lead_time_days !== undefined ?
+        `${Math.round(team.flow_metrics.lead_time_days)}d` : '?';
+    const text = `📊 ${leadTime} ${health.emoji}`;
+
+    ctx.fillStyle = '#333';
+    ctx.font = 'bold 12px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(text, boxX + boxWidth / 2, boxY + boxHeight / 2);
 }
 
 /**

@@ -90,6 +90,23 @@ export function handleViewChange(e, loadAllTeams, _draw) {
         }
     }
 
+    // Show/hide Flow Metrics checkbox (TT Design view only)
+    const showFlowMetricsLabel = document.getElementById('showFlowMetricsLabel');
+    const consumersMetricsDivider = document.getElementById('consumersMetricsDivider');
+    if (showFlowMetricsLabel) {
+        if (state.currentView === 'tt') {
+            showFlowMetricsLabel.style.display = 'flex';
+            if (consumersMetricsDivider) {
+                consumersMetricsDivider.style.display = 'block';
+            }
+        } else {
+            showFlowMetricsLabel.style.display = 'none';
+            if (consumersMetricsDivider) {
+                consumersMetricsDivider.style.display = 'none';
+            }
+        }
+    }
+
     const autoAlignBtnView = document.getElementById('autoAlignBtn');
     if (autoAlignBtnView) {
         if (state.currentView === 'current') {
@@ -441,6 +458,14 @@ export function setupUIEventListeners(loadAllTeams, draw, openAddTeamModal, clos
         });
     }
 
+    const showFlowMetricsCheckbox = document.getElementById('showFlowMetrics');
+    if (showFlowMetricsCheckbox) {
+        showFlowMetricsCheckbox.addEventListener('change', (e) => {
+            state.showFlowMetrics = e.target.checked;
+            draw();
+        });
+    }
+
     const showTeamTypeBadgesCheckbox = document.getElementById('showTeamTypeBadges');
     if (showTeamTypeBadgesCheckbox) {
         showTeamTypeBadgesCheckbox.addEventListener('change', (e) => {
@@ -610,6 +635,11 @@ export function setupUIEventListeners(loadAllTeams, draw, openAddTeamModal, clos
     const showPlatformConsumersLabelInit = document.getElementById('showPlatformConsumersLabel');
     if (showPlatformConsumersLabelInit) {
         showPlatformConsumersLabelInit.style.display = 'flex'; // Shown in TT view (disabled by default)
+    }
+
+    const showFlowMetricsLabelInit = document.getElementById('showFlowMetricsLabel');
+    if (showFlowMetricsLabelInit) {
+        showFlowMetricsLabelInit.style.display = 'flex'; // Shown in TT view (disabled by default)
     }
 
     const autoAlignBtnInit = document.getElementById('autoAlignBtn');

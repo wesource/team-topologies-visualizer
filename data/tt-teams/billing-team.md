@@ -2,11 +2,16 @@
 name: Billing Team
 team_type: stream-aligned
 position:
-  x: 393.0
-  y: 166.0
+  x: 204.0
+  y: 161.0
 metadata:
   size: 6
   cognitive_load: medium
+  flow_metrics:
+    lead_time_days: 18
+    deployment_frequency: weekly
+    change_fail_rate: 0.12
+    mttr_hours: 3
 value_stream: Financial Services
 ---
 

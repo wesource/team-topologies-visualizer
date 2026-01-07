@@ -1769,3 +1769,8 @@ header h1 {
     color: #6c757d;
     font-size: 0.95rem;
 }
+
+/* Hide first h1 in team description (duplicate of modal header) */
+#detailDescription .team-api-content > h1:first-child {
+    display: none;
+}

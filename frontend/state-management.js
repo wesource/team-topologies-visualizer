@@ -25,6 +25,7 @@ export const state = {
     showInteractionModes: true, // Interaction mode lines enabled by default
     showCognitiveLoad: false, // Cognitive load indicators disabled by default
     showPlatformConsumers: false, // Platform consumer dashboard disabled by default (TT Design view only)
+    showFlowMetrics: false, // Flow metrics overlay disabled by default (optional canvas visualization)
     showTeamTypeBadges: false, // Team type badges (Feature/Platform/etc) in product lines view, disabled by default
     selectedGrouping: 'all', // Legacy format: 'all', 'vs:ValueStreamName', 'pg:PlatformGroupingName'
     selectedFilters: {

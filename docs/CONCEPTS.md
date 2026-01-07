@@ -752,6 +752,101 @@ This tool helps make cognitive load visible through a **traffic light indicator 
 
 This visualization helps organizations have data-driven conversations about team capacity and where to focus improvement efforts.
 
+### Flow Metrics (DORA Metrics) for Measuring Outcomes
+
+> **"Team Topologies is ultimately about accelerating flow of change, not just reorganizing boxes."** Without metrics, you can visualize structure but not measure whether your TT transformation is actually improving delivery speed.
+
+Team Topologies emphasizes outcomes over structure. While org charts show *where teams sit*, flow metrics show *how well they deliver*. This tool supports optional **DORA metrics** (DevOps Research and Assessment) to track team performance:
+
+#### The Four DORA Metrics
+
+1. **Lead Time** - Median time from commit to production deployment
+   - 🟢 **Elite**: <1 day | 🟡 **Medium**: 1-4 weeks | 🔴 **Low**: >4 weeks
+   - Measures how quickly teams can deliver value to customers
+
+2. **Deployment Frequency** - How often teams deploy to production
+   - 🟢 **Elite**: Multiple times per day | 🟡 **Medium**: Weekly | 🔴 **Low**: Monthly/Quarterly
+   - Indicates ability to respond to customer needs rapidly
+
+3. **Change Fail Rate** - Percentage of deployments causing production failures
+   - 🟢 **Elite**: 0-10% | 🟡 **Medium**: 10-15% | 🔴 **Low**: >15%
+   - Measures deployment reliability and engineering practices
+
+4. **MTTR (Mean Time to Recovery)** - Time to restore service after incidents
+   - 🟢 **Elite**: <1 hour | 🟡 **Medium**: 1-4 hours | 🔴 **Low**: >4 hours
+   - Reflects incident response capability and system observability
+
+#### Flow Metrics in This Tool
+
+**Phase 1: Modal Display** ✅ **IMPLEMENTED**
+- Add flow metrics to team YAML front matter:
+  ```yaml
+  metadata:
+    flow_metrics:
+      lead_time_days: 10
+      deployment_frequency: weekly
+      change_fail_rate: 0.10  # 10%
+      mttr_hours: 3
+  ```
+- **Collapsible display at top of team modal**:
+  - One-liner summary: `🟢 10d lead time • weekly deploys • 10.0% fail rate • 3h MTTR`
+  - Click "View details" button (right side) to expand full metrics popup
+  - Warning indicators (⚠️) for concerning values in detailed view
+  - Color-coded health indicator: 🟢 Green / 🟡 Yellow / 🔴 Red
+- Backend validation ensures metrics are within valid ranges
+- Metrics are optional - teams without metrics show nothing in this section
+
+**Phase 2: Canvas Overlay** ✅ **IMPLEMENTED**
+- "Flow Metrics" checkbox in toolbar (TT Design view only, default OFF)
+- When enabled, shows compact metrics box on each team card
+- Format: `📊 14d 🟢` (lead time + health indicator)
+- **Color-coded health status**:
+  - 🟢 **Green**: Elite performers (lead time <14d, daily deploys, <10% fail rate, <2h MTTR)
+  - 🟡 **Yellow**: Medium performers (lead time 14-30d, weekly deploys, 10-15% fail rate, 2-4h MTTR)
+  - 🔴 **Red**: Needs attention (lead time >30d, monthly deploys, >15% fail rate, >4h MTTR)
+
+#### Why Flow Metrics Matter for Team Topologies
+
+**Measure transformation success**: "Is our TT reorganization actually improving delivery speed?"
+- **Before**: Lead time 35 days, monthly deploys, 22% fail rate → 🔴 Red team struggling
+- **After**: Lead time 10 days, weekly deploys, 8% fail rate → 🟢 Green team improving
+- Track metrics over time (compare snapshots) to show transformation ROI
+
+**Identify bottlenecks**: Which teams/value streams are slowest?
+- Platform team with 5d lead time vs. stream-aligned team with 40d lead time → different problems
+- Value stream aggregation (Phase 3 - future) will show bottleneck value streams
+
+**Data-driven conversations**: Replace opinions with evidence
+- "We feel slow" → "Our lead time is 35 days (aim for <14)"
+- "Platform is unstable" → "20% change fail rate (aim for <10%)"
+- Metrics enable specific, actionable improvement discussions
+
+**Executive communication**: Justify transformation investment
+- Show quarterly improvements in DORA metrics
+- Connect TT patterns to business outcomes (faster delivery, higher reliability)
+- Metrics make abstract concepts concrete for stakeholders
+
+#### Best Practices for Flow Metrics
+
+**Start simple**: Don't wait for perfect data
+- Begin with 3-4 teams that have metrics available
+- Manual data entry is fine initially - automation can come later
+- Even rough estimates reveal patterns
+
+**Focus on trends, not absolutes**: Improvement matters more than perfection
+- Lead time improving from 40d → 25d → 15d shows progress
+- Compare teams within same context (platform teams vs. stream-aligned teams have different baselines)
+
+**Combine with cognitive load**: Metrics + cognitive load = complete picture
+- High cognitive load + poor metrics → Team is overwhelmed, needs help
+- Low cognitive load + poor metrics → Process or tooling issues, not capacity
+- High cognitive load + good metrics → Team may be at breaking point, monitor closely
+
+**Update quarterly**: Metrics don't need daily updates
+- Snapshot metrics every quarter alongside TT evolution snapshots
+- Track transformation journey over 6-12 months
+- Quarterly cadence aligns with typical transformation planning cycles
+
 ## About the Example Data
 
 ### Current State: Traditional Team Classifications

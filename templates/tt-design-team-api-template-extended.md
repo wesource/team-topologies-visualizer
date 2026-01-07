@@ -9,6 +9,12 @@ position:
 metadata:
   size: 7  # Number of people on the team (5-9 recommended)
   cognitive_load: medium  # low | medium | high | very-high
+  established: 2024-01  # YYYY-MM format (when team was formed)
+  flow_metrics:  # Optional: DORA metrics for team performance
+    lead_time_days: 10  # Median days from commit to production
+    deployment_frequency: weekly  # daily | weekly | monthly | quarterly
+    change_fail_rate: 0.10  # 0.0 to 1.0 (e.g., 0.10 = 10%)
+    mttr_hours: 3  # Mean time to recovery in hours
 value_stream: [Value Stream Name]  # Optional: Grouping by value stream
 platform_grouping: [Platform Grouping Name]  # Optional: Grouping by platform or capability area
 ---
@@ -19,7 +25,7 @@ platform_grouping: [Platform Grouping Name]  # Optional: Grouping by platform or
 >
 > **Base**: Follows the official [Team Topologies Team API Template](https://github.com/TeamTopologies/Team-API-template) (CC BY-SA 4.0)
 >
-> **Extensions**: Includes additional fields from Team Topologies book (2nd edition) and presentation materials. Extended sections are marked with _[Extended]_.
+> **Extensions**: Includes additional fields from Team Topologies book (2nd edition, 2025) and presentation materials. Extended sections are marked with _[Extended]_.
 >
 > **Instructions**: Replace all `[bracketed placeholders]` with your team's information. Delete this instruction block when done.
 
@@ -50,7 +56,7 @@ platform_grouping: [Platform Grouping Name]  # Optional: Grouping by platform or
 **Note**: Only relevant for platform teams. Platform groupings are collections of related platform teams (e.g., "Data Platform Grouping", "Cloud Infrastructure Grouping")
 
 ## Code & Artifacts
-_[Extended: Not part of github team api template, but mentioned in book or other TT resources]_
+_[Extended: Not part of official Team API template, but useful for clarity about team outputs]_
 
 [Describe the runtime endpoints, libraries, clients, UI, and other code artifacts your team produces]
 
@@ -110,7 +116,7 @@ _[Extended: Not part of github team api template, but mentioned in book or other
 - "Deprecation policy: 90-day notice with migration guide"
 
 ## Testing Approach
-_[Extended: Not part of github team api template, but mentioned in book or other TT resources]_
+_[Extended: Not part of official Team API template, but useful for understanding team quality standards]_
 
 [Describe how your team tests code and services, and what quality standards you maintain]
 
@@ -147,7 +153,7 @@ _[Extended: Not part of github team api template, but mentioned in book or other
 - **SSO**: Single Sign-On - users authenticate once and access multiple services
 
 ## Practices & Principles
-_[Extended: Not part of github team api template, but mentioned in book or other TT resources]_
+_[Extended: Not part of official Team API template, but helps clarify team working practices]_
 
 [Describe your team's working practices and technical principles that affect how other teams interact with you]
 
@@ -162,7 +168,7 @@ _[Extended: Not part of github team api template, but mentioned in book or other
 - **Weekly demos**: Fridays at 3pm - showcase new features to interested teams
 
 ## Communication Preferences
-_[Extended: Not part of github team api template, but mentioned in book or other TT resources]_
+_[Extended: Not part of official Team API template, but important for effective team collaboration]_
 
 [Detailed communication preferences including async/sync balance, response times, and collaboration expectations]
 
@@ -199,7 +205,7 @@ _[Extended: Not part of github team api template, but mentioned in book or other
 - "Remote-friendly: No expectation of immediate responses outside core hours"
 
 ## Roadmap & Current Priorities
-_[Extended: Not part of github team api template, but mentioned in book or other TT resources]_
+_[Extended: Not part of official Team API template, but helps with team transparency and planning]_
 
 ### Currently working on (Q1 2026)
 
@@ -410,4 +416,4 @@ _[Extended: Optional section for transparency and contact routing]_
 
 This template extends the [Team Topologies Team API Template](https://github.com/TeamTopologies/Team-API-template) and is licensed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
 
-Extended sections are based on Team Topologies book (2nd edition, chapters on Team APIs) and presentation materials.
+Extended sections are based on Team Topologies book (2nd edition, 2025, chapters on Team APIs) and presentation materials.

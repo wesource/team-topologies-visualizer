@@ -8,6 +8,11 @@ metadata:
   size: 6
   cognitive_load: medium
   established: 2023-10
+  flow_metrics:
+    lead_time_days: 10
+    deployment_frequency: daily
+    change_fail_rate: 0.05
+    mttr_hours: 2
 value_stream: Mobile Experience
 ---
 

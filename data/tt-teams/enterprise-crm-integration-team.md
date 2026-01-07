@@ -8,6 +8,11 @@ metadata:
   size: 6
   cognitive_load: high
   established: 2024-02
+  flow_metrics:
+    lead_time_days: 35
+    deployment_frequency: monthly
+    change_fail_rate: 0.22
+    mttr_hours: 6
 value_stream: B2B Services
 ---
 

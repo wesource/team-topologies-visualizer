@@ -8,6 +8,11 @@ metadata:
   size: 6
   cognitive_load: medium
   established: 2023-11
+  flow_metrics:
+    lead_time_days: 5
+    deployment_frequency: daily
+    change_fail_rate: 0.08
+    mttr_hours: 1.5
 platform_grouping: Cloud Infrastructure Platform Grouping
 ---
 
