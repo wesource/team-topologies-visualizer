@@ -269,7 +269,50 @@ class ComparisonView {
         const summary = this.comparison.changes.summary;
         const changes = this.comparison.changes;
 
+        // Calculate interaction mode counts
+        const beforeInteractions = this.countInteractionModes(this.beforeSnapshot.teams);
+        const afterInteractions = this.countInteractionModes(this.afterSnapshot.teams);
+
+        // Interaction modes comparison table (at the top)
         let html = `
+            <div class="change-details" style="margin-bottom: 15px;">
+                <h4>📊 Interaction Modes</h4>
+                <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid #ddd;">
+                            <th style="text-align: left; padding: 6px;">Mode</th>
+                            <th style="text-align: center; padding: 6px;">Before</th>
+                            <th style="text-align: center; padding: 6px;">After</th>
+                            <th style="text-align: center; padding: 6px;">Δ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom: 1px solid #eee;">
+                            <td style="padding: 6px;">🟣 Collaboration</td>
+                            <td style="text-align: center; padding: 6px;">${beforeInteractions.collaboration}</td>
+                            <td style="text-align: center; padding: 6px;">${afterInteractions.collaboration}</td>
+                            <td style="text-align: center; padding: 6px; font-weight: bold; color: ${this.getDeltaColor(afterInteractions.collaboration - beforeInteractions.collaboration)}">${this.formatDelta(afterInteractions.collaboration - beforeInteractions.collaboration)}</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #eee;">
+                            <td style="padding: 6px;">⚫ X-as-a-Service</td>
+                            <td style="text-align: center; padding: 6px;">${beforeInteractions['x-as-a-service']}</td>
+                            <td style="text-align: center; padding: 6px;">${afterInteractions['x-as-a-service']}</td>
+                            <td style="text-align: center; padding: 6px; font-weight: bold; color: ${this.getDeltaColor(afterInteractions['x-as-a-service'] - beforeInteractions['x-as-a-service'])}">${this.formatDelta(afterInteractions['x-as-a-service'] - beforeInteractions['x-as-a-service'])}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 6px;">🟢 Facilitating</td>
+                            <td style="text-align: center; padding: 6px;">${beforeInteractions.facilitating}</td>
+                            <td style="text-align: center; padding: 6px;">${afterInteractions.facilitating}</td>
+                            <td style="text-align: center; padding: 6px; font-weight: bold; color: ${this.getDeltaColor(afterInteractions.facilitating - beforeInteractions.facilitating)}">${this.formatDelta(afterInteractions.facilitating - beforeInteractions.facilitating)}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <hr style="border: none; border-top: 1px solid #ddd; margin: 15px 0;">
+        `;
+
+        // Team change statistics
+        html += `
             <div class="change-stat added">
                 <span>🟢 Added</span>
                 <strong>${summary.added_count}</strong>
@@ -596,6 +639,47 @@ class ComparisonView {
         }
 
         return lines;
+    }
+
+    /**
+     * Count interaction modes in a snapshot
+     * @param {Array} teams - Array of team objects
+     * @returns {Object} - Counts for each interaction mode
+     */
+    countInteractionModes(teams) {
+        const counts = {
+            'collaboration': 0,
+            'x-as-a-service': 0,
+            'facilitating': 0
+        };
+
+        teams.forEach(team => {
+            if (team.interaction_modes) {
+                Object.values(team.interaction_modes).forEach(mode => {
+                    if (Object.hasOwn(counts, mode)) {
+                        counts[mode]++;
+                    }
+                });
+            }
+        });
+
+        return counts;
+    }
+
+    /**
+     * Format delta value with sign
+     */
+    formatDelta(delta) {
+        if (delta === 0) return '–';
+        return delta > 0 ? `+${delta}` : `${delta}`;
+    }
+
+    /**
+     * Get color for delta value
+     */
+    getDeltaColor(delta) {
+        if (delta === 0) return '#999';
+        return delta > 0 ? '#28a745' : '#dc3545';
     }
 }
 

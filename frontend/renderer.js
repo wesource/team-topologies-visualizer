@@ -58,17 +58,17 @@ export function draw(state) {
         drawPlatformGroupings(state.ctx, platformGroupings);
     }
 
-    // Skip standard team drawing in product-lines and value-streams perspectives
+    // Skip standard team drawing in product-lines and business-streams perspectives
     // (teams are already rendered inside their respective containers)
-    if (state.currentView === 'current' && (state.currentPerspective === 'product-lines' || state.currentPerspective === 'value-streams')) {
+    if (state.currentView === 'current' && (state.currentPerspective === 'product-lines' || state.currentPerspective === 'business-streams')) {
         // Draw connections if enabled (use appropriate position map)
         if (state.showConnections) {
-            const positionMap = state.currentPerspective === 'value-streams'
-                ? state.valueStreamsTeamPositions
+            const positionMap = state.currentPerspective === 'business-streams'
+                ? state.businessStreamsTeamPositions
                 : state.productLinesTeamPositions;
             drawConnections(state.ctx, teamsToRender, state.currentView, state.showInteractionModes, state.currentPerspective, positionMap, state.focusedTeam, state.focusedConnections);
         }
-        // Product lines and value streams views handle team rendering - skip standard team drawing
+        // Product lines and business streams views handle team rendering - skip standard team drawing
     } else {
         // Draw connections first (only if enabled in current view)
         if (!(state.currentView === 'current' && !state.showConnections)) {

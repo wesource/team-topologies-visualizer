@@ -650,5 +650,3 @@ describe('renderBusinessStreamsView', () => {
     });
 });
 
-
-

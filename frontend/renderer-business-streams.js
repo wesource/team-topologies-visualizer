@@ -26,6 +26,7 @@ const LAYOUT = {
  * Render Business Streams view with nested Product sections
  */
 export function renderBusinessStreamsView(ctx, data) {
+    console.log('🌊 renderBusinessStreamsView called with data:', data);
     const { business_streams, products_without_business_stream, ungrouped_teams, teams } = data;
 
     // Clear position tracking map

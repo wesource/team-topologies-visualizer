@@ -659,6 +659,55 @@ function drawTeamName(ctx, team, x, y, width, height, wrapText) {
 }
 
 /**
+ * Calculate intersection point between a line and a rectangle edge
+ * @param {number} centerX - Center X of rectangle
+ * @param {number} centerY - Center Y of rectangle
+ * @param {number} width - Width of rectangle
+ * @param {number} height - Height of rectangle
+ * @param {number} angle - Angle of line from center (in radians)
+ * @returns {{x: number, y: number}} - Intersection point on rectangle edge
+ */
+function getBoxEdgePoint(centerX, centerY, width, height, angle) {
+    // Calculate which edge the line intersects based on angle
+    const halfWidth = width / 2;
+    const halfHeight = height / 2;
+
+    // Calculate intersection with each edge
+    const tanAngle = Math.tan(angle);
+
+    // Check right edge (angle between -π/2 and π/2, roughly)
+    if (Math.abs(Math.cos(angle)) > Math.abs(Math.sin(angle))) {
+        if (Math.cos(angle) > 0) {
+            // Right edge
+            return {
+                x: centerX + halfWidth,
+                y: centerY + halfWidth * tanAngle
+            };
+        } else {
+            // Left edge
+            return {
+                x: centerX - halfWidth,
+                y: centerY - halfWidth * tanAngle
+            };
+        }
+    } else {
+        if (Math.sin(angle) > 0) {
+            // Bottom edge
+            return {
+                x: centerX + halfHeight / tanAngle,
+                y: centerY + halfHeight
+            };
+        } else {
+            // Top edge
+            return {
+                x: centerX - halfHeight / tanAngle,
+                y: centerY - halfHeight
+            };
+        }
+    }
+}
+
+/**
  * Draw connection lines between teams (dependencies or interaction modes)
  * @param {CanvasRenderingContext2D} ctx - Canvas 2D context
  * @param {Array<Object>} teams - Array of all team objects
@@ -711,52 +760,67 @@ function drawConnection(ctx, from, to, mode, currentView = 'current', currentPer
     }
     ctx.globalAlpha = opacity;
 
-    let fromX, fromY, toX, toY;
+    let fromCenterX, fromCenterY, toCenterX, toCenterY;
+    let fromWidth, fromHeight, toWidth, toHeight;
 
-    // Use custom positions if in product-lines or value-streams perspective
-    if (currentView === 'current' && (currentPerspective === 'product-lines' || currentPerspective === 'value-streams') && customTeamPositions) {
+    // Use custom positions if in product-lines or business-streams perspective
+    if (currentView === 'current' && (currentPerspective === 'product-lines' || currentPerspective === 'business-streams') && customTeamPositions) {
         const fromBounds = customTeamPositions.get(from.name);
         const toBounds = customTeamPositions.get(to.name);
 
         if (fromBounds && toBounds) {
-            fromX = fromBounds.x + fromBounds.width / 2;
-            fromY = fromBounds.y + fromBounds.height / 2;
-            toX = toBounds.x + toBounds.width / 2;
-            toY = toBounds.y + toBounds.height / 2;
+            fromWidth = fromBounds.width || 120;
+            fromHeight = fromBounds.height || 50;
+            toWidth = toBounds.width || 120;
+            toHeight = toBounds.height || 50;
+            fromCenterX = fromBounds.x + fromWidth / 2;
+            fromCenterY = fromBounds.y + fromHeight / 2;
+            toCenterX = toBounds.x + toWidth / 2;
+            toCenterY = toBounds.y + toHeight / 2;
         } else {
             // Fall back to standard positions if not found
-            const fromWidth = getTeamBoxWidth(from, currentView);
-            const toWidth = getTeamBoxWidth(to, currentView);
-            fromX = from.position.x + fromWidth / 2;
-            fromY = from.position.y + LAYOUT.TEAM_BOX_HEIGHT / 2;
-            toX = to.position.x + toWidth / 2;
-            toY = to.position.y + LAYOUT.TEAM_BOX_HEIGHT / 2;
+            fromWidth = getTeamBoxWidth(from, currentView);
+            toWidth = getTeamBoxWidth(to, currentView);
+            fromHeight = LAYOUT.TEAM_BOX_HEIGHT;
+            toHeight = LAYOUT.TEAM_BOX_HEIGHT;
+            fromCenterX = from.position.x + fromWidth / 2;
+            fromCenterY = from.position.y + fromHeight / 2;
+            toCenterX = to.position.x + toWidth / 2;
+            toCenterY = to.position.y + toHeight / 2;
         }
     } else {
         // Calculate center points dynamically based on team box width
-        const fromWidth = getTeamBoxWidth(from, currentView);
-        const toWidth = getTeamBoxWidth(to, currentView);
-        fromX = from.position.x + fromWidth / 2;
-        fromY = from.position.y + LAYOUT.TEAM_BOX_HEIGHT / 2;
-        toX = to.position.x + toWidth / 2;
-        toY = to.position.y + LAYOUT.TEAM_BOX_HEIGHT / 2;
+        fromWidth = getTeamBoxWidth(from, currentView);
+        toWidth = getTeamBoxWidth(to, currentView);
+        fromHeight = LAYOUT.TEAM_BOX_HEIGHT;
+        toHeight = LAYOUT.TEAM_BOX_HEIGHT;
+        fromCenterX = from.position.x + fromWidth / 2;
+        fromCenterY = from.position.y + fromHeight / 2;
+        toCenterX = to.position.x + toWidth / 2;
+        toCenterY = to.position.y + toHeight / 2;
     }
+
+    // Calculate angle between centers
+    const angle = Math.atan2(toCenterY - fromCenterY, toCenterX - fromCenterX);
+
+    // Calculate edge intersection points instead of centers
+    const fromEdge = getBoxEdgePoint(fromCenterX, fromCenterY, fromWidth, fromHeight, angle);
+    const toEdge = getBoxEdgePoint(toCenterX, toCenterY, toWidth, toHeight, angle + Math.PI); // Opposite direction
 
     ctx.strokeStyle = style.color;
     ctx.lineWidth = style.width + lineWidthBoost;
     ctx.setLineDash(style.dash);
     ctx.beginPath();
-    ctx.moveTo(fromX, fromY);
-    ctx.lineTo(toX, toY);
+    ctx.moveTo(fromEdge.x, fromEdge.y);
+    ctx.lineTo(toEdge.x, toEdge.y);
     ctx.stroke();
-    // Arrow
-    const angle = Math.atan2(toY - fromY, toX - fromX);
+    // Arrow at edge point
     const arrowLength = 10;
     ctx.beginPath();
-    ctx.moveTo(toX, toY);
-    ctx.lineTo(toX - arrowLength * Math.cos(angle - Math.PI / 6), toY - arrowLength * Math.sin(angle - Math.PI / 6));
-    ctx.moveTo(toX, toY);
-    ctx.lineTo(toX - arrowLength * Math.cos(angle + Math.PI / 6), toY - arrowLength * Math.sin(angle + Math.PI / 6));
+    ctx.moveTo(toEdge.x, toEdge.y);
+    ctx.lineTo(toEdge.x - arrowLength * Math.cos(angle - Math.PI / 6), toEdge.y - arrowLength * Math.sin(angle - Math.PI / 6));
+    ctx.moveTo(toEdge.x, toEdge.y);
+    ctx.lineTo(toEdge.x - arrowLength * Math.cos(angle + Math.PI / 6), toEdge.y - arrowLength * Math.sin(angle + Math.PI / 6));
     ctx.stroke();
     ctx.setLineDash([]);
     ctx.globalAlpha = 1.0; // Reset
@@ -776,46 +840,55 @@ function drawActualCommsConnection(ctx, from, to, currentView = 'current', curre
     }
     ctx.globalAlpha = opacity;
     // Current State view: simple bidirectional fat arrow called "Actual Comms"
-    let fromX, fromY, toX, toY;
+    let fromCenterX, fromCenterY, toCenterX, toCenterY;
+    let fromWidth, fromHeight, toWidth, toHeight;
 
-    // Use custom positions if in product-lines or value-streams perspective
-    if (currentView === 'current' && (currentPerspective === 'product-lines' || currentPerspective === 'value-streams') && customTeamPositions) {
+    // Use custom positions if in product-lines or business-streams perspective
+    if (currentView === 'current' && (currentPerspective === 'product-lines' || currentPerspective === 'business-streams') && customTeamPositions) {
         const fromPos = customTeamPositions.get(from.name);
         const toPos = customTeamPositions.get(to.name);
 
         if (fromPos && toPos) {
-            fromX = fromPos.x + (fromPos.width || 120) / 2;
-            fromY = fromPos.y + (fromPos.height || 50) / 2;
-            toX = toPos.x + (toPos.width || 120) / 2;
-            toY = toPos.y + (toPos.height || 50) / 2;
+            fromWidth = fromPos.width || 120;
+            fromHeight = fromPos.height || 50;
+            toWidth = toPos.width || 120;
+            toHeight = toPos.height || 50;
+            fromCenterX = fromPos.x + fromWidth / 2;
+            fromCenterY = fromPos.y + fromHeight / 2;
+            toCenterX = toPos.x + toWidth / 2;
+            toCenterY = toPos.y + toHeight / 2;
         } else {
             // Fall back to standard positions
-            const fromWidth = getTeamBoxWidth(from, currentView);
-            const toWidth = getTeamBoxWidth(to, currentView);
-            fromX = from.position.x + fromWidth / 2;
-            fromY = from.position.y + LAYOUT.TEAM_BOX_HEIGHT / 2;
-            toX = to.position.x + toWidth / 2;
-            toY = to.position.y + LAYOUT.TEAM_BOX_HEIGHT / 2;
+            fromWidth = getTeamBoxWidth(from, currentView);
+            toWidth = getTeamBoxWidth(to, currentView);
+            fromHeight = LAYOUT.TEAM_BOX_HEIGHT;
+            toHeight = LAYOUT.TEAM_BOX_HEIGHT;
+            fromCenterX = from.position.x + fromWidth / 2;
+            fromCenterY = from.position.y + fromHeight / 2;
+            toCenterX = to.position.x + toWidth / 2;
+            toCenterY = to.position.y + toHeight / 2;
         }
     } else {
-        const fromWidth = getTeamBoxWidth(from, currentView);
-        const toWidth = getTeamBoxWidth(to, currentView);
-        fromX = from.position.x + fromWidth / 2;
-        fromY = from.position.y + LAYOUT.TEAM_BOX_HEIGHT / 2;
-        toX = to.position.x + toWidth / 2;
-        toY = to.position.y + LAYOUT.TEAM_BOX_HEIGHT / 2;
+        fromWidth = getTeamBoxWidth(from, currentView);
+        toWidth = getTeamBoxWidth(to, currentView);
+        fromHeight = LAYOUT.TEAM_BOX_HEIGHT;
+        toHeight = LAYOUT.TEAM_BOX_HEIGHT;
+        fromCenterX = from.position.x + fromWidth / 2;
+        fromCenterY = from.position.y + fromHeight / 2;
+        toCenterX = to.position.x + toWidth / 2;
+        toCenterY = to.position.y + toHeight / 2;
     }
 
-    const angle = Math.atan2(toY - fromY, toX - fromX);
+    // Calculate angle between centers
+    const angle = Math.atan2(toCenterY - fromCenterY, toCenterX - fromCenterX);
+
+    // Calculate edge intersection points instead of centers
+    const fromEdge = getBoxEdgePoint(fromCenterX, fromCenterY, fromWidth, fromHeight, angle);
+    const toEdge = getBoxEdgePoint(toCenterX, toCenterY, toWidth, toHeight, angle + Math.PI); // Opposite direction
+
     const arrowLength = 20;
 
-    // Shorten the line so it doesn't overlap with arrows
-    const shortenBy = arrowLength + 2;
-    const lineFromX = fromX + shortenBy * Math.cos(angle);
-    const lineFromY = fromY + shortenBy * Math.sin(angle);
-    const lineToX = toX - shortenBy * Math.cos(angle);
-    const lineToY = toY - shortenBy * Math.sin(angle);
-
+    // Draw line from edge to edge (no need to shorten anymore!)
     ctx.save(); // Save context state
 
     // Fat gray line (realistic, not TT-designed)
@@ -823,29 +896,29 @@ function drawActualCommsConnection(ctx, from, to, currentView = 'current', curre
     ctx.lineWidth = 4 + lineWidthBoost;
     ctx.setLineDash([]);
     ctx.beginPath();
-    ctx.moveTo(lineFromX, lineFromY);
-    ctx.lineTo(lineToX, lineToY);
+    ctx.moveTo(fromEdge.x, fromEdge.y);
+    ctx.lineTo(toEdge.x, toEdge.y);
     ctx.stroke();
 
-    // Draw arrows ON TOP of line for visibility
+    // Draw arrows at edge points
     ctx.fillStyle = '#666666';
     ctx.strokeStyle = '#666666';
     ctx.lineWidth = 1;
 
     // Filled arrow triangle at 'to' end
     ctx.beginPath();
-    ctx.moveTo(toX, toY);
-    ctx.lineTo(toX - arrowLength * Math.cos(angle - Math.PI / 6), toY - arrowLength * Math.sin(angle - Math.PI / 6));
-    ctx.lineTo(toX - arrowLength * Math.cos(angle + Math.PI / 6), toY - arrowLength * Math.sin(angle + Math.PI / 6));
+    ctx.moveTo(toEdge.x, toEdge.y);
+    ctx.lineTo(toEdge.x - arrowLength * Math.cos(angle - Math.PI / 6), toEdge.y - arrowLength * Math.sin(angle - Math.PI / 6));
+    ctx.lineTo(toEdge.x - arrowLength * Math.cos(angle + Math.PI / 6), toEdge.y - arrowLength * Math.sin(angle + Math.PI / 6));
     ctx.closePath();
     ctx.fill();
     ctx.stroke();
 
     // Filled arrow triangle at 'from' end (opposite direction)
     ctx.beginPath();
-    ctx.moveTo(fromX, fromY);
-    ctx.lineTo(fromX + arrowLength * Math.cos(angle - Math.PI / 6), fromY + arrowLength * Math.sin(angle - Math.PI / 6));
-    ctx.lineTo(fromX + arrowLength * Math.cos(angle + Math.PI / 6), fromY + arrowLength * Math.sin(angle + Math.PI / 6));
+    ctx.moveTo(fromEdge.x, fromEdge.y);
+    ctx.lineTo(fromEdge.x + arrowLength * Math.cos(angle - Math.PI / 6), fromEdge.y + arrowLength * Math.sin(angle - Math.PI / 6));
+    ctx.lineTo(fromEdge.x + arrowLength * Math.cos(angle + Math.PI / 6), fromEdge.y + arrowLength * Math.sin(angle + Math.PI / 6));
     ctx.closePath();
     ctx.fill();
     ctx.stroke();

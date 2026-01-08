@@ -156,7 +156,7 @@ export async function handlePerspectiveChange(e, draw) {
     const teamTypeBadgesLabel = document.getElementById('teamTypeBadgesLabel');
     const cognitiveLoadBadgesDivider = document.getElementById('cognitiveLoadBadgesDivider');
     if (teamTypeBadgesLabel && cognitiveLoadBadgesDivider) {
-        // Always show in Pre-TT view (hierarchy, product-lines, value-streams)
+        // Always show in Pre-TT view (hierarchy, product-lines, business-streams)
         teamTypeBadgesLabel.style.display = 'flex';
         cognitiveLoadBadgesDivider.style.display = 'block';
     }
@@ -164,7 +164,7 @@ export async function handlePerspectiveChange(e, draw) {
     // Show/hide and enable/disable auto-align based on perspective
     const autoAlignBtn = document.getElementById('autoAlignBtn');
     if (autoAlignBtn) {
-        if (state.currentPerspective === 'product-lines' || state.currentPerspective === 'value-streams') {
+        if (state.currentPerspective === 'product-lines' || state.currentPerspective === 'business-streams') {
             autoAlignBtn.disabled = true;
             autoAlignBtn.style.opacity = '0.5';
             autoAlignBtn.style.cursor = 'not-allowed';
