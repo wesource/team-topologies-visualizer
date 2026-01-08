@@ -14,7 +14,7 @@ A web application with dual visualization of organizational team structures. Vis
     <img src="tests/tests/screenshots/tt-vision-view.png" alt="TT Design View" width="45%" />
   </a>
   <br/>
-  <em>Pre-TT (org hierarchy) and TT Design (value streams & platform groupings)</em>
+  <em>Baseline (org hierarchy) and TT Design (value streams & platform groupings)</em>
 </div>
 
 ## Quick Start
@@ -96,11 +96,11 @@ This tool provides dual visualizations to make these conversations easier.
 
 - 📊 **Interactive Canvas** - Drag-and-drop teams, zoom (Ctrl+/- or mouse wheel), pan (right-click drag), fit-to-view (Ctrl+0)
 - 🔍 **Search & Filter** - Instant team search (Esc to clear), multi-select filters for value streams and platform groupings (TT Design view)
-- 🔄 **Dual Views** - Toggle between "Pre-TT" and "TT Design" (TT Design is default)
-- 🎭 **Multiple Pre-TT Perspectives** - Visualize current state three ways:
+- 🔄 **Dual Views** - Toggle between "Baseline" and "TT Design" (TT Design is default)
+- 🎭 **Multiple Baseline Perspectives** - Visualize current state three ways:
   - **📊 Hierarchy**: Traditional org chart with line managers and departments
   - **🏭 Product Lines**: Hybrid layout with vertical product lanes + horizontal shared teams
-  - **🌊 Value Streams**: Swimlane visualization showing teams grouped by value stream
+  - **🌊 Business Streams**: Swimlane visualization showing teams grouped by business value streams
 - 📝 **Git-Friendly Storage** - Teams stored as markdown files with YAML front matter (structured metadata at the top of files between `---` delimiters, followed by markdown content)
 - ✅ **File Validation** - "✓ Validate Files" button checks for YAML errors, missing fields, filename mismatches, team size issues, and more
 - 🎨 **Customizable Team Types** - Define your own team classifications and colors via JSON config
@@ -108,7 +108,7 @@ This tool provides dual visualizations to make these conversations easier.
 - 📐 **Book-Accurate Team Shapes** (TT Design view) - Stream-aligned and Platform teams render as wide horizontal boxes (~80% of grouping width) matching Team Topologies book visualizations, stacking vertically to show flow alignment
 - ⚡ **Auto-align Teams** - One-click alignment for both views:
   - **TT Design**: Organize teams within value stream and platform groupings with book-accurate shapes
-  - **Pre-TT**: Align teams under line managers in org-chart layout
+  - **Baseline**: Align teams under line managers in org-chart layout
 - 🎯 **Fractal Groupings** (TT 2nd edition) - Visual grouping of teams into Value Stream Groupings and Platform Groupings for team-of-teams patterns. Platform grouping boxes now always render and dynamically resize, even when teams are dragged far apart.
 - 👥 **Platform Consumer Dashboard** - Identify bottlenecks and adoption patterns (TT Design view only):
   - Badge on canvas showing consumer count (e.g., "👥 12")
@@ -132,13 +132,13 @@ This tool provides dual visualizations to make these conversations easier.
   - Click same team or empty canvas to exit
   - Press Escape to exit focus mode
   - Badge indicator shows focused team name
-  - Works in both TT Design and Pre-TT views
+  - Works in both TT Design and Baseline views
 - 🔍 **Team Details** - Double-click for full team information with rendered markdown
 - 📋 **Team API Compatible** - Uses Team Topologies Team API template format
 - 📥 **SVG Export** - Export visualizations to SVG for presentations and documentation (respects connection visibility settings)
 - 👁️ **Connection Toggles** - Control visual complexity:
   - **TT Design**: Show/hide interaction mode lines (shown by default, toggle off to reduce clutter)
-  - **Pre-TT**: Show/hide communication lines (hidden by default for cleaner org-chart view)
+  - **Baseline**: Show/hide communication lines (hidden by default for cleaner org-chart view)
 - 🔄 **Refresh** - Reload all team files and configurations without losing canvas position
 
 ## Design Philosophy
@@ -157,6 +157,16 @@ This tool provides dual visualizations to make these conversations easier.
 - Minimal dependencies (FastAPI, PyYAML, Markdown)
 - Easy to fork and adapt for your organization
 - Configurable team types and colors via JSON
+
+### View Naming: Why "Baseline" and "TT Design"?
+
+The tool uses two primary views:
+
+- **"Baseline"** (not "Current State" or "Pre-TT"): Represents your organization's structure as it exists - whether before, during, or after TT adoption. This view remains useful even after years of TT transformation, as it shows reality vs. your evolving design. The term "baseline" emphasizes it's a reference point for comparison, not a temporary "before" snapshot.
+
+- **"TT Design"**: Your Team Topologies design - a living, evolving view that improves over time. This isn't a fixed "target state" or "final vision", but rather your current TT design that you continuously refine. Organizations may iterate on this view for years, adjusting team boundaries, interaction modes, and groupings as they learn.
+
+- **"Business Streams"** (in Baseline view): Shows how teams align to business value streams in your current organization. We use "Business Streams" instead of "Value Streams" to distinguish it from TT Design's "Value Stream Groupings" - the former shows current business alignment, the latter shows your deliberate TT design pattern.
 
 ## Project Structure
 
@@ -447,7 +457,7 @@ metadata:
   line_manager: Rachel Martinez   # Reports to (org hierarchy)
   established: 2018-06
   cognitive_load: very-high
-value_stream: B2B Fleet Management # Groups in Value Streams view
+value_stream: B2B Fleet Management # Groups in Business Streams view
 ---
 
 # Team description in markdown...

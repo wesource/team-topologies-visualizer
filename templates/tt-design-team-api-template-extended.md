@@ -9,7 +9,7 @@ position:
 metadata:
   size: 7  # Number of people on the team (5-9 recommended)
   cognitive_load: medium  # low | medium | high | very-high
-  established: 2024-01  # YYYY-MM format (when team was formed)
+  established: 2024-01  # YYYY-MM format - shows team age/maturity in modal
   flow_metrics:  # Optional: DORA metrics for team performance
     lead_time_days: 10  # Median days from commit to production
     deployment_frequency: weekly  # daily | weekly | monthly | quarterly

@@ -156,265 +156,45 @@ Update base line widths in `INTERACTION_STYLES` constant:
 
 **Note**: Phases 1 & 2 are complete ✅ - See "COMPLETED" section above for implementation details.
 
-**Phase 3 Goals
+**Goals**: Aggregate team-level metrics to show value stream bottlenecks.
 
-**Why This Matters**:
-Team Topologies is ultimately about **accelerating flow of change**, not just reorganizing boxes. Without flow metrics, this tool shows *where teams sit* but not *how well they deliver*. Organizations need to answer: "Is our TT transformation actually improving delivery speed?"
-
-**The Critical Question**: "Which value stream has the longest lead time? Where are the bottlenecks? Are we getting faster?"
-
-**Current State**:
-- Tool visualizes team structure (types, interactions, groupings)
-- No visibility into delivery performance (lead time, deployment frequency, reliability)
-- Can't track whether TT transformation improves outcomes
-- Organizations struggle to justify transformation investment without metrics
-
-**Proposed Solution (Phased Approach)**:
-
-Add optional flow metrics to team YAML (based on DORA metrics):
-```yaml
-metadata:
-  flow_metrics:
-    lead_time_days: 14              # Median time from commit to production
-    deployment_frequency: daily      # daily, weekly, monthly, quarterly
-    change_fail_rate: 0.05          # 5% (0.0 to 1.0)
-    mttr_hours: 2                   # Mean time to recovery
-```
-
-**Phase 1: Backend + Modal Display (Week 1-2) - 8-12 hours**
-
-Start simple: Parse metrics and show in team detail modal. No canvas changes yet.
+**Why This Matters**: With team-level metrics now visible (Phases 1 & 2 complete ✅), next step is aggregating to value stream level to identify system bottlenecks.
 
 **Tasks**:
-- [ ] Backend: Update `backend/services.py` to parse `flow_metrics` from YAML
-- [ ] Backend: Add `flow_metrics` field to `TeamData` Pydantic model
-- [ ] Backend: Add validation for metric values (lead_time >= 0, change_fail_rate 0.0-1.0, etc.)
-- [ ] Frontend: Update team detail modal to show metrics section:
-  ```
-  📊 Flow Metrics
-  ─────────────────────────────────────
-  Lead Time: 14 days
-  Deployment Frequency: Daily
-  Change Fail Rate: 5% ✅
-  MTTR: 2 hours
-  ```
-- [ ] Add warning emoji (⚠️) for concerning values:
-  - Lead time >30 days: ⚠️ "Slow delivery - aim for <14 days"
-  - Change fail rate >15%: ⚠️ "High risk - aim for <15%"
-  - Deployment frequency <weekly: ⚠️ "Infrequent deployments - aim for daily"
-  - MTTR >4 hours: ⚠️ "Slow recovery - aim for <2 hours"
-- [ ] Test: Add example flow metrics to 3-4 teams (good, medium, poor)
-- [ ] Test: Backend unit tests for metric parsing and validation
-- [ ] Test: Frontend test for modal rendering with metrics
-- [ ] Documentation: Update team markdown templates with flow_metrics example
-
-**Success Criteria (Phase 1)**:
-- Double-click team → see flow metrics in modal
-- Warning emojis appear for poor values
-- Metrics optional (teams without metrics show "No metrics available")
-- Backend validation prevents invalid values (negative days, >100% fail rate)
-
-**Phase 2: Optional Canvas Overlay (Week 3) - 4-6 hours**
-
-Add opt-in visualization on canvas. Default OFF to avoid clutter.
-
-**Tasks**:
-- [ ] UI: Add "📊 Show Metrics" checkbox in toolbar (default unchecked)
-- [ ] State: Add `showFlowMetrics` boolean to state management
-- [ ] Renderer: When enabled, show small metrics box on each team card:
-  ```
-  ┌─────────────────┐
-  │ Team Name       │
-  │ Stream-aligned  │
-  ├─────────────────┤  ← Metrics box (only if checkbox enabled)
-  │ 📊 14d ⚠️ 18%   │  ← Lead time + change fail rate with warning
-  └─────────────────┘
-  ```
-- [ ] Color-code metric box background:
-  - 🟢 Green: All metrics good (lead time <14d, fail rate <10%, daily deploys, MTTR <2h)
-  - 🟡 Yellow: Some concerns (lead time 14-30d, fail rate 10-15%, weekly deploys, MTTR 2-4h)
-  - 🔴 Red: Needs attention (lead time >30d, fail rate >15%, monthly deploys, MTTR >4h)
-- [ ] Show compact format: "📊 14d 🟢" (lead time + overall health indicator)
-- [ ] Hover over metrics box → tooltip with full details
-- [ ] Test: Canvas rendering with metrics overlay
-- [ ] Test: Checkbox toggle works correctly
-- [ ] Test: Metrics box positions correctly on different team sizes
-- [ ] Documentation: Update user guide with metrics overlay feature
-
-**Success Criteria (Phase 2)**:
-- Checkbox toggles metrics visibility on/off
-- Metrics box appears below team name (doesn't obscure team info)
-- Color coding instantly shows team health (green/yellow/red)
-- Compact format works at all zoom levels
-- Performance remains smooth with 40+ teams
-
-**Phase 3: Value Stream Aggregation (Future - 8-12 hours)**
-
-Aggregate metrics at value stream level. Show bottleneck value streams.
-
-**Tasks (deferred to future sprint)**:
 - [ ] Calculate average/median metrics per value stream
 - [ ] Show aggregated metrics on value stream grouping boxes
-- [ ] Highlight slowest value stream in red
-- [ ] Comparison view: Show metric changes between snapshots ("Lead time improved from 21d to 14d")
-- [ ] Export: Include metrics in SVG export
-- [ ] API: Add endpoint to retrieve aggregated metrics per value stream
-
-**Technical Details**:
-
-**Backend Changes** (`backend/services.py`):
-```python
-def parse_team_file(file_path: Path) -> TeamData:
-    # ... existing parsing
-    metadata = data.get('metadata', {}) or {}
-    
-    # Parse flow metrics
-    if 'flow_metrics' in metadata:
-        flow_metrics = metadata['flow_metrics']
-        # Validate
-        if 'lead_time_days' in flow_metrics:
-            assert flow_metrics['lead_time_days'] >= 0, "Lead time must be non-negative"
-        if 'change_fail_rate' in flow_metrics:
-            assert 0 <= flow_metrics['change_fail_rate'] <= 1.0, "Fail rate must be 0.0-1.0"
-        data['flow_metrics'] = flow_metrics
-```
-
-**Frontend Modal Updates** (`frontend/modals.js`):
-```javascript
-function renderFlowMetrics(team) {
-    if (!team.flow_metrics) {
-        return '<p><em>No flow metrics available</em></p>';
-    }
-    
-    const metrics = team.flow_metrics;
-    let html = '<h3>📊 Flow Metrics</h3><div class="flow-metrics">';
-    
-    // Lead time
-    if (metrics.lead_time_days !== undefined) {
-        const warning = metrics.lead_time_days > 30 ? ' ⚠️ Slow delivery' : '';
-        html += `<div>Lead Time: ${metrics.lead_time_days} days${warning}</div>`;
-    }
-    
-    // Deployment frequency
-    if (metrics.deployment_frequency) {
-        const warning = metrics.deployment_frequency === 'monthly' || 
-                       metrics.deployment_frequency === 'quarterly' ? ' ⚠️ Infrequent' : '';
-        html += `<div>Deployment Frequency: ${metrics.deployment_frequency}${warning}</div>`;
-    }
-    
-    // Change fail rate
-    if (metrics.change_fail_rate !== undefined) {
-        const percentage = (metrics.change_fail_rate * 100).toFixed(1);
-        const warning = metrics.change_fail_rate > 0.15 ? ' ⚠️ High risk' : ' ✅';
-        html += `<div>Change Fail Rate: ${percentage}%${warning}</div>`;
-    }
-    
-    // MTTR
-    if (metrics.mttr_hours !== undefined) {
-        const warning = metrics.mttr_hours > 4 ? ' ⚠️ Slow recovery' : '';
-        html += `<div>MTTR: ${metrics.mttr_hours} hours${warning}</div>`;
-    }
-    
-    html += '</div>';
-    return html;
-}
-```
-
-**Related Files**:
-- `backend/services.py` - YAML parsing
-- `backend/models.py` - Pydantic model with flow_metrics field
-- `frontend/modals.js` - Team detail modal rendering
-- `frontend/renderer.js` - Canvas overlay (Phase 2)
-- `frontend/state-management.js` - showFlowMetrics checkbox state
-- `templates/tt-design-team-api-template-*.md` - Example metrics in template
-
-**Example Team Markdown** (for testing):
-```yaml
----
-name: E-commerce Checkout Team
-team_type: stream-aligned
-value_stream: E-commerce Experience
-metadata:
-  size: 7
-  cognitive_load: medium
-  flow_metrics:
-    lead_time_days: 3
-    deployment_frequency: daily
-    change_fail_rate: 0.02
-    mttr_hours: 1
----
-# Fast-flowing team with excellent metrics
-```
-
-**Why This Is Critical**:
-Without flow metrics, the tool is just a fancy org chart. **With metrics**, it becomes a transformation dashboard showing:
-- Which teams are fast vs slow
-- Which value streams are bottlenecks
-- Whether TT changes actually improve delivery
-- Data to justify transformation investment to executives
-
-This is the **#1 gap** identified by expert analysis. It transforms the tool from "visualize structure" to "measure outcomes."
-
----
-
-### Line Thickness by Interaction Mode ⭐⭐⭐⭐⭐ HIGHEST - QUICK WIN
-**Impact**: HIGH (visual clarity) | **Effort**: 1-2 hours | **Priority**: 🥇 START HERE | **Added**: 2026-01-07
-
-**Why This Matters**:
-Canvas becomes cluttered with 20+ teams showing all interaction modes. Visual hierarchy helps users distinguish between different relationship types at a glance. High-touch collaboration should be more prominent than lightweight facilitating.
-
-**Current State**:
-- All interaction mode lines use same thickness
-- Harder to distinguish importance/intensity of relationships
-- Visual noise when many teams visible
-
-**Proposed Solution**:
-- **Collaboration** = 2px thick (solid purple) - High touch, temporary, needs attention
-- **X-as-a-Service** = 1px medium (dashed black) - Standard operational relationship
-- **Facilitating** = 0.5px thin (dotted green) - Lightweight coaching
-
-**Technical Implementation**:
-1. Update `renderer.js` (or `renderer-common.js`) line drawing logic:
-   ```javascript
-   function drawInteractionLine(ctx, from, to, mode) {
-     // Set line width based on interaction mode
-     if (mode === 'collaboration') {
-       ctx.lineWidth = 2;
-       ctx.strokeStyle = COLLABORATION_COLOR;
-       ctx.setLineDash([]);  // Solid
-     } else if (mode === 'x-as-a-service') {
-       ctx.lineWidth = 1;
-       ctx.strokeStyle = XAAS_COLOR;
-       ctx.setLineDash([5, 5]);  // Dashed
-     } else if (mode === 'facilitating') {
-       ctx.lineWidth = 0.5;
-       ctx.strokeStyle = FACILITATING_COLOR;
-       ctx.setLineDash([2, 3]);  // Dotted
-     }
-     // ... existing line drawing code
-   }
-   ```
-
-2. Update legend to show line thickness visually
-3. Test with different zoom levels to ensure visibility
-
-**Tasks**:
-- [ ] Update line drawing function in renderer to set `ctx.lineWidth` based on mode
-- [ ] Test at various zoom levels (ensure 0.5px visible when zoomed in)
-- [ ] Update legend to show thickness differences
-- [ ] Update documentation/screenshots showing new visual hierarchy
-- [ ] Add test case verifying line thickness is applied correctly
-
-**Related Files**:
-- `frontend/renderer.js` - Main rendering coordination
-- `frontend/renderer-common.js` - Shared line drawing utilities
-- `frontend/constants.js` - Color definitions
+- [ ] Highlight slowest value stream in red  
+- [ ] Comparison view: Show metric changes between snapshots
+- [ ] API: Add endpoint for aggregated metrics per value stream
 
 **Success Criteria**:
-- Collaboration lines clearly thicker than X-as-a-Service
-- Facilitating lines visible but subtle (don't dominate canvas)
-- Users can distinguish relationship types by thickness alone
-- Works well at all zoom levels (100%, 50%, 150%)
+- Value stream boxes show avg lead time and deployment frequency
+- Slowest value stream highlighted in red
+- Snapshot comparison shows "Lead time improved from 21d to 14d" badges
+
+---
+
+### Line Thickness by Interaction Mode ⭐⭐⭐⭐ HIGH - QUICK WIN
+**Impact**: MEDIUM (visual clarity) | **Effort**: 1-2 hours | **Priority**: 🥈 NEXT | **Added**: 2026-01-07
+
+**Why This Matters**: Visual hierarchy helps distinguish collaboration (high-touch) from facilitating (lightweight) at a glance.
+
+**Current State**: INTERACTION_STYLES constant exists with line widths (collaboration: 4px, x-as-a-service: 3px, facilitating: 2px).
+
+**What Needs Changing**: Adjust to more pronounced differences following expert recommendation:
+- Collaboration: 3px (currently 4px)
+- X-as-a-Service: 1.5px (currently 3px)  
+- Facilitating: 1px (currently 2px)
+
+**Tasks**:
+- [ ] Update INTERACTION_STYLES constant in [frontend/renderer-common.js](frontend/renderer-common.js) or [frontend/constants.js](frontend/constants.js)
+- [ ] Test at various zoom levels (ensure 1px visible when zoomed in)
+- [ ] Verify focus mode boost (+2px) still applies correctly
+- [ ] Update screenshots if needed
+
+**Related Files**: [frontend/renderer-common.js](frontend/renderer-common.js), [frontend/constants.js](frontend/constants.js)
+
+**Success Criteria**: Users can distinguish relationship types by thickness alone at standard zoom.
 
 ---
 
@@ -435,167 +215,6 @@ Canvas becomes cluttered with 20+ teams showing all interaction modes. Visual hi
 **User Value**:
 With 20-40 teams on canvas, users can now focus on one team's relationships without distraction. Focus mode provides middle ground: see structure but highlight specific team's network.
 
----
-**Impact**: HIGH (reduces cognitive load) | **Effort**: 4-6 hours | **Priority**: 🥇 START HERE | **Added**: 2026-01-07
-
-**Why This Matters**:
-With 20-40 teams on canvas, users need to focus on one team's relationships without distraction. Current "Show Interaction Modes" checkbox is all-or-nothing. Focus mode provides middle ground: see structure but highlight specific team's network.
-
-**User Story**:
-"As a transformation coach, I want to click a team and see only its direct relationships, so I can explain its dependencies without visual clutter from unrelated teams."
-
-**Current State**:
-- All teams always shown at 100% opacity
-- "Show Interaction Modes" checkbox controls all lines (binary: show all or none)
-- Hard to trace specific team's relationships in dense canvas
-
-**Proposed Solution**:
-- **Single-click** on team → enter focus mode:
-  - Selected team: 100% opacity (full color)
-  - Direct dependencies: 100% opacity (teams this team depends on)
-  - Direct consumers: 100% opacity (teams that depend on this team)
-  - Connection lines to/from focused team: 100% opacity
-  - All other teams: 20% opacity (dimmed/grayed)
-  - All other lines: 10% opacity (barely visible)
-- Click same team again (or empty canvas) → exit focus mode (restore all to 100%)
-- Works in both TT Design and Pre-TT views
-
-**Technical Implementation**:
-
-1. **State Management** (`frontend/state-management.js`):
-   ```javascript
-   export const state = {
-     // ... existing state
-     focusedTeam: null,              // Team object or null
-     focusedConnections: new Set(),  // Set of team names in focus network
-   };
-   ```
-
-2. **Canvas Interactions** (`frontend/canvas-interactions.js`):
-   ```javascript
-   function handleCanvasClick(e) {
-     const clickedTeam = getTeamAtPosition(x, y);
-     
-     if (clickedTeam) {
-       // Toggle focus mode
-       if (state.focusedTeam === clickedTeam) {
-         // Exit focus mode (clicked same team)
-         state.focusedTeam = null;
-         state.focusedConnections.clear();
-       } else {
-         // Enter focus mode
-         state.focusedTeam = clickedTeam;
-         state.focusedConnections = getDirectRelationships(clickedTeam);
-       }
-       draw(state);
-     } else {
-       // Clicked empty canvas - exit focus mode
-       if (state.focusedTeam) {
-         state.focusedTeam = null;
-         state.focusedConnections.clear();
-         draw(state);
-       }
-     }
-   }
-   
-   function getDirectRelationships(team) {
-     const connected = new Set([team.name]);
-     
-     // Add teams this team depends on
-     if (team.dependencies) {
-       team.dependencies.forEach(dep => connected.add(dep));
-     }
-     
-     // Add teams that depend on this team
-     state.teams.forEach(t => {
-       if (t.dependencies && t.dependencies.includes(team.name)) {
-         connected.add(t.name);
-       }
-     });
-     
-     return connected;
-   }
-   ```
-
-3. **Renderer Updates** (`frontend/renderer.js` or `renderer-common.js`):
-   ```javascript
-   function drawTeam(ctx, team) {
-     // Calculate opacity based on focus mode
-     let opacity = 1.0;
-     if (state.focusedTeam) {
-       if (state.focusedConnections.has(team.name)) {
-         opacity = 1.0;  // Full opacity for focused network
-       } else {
-         opacity = 0.2;  // Dimmed for unrelated teams
-       }
-     }
-     
-     // Apply opacity to team box
-     ctx.globalAlpha = opacity;
-     // ... existing team drawing code
-     ctx.globalAlpha = 1.0;  // Reset
-   }
-   
-   function drawInteractionLine(ctx, fromTeam, toTeam, mode) {
-     // Calculate opacity for lines
-     let opacity = 1.0;
-     if (state.focusedTeam) {
-       if (state.focusedConnections.has(fromTeam.name) && 
-           state.focusedConnections.has(toTeam.name)) {
-         opacity = 1.0;  // Full opacity for focused lines
-       } else {
-         opacity = 0.1;  // Nearly invisible for unrelated lines
-       }
-     }
-     
-     ctx.globalAlpha = opacity;
-     // ... existing line drawing code
-     ctx.globalAlpha = 1.0;  // Reset
-   }
-   ```
-
-4. **UI Indicator** (optional but recommended):
-   - Show small badge in toolbar when focus mode active: "👁️ Focus: [Team Name] (click to exit)"
-   - Helps users understand current state
-
-**Tasks**:
-- [ ] Add `focusedTeam` and `focusedConnections` to state management
-- [ ] Implement `getDirectRelationships()` helper function
-- [ ] Update click handler in `canvas-interactions.js` to toggle focus mode
-- [ ] Update team rendering to apply opacity based on focus state
-- [ ] Update line rendering to apply opacity based on focus state
-- [ ] Add visual indicator in toolbar showing focused team (optional)
-- [ ] Test with various team sizes (5 teams, 20 teams, 40 teams)
-- [ ] Test interaction with zoom/pan (ensure focus persists)
-- [ ] Add keyboard shortcut: Escape to exit focus mode
-- [ ] Update user documentation with focus mode instructions
-- [ ] Add E2E test for focus mode interaction
-
-**Edge Cases to Handle**:
-- Team with no dependencies (should just show team itself)
-- Orphaned team with no consumers (should just show team itself)
-- Focus mode + search filter (should they work together or be mutually exclusive?)
-- Focus mode + cognitive load overlay (both visual features - ensure readable)
-
-**Related Files**:
-- `frontend/state-management.js` - State structure
-- `frontend/canvas-interactions.js` - Click handling
-- `frontend/renderer.js` - Team rendering coordination
-- `frontend/renderer-common.js` - Shared drawing utilities
-
-**Success Criteria**:
-- Single click on team dims all unrelated teams to 20% opacity
-- Direct dependencies and consumers remain at 100% opacity
-- Connection lines appropriately dimmed/shown
-- Click same team or empty canvas exits focus mode
-- Performance remains smooth with 40+ teams
-- Works in both TT Design and Pre-TT views
-- Intuitive for first-time users (no tutorial needed)
-
-**Future Enhancements** (not in scope for this ticket):
-- Multi-team focus (Ctrl+click to add teams to focus set)
-- Focus on value stream grouping (show all teams in value stream)
-- Hover preview (temporary focus on hover, full focus on click)
 
 ---
 

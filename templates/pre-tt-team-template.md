@@ -8,13 +8,13 @@ position:  # Canvas position (auto-managed when dragging)
 
 # OPTIONAL FIELDS (but recommended for full visualization features)
 product_line: [Product Name]  # Groups teams in Product Lines view (e.g., DispatchHub, RouteOptix)
-value_stream: [Value Stream Name]  # Groups teams in Value Streams view (e.g., B2B Fleet Management, B2C Driver Experience)
+value_stream: [Value Stream Name]  # Groups teams in Business Streams view (e.g., B2B Fleet Management, B2C Driver Experience)
 dependencies: []  # Teams this team depends on - creates communication lines (e.g., [Database Team, API Framework Team])
 metadata:
   size: 7  # Number of team members - used for display and validation warnings
   department: [Department]  # e.g., Engineering, Product Management, Customer Solutions
   line_manager: [Manager Name]  # Direct reporting manager
-  established: 2024-01  # YYYY-MM format - shows team age/maturity in modal (planned feature)
+  established: 2024-01  # YYYY-MM format - shows team age/maturity in modal
   cognitive_load: medium  # low | medium | high | very-high - shows in visualization indicator
 ---
 

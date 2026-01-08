@@ -6,11 +6,11 @@ import { getPlatformGroupings } from './tt-platform-grouping.js';
 // SVG Export Module - Separated from runtime rendering
 // Converts current visualization state to downloadable SVG
 export function exportToSVG(state, organizationHierarchy, teams, teamColorMap, currentView, showInteractionModes = true) {
-    // Handle product-lines and value-streams perspectives
-    const isPreTTView = currentView === 'current';
-    const isProductLines = isPreTTView && state.currentPerspective === 'product-lines';
-    const isValueStreams = isPreTTView && state.currentPerspective === 'value-streams';
-    const isHierarchy = isPreTTView && state.currentPerspective === 'hierarchy';
+    // Handle product-lines and business-streams perspectives
+    const isBaselineView = currentView === 'current';
+    const isProductLines = isBaselineView && state.currentPerspective === 'product-lines';
+    const isBusinessStreams = isBaselineView && state.currentPerspective === 'value-streams';
+    const isHierarchy = isBaselineView && state.currentPerspective === 'hierarchy';
 
     let width = 2000;
     let height = 1500;
@@ -41,8 +41,8 @@ export function exportToSVG(state, organizationHierarchy, teams, teamColorMap, c
 `;
     if (currentView === 'current' && isProductLines && state.productLinesData) {
         svg += generateProductLinesSVG(state.productLinesData, teamColorMap);
-    } else if (currentView === 'current' && isValueStreams && state.valueStreamsData) {
-        svg += generateValueStreamsSVG(state.valueStreamsData, teamColorMap);
+    } else if (currentView === 'current' && isBusinessStreams && state.valueStreamsData) {
+        svg += generateBusinessStreamsSVG(state.valueStreamsData, teamColorMap);
     } else if (currentView === 'current' && organizationHierarchy) {
         svg += generateCurrentStateSVG(organizationHierarchy, teams, teamColorMap);
     } else {
@@ -613,7 +613,7 @@ function downloadSVG(svgContent, filename) {
     URL.revokeObjectURL(url);
 }
 
-function generateValueStreamsSVG(valueStreamsData, teamColorMap) {
+function generateBusinessStreamsSVG(valueStreamsData, teamColorMap) {
     let elements = '';
     if (!valueStreamsData || !valueStreamsData.value_streams) return elements;
 
@@ -632,7 +632,7 @@ function generateValueStreamsSVG(valueStreamsData, teamColorMap) {
     let currentY = 100;
 
     // Title
-    elements += `<text x="${startX}" y="${currentY - 40}" style="font-family: sans-serif; font-size: 24px; font-weight: bold; fill: #333;" text-anchor="start">Value Streams View</text>\n`;
+    elements += `<text x="${startX}" y="${currentY - 40}" style="font-family: sans-serif; font-size: 24px; font-weight: bold; fill: #333;" text-anchor="start">Business Streams View</text>\n`;
 
     // Calculate right column X position
     const rightColumnX = startX + VS_WIDTH + VS_SPACING;
