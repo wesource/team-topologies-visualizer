@@ -1,7 +1,7 @@
 // Canvas rendering coordination
 import { drawCurrentStateView } from './renderer-current.js';
 import { drawProductLinesView } from './renderer-product-lines.js';
-import { renderValueStreamsView } from './renderer-value-streams.js';
+import { renderBusinessStreamsView } from './renderer-business-streams.js';
 import { drawTeam, drawConnections, wrapText, drawValueStreamGroupings, drawPlatformGroupings } from './renderer-common.js';
 import { getValueStreamGroupings } from './tt-value-stream-grouping.js';
 import { getPlatformGroupings } from './tt-platform-grouping.js';
@@ -24,11 +24,11 @@ export function draw(state) {
     // Filter teams using new multi-select filter system
     const teamsToRender = getFilteredTeams();
 
-    // Draw Pre-TT views (hierarchy, product-lines, or value-streams)
+    // Draw Pre-TT views (hierarchy, product-lines, or business-streams)
     if (state.currentView === 'current') {
-        if (state.currentPerspective === 'value-streams' && state.valueStreamsData) {
-            // Value Streams View (nested layout)
-            renderValueStreamsView(state.ctx, state.valueStreamsData);
+        if (state.currentPerspective === 'business-streams' && state.businessStreamsData) {
+            // Business Streams View (nested layout)
+            renderBusinessStreamsView(state.ctx, state.businessStreamsData);
         } else if (state.currentPerspective === 'product-lines' && state.productLinesData) {
             // Product Lines View (hybrid layout)
             drawProductLinesView(

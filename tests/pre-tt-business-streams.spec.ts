@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 const BASE_URL = 'http://127.0.0.1:8000';
 
-test.describe('Pre-TT Value Streams View', () => {
+test.describe('Pre-TT Business Streams View', () => {
     test.beforeEach(async ({ page }) => {
         await page.goto(`${BASE_URL}/static/index.html`);
         // Wait for initial TT teams load
@@ -17,10 +17,10 @@ test.describe('Pre-TT Value Streams View', () => {
         await page.waitForTimeout(500);
     });
 
-    test('should switch to Value Streams perspective', async ({ page }) => {
-        // Switch to Value Streams perspective
-        const valueStreamsRadio = page.locator('input[type="radio"][value="value-streams"]');
-        await valueStreamsRadio.check();
+    test('should switch to Business Streams perspective', async ({ page }) => {
+        // Switch to Business Streams perspective
+        const businessStreamsRadio = page.locator('input[type="radio"][value="business-streams"]');
+        await businessStreamsRadio.check();
         await page.waitForTimeout(1000);
 
         // Verify canvas is visible
@@ -28,40 +28,40 @@ test.describe('Pre-TT Value Streams View', () => {
         await expect(canvas).toBeVisible();
 
         // Verify the perspective is active
-        await expect(valueStreamsRadio).toBeChecked();
+        await expect(businessStreamsRadio).toBeChecked();
     });
 
-    test('should load value streams data', async ({ page }) => {
+    test('should load Business Streams data', async ({ page }) => {
         // Listen for the API call
         const responsePromise = page.waitForResponse(
-            response => response.url().includes('/api/pre-tt/value-streams') && response.status() === 200
+            response => response.url().includes('/api/pre-tt/business-streams') && response.status() === 200
         );
 
-        // Switch to Value Streams perspective
-        const valueStreamsRadio = page.locator('input[type="radio"][value="value-streams"]');
-        await valueStreamsRadio.check();
+        // Switch to Business Streams perspective
+        const businessStreamsRadio = page.locator('input[type="radio"][value="business-streams"]');
+        await businessStreamsRadio.check();
 
         // Wait for API response
         const response = await responsePromise;
         const data = await response.json();
 
         // Verify data structure
-        expect(data).toHaveProperty('value_streams');
+        expect(data).toHaveProperty('business_streams');
         expect(data).toHaveProperty('products_without_value_stream');
         expect(data).toHaveProperty('ungrouped_teams');
-        expect(typeof data.value_streams).toBe('object');
+        expect(typeof data.business_streams).toBe('object');
         expect(Array.isArray(data.ungrouped_teams)).toBeTruthy();
     });
 
-    test('should render value stream swimlanes', async ({ page }) => {
-        // Switch to Value Streams perspective
-        const valueStreamsRadio = page.locator('input[type="radio"][value="value-streams"]');
-        await valueStreamsRadio.check();
+    test('should render Business Stream swimlanes', async ({ page }) => {
+        // Switch to Business Streams perspective
+        const businessStreamsRadio = page.locator('input[type="radio"][value="business-streams"]');
+        await businessStreamsRadio.check();
         await page.waitForTimeout(1500);
 
         // Take screenshot for visual verification
         await page.screenshot({
-            path: 'tests/screenshots/pre-tt-value-streams-view.png',
+            path: 'tests/screenshots/pre-tt-business-streams-view.png',
             fullPage: false
         });
 
@@ -78,20 +78,20 @@ test.describe('Pre-TT Value Streams View', () => {
         }
     });
 
-    test('should show value stream metadata', async ({ page }) => {
-        // Switch to Value Streams perspective
-        const valueStreamsRadio = page.locator('input[type="radio"][value="value-streams"]');
-        await valueStreamsRadio.check();
+    test('should show Business Stream metadata', async ({ page }) => {
+        // Switch to Business Streams perspective
+        const businessStreamsRadio = page.locator('input[type="radio"][value="business-streams"]');
+        await businessStreamsRadio.check();
         await page.waitForTimeout(1500);
 
-        // Get the API response to verify value streams have proper structure
-        const response = await page.request.get('/api/pre-tt/value-streams');
+        // Get the API response to verify Business Streams have proper structure
+        const response = await page.request.get('/api/pre-tt/business-streams');
         const data = await response.json();
 
-        // Each value stream should have metadata
-        const vsNames = Object.keys(data.value_streams);
+        // Each Business Stream should have metadata
+        const vsNames = Object.keys(data.business_streams);
         if (vsNames.length > 0) {
-            const firstVS = data.value_streams[vsNames[0]];
+            const firstVS = data.business_streams[vsNames[0]];
             expect(firstVS).toHaveProperty('id');
             expect(firstVS).toHaveProperty('name');
             expect(firstVS).toHaveProperty('description');
@@ -100,20 +100,20 @@ test.describe('Pre-TT Value Streams View', () => {
         }
     });
 
-    test('should handle teams grouped by product within value stream', async ({ page }) => {
-        // Switch to Value Streams perspective
-        const valueStreamsRadio = page.locator('input[type="radio"][value="value-streams"]');
-        await valueStreamsRadio.check();
+    test('should handle teams grouped by product within Business Stream', async ({ page }) => {
+        // Switch to Business Streams perspective
+        const businessStreamsRadio = page.locator('input[type="radio"][value="business-streams"]');
+        await businessStreamsRadio.check();
         await page.waitForTimeout(1500);
 
         // Get the API response
-        const response = await page.request.get('/api/pre-tt/value-streams');
+        const response = await page.request.get('/api/pre-tt/business-streams');
         const data = await response.json();
 
         // Verify nested structure: value_stream -> products -> teams
-        const vsNames = Object.keys(data.value_streams);
+        const vsNames = Object.keys(data.business_streams);
         if (vsNames.length > 0) {
-            const firstVS = data.value_streams[vsNames[0]];
+            const firstVS = data.business_streams[vsNames[0]];
             const products = firstVS.products;
             expect(typeof products).toBe('object');
 
@@ -137,11 +137,11 @@ test.describe('Pre-TT Value Streams View', () => {
         await page.waitForTimeout(1000);
         await expect(productLinesRadio).toBeChecked();
 
-        // Switch to Value Streams
-        const valueStreamsRadio = page.locator('input[type="radio"][value="value-streams"]');
-        await valueStreamsRadio.check();
+        // Switch to Business Streams
+        const businessStreamsRadio = page.locator('input[type="radio"][value="business-streams"]');
+        await businessStreamsRadio.check();
         await page.waitForTimeout(1000);
-        await expect(valueStreamsRadio).toBeChecked();
+        await expect(businessStreamsRadio).toBeChecked();
 
         // Switch back to Hierarchy
         await hierarchyRadio.check();
@@ -153,3 +153,4 @@ test.describe('Pre-TT Value Streams View', () => {
         await expect(canvas).toBeVisible();
     });
 });
+

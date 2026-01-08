@@ -11,7 +11,7 @@ metadata:
   line_manager: Rachel Martinez
   established: 2018-06
   cognitive_load: very-high
-value_stream: B2B Fleet Management
+business_stream: B2B Fleet Management
 ---
 
 # Backend Services Team

@@ -100,72 +100,72 @@ async def get_product_lines():
     return result
 
 
-@router.get("/value-streams")
-async def get_value_streams():
-    """Get teams grouped by value streams for Value Streams view (Pre-TT only)"""
-    value_streams_file = CURRENT_TEAMS_DIR / "value-streams.json"
+@router.get("/business-streams")
+async def get_business_streams():
+    """Get teams grouped by business streams for Business Streams view (Baseline only)"""
+    business_streams_file = CURRENT_TEAMS_DIR / "business-streams.json"
 
-    if not value_streams_file.exists():
-        raise HTTPException(status_code=404, detail="Value streams configuration not found")
+    if not business_streams_file.exists():
+        raise HTTPException(status_code=404, detail="Business streams configuration not found")
 
-    with open(value_streams_file, encoding='utf-8') as f:
-        value_streams_config = json.load(f)
+    with open(business_streams_file, encoding='utf-8') as f:
+        business_streams_config = json.load(f)
 
     # Get all teams from current view
     all_teams = find_all_teams("current")
 
-    # Build nested structure: value_stream -> product -> teams
-    value_streams_with_teams = {}
-    products_without_value_stream = {}
+    # Build nested structure: business_stream -> product -> teams
+    business_streams_with_teams = {}
+    products_without_business_stream = {}
     ungrouped_teams = []
 
     for team in all_teams:
-        value_stream = team.value_stream
+        business_stream = team.business_stream
         product_line = team.product_line
         team_dict = team.model_dump()
 
-        if value_stream:
-            # Initialize value stream dict if needed
-            if value_stream not in value_streams_with_teams:
-                value_streams_with_teams[value_stream] = {}
+        if business_stream:
+            # Initialize business stream dict if needed
+            if business_stream not in business_streams_with_teams:
+                business_streams_with_teams[business_stream] = {}
 
             if product_line:
-                # Group by product within value stream
-                if product_line not in value_streams_with_teams[value_stream]:
-                    value_streams_with_teams[value_stream][product_line] = []
-                value_streams_with_teams[value_stream][product_line].append(team_dict)
+                # Group by product within business stream
+                if product_line not in business_streams_with_teams[business_stream]:
+                    business_streams_with_teams[business_stream][product_line] = []
+                business_streams_with_teams[business_stream][product_line].append(team_dict)
             else:
-                # Teams with value stream but no product
-                if "_no_product" not in value_streams_with_teams[value_stream]:
-                    value_streams_with_teams[value_stream]["_no_product"] = []
-                value_streams_with_teams[value_stream]["_no_product"].append(team_dict)
+                # Teams with business stream but no product
+                if "_no_product" not in business_streams_with_teams[business_stream]:
+                    business_streams_with_teams[business_stream]["_no_product"] = []
+                business_streams_with_teams[business_stream]["_no_product"].append(team_dict)
         elif product_line:
-            # Teams with product but no value stream
-            if product_line not in products_without_value_stream:
-                products_without_value_stream[product_line] = []
-            products_without_value_stream[product_line].append(team_dict)
+            # Teams with product but no business stream
+            if product_line not in products_without_business_stream:
+                products_without_business_stream[product_line] = []
+            products_without_business_stream[product_line].append(team_dict)
         else:
             # Completely ungrouped teams
             ungrouped_teams.append(team_dict)
 
-    # Build response with value stream metadata
+    # Build response with business stream metadata
     result = {
-        "perspective": "value-streams",
-        "value_streams": {},
-        "products_without_value_stream": products_without_value_stream,
+        "perspective": "business-streams",
+        "business_streams": {},
+        "products_without_business_stream": products_without_business_stream,
         "ungrouped_teams": ungrouped_teams,
         "teams": [team.model_dump() for team in all_teams]
     }
 
-    for vs_config in value_streams_config["value_streams"]:
-        vs_name = vs_config["name"]
+    for bs_config in business_streams_config["business_streams"]:
+        bs_name = bs_config["name"]
 
-        result["value_streams"][vs_name] = {
-            "id": vs_config["id"],
-            "name": vs_name,
-            "description": vs_config.get("description", ""),
-            "color": vs_config["color"],
-            "products": value_streams_with_teams.get(vs_name, {})
+        result["business_streams"][bs_name] = {
+            "id": bs_config["id"],
+            "name": bs_name,
+            "description": bs_config.get("description", ""),
+            "color": bs_config["color"],
+            "products": business_streams_with_teams.get(bs_name, {})
         }
 
     return result

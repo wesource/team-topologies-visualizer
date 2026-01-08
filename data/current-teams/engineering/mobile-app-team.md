@@ -11,7 +11,7 @@ metadata:
   line_manager: Michael Chen
   established: 2020-01
   cognitive_load: high
-value_stream: B2C Driver Experience
+business_stream: B2C Driver Experience
 ---
 
 # Mobile App Team

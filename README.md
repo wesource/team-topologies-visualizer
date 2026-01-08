@@ -168,6 +168,8 @@ The tool uses two primary views:
 
 - **"Business Streams"** (in Baseline view): Shows how teams align to business value streams in your current organization. We use "Business Streams" instead of "Value Streams" to distinguish it from TT Design's "Value Stream Groupings" - the former shows current business alignment, the latter shows your deliberate TT design pattern.
 
+> **Note**: Some folder names, filenames, and code identifiers still use older naming conventions (e.g., `pre-tt-business-streams.spec.ts`, `routes_pre_tt.py`). These will be updated in a future refactoring for consistency. The field names, API endpoints, and UI labels have been updated to match the new terminology.
+
 ## Project Structure
 
 ```

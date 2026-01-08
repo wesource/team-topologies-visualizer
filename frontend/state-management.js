@@ -10,10 +10,10 @@ export const state = {
     teams: [],
     organizationHierarchy: null,
     productLinesData: null, // Product lines view data
-    valueStreamsData: null, // NEW: Value streams view data
+    businessStreamsData: null, // Business streams view data (Baseline only)
     productLinesTeamPositions: new Map(), // Track team positions in product lines view for click detection
-    valueStreamsTeamPositions: new Map(), // Track team positions in value streams view for click detection
-    currentPerspective: 'hierarchy', // 'hierarchy', 'product-lines', or 'value-streams' (Pre-TT only)
+    businessStreamsTeamPositions: new Map(), // Track team positions in business streams view for click detection
+    currentPerspective: 'hierarchy', // 'hierarchy', 'product-lines', or 'business-streams' (Baseline only)
     selectedTeam: null,
     viewOffset: { x: 0, y: 0 },
     scale: 1,

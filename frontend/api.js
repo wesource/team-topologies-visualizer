@@ -43,8 +43,8 @@ export async function loadProductLines() {
     return await response.json();
 }
 
-export async function loadValueStreams() {
-    const response = await fetch(getApiUrl('/pre-tt/value-streams'));
+export async function loadBusinessStreams() {
+    const response = await fetch(getApiUrl('/pre-tt/business-streams'));
     return await response.json();
 }
 

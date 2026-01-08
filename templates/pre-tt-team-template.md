@@ -8,7 +8,7 @@ position:  # Canvas position (auto-managed when dragging)
 
 # OPTIONAL FIELDS (but recommended for full visualization features)
 product_line: [Product Name]  # Groups teams in Product Lines view (e.g., DispatchHub, RouteOptix)
-value_stream: [Value Stream Name]  # Groups teams in Business Streams view (e.g., B2B Fleet Management, B2C Driver Experience)
+business_stream: [Business Stream Name]  # Groups teams in Business Streams view (e.g., B2B Fleet Management, B2C Driver Experience)
 dependencies: []  # Teams this team depends on - creates communication lines (e.g., [Database Team, API Framework Team])
 metadata:
   size: 7  # Number of team members - used for display and validation warnings

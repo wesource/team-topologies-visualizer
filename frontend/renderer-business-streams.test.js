@@ -1,14 +1,14 @@
 /**
- * Unit tests for renderer-value-streams.js
+ * Unit tests for renderer-business-streams.js
  * Tests Value Streams View rendering logic with nested layout
  */
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { renderValueStreamsView } from './renderer-value-streams.js';
+import { renderBusinessStreamsView } from './renderer-business-streams.js';
 
 // Mock state management
 vi.mock('./state-management.js', () => ({
     state: {
-        valueStreamsTeamPositions: new Map(),
+        businessStreamsTeamPositions: new Map(),
         teams: [],
         teamColorMap: {
             'feature-team': '#3498db',
@@ -49,7 +49,7 @@ function createMockContext() {
     };
 }
 
-describe('renderValueStreamsView', () => {
+describe('renderBusinessStreamsView', () => {
     let ctx;
 
     beforeEach(() => {
@@ -59,23 +59,23 @@ describe('renderValueStreamsView', () => {
     describe('Basic Rendering', () => {
         it('should render title', () => {
             const data = {
-                value_streams: {},
-                products_without_value_stream: {},
+                business_streams: {},
+                products_without_business_stream: {},
                 ungrouped_teams: [],
                 teams: []
             };
-            renderValueStreamsView(ctx, data);
-            expect(ctx.fillText).toHaveBeenCalledWith('Value Streams View', expect.any(Number), expect.any(Number));
+            renderBusinessStreamsView(ctx, data);
+            expect(ctx.fillText).toHaveBeenCalledWith('Business Streams View', expect.any(Number), expect.any(Number));
         });
 
         it('should handle empty value streams', () => {
             const data = {
-                value_streams: {},
-                products_without_value_stream: {},
+                business_streams: {},
+                products_without_business_stream: {},
                 ungrouped_teams: [],
                 teams: []
             };
-            renderValueStreamsView(ctx, data);
+            renderBusinessStreamsView(ctx, data);
             // Should render title but no value stream containers
             expect(ctx.fillText).toHaveBeenCalled();
             expect(ctx.strokeRect).not.toHaveBeenCalled();
@@ -83,12 +83,12 @@ describe('renderValueStreamsView', () => {
 
         it('should handle null or undefined data', () => {
             const data = {
-                value_streams: {},
-                products_without_value_stream: {},
+                business_streams: {},
+                products_without_business_stream: {},
                 ungrouped_teams: [],
                 teams: []
             };
-            renderValueStreamsView(ctx, data);
+            renderBusinessStreamsView(ctx, data);
             // Should not throw error
             expect(ctx.fillText).toHaveBeenCalled();
         });
@@ -97,7 +97,7 @@ describe('renderValueStreamsView', () => {
     describe('Value Stream Containers', () => {
         it('should render value stream containers', () => {
             const data = {
-                value_streams: {
+                business_streams: {
                     'B2B Services': {
                         id: 'b2b-services',
                         name: 'B2B Services',
@@ -106,11 +106,11 @@ describe('renderValueStreamsView', () => {
                         products: {}
                     }
                 },
-                products_without_value_stream: {},
+                products_without_business_stream: {},
                 ungrouped_teams: [],
                 teams: []
             };
-            renderValueStreamsView(ctx, data);
+            renderBusinessStreamsView(ctx, data);
             // Should draw container rectangles
             expect(ctx.fillRect).toHaveBeenCalled();
             expect(ctx.strokeRect).toHaveBeenCalled();
@@ -120,7 +120,7 @@ describe('renderValueStreamsView', () => {
 
         it('should use value stream colors', () => {
             const data = {
-                value_streams: {
+                business_streams: {
                     'VS1': {
                         id: 'vs1',
                         name: 'VS1',
@@ -129,18 +129,18 @@ describe('renderValueStreamsView', () => {
                         products: {}
                     }
                 },
-                products_without_value_stream: {},
+                products_without_business_stream: {},
                 ungrouped_teams: [],
                 teams: []
             };
-            renderValueStreamsView(ctx, data);
+            renderBusinessStreamsView(ctx, data);
             // Color should be set during rendering
             expect(ctx.strokeStyle).toContain('FF5733');
         });
 
         it('should render multiple value streams vertically stacked', () => {
             const data = {
-                value_streams: {
+                business_streams: {
                     'VS1': {
                         id: 'vs1',
                         name: 'VS1',
@@ -156,11 +156,11 @@ describe('renderValueStreamsView', () => {
                         products: {}
                     }
                 },
-                products_without_value_stream: {},
+                products_without_business_stream: {},
                 ungrouped_teams: [],
                 teams: []
             };
-            renderValueStreamsView(ctx, data);
+            renderBusinessStreamsView(ctx, data);
             // Should render both value streams
             expect(ctx.strokeRect).toHaveBeenCalled();
             expect(ctx.fillRect).toHaveBeenCalled();
@@ -168,7 +168,7 @@ describe('renderValueStreamsView', () => {
 
         it('should display value stream description if available', () => {
             const data = {
-                value_streams: {
+                business_streams: {
                     'VS1': {
                         id: 'vs1',
                         name: 'VS1',
@@ -177,11 +177,11 @@ describe('renderValueStreamsView', () => {
                         products: {}
                     }
                 },
-                products_without_value_stream: {},
+                products_without_business_stream: {},
                 ungrouped_teams: [],
                 teams: []
             };
-            renderValueStreamsView(ctx, data);
+            renderBusinessStreamsView(ctx, data);
             // Description should be rendered
             expect(ctx.fillText).toHaveBeenCalled();
         });
@@ -190,7 +190,7 @@ describe('renderValueStreamsView', () => {
     describe('Product Sections Within Value Streams', () => {
         it('should render products within value streams', () => {
             const data = {
-                value_streams: {
+                business_streams: {
                     'VS1': {
                         id: 'vs1',
                         name: 'VS1',
@@ -203,18 +203,18 @@ describe('renderValueStreamsView', () => {
                         }
                     }
                 },
-                products_without_value_stream: {},
+                products_without_business_stream: {},
                 ungrouped_teams: [],
                 teams: []
             };
-            renderValueStreamsView(ctx, data);
+            renderBusinessStreamsView(ctx, data);
             // Should render product section
             expect(ctx.fillText).toHaveBeenCalled();
         });
 
         it('should skip _no_product placeholder', () => {
             const data = {
-                value_streams: {
+                business_streams: {
                     'VS1': {
                         id: 'vs1',
                         name: 'VS1',
@@ -230,11 +230,11 @@ describe('renderValueStreamsView', () => {
                         }
                     }
                 },
-                products_without_value_stream: {},
+                products_without_business_stream: {},
                 ungrouped_teams: [],
                 teams: []
             };
-            renderValueStreamsView(ctx, data);
+            renderBusinessStreamsView(ctx, data);
             // _no_product should be skipped
             // Only RealProduct should be rendered
             expect(ctx.fillText).toHaveBeenCalled();
@@ -242,7 +242,7 @@ describe('renderValueStreamsView', () => {
 
         it('should render multiple products within a value stream', () => {
             const data = {
-                value_streams: {
+                business_streams: {
                     'VS1': {
                         id: 'vs1',
                         name: 'VS1',
@@ -255,18 +255,18 @@ describe('renderValueStreamsView', () => {
                         }
                     }
                 },
-                products_without_value_stream: {},
+                products_without_business_stream: {},
                 ungrouped_teams: [],
                 teams: []
             };
-            renderValueStreamsView(ctx, data);
+            renderBusinessStreamsView(ctx, data);
             // Should render all product sections
             expect(ctx.fillRect).toHaveBeenCalled();
         });
 
         it('should render teams within products', () => {
             const data = {
-                value_streams: {
+                business_streams: {
                     'VS1': {
                         id: 'vs1',
                         name: 'VS1',
@@ -280,11 +280,11 @@ describe('renderValueStreamsView', () => {
                         }
                     }
                 },
-                products_without_value_stream: {},
+                products_without_business_stream: {},
                 ungrouped_teams: [],
                 teams: []
             };
-            renderValueStreamsView(ctx, data);
+            renderBusinessStreamsView(ctx, data);
             // Check that team names appear in fillText calls (may be wrapped)
             const fillTextCalls = ctx.fillText.mock.calls.map(call => call[0]);
             const hasBackendTeam = fillTextCalls.some(text => text.includes('Backend'));
@@ -295,7 +295,7 @@ describe('renderValueStreamsView', () => {
 
         it('should handle product with empty teams array', () => {
             const data = {
-                value_streams: {
+                business_streams: {
                     'VS1': {
                         id: 'vs1',
                         name: 'VS1',
@@ -306,11 +306,11 @@ describe('renderValueStreamsView', () => {
                         }
                     }
                 },
-                products_without_value_stream: {},
+                products_without_business_stream: {},
                 ungrouped_teams: [],
                 teams: []
             };
-            renderValueStreamsView(ctx, data);
+            renderBusinessStreamsView(ctx, data);
             // Should not throw error
             expect(ctx.fillText).toHaveBeenCalled();
         });
@@ -319,8 +319,8 @@ describe('renderValueStreamsView', () => {
     describe('Products Without Value Stream (Right Column)', () => {
         it('should render products without value stream in right column', () => {
             const data = {
-                value_streams: {},
-                products_without_value_stream: {
+                business_streams: {},
+                products_without_business_stream: {
                     'StandaloneProduct': [
                         { name: 'Standalone Team', team_type: 'feature-team' }
                     ]
@@ -328,34 +328,34 @@ describe('renderValueStreamsView', () => {
                 ungrouped_teams: [],
                 teams: []
             };
-            renderValueStreamsView(ctx, data);
+            renderBusinessStreamsView(ctx, data);
             // Should render ungrouped products section
             expect(ctx.fillText).toHaveBeenCalled();
         });
 
-        it('should handle empty products_without_value_stream', () => {
+        it('should handle empty products_without_business_stream', () => {
             const data = {
-                value_streams: {},
-                products_without_value_stream: {},
+                business_streams: {},
+                products_without_business_stream: {},
                 ungrouped_teams: [],
                 teams: []
             };
-            renderValueStreamsView(ctx, data);
+            renderBusinessStreamsView(ctx, data);
             // Should not render ungrouped products section
-            expect(ctx.fillText).toHaveBeenCalledWith('Value Streams View', expect.any(Number), expect.any(Number));
+            expect(ctx.fillText).toHaveBeenCalledWith('Business Streams View', expect.any(Number), expect.any(Number));
         });
 
         it('should render multiple products without value stream', () => {
             const data = {
-                value_streams: {},
-                products_without_value_stream: {
+                business_streams: {},
+                products_without_business_stream: {
                     'Product1': [{ name: 'Team 1', team_type: 'feature-team' }],
                     'Product2': [{ name: 'Team 2', team_type: 'feature-team' }]
                 },
                 ungrouped_teams: [],
                 teams: []
             };
-            renderValueStreamsView(ctx, data);
+            renderBusinessStreamsView(ctx, data);
             // Should render both products
             expect(ctx.fillRect).toHaveBeenCalled();
         });
@@ -364,15 +364,15 @@ describe('renderValueStreamsView', () => {
     describe('Ungrouped Teams (Right Column)', () => {
         it('should render ungrouped teams below products', () => {
             const data = {
-                value_streams: {},
-                products_without_value_stream: {},
+                business_streams: {},
+                products_without_business_stream: {},
                 ungrouped_teams: [
                     { name: 'Database Team', team_type: 'platform-team' },
                     { name: 'DevOps Team', team_type: 'platform-team' }
                 ],
                 teams: []
             };
-            renderValueStreamsView(ctx, data);
+            renderBusinessStreamsView(ctx, data);
             // Should render ungrouped teams
             expect(ctx.fillText).toHaveBeenCalledWith('Database Team', expect.any(Number), expect.any(Number));
             expect(ctx.fillText).toHaveBeenCalledWith('DevOps Team', expect.any(Number), expect.any(Number));
@@ -380,20 +380,20 @@ describe('renderValueStreamsView', () => {
 
         it('should handle empty ungrouped_teams array', () => {
             const data = {
-                value_streams: {},
-                products_without_value_stream: {},
+                business_streams: {},
+                products_without_business_stream: {},
                 ungrouped_teams: [],
                 teams: []
             };
-            renderValueStreamsView(ctx, data);
+            renderBusinessStreamsView(ctx, data);
             // Should not throw error
             expect(ctx.fillText).toHaveBeenCalled();
         });
 
         it('should handle many ungrouped teams', () => {
             const data = {
-                value_streams: {},
-                products_without_value_stream: {},
+                business_streams: {},
+                products_without_business_stream: {},
                 ungrouped_teams: Array(10).fill(null).map((_, i) => ({
                     name: `Team ${i + 1}`,
                     team_type: 'platform-team'
@@ -401,14 +401,14 @@ describe('renderValueStreamsView', () => {
                 teams: []
             };
             // Should render without error - fillRect may or may not be called depending on team rendering logic
-            expect(() => renderValueStreamsView(ctx, data)).not.toThrow();
+            expect(() => renderBusinessStreamsView(ctx, data)).not.toThrow();
         });
     });
 
     describe('Complex Nested Structure', () => {
         it('should handle full nested structure: VS → Products → Teams', () => {
             const data = {
-                value_streams: {
+                business_streams: {
                     'B2B Services': {
                         id: 'b2b-services',
                         name: 'B2B Services',
@@ -437,7 +437,7 @@ describe('renderValueStreamsView', () => {
                         }
                     }
                 },
-                products_without_value_stream: {
+                products_without_business_stream: {
                     'LegacyProduct': [
                         { name: 'Legacy Team', team_type: 'feature-team' }
                     ]
@@ -448,7 +448,7 @@ describe('renderValueStreamsView', () => {
                 ],
                 teams: []
             };
-            renderValueStreamsView(ctx, data);
+            renderBusinessStreamsView(ctx, data);
             // Should render everything without error
             expect(ctx.fillRect).toHaveBeenCalled();
             expect(ctx.strokeRect).toHaveBeenCalled();
@@ -457,7 +457,7 @@ describe('renderValueStreamsView', () => {
 
         it('should handle value stream with mixed products (some with teams, some empty)', () => {
             const data = {
-                value_streams: {
+                business_streams: {
                     'VS1': {
                         id: 'vs1',
                         name: 'VS1',
@@ -475,11 +475,11 @@ describe('renderValueStreamsView', () => {
                         }
                     }
                 },
-                products_without_value_stream: {},
+                products_without_business_stream: {},
                 ungrouped_teams: [],
                 teams: []
             };
-            renderValueStreamsView(ctx, data);
+            renderBusinessStreamsView(ctx, data);
             // Should render all products including empty one
             expect(ctx.fillRect).toHaveBeenCalled();
         });
@@ -488,7 +488,7 @@ describe('renderValueStreamsView', () => {
     describe('Layout Calculations', () => {
         it('should position value streams vertically with spacing', () => {
             const data = {
-                value_streams: {
+                business_streams: {
                     'VS1': {
                         id: 'vs1',
                         name: 'VS1',
@@ -508,11 +508,11 @@ describe('renderValueStreamsView', () => {
                         }
                     }
                 },
-                products_without_value_stream: {},
+                products_without_business_stream: {},
                 ungrouped_teams: [],
                 teams: []
             };
-            renderValueStreamsView(ctx, data);
+            renderBusinessStreamsView(ctx, data);
             // Should draw rectangles at different Y positions
             const fillRectCalls = ctx.fillRect.mock.calls;
             expect(fillRectCalls.length).toBeGreaterThan(0);
@@ -524,7 +524,7 @@ describe('renderValueStreamsView', () => {
 
         it('should use right column for ungrouped content', () => {
             const data = {
-                value_streams: {
+                business_streams: {
                     'VS1': {
                         id: 'vs1',
                         name: 'VS1',
@@ -533,7 +533,7 @@ describe('renderValueStreamsView', () => {
                         products: {}
                     }
                 },
-                products_without_value_stream: {
+                products_without_business_stream: {
                     'Product1': [{ name: 'Team 1', team_type: 'feature-team' }]
                 },
                 ungrouped_teams: [
@@ -541,7 +541,7 @@ describe('renderValueStreamsView', () => {
                 ],
                 teams: []
             };
-            renderValueStreamsView(ctx, data);
+            renderBusinessStreamsView(ctx, data);
             // Right column content should have different X positions
             const fillRectCalls = ctx.fillRect.mock.calls;
             const xPositions = fillRectCalls.map(call => call[0]);
@@ -553,7 +553,7 @@ describe('renderValueStreamsView', () => {
     describe('Edge Cases', () => {
         it('should handle value stream with only _no_product teams', () => {
             const data = {
-                value_streams: {
+                business_streams: {
                     'VS1': {
                         id: 'vs1',
                         name: 'VS1',
@@ -566,18 +566,18 @@ describe('renderValueStreamsView', () => {
                         }
                     }
                 },
-                products_without_value_stream: {},
+                products_without_business_stream: {},
                 ungrouped_teams: [],
                 teams: []
             };
-            renderValueStreamsView(ctx, data);
+            renderBusinessStreamsView(ctx, data);
             // Should render value stream container but skip _no_product
             expect(ctx.fillText).toHaveBeenCalled();
         });
 
         it('should handle teams without team_type', () => {
             const data = {
-                value_streams: {
+                business_streams: {
                     'VS1': {
                         id: 'vs1',
                         name: 'VS1',
@@ -590,18 +590,18 @@ describe('renderValueStreamsView', () => {
                         }
                     }
                 },
-                products_without_value_stream: {},
+                products_without_business_stream: {},
                 ungrouped_teams: [],
                 teams: []
             };
-            renderValueStreamsView(ctx, data);
+            renderBusinessStreamsView(ctx, data);
             // Should render without error
             expect(ctx.fillText).toHaveBeenCalled();
         });
 
         it('should handle very long value stream names', () => {
             const data = {
-                value_streams: {
+                business_streams: {
                     'Very Long Value Stream Name That Exceeds Normal Width': {
                         id: 'long-vs',
                         name: 'Very Long Value Stream Name That Exceeds Normal Width',
@@ -610,11 +610,11 @@ describe('renderValueStreamsView', () => {
                         products: {}
                     }
                 },
-                products_without_value_stream: {},
+                products_without_business_stream: {},
                 ungrouped_teams: [],
                 teams: []
             };
-            renderValueStreamsView(ctx, data);
+            renderBusinessStreamsView(ctx, data);
             // Should render without error
             expect(ctx.fillText).toHaveBeenCalled();
         });
@@ -629,7 +629,7 @@ describe('renderValueStreamsView', () => {
             }
 
             const data = {
-                value_streams: {
+                business_streams: {
                     'Large VS': {
                         id: 'large-vs',
                         name: 'Large VS',
@@ -638,14 +638,17 @@ describe('renderValueStreamsView', () => {
                         products
                     }
                 },
-                products_without_value_stream: {},
+                products_without_business_stream: {},
                 ungrouped_teams: [],
                 teams: []
             };
-            renderValueStreamsView(ctx, data);
+            renderBusinessStreamsView(ctx, data);
             // Should render all content without error
             expect(ctx.fillRect).toHaveBeenCalled();
             expect(ctx.fillText).toHaveBeenCalled(); // Just check it was called
         });
     });
 });
+
+
+

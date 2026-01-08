@@ -2,7 +2,7 @@
 Tests for Pre-TT API routes (routes_pre_tt.py)
 
 These tests validate the Pre-TT specific endpoints:
-- /api/pre-tt/value-streams - Value stream grouping data
+- /api/pre-tt/business-streams - Value stream grouping data
 - /api/pre-tt/product-lines - Product lines grouping data
 """
 
@@ -17,50 +17,50 @@ client = TestClient(app)
 
 
 class TestValueStreamsEndpoint:
-    """Tests for /api/pre-tt/value-streams endpoint"""
+    """Tests for /api/pre-tt/business-streams endpoint"""
 
-    def test_value_streams_endpoint_returns_200(self):
+    def test_business_streams_endpoint_returns_200(self):
         """Value streams endpoint should return 200 status"""
-        response = client.get("/api/pre-tt/value-streams")
+        response = client.get("/api/pre-tt/business-streams")
         assert response.status_code == 200
 
-    def test_value_streams_returns_json(self):
+    def test_business_streams_returns_json(self):
         """Value streams endpoint should return valid JSON"""
-        response = client.get("/api/pre-tt/value-streams")
+        response = client.get("/api/pre-tt/business-streams")
         assert response.headers["content-type"] == "application/json"
         data = response.json()
         assert isinstance(data, dict)
 
-    def test_value_streams_has_expected_structure(self):
-        """Value streams response should have value_streams key with dict"""
-        response = client.get("/api/pre-tt/value-streams")
+    def test_business_streams_has_expected_structure(self):
+        """Value streams response should have business_streams key with dict"""
+        response = client.get("/api/pre-tt/business-streams")
         data = response.json()
-        assert "value_streams" in data
-        assert isinstance(data["value_streams"], dict)
+        assert "business_streams" in data
+        assert isinstance(data["business_streams"], dict)
 
-    def test_value_streams_contains_product_data(self):
+    def test_business_streams_contains_product_data(self):
         """Each value stream should contain products dict"""
-        response = client.get("/api/pre-tt/value-streams")
+        response = client.get("/api/pre-tt/business-streams")
         data = response.json()
-        value_streams = data["value_streams"]
+        business_streams = data["business_streams"]
 
         # Should have at least one value stream
-        assert len(value_streams) > 0
+        assert len(business_streams) > 0
 
         # Each value stream should have products dict
-        for vs_name, vs_data in value_streams.items():
+        for vs_name, vs_data in business_streams.items():
             assert isinstance(vs_name, str)
             assert "products" in vs_data
             assert isinstance(vs_data["products"], dict)
 
-    def test_value_streams_teams_have_required_fields(self):
+    def test_business_streams_teams_have_required_fields(self):
         """Teams in value stream products should have required fields"""
-        response = client.get("/api/pre-tt/value-streams")
+        response = client.get("/api/pre-tt/business-streams")
         data = response.json()
-        value_streams = data["value_streams"]
+        business_streams = data["business_streams"]
 
         # Find a value stream with products containing teams
-        for _vs_name, vs_data in value_streams.items():
+        for _vs_name, vs_data in business_streams.items():
             products = vs_data["products"]
             for _product_name, teams in products.items():
                 if isinstance(teams, list) and len(teams) > 0:
@@ -72,18 +72,18 @@ class TestValueStreamsEndpoint:
                     return  # Only need to check one team
         # If no teams found, that's also valid (empty value streams)
 
-    def test_value_streams_config_file_exists(self):
+    def test_business_streams_config_file_exists(self):
         """Value streams config file should exist"""
-        config_path = Path("data/current-teams/value-streams.json")
+        config_path = Path("data/current-teams/business-streams.json")
         assert config_path.exists(), f"Config file not found: {config_path}"
 
-    def test_value_streams_config_is_valid_json(self):
+    def test_business_streams_config_is_valid_json(self):
         """Value streams config should be valid JSON"""
-        config_path = Path("data/current-teams/value-streams.json")
+        config_path = Path("data/current-teams/business-streams.json")
         with open(config_path, encoding="utf-8") as f:
             data = json.load(f)
             assert isinstance(data, dict)
-            assert "value_streams" in data
+            assert "business_streams" in data
 
 
 class TestProductLinesEndpoint:
@@ -193,11 +193,11 @@ class TestPreTTRoutesPrefixes:
 class TestErrorHandling:
     """Tests for error handling in Pre-TT routes"""
 
-    def test_missing_value_streams_config_handled_gracefully(self, tmp_path, monkeypatch):
-        """Should handle missing value-streams.json gracefully"""
+    def test_missing_business_streams_config_handled_gracefully(self, tmp_path, monkeypatch):
+        """Should handle missing business-streams.json gracefully"""
         # This test ensures the endpoint doesn't crash if config is missing
         # In production, this should return empty data or appropriate error
-        response = client.get("/api/pre-tt/value-streams")
+        response = client.get("/api/pre-tt/business-streams")
         # Should not return 500 error
         assert response.status_code in [200, 404]
 
@@ -206,3 +206,4 @@ class TestErrorHandling:
         response = client.get("/api/pre-tt/product-lines")
         # Should not return 500 error
         assert response.status_code in [200, 404]
+

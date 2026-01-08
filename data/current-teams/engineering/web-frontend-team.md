@@ -11,7 +11,7 @@ metadata:
   line_manager: Marcus Thompson
   established: 2019-06
   cognitive_load: high
-value_stream: B2B Fleet Management
+business_stream: B2B Fleet Management
 ---
 
 # Web Frontend Team

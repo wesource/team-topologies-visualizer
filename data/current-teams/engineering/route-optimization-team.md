@@ -11,7 +11,7 @@ metadata:
   line_manager: Marcus Thompson
   established: 2016-03
   cognitive_load: very-high
-value_stream: B2B Fleet Management
+business_stream: B2B Fleet Management
 ---
 
 # Route Optimization Team

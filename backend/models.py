@@ -31,12 +31,13 @@ class TeamData(BaseModel):
     interaction_modes: dict[str, str] | None = {}  # {team_name: interaction_mode}
     line_manager: str | None = None  # For current org structure
     product_line: str | None = None  # For Product Lines view (Pre-TT only)
+    business_stream: str | None = None  # For Business Streams view (Baseline only)
     position: dict[str, float] | None = {"x": 0, "y": 0}
     metadata: dict[str, Any] | None = {}
     # Team API fields (optional, for TT Design teams)
     team_api: TeamAPI | None = None
     purpose: str | None = None  # One-liner mission statement (for quick access)
-    value_stream: str | None = None
+    value_stream: str | None = None  # For Value Stream Groupings in TT Design
     platform_grouping: str | None = None
     established: str | None = None  # YYYY-MM
     cognitive_load: str | None = None  # low | medium | high | very-high

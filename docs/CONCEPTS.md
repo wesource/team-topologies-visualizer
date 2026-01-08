@@ -752,6 +752,40 @@ This tool helps make cognitive load visible through a **traffic light indicator 
 
 This visualization helps organizations have data-driven conversations about team capacity and where to focus improvement efforts.
 
+### Focus Mode: Reducing Visual Complexity
+
+> **"With 20-40 teams on canvas, users need to focus on one team's relationships without distraction."**
+
+**Focus Mode** helps you explore individual team dependencies without overwhelming visual clutter.
+
+**How to use Focus Mode:**
+1. **Single-click any team** to enter focus mode
+2. The focused team and its direct relationships remain at full opacity (100%)
+3. All unrelated teams dim to 20% opacity
+4. All unrelated connection lines dim to 10% opacity
+5. **Click the same team again** or **click empty canvas** to exit focus mode
+6. **Press Escape key** to exit focus mode anytime
+
+**What's included in focus:**
+- The selected team (full color)
+- **Direct dependencies**: Teams this team depends on (outgoing connections)
+- **Direct consumers**: Teams that depend on this team (incoming connections)
+- **Connection lines**: All lines connecting focused teams
+
+**Badge indicator**: When in focus mode, a blue badge appears showing the focused team name with a "click to exit" hint.
+
+**Works in both views:**
+- **TT Design view**: Explore team interactions and platform dependencies
+- **Baseline view**: Trace communication patterns in current organization
+
+**Use cases:**
+- **Explain dependencies** to stakeholders without visual noise
+- **Trace platform consumers** - Click platform team to see all consuming teams
+- **Identify team isolation** - Teams with no connections when focused are disconnected from the organization
+- **Workshop discussions** - Focus on one team while discussing its responsibilities and interactions
+
+This feature provides a middle ground between "show all connections" (overwhelming) and "hide all connections" (no context).
+
 ### Flow Metrics (DORA Metrics) for Measuring Outcomes
 
 > **"Team Topologies is ultimately about accelerating flow of change, not just reorganizing boxes."** Without metrics, you can visualize structure but not measure whether your TT transformation is actually improving delivery speed.

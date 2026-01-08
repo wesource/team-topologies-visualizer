@@ -190,14 +190,14 @@ export async function handlePerspectiveChange(e, draw) {
         }
     }
 
-    // Load value streams data if switching to that perspective
-    if (state.currentPerspective === 'value-streams' && !state.valueStreamsData) {
+    // Load business streams data if switching to that perspective
+    if (state.currentPerspective === 'business-streams' && !state.businessStreamsData) {
         try {
-            const { loadValueStreams } = await import('./api.js');
-            state.valueStreamsData = await loadValueStreams();
+            const { loadBusinessStreams } = await import('./api.js');
+            state.businessStreamsData = await loadBusinessStreams();
         } catch (error) {
-            console.error('Failed to load value streams data:', error);
-            showError('Failed to load value streams view');
+            console.error('Failed to load business streams data:', error);
+            showError('Failed to load business streams view');
             // Fall back to hierarchy
             document.getElementById('perspectiveHierarchy').checked = true;
             state.currentPerspective = 'hierarchy';

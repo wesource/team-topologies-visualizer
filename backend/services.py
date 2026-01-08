@@ -96,7 +96,9 @@ def parse_team_file(file_path: Path) -> TeamData:
                 elif 'purpose' in metadata:
                     data['purpose'] = metadata['purpose']
 
-            # Support value_stream/platform_grouping at top-level or in metadata
+            # Support business_stream (Baseline) and value_stream (TT Design) at top-level or in metadata
+            if 'business_stream' not in data and 'business_stream' in metadata:
+                data['business_stream'] = metadata['business_stream']
             if 'value_stream' not in data and 'value_stream' in metadata:
                 data['value_stream'] = metadata['value_stream']
             if 'platform_grouping' not in data and 'platform_grouping' in metadata:
@@ -265,6 +267,8 @@ def write_team_file_to_path(team: TeamData, file_path: Path) -> Path:
         yaml_data['team_api'] = team.team_api.dict(exclude_none=True)
     if team.purpose:
         yaml_data['purpose'] = team.purpose
+    if team.business_stream:
+        yaml_data['business_stream'] = team.business_stream
     if team.value_stream:
         yaml_data['value_stream'] = team.value_stream
     if team.platform_grouping:
