@@ -47,7 +47,7 @@ test.describe('Pre-TT Business Streams View', () => {
 
         // Verify data structure
         expect(data).toHaveProperty('business_streams');
-        expect(data).toHaveProperty('products_without_value_stream');
+        expect(data).toHaveProperty('products_without_business_stream');
         expect(data).toHaveProperty('ungrouped_teams');
         expect(typeof data.business_streams).toBe('object');
         expect(Array.isArray(data.ungrouped_teams)).toBeTruthy();

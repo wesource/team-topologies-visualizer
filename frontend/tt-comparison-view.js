@@ -269,9 +269,9 @@ class ComparisonView {
         const summary = this.comparison.changes.summary;
         const changes = this.comparison.changes;
 
-        // Calculate interaction mode counts
-        const beforeInteractions = this.countInteractionModes(this.beforeSnapshot.teams);
-        const afterInteractions = this.countInteractionModes(this.afterSnapshot.teams);
+        // Calculate interaction mode counts (with null safety)
+        const beforeInteractions = this.countInteractionModes(this.beforeSnapshot?.teams || []);
+        const afterInteractions = this.countInteractionModes(this.afterSnapshot?.teams || []);
 
         // Interaction modes comparison table (at the top)
         let html = `
