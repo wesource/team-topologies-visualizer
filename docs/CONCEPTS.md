@@ -82,34 +82,34 @@ Pre-TT perspectives let you visualize all three without changing the underlying 
 - Teams with `product_line` field appear in product lanes
 - Teams without `product_line` appear in shared row
 
-#### 3. 🌊 Value Streams View (Swimlane Layout)
+#### 3. 🌊 Business Streams View (Swimlane Layout)
 
 **What it shows:**
-- Teams grouped by customer-facing value stream
-- Products nested within value streams
+- Teams grouped by customer-facing business stream
+- Products nested within business streams
 - End-to-end flow from customer need to delivered value
 
 **Visual layout:**
-- **Value stream swimlanes**: Horizontal containers for each value stream
-- **Nested products**: Products shown as sections within value streams
+- **Business stream swimlanes**: Horizontal containers for each business stream
+- **Nested products**: Products shown as sections within business streams
 - **Teams within products**: Teams positioned inside their product sections
-- **Right column**: Teams and products without value stream assignment
+- **Right column**: Teams and products without business stream assignment
 
 **When to use:**
 - Organizations with clear customer journeys (e.g., B2B vs B2C)
-- Planning value stream-aligned transformation
-- Identifying cross-value-stream dependencies
+- Planning business stream-aligned transformation
+- Identifying cross-business-stream dependencies
 - Executive presentations showing business domain alignment
 
 **Common patterns revealed:**
-- **Missing value streams**: Teams not assigned to any customer-facing flow
-- **Fragmented ownership**: Single value stream split across many teams
-- **Cross-stream coupling**: Dependencies between value streams (should be minimized)
+- **Missing business streams**: Teams not assigned to any customer-facing flow
+- **Fragmented ownership**: Single business stream split across many teams
+- **Cross-stream coupling**: Dependencies between business streams (should be minimized)
 
 **Configuration:**
-- `value-streams.json` defines value stream names, colors, and product mappings
-- Teams with `value_stream` field appear in swimlanes
-- Products can be mapped to value streams
+- `business-streams.json` defines business stream names, colors, and product mappings
+- Teams with `business_stream` field appear in swimlanes
+- Products can be mapped to business streams
 - Ungrouped content appears in right column
 
 ### Comparison: When to Use Each Perspective
@@ -118,7 +118,7 @@ Pre-TT perspectives let you visualize all three without changing the underlying 
 |-------------|----------|----------|
 | **📊 Hierarchy** | Current reporting structure, HR alignment | Spans of control, organizational silos, reporting bottlenecks |
 | **🏭 Product Lines** | Product-centric organizations, portfolio management | Shared service bottlenecks, product silos, team allocation |
-| **🌊 Value Streams** | Customer journey focus, TT transformation planning | Value stream gaps, cross-stream dependencies, flow alignment |
+| **🌊 Business Streams** | Customer journey focus, TT transformation planning | Business stream gaps, cross-stream dependencies, flow alignment |
 
 ### Communication Lines vs. Interaction Modes
 
@@ -161,7 +161,7 @@ interaction_modes:
 
 **UI Controls:**
 1. **View selector** (top toolbar): Toggle between "Pre-TT" and "TT Design"
-2. **Perspective selector** (Pre-TT only): Radio buttons for Hierarchy / Product Lines / Value Streams
+2. **Perspective selector** (Pre-TT only): Radio buttons for Hierarchy / Product Lines / Business Streams
 3. **Visibility toggles**: Show/hide communication lines (Pre-TT) or interaction modes (TT)
 
 **Data consistency:**

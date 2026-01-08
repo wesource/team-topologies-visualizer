@@ -203,7 +203,7 @@ The tool uses two primary views:
 │   ├── renderer-common.js     # Shared rendering utilities
 │   ├── renderer-current.js    # Pre-TT state rendering (Hierarchy view)
 │   ├── renderer-product-lines.js      # Pre-TT Product Lines view
-│   ├── renderer-value-streams.js      # Pre-TT Value Streams view
+│   ├── renderer-business-streams.js   # Baseline Business Streams view
 │   ├── svg-export.js          # SVG export functionality
 │   ├── snapshot-handlers.js   # Snapshot management UI
 │   ├── tt-comparison-view.js  # Side-by-side snapshot comparison
@@ -459,7 +459,7 @@ metadata:
   line_manager: Rachel Martinez   # Reports to (org hierarchy)
   established: 2018-06
   cognitive_load: very-high
-value_stream: B2B Fleet Management # Groups in Business Streams view
+business_stream: B2B Fleet Management # Groups in Business Streams view
 ---
 
 # Team description in markdown...
