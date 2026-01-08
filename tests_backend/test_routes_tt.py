@@ -1,8 +1,5 @@
 """Tests for TT-Design API routes"""
-import json
-from pathlib import Path
 
-import pytest
 from fastapi.testclient import TestClient
 
 from main import app
@@ -29,11 +26,11 @@ class TestTTTeamTypesEndpoint:
         """Should return team types with expected keys"""
         response = client.get("/api/tt/team-types")
         data = response.json()
-        
+
         # Should have team_types array
         assert "team_types" in data
         assert isinstance(data["team_types"], list)
-        
+
         # Each team type should have required fields
         if len(data["team_types"]) > 0:
             team_type = data["team_types"][0]
@@ -61,7 +58,7 @@ class TestTTTeamsEndpoint:
         """Each team should have required fields"""
         response = client.get("/api/tt/teams")
         teams = response.json()
-        
+
         if len(teams) > 0:
             team = teams[0]
             assert "name" in team
@@ -77,7 +74,7 @@ class TestTTTeamDetailEndpoint:
         # First get a valid team name
         teams_response = client.get("/api/tt/teams")
         teams = teams_response.json()
-        
+
         if len(teams) > 0:
             team_name = teams[0]["name"]
             response = client.get(f"/api/tt/teams/{team_name}")
@@ -92,12 +89,12 @@ class TestTTTeamDetailEndpoint:
         """Should return a single team object with all fields"""
         teams_response = client.get("/api/tt/teams")
         teams = teams_response.json()
-        
+
         if len(teams) > 0:
             team_name = teams[0]["name"]
             response = client.get(f"/api/tt/teams/{team_name}")
             team = response.json()
-            
+
             assert "name" in team
             assert "team_type" in team
             assert "position" in team
@@ -111,7 +108,7 @@ class TestTTUpdateTeamPosition:
         """Should return 200 when updating position"""
         teams_response = client.get("/api/tt/teams")
         teams = teams_response.json()
-        
+
         if len(teams) > 0:
             team_name = teams[0]["name"]
             response = client.patch(
@@ -124,16 +121,16 @@ class TestTTUpdateTeamPosition:
         """Should return the updated position in response"""
         teams_response = client.get("/api/tt/teams")
         teams = teams_response.json()
-        
+
         if len(teams) > 0:
             team_name = teams[0]["name"]
             new_x, new_y = 150, 250
-            
+
             response = client.patch(
                 f"/api/tt/teams/{team_name}/position",
                 json={"x": new_x, "y": new_y}
             )
-            
+
             result = response.json()
             assert "position" in result
             assert result["position"]["x"] == new_x
@@ -151,10 +148,10 @@ class TestTTUpdateTeamPosition:
         """Should return 422 for invalid position data"""
         teams_response = client.get("/api/tt/teams")
         teams = teams_response.json()
-        
+
         if len(teams) > 0:
             team_name = teams[0]["name"]
-            
+
             # Missing required fields
             response = client.patch(
                 f"/api/tt/teams/{team_name}/position",
@@ -175,7 +172,7 @@ class TestTTValidateEndpoint:
         """Should return validation report with expected structure"""
         response = client.get("/api/tt/validate")
         report = response.json()
-        
+
         # Validation report should have these keys
         assert "total_files" in report
         assert "files_with_errors" in report
