@@ -170,7 +170,6 @@ This tool provides dual visualizations to make these conversations easier.
 │   ├── validation.py          # Team API validation & YAML checks
 │   ├── snapshot_services.py   # Snapshot management for TT Design
 │   ├── comparison.py          # Snapshot comparison logic
-│   ├── routes.py              # Common API endpoints
 │   ├── routes_pre_tt.py       # Pre-TT view endpoints (/api/pre-tt/*)
 │   └── routes_tt.py           # TT Design view endpoints (/api/tt/*)
 ├── frontend/                   # HTML5 Canvas + vanilla JS (modular architecture)
@@ -201,7 +200,7 @@ This tool provides dual visualizations to make these conversations easier.
 │   ├── tt-value-stream-grouping.js   # Value stream grouping logic
 │   ├── tt-platform-grouping.js   # Platform grouping logic
 │   ├── vitest.config.js       # Vitest test configuration
-│   └── *.test.js              # Frontend unit tests (195 tests)
+│   └── *.test.js              # Frontend unit tests (329 tests)
 ├── data/
 │   ├── current-teams/         # Your pre-TT baseline state
 │   │   ├── current-team-types.json    # Team type config
@@ -212,11 +211,13 @@ This tool provides dual visualizations to make these conversations easier.
 │   │   └── *.md               # Team files
 │   └── snapshots/             # TT Design snapshots (immutable history)
 │       └── *.json             # Timestamped snapshot files
-├── tests_backend/             # Backend unit tests (55 tests with pytest)
+├── tests_backend/             # Backend unit tests (133 tests with pytest)
 │   ├── test_main.py
 │   ├── test_team_api_fields.py
 │   ├── test_url_safe_team_names.py
 │   ├── test_interaction_table_parsing.py
+│   ├── test_dependency_parsing.py
+│   ├── test_routes_tt.py
 │   └── test_snapshots.py
 ├── tests/                     # E2E tests with Playwright (82 tests)
 │   ├── api-validation.spec.ts      # API endpoint validation
@@ -235,7 +236,7 @@ This tool provides dual visualizations to make these conversations easier.
     └── svgs/                  # SVG assets for documentation
 ```
 
-**Test Coverage**: 332 tests total (55 backend + 195 frontend + 82 E2E)
+**Test Coverage**: 544 tests total (133 backend + 329 frontend + 82 E2E)
 
 ## Documentation
 

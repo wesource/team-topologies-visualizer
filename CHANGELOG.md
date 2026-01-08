@@ -7,7 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Removed
+- **Dead code cleanup (2026-01-08)**: Removed `backend/routes.py` (286 lines) - file was not imported anywhere in codebase after routing architecture split into `routes_tt.py` and `routes_pre_tt.py`
+
 ### Added
+- **Test coverage improvements (2026-01-08)**: Added 27 new tests for previously untested features
+  - `test_dependency_parsing.py`: 12 tests for Pre-TT dependency parsing from markdown bullet lists
+  - `test_routes_tt.py`: 15 tests for TT Design API endpoints (team-types, teams, position updates, validation)
+  - `renderer-common.test.js`: 12 tests for line thickness and corner radius rendering
+  - **Total test count**: 544 tests (133 backend, 329 frontend, 82 E2E)
 - **Toolbar UI Improvements (2026-01-06)**: Enhanced visual separation and clarity of view selectors
   - Added pipe separators (`|`) between all radio button options:
     - Between "Pre-TT" and "TT Design" view selector

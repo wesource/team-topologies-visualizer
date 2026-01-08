@@ -4,31 +4,31 @@
       "id": "feature-team",
       "name": "Feature Team",
       "description": "Small, cross-functional teams that own and deliver complete product features end-to-end. Responsible for the full lifecycle of their features.",
-      "color": "#E74C3C"
+      "color": "#FF6B6B"
     },
     {
       "id": "component-team",
       "name": "Component Team",
       "description": "Teams organized around technical components rather than customer value streams. Anti-pattern in many contexts.",
-      "color": "#95A5A6"
+      "color": "#B8C5C9"
     },
     {
       "id": "platform-team",
       "name": "Platform Team",
       "description": "Teams that own shared/core components and maintain the common foundation other teams build on. Provide internal services and infrastructure.",
-      "color": "#1ABC9C"
+      "color": "#5DD9C1"
     },
     {
       "id": "support-team",
       "name": "Enabling/Support Team",
       "description": "Teams that support other teams with specialized skills, coaching, or specialist work (e.g., architects, testing specialists, documentation teams).",
-      "color": "#F4D03F"
+      "color": "#FFE156"
     },
     {
       "id": "undefined",
       "name": "Undefined Team",
       "description": "Teams not yet classified into organizational team types. Used during organizational assessment or transition periods.",
-      "color": "#E8E8E8"
+      "color": "#F5F5F5"
     }
   ]
 }

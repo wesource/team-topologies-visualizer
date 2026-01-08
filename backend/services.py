@@ -115,6 +115,11 @@ def parse_team_file(file_path: Path) -> TeamData:
 
             # Parse interaction tables from markdown content (for visualization connections)
             dependencies, interaction_modes = _parse_interaction_tables(markdown_content)
+
+            # Also parse Pre-TT style dependencies from bullet lists
+            if not dependencies:
+                dependencies = _parse_dependency_bullets(markdown_content)
+
             if dependencies:
                 data['dependencies'] = dependencies
             if interaction_modes:
@@ -181,6 +186,63 @@ def _parse_interaction_tables(markdown_content: str) -> tuple[list[str], dict[st
                         interaction_modes[team_name] = interaction_mode
 
     return dependencies, interaction_modes
+
+
+def _parse_dependency_bullets(markdown_content: str) -> list[str]:
+    """Parse Pre-TT style dependencies from bullet lists under ## Dependencies section.
+
+    Expected format:
+    ## Dependencies
+    - Database Team - Schema changes, database performance tuning
+    - API Framework Team - Shared API infrastructure and standards
+
+    Or:
+    ## Dependencies
+    - **Backend Services Team**: All business logic and data access
+    - **Database Team**: Read replicas, reporting queries
+
+    Returns:
+        List of team names
+    """
+    dependencies = []
+
+    # Find the "Dependencies" section
+    dependencies_match = re.search(
+        r'## Dependencies\s*\n(.*?)(?=\n## |$)',
+        markdown_content,
+        re.DOTALL | re.IGNORECASE
+    )
+
+    if not dependencies_match:
+        return dependencies
+
+    section_content = dependencies_match.group(1)
+
+    # Parse bullet points
+    lines = section_content.strip().split('\n')
+    for line in lines:
+        if line.strip().startswith('-'):
+            # Extract team name from bullet point
+            # Handle both formats:
+            # - Database Team - Description
+            # - **Backend Services Team**: Description
+            line = line.strip()[1:].strip()  # Remove '-' and whitespace
+
+            # Check for bold markdown **Team Name**:
+            bold_match = re.match(r'\*\*([^*]+)\*\*:', line)
+            if bold_match:
+                team_name = bold_match.group(1).strip()
+                dependencies.append(team_name)
+            else:
+                # Check for plain format: Team Name - Description
+                dash_match = re.match(r'([^-:]+?)(?:\s*[-:]|$)', line)
+                if dash_match:
+                    team_name = dash_match.group(1).strip()
+                    # Filter out common non-team text
+                    if team_name and not team_name.lower().startswith(('teams we', 'internal', 'external')):
+                        dependencies.append(team_name)
+
+    return dependencies
 
 
 def write_team_file(team: TeamData, data_dir: Path) -> Path:

@@ -72,7 +72,9 @@ export function draw(state) {
     } else {
         // Draw connections first (only if enabled in current view)
         if (!(state.currentView === 'current' && !state.showConnections)) {
-            drawConnections(state.ctx, teamsToRender, state.currentView, state.showInteractionModes, state.currentPerspective, state.productLinesTeamPositions, state.focusedTeam, state.focusedConnections);
+            // Use null for hierarchy view (teams use standard positions)
+            const customPositions = state.currentPerspective === 'hierarchy' ? null : state.productLinesTeamPositions;
+            drawConnections(state.ctx, teamsToRender, state.currentView, state.showInteractionModes, state.currentPerspective, customPositions, state.focusedTeam, state.focusedConnections);
         }
 
         // Draw teams

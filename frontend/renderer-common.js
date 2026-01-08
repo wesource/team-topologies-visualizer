@@ -697,12 +697,14 @@ export function drawConnections(ctx, teams, currentView = 'current', showInterac
 function drawConnection(ctx, from, to, mode, currentView = 'current', currentPerspective = 'hierarchy', customTeamPositions = null, focusedTeam = null, focusedConnections = null) {
     const style = INTERACTION_STYLES[mode] || INTERACTION_STYLES['collaboration'];
 
-    // Apply opacity based on focus mode
+    // Apply opacity and line width based on focus mode
     let opacity = 1.0;
+    let lineWidthBoost = 0;
     if (focusedTeam && focusedConnections) {
         // Check if both endpoints are in focused network
         if (focusedConnections.has(from.name) && focusedConnections.has(to.name)) {
             opacity = 1.0; // Full opacity for focused connections
+            lineWidthBoost = 2; // Make focused lines thicker (+2px)
         } else {
             opacity = 0.1; // Nearly invisible for unrelated connections
         }
@@ -741,7 +743,7 @@ function drawConnection(ctx, from, to, mode, currentView = 'current', currentPer
     }
 
     ctx.strokeStyle = style.color;
-    ctx.lineWidth = style.width;
+    ctx.lineWidth = style.width + lineWidthBoost;
     ctx.setLineDash(style.dash);
     ctx.beginPath();
     ctx.moveTo(fromX, fromY);
@@ -761,11 +763,13 @@ function drawConnection(ctx, from, to, mode, currentView = 'current', currentPer
 }
 
 function drawActualCommsConnection(ctx, from, to, currentView = 'current', currentPerspective = 'hierarchy', customTeamPositions = null, focusedTeam = null, focusedConnections = null) {
-    // Apply opacity based on focus mode
+    // Apply opacity and line width based on focus mode
     let opacity = 1.0;
+    let lineWidthBoost = 0;
     if (focusedTeam && focusedConnections) {
         if (focusedConnections.has(from.name) && focusedConnections.has(to.name)) {
             opacity = 1.0; // Full opacity for focused connections
+            lineWidthBoost = 2; // Make focused lines thicker (+2px)
         } else {
             opacity = 0.1; // Nearly invisible for unrelated connections
         }
@@ -816,7 +820,7 @@ function drawActualCommsConnection(ctx, from, to, currentView = 'current', curre
 
     // Fat gray line (realistic, not TT-designed)
     ctx.strokeStyle = '#666666';
-    ctx.lineWidth = 4;
+    ctx.lineWidth = 4 + lineWidthBoost;
     ctx.setLineDash([]);
     ctx.beginPath();
     ctx.moveTo(lineFromX, lineFromY);
