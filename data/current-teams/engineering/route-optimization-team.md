@@ -1,6 +1,7 @@
 ---
 name: Route Optimization Team
 team_type: feature-team
+product_line: RouteOptix
 position:
   x: 80.0
   y: 530.0

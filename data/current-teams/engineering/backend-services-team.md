@@ -1,6 +1,7 @@
 ---
 name: Backend Services Team
 team_type: feature-team
+product_line: DispatchHub
 position:
   x: 80.0
   y: 410.0

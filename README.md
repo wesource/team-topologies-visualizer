@@ -432,20 +432,22 @@ Teams are stored as markdown files with YAML front matter. Team types, colors, a
 **Current State teams** (`data/current-teams/`) include:
 ```yaml
 ---
-name: Core Product Team
-team_type: feature-team            # Must match an id from current-team-types.json or tt-team-types.json
-line_manager: Marcus Thompson      # Reports to (org hierarchy)
+name: Backend Services Team
+team_type: feature-team            # Must match an id from current-team-types.json
+product_line: DispatchHub          # Groups in Product Lines view (vertical lanes)
 dependencies:
-  - Database Platform Team
-interaction_modes:
-  Database Platform Team: collaboration
+  - Database Team
+  - API Framework Team
 position:
-  x: 300
-  y: 200
+  x: 80
+  y: 410
 metadata:
-  size: 6
+  size: 8
   department: Engineering
-  product: RouteOptix
+  line_manager: Rachel Martinez   # Reports to (org hierarchy)
+  established: 2018-06
+  cognitive_load: very-high
+value_stream: B2B Fleet Management # Groups in Value Streams view
 ---
 
 # Team description in markdown...

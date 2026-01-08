@@ -1,6 +1,7 @@
 ---
 name: Mobile App Team
 team_type: feature-team
+product_line: Driver Mobile Apps
 position:
   x: 619.6800000000001
   y: 644.0479999999999

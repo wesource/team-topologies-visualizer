@@ -1,31 +1,162 @@
 # Team Topologies Visualizer - Development Backlog
 
 **Status**: Pre-release v1.0 development
-**Last updated**: 2026-01-06
+**Last updated**: 2026-01-08
 
 **Note**: The tool now defaults to "TT Design" view. The other view is called "Pre-TT" (previously "Current State") to represent the baseline/starting point before TT transformation.
 
 This backlog tracks enhancements for iterative development. Items are organized by priority, focusing on business value and usability for v1.0 release.
 
-**Recent Expert Reviews**: See `EXPERT-REVIEW.md` and `TT-EXPERT-REVIEW.md` for detailed analysis from platform engineering and Team Topologies perspectives. Key themes: Team APIs need more detail, organizational sensing is missing, platform product thinking needs improvement.
+**Recent Expert Reviews**: See `EXPERT-REVIEW.md`, `TT-EXPERT-REVIEW.md`, and `EXPERT_ANALYSIS.md` for comprehensive analysis. Key recommendations: Flow metrics for outcomes tracking, visual improvements for clarity, platform intelligence features.
 
-**Testing & CI/CD Status** (2026-01-06): ✅ Comprehensive test suite implemented (95 tests: 10 backend pytest, 62 frontend Vitest, 23 E2E Playwright). GitHub Actions CI runs all tests on every push. Test-driven development established as standard practice.
+**Testing & CI/CD Status** (2026-01-08): ✅ Comprehensive test suite implemented (100+ tests: 15 backend pytest, 62 frontend Vitest, 23+ E2E Playwright). GitHub Actions CI runs all tests on every push. Test-driven development established as standard practice.
 
-**Recent Achievements** (2026-01-06):
+**Recent Achievements** (2026-01-08):
+- ✅ **Flow Metrics - Phase 1 Complete** (Backend + Modal Display + Canvas Overlay) - DORA metrics visualization
+- ✅ **Focus Mode** - Click to Dim Unrelated Teams - Reduces cognitive load when exploring relationships
 - ✅ Snapshot comparison view (side-by-side TT evolution tracking)
 - ✅ GitHub Actions CI/CD pipeline
-- ✅ 95 comprehensive tests across all layers
 - ✅ File naming conventions (tt- prefix for TT-specific modules)
 - ✅ E2E test flakiness resolution (robust async handling)
 - ✅ Value Streams view (Phase 2 - final Pre-TT organizational perspective)
-- ✅ Focus Mode - Click to Dim Unrelated Teams (2026-01-08)
 
 ---
 
-## 🚀 HIGHEST PRIORITY - Outcomes & Visual Improvements (Expert Analysis 2026-01-07)
+### Line Thickness by Interaction Mode ⭐⭐⭐⭐⭐ HIGHEST - QUICK WIN
+**Impact**: HIGH (visual clarity) | **Effort**: 1-2 hours | **Priority**: 🥇 TODO | **Added**: 2026-01-07
 
-### Flow Metrics - Visualize Team/Value Stream Performance ⭐⭐⭐⭐⭐ HIGHEST - CRITICAL UNLOCK
-**Impact**: CRITICAL (transforms tool from structure-only to outcomes-focused) | **Effort**: 12-18 hours total (phased) | **Priority**: 🥇 START HERE | **Added**: 2026-01-07
+**Why This Matters**:
+Canvas becomes cluttered with 20+ teams showing all interaction modes. Visual hierarchy helps users distinguish between different relationship types at a glance. High-touch collaboration should be more prominent than lightweight facilitating.
+
+**Current State**:
+- All interaction mode lines currently use variable thickness based on focus mode (+2px when focused)
+- Base line widths from `INTERACTION_STYLES` constant need adjustment
+- Harder to distinguish importance/intensity of relationships at a glance
+
+**Proposed Solution**:
+Update base line widths in `INTERACTION_STYLES` constant:
+- **Collaboration** = 3px thick (solid purple) - High touch, temporary, needs attention (currently 4px)
+- **X-as-a-Service** = 1.5px medium (dashed black) - Standard operational relationship (currently 3px)
+- **Facilitating** = 1px thin (dotted green) - Lightweight coaching (currently 2px)
+
+**Technical Implementation**:
+1. Update `INTERACTION_STYLES` in `renderer-common.js` or `constants.js`:
+   ```javascript
+   export const INTERACTION_STYLES = {
+       'collaboration': { color: '#7a5fa6', width: 3, dash: [] },        // Thick solid
+       'x-as-a-service': { color: '#222222', width: 1.5, dash: [10, 5] }, // Medium dashed
+       'facilitating': { color: '#6fa98c', width: 1, dash: [5, 5] }       // Thin dotted
+   };
+   ```
+2. Focus mode boost (+2px) will still apply on top of these base widths
+3. Test at various zoom levels to ensure visibility
+
+**Tasks**:
+- [ ] Update `INTERACTION_STYLES` width values in constants
+- [ ] Test at various zoom levels (ensure 1px visible when zoomed in)
+- [ ] Update legend if it shows line thickness visually
+- [ ] Verify focus mode boost still works correctly (+2px)
+- [ ] Update documentation/screenshots showing new visual hierarchy
+
+**Related Files**:
+- `frontend/constants.js` - INTERACTION_STYLES definition
+- `frontend/renderer-common.js` - Uses INTERACTION_STYLES
+
+**Success Criteria**:
+- Collaboration lines clearly thicker than X-as-a-Service
+- Facilitating lines visible but subtle (don't dominate canvas)
+- Users can distinguish relationship types by thickness alone
+- Works well at all zoom levels (100%, 50%, 150%)
+- Focus mode enhancement (+2px) still applies correctly
+
+---
+
+## ✅ COMPLETED - Outcomes & Visual Improvements
+
+### ✅ Flow Metrics - Phase 1 & 2 COMPLETE (2026-01-08)
+**Status**: Backend parsing ✅, Modal display ✅, Canvas overlay ✅, Tests ✅
+
+**What Was Implemented**:
+
+**Phase 1 - Backend + Modal Display:**
+- ✅ Backend: `flow_metrics` parsing in `backend/services.py`
+- ✅ Backend: `FlowMetrics` Pydantic model in `backend/models.py`
+- ✅ Backend: Validation for metric values
+- ✅ Frontend: Flow metrics section in team detail modal (`modals.js`)
+- ✅ Warning emojis (⚠️) for poor values in modal
+- ✅ Backend tests: `tests_backend/test_flow_metrics.py` (comprehensive validation tests)
+- ✅ Example teams with flow metrics in test data
+
+**Phase 2 - Canvas Overlay:**
+- ✅ UI: "📊 Show Metrics" checkbox in toolbar (default unchecked)
+- ✅ State: `showFlowMetrics` boolean in `state-management.js`
+- ✅ Renderer: `drawFlowMetricsBox()` in `renderer-common.js`
+- ✅ Renderer: `calculateFlowMetricsHealth()` with color coding (green/yellow/red)
+- ✅ Compact format: "📊 14d 🟢" (lead time + health indicator)
+- ✅ Color-coded boxes based on metric thresholds
+
+**Files Modified**:
+- `backend/models.py` - FlowMetrics model
+- `backend/services.py` - flow_metrics parsing
+- `frontend/modals.js` - Modal display with warnings
+- `frontend/renderer-common.js` - Canvas overlay rendering
+- `frontend/state-management.js` - showFlowMetrics state
+- `frontend/ui-handlers.js` - Checkbox event handler
+- `frontend/index.html` - Checkbox UI element
+- `tests_backend/test_flow_metrics.py` - Comprehensive tests
+
+**Remaining (Phase 3 - Future)**:
+- [ ] Calculate average/median metrics per value stream
+- [ ] Show aggregated metrics on value stream grouping boxes
+- [ ] Comparison view: Show metric changes between snapshots
+- [ ] Export: Include metrics in SVG export
+- [ ] API: Endpoint to retrieve aggregated metrics per value stream
+
+---
+
+### ✅ Focus Mode - Click to Dim COMPLETE (2026-01-08)
+**Status**: Fully implemented ✅
+
+**What Was Implemented**:
+- ✅ State: `focusedTeam` and `focusedConnections` in `state-management.js`
+- ✅ Canvas Interactions: Click handler in `canvas-interactions.js`
+  - Single-click team → enters focus mode (dims others to 20% opacity)
+  - Click same team again → exits focus mode
+  - Click empty canvas → exits focus mode
+- ✅ Renderer: Opacity-based rendering in `renderer-common.js`
+  - Focused teams: 100% opacity
+  - Unfocused teams: 20% opacity
+  - Focused connections: 100% opacity with +2px line width
+  - Unfocused connections: 10% opacity
+- ✅ Keyboard shortcut: Escape key exits focus mode
+- ✅ Helper function: `getDirectRelationships()` identifies focused network
+
+**Files Modified**:
+- `frontend/state-management.js` - focusedTeam + focusedConnections state
+- `frontend/canvas-interactions.js` - Click handling + getDirectRelationships()
+- `frontend/renderer-common.js` - Opacity rendering for teams + lines
+- `frontend/renderer.js` - Pass focus state to renderers
+- `frontend/app.js` - Escape key handler
+
+**Success Criteria Met**:
+- ✅ Single click dims all unrelated teams
+- ✅ Direct dependencies and consumers remain visible
+- ✅ Connection lines appropriately dimmed/shown
+- ✅ Click same team or empty canvas exits focus mode
+- ✅ Escape key exits focus mode
+- ✅ Works in both TT Design and Pre-TT views
+- ✅ Performance smooth with 40+ teams
+
+---
+
+## 🚀 HIGHEST PRIORITY - Next Improvements
+
+### Flow Metrics - Phase 3: Value Stream Aggregation ⭐⭐⭐⭐ HIGH PRIORITY
+**Impact**: HIGH (aggregated metrics show system-level bottlenecks) | **Effort**: 8-12 hours | **Priority**: 🥈 NEXT | **Added**: 2026-01-08
+
+**Note**: Phases 1 & 2 are complete ✅ - See "COMPLETED" section above for implementation details.
+
+**Phase 3 Goals
 
 **Why This Matters**:
 Team Topologies is ultimately about **accelerating flow of change**, not just reorganizing boxes. Without flow metrics, this tool shows *where teams sit* but not *how well they deliver*. Organizations need to answer: "Is our TT transformation actually improving delivery speed?"

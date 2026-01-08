@@ -1,6 +1,7 @@
 ---
 name: European Transport Solutions Team
 team_type: feature-team
+product_line: Customer Solutions
 position:
   x: 1990.0
   y: 650.0

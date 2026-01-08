@@ -1,6 +1,7 @@
 ---
 name: Web Frontend Team
 team_type: feature-team
+product_line: DispatchHub
 position:
   x: 300.0
   y: 410.0
