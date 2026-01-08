@@ -1,4 +1,6 @@
 """FastAPI application setup and configuration"""
+import os
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -36,6 +38,14 @@ async def root():
         "message": "Team Topologies API",
         "docs": "/docs",
         "frontend": "/static/index.html"
+    }
+
+
+@app.get("/api/config")
+async def get_config():
+    """Get application configuration (e.g., demo mode status)"""
+    return {
+        "readOnlyMode": os.getenv("READ_ONLY_MODE") == "true"
     }
 
 

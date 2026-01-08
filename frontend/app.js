@@ -52,6 +52,8 @@ function init() {
     window._testHelpers = {
         showTeamDetails
     };
+    // Check if in demo mode and show banner
+    checkDemoMode();
     // Load initial data
     loadAllTeams();
 }
@@ -124,3 +126,27 @@ function updateTeamList() {
         teamList.appendChild(item);
     });
 }
+
+async function checkDemoMode() {
+    try {
+        const response = await fetch('/api/config');
+        const config = await response.json();
+        if (config.readOnlyMode) {
+            showDemoBanner();
+        }
+    } catch (error) {
+        console.warn('Failed to check demo mode:', error);
+    }
+}
+
+function showDemoBanner() {
+    const banner = document.createElement('div');
+    banner.className = 'demo-banner';
+    banner.innerHTML = `
+        <span class="demo-banner-icon">🎮</span>
+        <strong>Demo Mode:</strong> Feel free to explore and interact with the visualization. 
+        Changes won't be saved.
+    `;
+    document.body.insertBefore(banner, document.body.firstChild);
+}
+

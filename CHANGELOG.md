@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Demo Mode (2026-01-08)**: Read-only mode for public demonstrations and workshops
+  - **Backend**: `READ_ONLY_MODE` environment variable blocks writes (403 Forbidden)
+    - Position updates blocked for both Pre-TT and TT Design teams
+    - Snapshot creation blocked
+    - `/api/config` endpoint exposes demo mode status to frontend
+  - **Frontend**: Purple gradient banner when in demo mode
+    - Animated slideDown entrance with pulsing icon
+    - Clear messaging: "Feel free to explore. Changes won't be saved"
+  - **Convenience scripts**: `start-demo.ps1` (Windows) and `start-demo.sh` (Linux/Mac)
+  - **Docker support**: `-e READ_ONLY_MODE=true` flag
+  - **Tests**: 5 backend tests + 1 E2E test for demo mode functionality
+  - **Rationale**: Enable safe public hosting where users can interact without persisting changes or corrupting shared data
+
 ### Removed
 - **Dead code cleanup (2026-01-08)**: Removed `backend/routes.py` (286 lines) - file was not imported anywhere in codebase after routing architecture split into `routes_tt.py` and `routes_pre_tt.py`
 

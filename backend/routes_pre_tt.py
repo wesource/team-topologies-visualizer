@@ -1,5 +1,6 @@
 """API routes for Pre-TT (current-teams) data management"""
 import json
+import os
 from typing import Any
 
 from fastapi import APIRouter, HTTPException
@@ -192,6 +193,9 @@ async def get_team(team_name: str):
 @router.patch("/teams/{team_name}/position")
 async def update_team_position(team_name: str, position: PositionUpdate):
     """Update only the position of a Pre-TT team (for drag-and-drop on canvas)"""
+    if os.getenv("READ_ONLY_MODE") == "true":
+        raise HTTPException(status_code=403, detail="Modifications not allowed in demo mode")
+
     result = find_team_by_name_or_slug(team_name, "current")
 
     if result is None:
@@ -223,6 +227,9 @@ async def create_new_snapshot(request: CreateSnapshotRequest):
     If team_names is provided, creates a filtered snapshot with only those teams.
     Otherwise, includes all teams.
     """
+    if os.getenv("READ_ONLY_MODE") == "true":
+        raise HTTPException(status_code=403, detail="Modifications not allowed in demo mode")
+
     try:
         snapshot = create_snapshot(
             name=request.name,

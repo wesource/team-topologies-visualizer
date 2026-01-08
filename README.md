@@ -70,6 +70,26 @@ A web application with dual visualization of organizational team structures. Vis
 
 The `-v` flag mounts your local `data/` directory so you can edit team files outside the container.
 
+### Demo Mode (Read-Only)
+
+For public demonstrations or workshops where you want users to explore without saving changes:
+
+**Local:**
+```bash
+# Windows
+.\start-demo.ps1
+
+# Linux/Mac
+./start-demo.sh
+```
+
+**Docker:**
+```bash
+docker run -p 8000:8000 -e READ_ONLY_MODE=true team-topologies-viz
+```
+
+Demo mode displays a banner and blocks all write operations (position updates, snapshot creation) while allowing full interaction with the visualization.
+
 See [SETUP.md](docs/SETUP.md) for detailed installation and configuration instructions.
 
 ## Why This Tool?

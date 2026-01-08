@@ -10,6 +10,45 @@ body {
     color: #333;
 }
 
+/* Demo Mode Banner */
+.demo-banner {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 0.75rem 2rem;
+    text-align: center;
+    font-size: 0.95rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    animation: slideDown 0.4s ease-out;
+    position: relative;
+    z-index: 1000;
+}
+
+.demo-banner-icon {
+    display: inline-block;
+    margin-right: 0.5rem;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
 .container {
     display: flex;
     flex-direction: column;
