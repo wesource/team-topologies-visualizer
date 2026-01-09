@@ -4,7 +4,7 @@
  * Nested vertical layout with large business stream containers
  */
 
-import { drawTeam, wrapText } from './renderer-common.js';
+import { drawTeam, wrapText, getTeamBoxWidth, getTeamBoxHeight } from './renderer-common.js';
 import { state } from './state-management.js';
 
 const LAYOUT = {
@@ -153,12 +153,28 @@ function drawProductSection(ctx, x, y, width, height, productName, teams, allTea
         const originalY = team.position?.y;
         team.position = { x: teamX, y: teamY };
 
-        // Track position for click detection and selection
-        state.businessStreamsTeamPositions.set(team.name, { x: teamX, y: teamY, width: LAYOUT.teamWidth, height: LAYOUT.teamHeight });
+        // Get actual rendered dimensions (not layout dimensions)
+        const actualWidth = getTeamBoxWidth(team, 'current');
+        const actualHeight = getTeamBoxHeight(team, 'current');
+
+        // Track position for click detection and selection using actual dimensions
+        state.businessStreamsTeamPositions.set(team.name, { x: teamX, y: teamY, width: actualWidth, height: actualHeight });
+
+        // Debug logging for specific teams
+        if (team.name === 'Web Frontend Team' || team.name === 'Database Team') {
+            console.log(`📍 Team "${team.name}" positioned at:`, {
+                x: teamX,
+                y: teamY,
+                width: actualWidth,
+                height: actualHeight,
+                center: { x: teamX + actualWidth / 2, y: teamY + actualHeight / 2 }
+            });
+        }
 
         drawTeam(ctx, team, state.selectedTeam, state.teamColorMap,
             (text, maxWidth) => wrapText(ctx, text, maxWidth),
-            'current', state.showCognitiveLoad, null, state.showTeamTypeBadges);
+            'current', state.showCognitiveLoad, null, state.showTeamTypeBadges,
+            null, null, state.focusedTeam, state.focusedConnections);
 
         // Restore original position
         if (originalX !== undefined && originalY !== undefined) {
@@ -186,7 +202,7 @@ function drawUngroupedProductsSection(ctx, x, y, width, height, products, allTea
     ctx.fillStyle = '#856404';
     ctx.font = 'bold 16px Inter, system-ui, -apple-system, sans-serif';
     ctx.textAlign = 'left';
-    ctx.fillText('⚠ Products not assigned to a value stream', x + 20, y + 30);
+    ctx.fillText('⚠ Products not assigned to a business stream', x + 20, y + 30);
 
     let productY = y + 70;
 
@@ -208,7 +224,7 @@ function drawUngroupedTeams(ctx, x, y, teams, allTeams) {
     ctx.fillStyle = '#6c757d';
     ctx.font = 'bold 14px Inter, system-ui, -apple-system, sans-serif';
     ctx.textAlign = 'left';
-    ctx.fillText('⚠ Teams Without Product or Value Stream', x, y + 20);
+    ctx.fillText('⚠ Teams Without Product or Business Stream', x, y + 20);
 
     let teamX = x;
     let teamY = y + 40;
@@ -221,12 +237,28 @@ function drawUngroupedTeams(ctx, x, y, teams, allTeams) {
         const originalY = team.position?.y;
         team.position = { x: teamX, y: teamY };
 
-        // Track position for click detection
-        state.businessStreamsTeamPositions.set(team.name, { x: teamX, y: teamY, width: LAYOUT.teamWidth, height: LAYOUT.teamHeight });
+        // Get actual rendered dimensions
+        const actualWidth = getTeamBoxWidth(team, 'current');
+        const actualHeight = getTeamBoxHeight(team, 'current');
+
+        // Track position for click detection using actual dimensions
+        state.businessStreamsTeamPositions.set(team.name, { x: teamX, y: teamY, width: actualWidth, height: actualHeight });
+
+        // Debug logging for specific teams
+        if (team.name === 'Web Frontend Team' || team.name === 'Database Team') {
+            console.log(`📍 Ungrouped team "${team.name}" positioned at:`, {
+                x: teamX,
+                y: teamY,
+                width: actualWidth,
+                height: actualHeight,
+                center: { x: teamX + actualWidth / 2, y: teamY + actualHeight / 2 }
+            });
+        }
 
         drawTeam(ctx, team, state.selectedTeam, state.teamColorMap,
             (text, maxWidth) => wrapText(ctx, text, maxWidth),
-            'current', state.showCognitiveLoad, null, state.showTeamTypeBadges);
+            'current', state.showCognitiveLoad, null, state.showTeamTypeBadges,
+            null, null, state.focusedTeam, state.focusedConnections);
 
         // Restore original position
         if (originalX !== undefined && originalY !== undefined) {

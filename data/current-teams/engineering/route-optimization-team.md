@@ -1,7 +1,6 @@
 ---
 name: Route Optimization Team
 team_type: feature-team
-product_line: RouteOptix
 position:
   x: 80.0
   y: 530.0
@@ -11,6 +10,7 @@ metadata:
   line_manager: Marcus Thompson
   established: 2016-03
   cognitive_load: very-high
+product_line: RouteOptix
 business_stream: B2B Fleet Management
 ---
 

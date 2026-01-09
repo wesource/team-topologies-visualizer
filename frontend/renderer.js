@@ -40,7 +40,9 @@ export function draw(state) {
                 state.showCognitiveLoad,
                 state.productLinesTeamPositions,
                 state.showTeamTypeBadges,
-                state.selectedTeam
+                state.selectedTeam,
+                state.focusedTeam,
+                state.focusedConnections
             );
         } else if (state.organizationHierarchy) {
             // Hierarchy View (org chart)

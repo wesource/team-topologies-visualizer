@@ -1,11 +1,11 @@
 import { LAYOUT } from './constants.js';
 
 // Interaction mode styles (colors match Team Topologies book symbols)
-// Line thickness reflects interaction intensity: Collaboration (high-touch) > X-as-a-Service (standard) > Facilitating (lightweight)
+// Line thickness communicates interaction intensity: thick=high-touch, thin=lightweight
 export const INTERACTION_STYLES = {
-    'collaboration': { dash: [], width: 2, color: '#7a5fa6' },        // Purple, thick line (high-touch, temporary)
-    'x-as-a-service': { dash: [10, 5], width: 1, color: '#222222' },  // Near-black, medium line (standard operational)
-    'facilitating': { dash: [5, 5], width: 0.5, color: '#6fa98c' }    // Green, thin line (lightweight coaching)
+    'collaboration': { dash: [], width: 2, color: '#7a5fa6' },        // Thick (2px) - High touch, temporary
+    'x-as-a-service': { dash: [10, 5], width: 1, color: '#222222' },  // Medium (1px) - Standard operational relationship
+    'facilitating': { dash: [5, 5], width: 0.5, color: '#6fa98c' }    // Thin (0.5px) - Lightweight coaching
 };
 
 // Value stream grouping style
@@ -124,57 +124,49 @@ export function getTeamBoxHeight(team, currentView = 'current') {
  * @param {string} [currentView='current'] - Current view mode ('current' or 'tt')
  * @param {boolean} [showCognitiveLoad=false] - Whether to display cognitive load indicator
  * @param {Object|null} [comparisonData=null] - Snapshot comparison data for highlighting changes
- * @param {boolean} [showTeamTypeBadges=false] - Whether to show team type badges
- * @param {Object|null} [platformMetrics=null] - Platform consumer metrics (TT Design view only)
- * @param {boolean} [showFlowMetrics=false] - Whether to show flow metrics overlay (TT Design view only)
  * @description Renders team with type-specific shapes: rounded rectangles for stream-aligned/platform,
  * vertical boxes for enabling teams, octagons for complicated-subsystem teams
  */
 export function drawTeam(ctx, team, selectedTeam, teamColorMap, wrapText, currentView = 'current', showCognitiveLoad = false, comparisonData = null, showTeamTypeBadges = false, platformMetrics = null, showFlowMetrics = false, focusedTeam = null, focusedConnections = null) {
+    // Apply focus mode opacity if active
+    if (focusedTeam && focusedConnections) {
+        const isInFocus = focusedConnections.has(team.name);
+        ctx.globalAlpha = isInFocus ? 1.0 : 0.2;
+    }
+
     const x = team.position.x;
     const y = team.position.y;
     const width = getTeamBoxWidth(team, currentView);
     const height = getTeamBoxHeight(team, currentView);
 
-    // Apply opacity based on focus mode
-    let opacity = 1.0;
-    if (focusedTeam && focusedConnections) {
-        if (focusedConnections.has(team.name)) {
-            opacity = 1.0; // Full opacity for focused network
-        } else {
-            opacity = 0.2; // Dimmed for unrelated teams
-        }
-    }
-    ctx.globalAlpha = opacity;
-
     // Use shape-specific drawing in TT Design view
     if (currentView === 'tt') {
         if (team.team_type === 'enabling') {
             drawEnablingTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData, showTeamTypeBadges, platformMetrics, showFlowMetrics);
-            ctx.globalAlpha = 1.0; // Reset
+            ctx.globalAlpha = 1.0; // Reset opacity
             return;
         }
         if (team.team_type === 'complicated-subsystem') {
             drawComplicatedSubsystemTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData, platformMetrics, showFlowMetrics);
-            ctx.globalAlpha = 1.0; // Reset
+            ctx.globalAlpha = 1.0; // Reset opacity
             return;
         }
         if (team.team_type === 'undefined') {
             drawUndefinedTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData, platformMetrics, showFlowMetrics);
-            ctx.globalAlpha = 1.0; // Reset
+            ctx.globalAlpha = 1.0; // Reset opacity
             return;
         }
     }
 
     // Default: draw as rounded rectangle
     drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, showTeamTypeBadges, platformMetrics, currentView, showFlowMetrics);
-    ctx.globalAlpha = 1.0; // Reset
+    ctx.globalAlpha = 1.0; // Reset opacity
 }
 
 /**
  * Draw team as default box (rounded corners in TT Design, sharp corners in Pre-TT view)
  */
-function drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, showTeamTypeBadges = false, platformMetrics = null, currentView = 'current', showFlowMetrics = false) {
+function drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, showTeamTypeBadges = false, _platformMetrics = null, currentView = 'current', showFlowMetrics = false) {
 
     // Rounded corners for stream-aligned and platform teams in TT Design view
     // Sharp corners in Pre-TT view (hierarchy, product lines, value streams)
@@ -204,9 +196,10 @@ function drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamCo
     drawCognitiveLoadIndicator(ctx, team, x, y, width, showCognitiveLoad);
 
     // Platform consumer badge (TT Design view only)
-    if (platformMetrics) {
-        drawPlatformConsumerBadge(ctx, team, platformMetrics, x, y, height);
-    }
+    // TODO: Implement drawPlatformConsumerBadge function or remove this feature
+    // if (platformMetrics) {
+    //     drawPlatformConsumerBadge(ctx, team, platformMetrics, x, y, height);
+    // }
 
     // Flow metrics box (TT Design view only, when checkbox enabled)
     if (showFlowMetrics && currentView === 'tt') {
@@ -237,7 +230,7 @@ function drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamCo
  * Draw enabling team as vertical rounded rectangle
  * Shape: 80×120 vertical orientation (tall and narrow)
  */
-function drawEnablingTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData, showTeamTypeBadges = false, _platformMetrics = null) {
+function drawEnablingTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData, showTeamTypeBadges = false, _platformMetrics = null, _showFlowMetrics = false) {
     // Check if this team has a comparison badge
     let comparisonBadge = null;
     if (comparisonData) {
@@ -320,7 +313,7 @@ function drawEnablingTeam(ctx, team, x, y, width, height, selectedTeam, teamColo
  * Draw complicated-subsystem team as octagon
  * Shape: 8-sided polygon representing internal complexity
  */
-function drawComplicatedSubsystemTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData, _platformMetrics = null) {
+function drawComplicatedSubsystemTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData, _platformMetrics = null, _showFlowMetrics = false) {
     // Check if this team has a comparison badge
     let comparisonBadge = null;
     if (comparisonData) {
@@ -383,7 +376,7 @@ function drawComplicatedSubsystemTeam(ctx, team, x, y, width, height, selectedTe
 /**
  * Draw undefined team with dashed border (TT Design view only)
  */
-function drawUndefinedTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData, _platformMetrics = null) {
+function drawUndefinedTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData, _platformMetrics = null, _showFlowMetrics = false) {
     // Check if this team has a comparison badge
     let comparisonBadge = null;
     if (comparisonData) {
@@ -505,46 +498,9 @@ function drawNewTeamBadge(ctx, team, x, y, _width) {
 }
 
 /**
- * Helper: Draw platform consumer count badge (TT Design view only)
- * Shows number of teams consuming this platform with warning if overloaded
- */
-function drawPlatformConsumerBadge(ctx, team, platformMetrics, x, y, height) {
-    if (!platformMetrics || platformMetrics.totalCount === 0) return;
-
-    const { totalCount, isOverloaded } = platformMetrics;
-
-    // Position badge in bottom-left corner
-    const badgeHeight = 22;
-    const badgePadding = 8;
-    const badgeY = y + height - badgeHeight - badgePadding;
-    const badgeX = x + badgePadding;
-
-    // Calculate badge width based on text
-    ctx.font = 'bold 12px sans-serif';
-    const text = `👥 ${totalCount}${isOverloaded ? ' ⚠️' : ''}`;
-    const textWidth = ctx.measureText(text).width;
-    const badgeWidth = textWidth + 16;
-
-    // Background (semi-transparent white)
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
-    ctx.fillRect(badgeX, badgeY, badgeWidth, badgeHeight);
-
-    // Border
-    ctx.strokeStyle = isOverloaded ? '#ff9800' : '#666';
-    ctx.lineWidth = isOverloaded ? 2 : 1;
-    ctx.strokeRect(badgeX, badgeY, badgeWidth, badgeHeight);
-
-    // Text
-    ctx.fillStyle = isOverloaded ? '#ff6600' : '#333';
-    ctx.font = 'bold 12px sans-serif';
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(text, badgeX + 8, badgeY + badgeHeight / 2);
-}
-
-/**
- * Helper: Calculate flow metrics health status
- * Returns color code based on metric values: green (good), yellow (medium), red (poor)
+ * Calculate overall health status from flow metrics
+ * @param {Object} flowMetrics - Flow metrics object with lead_time_days, deployment_frequency, change_fail_rate, mttr_hours
+ * @returns {Object|null} Health status object with status, color, emoji or null if no metrics
  */
 export function calculateFlowMetricsHealth(flowMetrics) {
     if (!flowMetrics) return null;
@@ -584,8 +540,14 @@ export function calculateFlowMetricsHealth(flowMetrics) {
 }
 
 /**
- * Helper: Draw flow metrics box (TT Design view only, when checkbox enabled)
+ * Draw flow metrics box (TT Design view only, when checkbox enabled)
  * Shows compact metrics with health indicator
+ * @param {CanvasRenderingContext2D} ctx - Canvas context
+ * @param {Object} team - Team object with flow_metrics
+ * @param {number} x - Team box X position
+ * @param {number} y - Team box Y position
+ * @param {number} width - Team box width
+ * @param {number} height - Team box height
  */
 export function drawFlowMetricsBox(ctx, team, x, y, width, height) {
     if (!team.flow_metrics) return;
@@ -659,13 +621,13 @@ function drawTeamName(ctx, team, x, y, width, height, wrapText) {
 }
 
 /**
- * Calculate intersection point between a line and a rectangle edge
- * @param {number} centerX - Center X of rectangle
- * @param {number} centerY - Center Y of rectangle
- * @param {number} width - Width of rectangle
- * @param {number} height - Height of rectangle
- * @param {number} angle - Angle of line from center (in radians)
- * @returns {{x: number, y: number}} - Intersection point on rectangle edge
+ * Calculate intersection point where a line at given angle intersects a rectangular box edge
+ * @param {number} centerX - Box center X coordinate
+ * @param {number} centerY - Box center Y coordinate
+ * @param {number} width - Box width
+ * @param {number} height - Box height
+ * @param {number} angle - Angle in radians from box center
+ * @returns {{x: number, y: number}} - Intersection point coordinates
  */
 function getBoxEdgePoint(centerX, centerY, width, height, angle) {
     // Calculate which edge the line intersects based on angle
@@ -721,10 +683,16 @@ export function drawConnections(ctx, teams, currentView = 'current', showInterac
         // Current State view: show simple "Actual Comms" from dependencies
         teams.forEach(team => {
             if (team.dependencies && Array.isArray(team.dependencies)) {
+                // Debug logging for specific team
+                if (team.name === 'Web Frontend Team') {
+                    console.log(`🔗 ${team.name} has dependencies:`, team.dependencies);
+                }
                 team.dependencies.forEach(targetName => {
                     const target = teams.find(t => t.name === targetName);
                     if (target) {
                         drawActualCommsConnection(ctx, team, target, currentView, currentPerspective, customTeamPositions, focusedTeam, focusedConnections);
+                    } else {
+                        console.warn(`⚠️ Dependency target "${targetName}" not found for team "${team.name}"`);
                     }
                 });
             }
@@ -768,6 +736,16 @@ function drawConnection(ctx, from, to, mode, currentView = 'current', currentPer
         const fromBounds = customTeamPositions.get(from.name);
         const toBounds = customTeamPositions.get(to.name);
 
+        // Debug logging to diagnose missing positions
+        if ((from.name === 'Web Frontend Team' && to.name === 'Database Team') || (from.name === 'Database Team' && to.name === 'Web Frontend Team')) {
+            console.log(`🔍 Checking connection ${from.name} -> ${to.name}:`, {
+                fromBounds: fromBounds ? 'found' : 'MISSING',
+                toBounds: toBounds ? 'found' : 'MISSING',
+                perspective: currentPerspective,
+                mapSize: customTeamPositions.size
+            });
+        }
+
         if (fromBounds && toBounds) {
             fromWidth = fromBounds.width || 120;
             fromHeight = fromBounds.height || 50;
@@ -777,16 +755,20 @@ function drawConnection(ctx, from, to, mode, currentView = 'current', currentPer
             fromCenterY = fromBounds.y + fromHeight / 2;
             toCenterX = toBounds.x + toWidth / 2;
             toCenterY = toBounds.y + toHeight / 2;
+
+            // Debug logging for specific teams
+            if ((from.name === 'Web Frontend Team' && to.name === 'Database Team') || (from.name === 'Database Team' && to.name === 'Web Frontend Team')) {
+                console.log(`✅ Connection ${from.name} -> ${to.name}:`, {
+                    fromBounds,
+                    toBounds,
+                    fromCenter: { x: fromCenterX, y: fromCenterY },
+                    toCenter: { x: toCenterX, y: toCenterY }
+                });
+            }
         } else {
-            // Fall back to standard positions if not found
-            fromWidth = getTeamBoxWidth(from, currentView);
-            toWidth = getTeamBoxWidth(to, currentView);
-            fromHeight = LAYOUT.TEAM_BOX_HEIGHT;
-            toHeight = LAYOUT.TEAM_BOX_HEIGHT;
-            fromCenterX = from.position.x + fromWidth / 2;
-            fromCenterY = from.position.y + fromHeight / 2;
-            toCenterX = to.position.x + toWidth / 2;
-            toCenterY = to.position.y + toHeight / 2;
+            // One or both teams not visible in this perspective - skip drawing
+            ctx.globalAlpha = 1.0;
+            return;
         }
     } else {
         // Calculate center points dynamically based on team box width
@@ -823,7 +805,7 @@ function drawConnection(ctx, from, to, mode, currentView = 'current', currentPer
     ctx.lineTo(toEdge.x - arrowLength * Math.cos(angle + Math.PI / 6), toEdge.y - arrowLength * Math.sin(angle + Math.PI / 6));
     ctx.stroke();
     ctx.setLineDash([]);
-    ctx.globalAlpha = 1.0; // Reset
+    ctx.globalAlpha = 1.0; // Reset opacity
 }
 
 function drawActualCommsConnection(ctx, from, to, currentView = 'current', currentPerspective = 'hierarchy', customTeamPositions = null, focusedTeam = null, focusedConnections = null) {
@@ -848,6 +830,16 @@ function drawActualCommsConnection(ctx, from, to, currentView = 'current', curre
         const fromPos = customTeamPositions.get(from.name);
         const toPos = customTeamPositions.get(to.name);
 
+        // Debug logging to diagnose missing positions
+        if ((from.name === 'Web Frontend Team' && to.name === 'Database Team') || (from.name === 'Database Team' && to.name === 'Web Frontend Team')) {
+            console.log(`🔍 ActualComms checking ${from.name} -> ${to.name}:`, {
+                fromPos: fromPos ? 'found' : 'MISSING',
+                toPos: toPos ? 'found' : 'MISSING',
+                perspective: currentPerspective,
+                mapSize: customTeamPositions.size
+            });
+        }
+
         if (fromPos && toPos) {
             fromWidth = fromPos.width || 120;
             fromHeight = fromPos.height || 50;
@@ -857,16 +849,20 @@ function drawActualCommsConnection(ctx, from, to, currentView = 'current', curre
             fromCenterY = fromPos.y + fromHeight / 2;
             toCenterX = toPos.x + toWidth / 2;
             toCenterY = toPos.y + toHeight / 2;
+
+            // Debug logging for actual coordinates
+            if ((from.name === 'Web Frontend Team' && to.name === 'Database Team') || (from.name === 'Database Team' && to.name === 'Web Frontend Team')) {
+                console.log(`✅ ActualComms drawing ${from.name} -> ${to.name}:`, {
+                    fromPos,
+                    toPos,
+                    fromCenter: { x: fromCenterX, y: fromCenterY },
+                    toCenter: { x: toCenterX, y: toCenterY }
+                });
+            }
         } else {
-            // Fall back to standard positions
-            fromWidth = getTeamBoxWidth(from, currentView);
-            toWidth = getTeamBoxWidth(to, currentView);
-            fromHeight = LAYOUT.TEAM_BOX_HEIGHT;
-            toHeight = LAYOUT.TEAM_BOX_HEIGHT;
-            fromCenterX = from.position.x + fromWidth / 2;
-            fromCenterY = from.position.y + fromHeight / 2;
-            toCenterX = to.position.x + toWidth / 2;
-            toCenterY = to.position.y + toHeight / 2;
+            // One or both teams not visible in this perspective - skip drawing
+            ctx.globalAlpha = 1.0;
+            return;
         }
     } else {
         fromWidth = getTeamBoxWidth(from, currentView);
@@ -888,7 +884,13 @@ function drawActualCommsConnection(ctx, from, to, currentView = 'current', curre
 
     const arrowLength = 20;
 
-    // Draw line from edge to edge (no need to shorten anymore!)
+    // Shorten the line only at the 'to' end so it doesn't overlap with arrow (unidirectional arrow only)
+    const shortenBy = arrowLength + 2;
+    const lineFromX = fromEdge.x; // No shortening at 'from' end (no arrow there)
+    const lineFromY = fromEdge.y;
+    const lineToX = toEdge.x - shortenBy * Math.cos(angle); // Shorten at 'to' end for arrow
+    const lineToY = toEdge.y - shortenBy * Math.sin(angle);
+
     ctx.save(); // Save context state
 
     // Fat gray line (realistic, not TT-designed)
@@ -896,16 +898,16 @@ function drawActualCommsConnection(ctx, from, to, currentView = 'current', curre
     ctx.lineWidth = 4 + lineWidthBoost;
     ctx.setLineDash([]);
     ctx.beginPath();
-    ctx.moveTo(fromEdge.x, fromEdge.y);
-    ctx.lineTo(toEdge.x, toEdge.y);
+    ctx.moveTo(lineFromX, lineFromY);
+    ctx.lineTo(lineToX, lineToY);
     ctx.stroke();
 
-    // Draw arrows at edge points
+    // Draw arrows ON TOP of line for visibility
     ctx.fillStyle = '#666666';
     ctx.strokeStyle = '#666666';
     ctx.lineWidth = 1;
 
-    // Filled arrow triangle at 'to' end
+    // Filled arrow triangle at 'to' end (unidirectional - only arrow at dependency target)
     ctx.beginPath();
     ctx.moveTo(toEdge.x, toEdge.y);
     ctx.lineTo(toEdge.x - arrowLength * Math.cos(angle - Math.PI / 6), toEdge.y - arrowLength * Math.sin(angle - Math.PI / 6));
@@ -914,17 +916,8 @@ function drawActualCommsConnection(ctx, from, to, currentView = 'current', curre
     ctx.fill();
     ctx.stroke();
 
-    // Filled arrow triangle at 'from' end (opposite direction)
-    ctx.beginPath();
-    ctx.moveTo(fromEdge.x, fromEdge.y);
-    ctx.lineTo(fromEdge.x + arrowLength * Math.cos(angle - Math.PI / 6), fromEdge.y + arrowLength * Math.sin(angle - Math.PI / 6));
-    ctx.lineTo(fromEdge.x + arrowLength * Math.cos(angle + Math.PI / 6), fromEdge.y + arrowLength * Math.sin(angle + Math.PI / 6));
-    ctx.closePath();
-    ctx.fill();
-    ctx.stroke();
-
     ctx.restore(); // Restore context state
-    ctx.globalAlpha = 1.0; // Reset
+    ctx.globalAlpha = 1.0; // Reset opacity
 }
 function getTeamColor(team, teamColorMap) {
     // Try to get color from team type config
@@ -960,8 +953,8 @@ export function getTeamAtPosition(teams, x, y, viewOffset, scale, currentView = 
     const worldX = (x - viewOffset.x) / scale;
     const worldY = (y - viewOffset.y) / scale;
 
-    // Special handling for product-lines and value-streams perspectives: check tracked positions
-    if (currentView === 'current' && (currentPerspective === 'product-lines' || currentPerspective === 'value-streams') && customTeamPositions) {
+    // Special handling for product-lines, value-streams, and business-streams perspectives: check tracked positions
+    if (currentView === 'current' && (currentPerspective === 'product-lines' || currentPerspective === 'value-streams' || currentPerspective === 'business-streams') && customTeamPositions) {
         // Check each team in the positions map
         for (const [teamName, bounds] of customTeamPositions.entries()) {
             if (worldX >= bounds.x && worldX <= bounds.x + bounds.width &&

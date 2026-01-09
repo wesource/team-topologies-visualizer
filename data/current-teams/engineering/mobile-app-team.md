@@ -1,16 +1,16 @@
 ---
 name: Mobile App Team
 team_type: feature-team
-product_line: Driver Mobile Apps
 position:
-  x: 619.6800000000001
-  y: 644.0479999999999
+  x: 300.0
+  y: 530.0
 metadata:
   size: 8
   department: Engineering
   line_manager: Michael Chen
   established: 2020-01
   cognitive_load: high
+product_line: Driver Mobile Apps
 business_stream: B2C Driver Experience
 ---
 

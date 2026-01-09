@@ -1,7 +1,6 @@
 // Canvas mouse and interaction handling
 import { getTeamAtPosition } from './renderer-common.js';
 import { updateTeamPosition } from './api.js';
-import { showInfo } from './notifications.js';
 import { pushPositionSnapshot } from './state-management.js';
 import { updateUndoButtonState } from './ui-handlers.js';
 
@@ -89,9 +88,14 @@ export class CanvasInteractionHandler {
         }
 
         // Left-click for team dragging
-        const customPositions = this.state.currentPerspective === 'value-streams'
-            ? this.state.valueStreamsTeamPositions
-            : this.state.productLinesTeamPositions;
+        let customPositions = null;
+        if (this.state.currentPerspective === 'value-streams') {
+            customPositions = this.state.valueStreamsTeamPositions;
+        } else if (this.state.currentPerspective === 'product-lines') {
+            customPositions = this.state.productLinesTeamPositions;
+        } else if (this.state.currentPerspective === 'business-streams') {
+            customPositions = this.state.businessStreamsTeamPositions;
+        }
 
         const team = getTeamAtPosition(
             this.state.teams,
@@ -104,27 +108,21 @@ export class CanvasInteractionHandler {
             customPositions
         );
         if (team) {
-            // Disable dragging in Product Lines and Value Streams views
-            if (this.state.currentView === 'current' && (this.state.currentPerspective === 'product-lines' || this.state.currentPerspective === 'value-streams')) {
-                const viewName = this.state.currentPerspective === 'product-lines' ? 'Product Lines' : 'Value Streams';
-                // Show info message on first drag attempt
-                if (!this._customViewDragWarningShown) {
-                    showInfo(`Teams cannot be repositioned in ${viewName} view. Switch to Hierarchy view to move teams.`);
-                    this._customViewDragWarningShown = true;
-                    // Reset flag after 5 seconds to allow message to show again if needed
-                    setTimeout(() => {
-                        this._customViewDragWarningShown = false;
-                    }, 5000);
-                }
-                // Still select the team for viewing details
-                this.state.selectedTeam = team;
+            // Set draggedTeam for click detection (focus mode)
+            this.draggedTeam = team;
+            this.hasDragged = false;
+            this.state.selectedTeam = team;
+
+            // Disable dragging in Product Lines, Value Streams, and Business Streams views
+            if (this.state.currentView === 'current' && (this.state.currentPerspective === 'product-lines' || this.state.currentPerspective === 'value-streams' || this.state.currentPerspective === 'business-streams')) {
+                // Focus mode still works, but no dragging
+                this.dragStartPosition = null; // Prevent dragging
                 this.drawCallback();
                 return;
             }
 
-            this.draggedTeam = team;
+            // Enable dragging in other views (Hierarchy, TT Design)
             this.dragStartPosition = { x: team.position.x, y: team.position.y };
-            this.hasDragged = false;
             // Capture position snapshot before drag starts (for undo)
             pushPositionSnapshot();
             updateUndoButtonState();
@@ -132,7 +130,6 @@ export class CanvasInteractionHandler {
                 x: (x - this.state.viewOffset.x) / this.state.scale - team.position.x,
                 y: (y - this.state.viewOffset.y) / this.state.scale - team.position.y
             };
-            this.state.selectedTeam = team;
             this.drawCallback();
         }
     }

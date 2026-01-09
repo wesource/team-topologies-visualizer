@@ -24,8 +24,10 @@ const SHARED_TEAM_SPACING = 20;
  * @param {Map} teamPositions - Map to store team positions for click detection
  * @param {boolean} showTeamTypeBadges - Whether to show team type badges (Feature/Platform/etc)
  * @param {Object} selectedTeam - Currently selected team (for highlighting)
+ * @param {Object} focusedTeam - Focused team for focus mode (or null)
+ * @param {Set} focusedConnections - Set of team names in focus network
  */
-export function drawProductLinesView(ctx, productLinesData, teams, teamColorMap, wrapText, showCognitiveLoad = false, teamPositions = null, showTeamTypeBadges = false, selectedTeam = null) {
+export function drawProductLinesView(ctx, productLinesData, teams, teamColorMap, wrapText, showCognitiveLoad = false, teamPositions = null, showTeamTypeBadges = false, selectedTeam = null, focusedTeam = null, focusedConnections = null) {
     if (!productLinesData || !productLinesData.products) return;
 
     // Clear team positions map at start of rendering
@@ -52,7 +54,7 @@ export function drawProductLinesView(ctx, productLinesData, teams, teamColorMap,
     // Draw vertical product lanes
     products.forEach((product, index) => {
         const laneX = startX + index * (PRODUCT_LANE_WIDTH + PRODUCT_LANE_PADDING);
-        drawProductLane(ctx, product, laneX, startY, teamColorMap, wrapText, showCognitiveLoad, teamPositions, showTeamTypeBadges, selectedTeam);
+        drawProductLane(ctx, product, laneX, startY, teamColorMap, wrapText, showCognitiveLoad, teamPositions, showTeamTypeBadges, selectedTeam, focusedTeam, focusedConnections);
     });
 
     // Calculate shared row position (below longest product lane)
@@ -63,13 +65,13 @@ export function drawProductLinesView(ctx, productLinesData, teams, teamColorMap,
     const sharedRowY = startY + maxProductHeight + 60;
 
     // Draw horizontal shared teams row
-    drawSharedTeamsRow(ctx, sharedTeams, startX, sharedRowY, totalWidth, teamColorMap, wrapText, showCognitiveLoad, teamPositions, showTeamTypeBadges, selectedTeam);
+    drawSharedTeamsRow(ctx, sharedTeams, startX, sharedRowY, totalWidth, teamColorMap, wrapText, showCognitiveLoad, teamPositions, showTeamTypeBadges, selectedTeam, focusedTeam, focusedConnections);
 }
 
 /**
  * Draw a single product lane (vertical)
  */
-function drawProductLane(ctx, product, x, y, teamColorMap, wrapText, showCognitiveLoad, teamPositions, showTeamTypeBadges, selectedTeam) {
+function drawProductLane(ctx, product, x, y, teamColorMap, wrapText, showCognitiveLoad, teamPositions, showTeamTypeBadges, selectedTeam, focusedTeam, focusedConnections) {
     // Draw product header with color
     ctx.fillStyle = product.color || '#3498db';
     ctx.fillRect(x, y, PRODUCT_LANE_WIDTH, PRODUCT_HEADER_HEIGHT);
@@ -98,7 +100,7 @@ function drawProductLane(ctx, product, x, y, teamColorMap, wrapText, showCogniti
     // Draw teams in vertical stack
     product.teams.forEach((team, index) => {
         const teamY = y + PRODUCT_HEADER_HEIGHT + 20 + index * (TEAM_CARD_HEIGHT + TEAM_CARD_SPACING);
-        drawProductTeamCard(ctx, team, x + 10, teamY, PRODUCT_LANE_WIDTH - 20, teamColorMap, wrapText, showCognitiveLoad, teamPositions, showTeamTypeBadges, selectedTeam);
+        drawProductTeamCard(ctx, team, x + 10, teamY, PRODUCT_LANE_WIDTH - 20, teamColorMap, wrapText, showCognitiveLoad, teamPositions, showTeamTypeBadges, selectedTeam, focusedTeam, focusedConnections);
     });
 
     ctx.textAlign = 'left'; // Reset
@@ -107,10 +109,24 @@ function drawProductLane(ctx, product, x, y, teamColorMap, wrapText, showCogniti
 /**
  * Draw a team card in a product lane
  */
-function drawProductTeamCard(ctx, team, x, y, width, teamColorMap, wrapText, showCognitiveLoad, teamPositions, showTeamTypeBadges, selectedTeam) {
+function drawProductTeamCard(ctx, team, x, y, width, teamColorMap, wrapText, showCognitiveLoad, teamPositions, showTeamTypeBadges, selectedTeam, focusedTeam, focusedConnections) {
     // Record team position for click detection (store in world coordinates)
     if (teamPositions && team.name) {
         teamPositions.set(team.name, { x, y, width, height: TEAM_CARD_HEIGHT });
+
+        // Debug logging for specific teams
+        if (team.name === 'Web Frontend Team' || team.name === 'Database Team') {
+            console.log(`📦 Product team "${team.name}" positioned at:`, {
+                x, y, width, height: TEAM_CARD_HEIGHT,
+                center: { x: x + width / 2, y: y + TEAM_CARD_HEIGHT / 2 }
+            });
+        }
+    }
+
+    // Apply focus mode opacity if active
+    if (focusedTeam && focusedConnections) {
+        const isInFocus = focusedConnections.has(team.name);
+        ctx.globalAlpha = isInFocus ? 1.0 : 0.2;
     }
 
     // Get team type color (same as used in hierarchy view)
@@ -165,34 +181,37 @@ function drawProductTeamCard(ctx, team, x, y, width, teamColorMap, wrapText, sho
             ctx.textAlign = 'left'; // Reset
         }
     }
+
+    // Reset global alpha
+    ctx.globalAlpha = 1.0;
 }
 
 /**
  * Draw shared teams row (horizontal)
  */
-function drawSharedTeamsRow(ctx, sharedTeams, x, y, width, teamColorMap, wrapText, showCognitiveLoad, teamPositions, showTeamTypeBadges, selectedTeam) {
+function drawSharedTeamsRow(ctx, sharedTeams, x, y, totalWidth, teamColorMap, wrapText, showCognitiveLoad, teamPositions, showTeamTypeBadges, selectedTeam, focusedTeam, focusedConnections) {
     // Draw section header
     ctx.fillStyle = '#95a5a6';
     const headerHeight = 50;
-    ctx.fillRect(x, y, width, headerHeight);
+    ctx.fillRect(x, y, totalWidth, headerHeight);
 
     // Section title
     ctx.fillStyle = 'white';
     ctx.font = 'bold 18px Arial';
     ctx.textAlign = 'center';
-    ctx.fillText('Shared / Platform Teams', x + width / 2, y + 25);
+    ctx.fillText('Shared / Platform Teams', x + totalWidth / 2, y + 25);
     ctx.font = '12px Arial';
     ctx.fillText(`${sharedTeams.length} team${sharedTeams.length !== 1 ? 's' : ''}`,
-        x + width / 2, y + 40);
+        x + totalWidth / 2, y + 40);
 
     // Draw row background
     ctx.fillStyle = '#f8f9fa';
-    ctx.fillRect(x, y + headerHeight, width, SHARED_ROW_HEIGHT);
+    ctx.fillRect(x, y + headerHeight, totalWidth, SHARED_ROW_HEIGHT);
 
     // Draw border
     ctx.strokeStyle = '#7f8c8d';
     ctx.lineWidth = 2;
-    ctx.strokeRect(x, y, width, headerHeight + SHARED_ROW_HEIGHT);
+    ctx.strokeRect(x, y, totalWidth, headerHeight + SHARED_ROW_HEIGHT);
 
     // Draw teams horizontally
     const teamStartX = x + 20;
@@ -202,11 +221,11 @@ function drawSharedTeamsRow(ctx, sharedTeams, x, y, width, teamColorMap, wrapTex
         const teamX = teamStartX + index * (SHARED_TEAM_WIDTH + SHARED_TEAM_SPACING);
 
         // Check if we need to wrap to next row (simple layout for now)
-        if (teamX + SHARED_TEAM_WIDTH > x + width - 20) {
+        if (teamX + SHARED_TEAM_WIDTH > x + totalWidth - 20) {
             return; // Skip if it doesn't fit (we'll improve this later)
         }
 
-        drawSharedTeamCard(ctx, team, teamX, teamY, teamColorMap, wrapText, showCognitiveLoad, teamPositions, showTeamTypeBadges, selectedTeam);
+        drawSharedTeamCard(ctx, team, teamX, teamY, teamColorMap, wrapText, showCognitiveLoad, teamPositions, showTeamTypeBadges, selectedTeam, focusedTeam, focusedConnections);
     });
 
     ctx.textAlign = 'left'; // Reset
@@ -222,6 +241,14 @@ function drawSharedTeamCard(ctx, team, x, y, teamColorMap, wrapText, showCogniti
     // Record team position for click detection
     if (teamPositions && team.name) {
         teamPositions.set(team.name, { x, y, width: cardWidth, height: cardHeight });
+
+        // Debug logging for specific teams
+        if (team.name === 'Web Frontend Team' || team.name === 'Database Team') {
+            console.log(`🔧 Shared team "${team.name}" positioned at:`, {
+                x, y, width: cardWidth, height: cardHeight,
+                center: { x: x + cardWidth / 2, y: y + cardHeight / 2 }
+            });
+        }
     }
 
     // Get team type color (same as used in hierarchy view)
@@ -285,6 +312,9 @@ function drawSharedTeamCard(ctx, team, x, y, teamColorMap, wrapText, showCogniti
     }
 
     ctx.textAlign = 'left'; // Reset
+
+    // Reset global alpha
+    ctx.globalAlpha = 1.0;
 }
 
 /**

@@ -115,17 +115,23 @@ def parse_team_file(file_path: Path) -> TeamData:
                     if key in data['team_api']:
                         data[key] = data['team_api'][key]
 
-            # Parse interaction tables from markdown content (for visualization connections)
-            dependencies, interaction_modes = _parse_interaction_tables(markdown_content)
+            # Parse dependencies: Prefer YAML 'dependencies' field, fallback to markdown parsing
+            if 'dependencies' not in data or not data['dependencies']:
+                # Parse interaction tables from markdown content (for visualization connections)
+                dependencies, interaction_modes = _parse_interaction_tables(markdown_content)
 
-            # Also parse Pre-TT style dependencies from bullet lists
-            if not dependencies:
-                dependencies = _parse_dependency_bullets(markdown_content)
+                # Also parse Pre-TT style dependencies from bullet lists
+                if not dependencies:
+                    dependencies = _parse_dependency_bullets(markdown_content)
 
-            if dependencies:
-                data['dependencies'] = dependencies
-            if interaction_modes:
-                data['interaction_modes'] = interaction_modes
+                if dependencies:
+                    data['dependencies'] = dependencies
+            
+            # Parse interaction modes from markdown (always from markdown for now)
+            if 'interaction_modes' not in data:
+                _, interaction_modes = _parse_interaction_tables(markdown_content)
+                if interaction_modes:
+                    data['interaction_modes'] = interaction_modes
 
             return TeamData(**data)
 
@@ -267,6 +273,8 @@ def write_team_file_to_path(team: TeamData, file_path: Path) -> Path:
         yaml_data['team_api'] = team.team_api.dict(exclude_none=True)
     if team.purpose:
         yaml_data['purpose'] = team.purpose
+    if team.product_line:
+        yaml_data['product_line'] = team.product_line
     if team.business_stream:
         yaml_data['business_stream'] = team.business_stream
     if team.value_stream:
