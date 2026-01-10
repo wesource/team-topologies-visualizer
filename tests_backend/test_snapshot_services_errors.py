@@ -210,8 +210,7 @@ class TestCreateSnapshotErrors:
         snapshot_file = Path("data/tt-snapshots") / f"{snapshot.snapshot_id}.json"
         assert snapshot_file.exists()
 
-        # Cleanup
-        snapshot_file.unlink()
+        # Cleanup handled by autouse fixture
 
 
 class TestLoadSnapshotErrors:

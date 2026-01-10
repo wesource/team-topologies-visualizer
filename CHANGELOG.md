@@ -751,7 +751,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Communication lines now hidden by default in Current State view (toggle to show)
 - Team list items in sidebar made more compact (reduced padding and margins)
 - SVG export updated to match canvas rendering (3px borders, 144px width, org-chart lines)
-- Renamed company from "LogiTech Solutions" to "LogiCore Systems" to avoid confusion with real company
+- Renamed company from "LogiTech Solutions" to "FleetFlow Systems" to avoid confusion with real company
 - **JavaScript chosen over TypeScript** - Documented decision in README (no build step, simpler for single-maintainer project)
 - All magic numbers replaced with LAYOUT constants from constants.js
 - Replaced inconsistent alert() calls with notification system
@@ -786,6 +786,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Docker/Podman containerization support
 - Example data for fictitious company (LogiCore Systems)
 - Documentation (README.md, SETUP.md, CONCEPTS.md)
+- Example data for fictitious company (LogiCore Systems)
 
 ### Changed
 - Refactored frontend from monolithic app.js (694 lines) into 5 modular files

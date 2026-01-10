@@ -1,7 +1,7 @@
 # Team Topologies Visualizer - Development Backlog
 
 **Status**: Pre-release v1.0 development
-**Last updated**: 2026-01-08
+**Last updated**: 2026-01-10
 
 **Note**: The tool now defaults to "TT Design" view. The other view is called "Pre-TT" (previously "Current State") to represent the baseline/starting point before TT transformation.
 
@@ -11,7 +11,9 @@ This backlog tracks enhancements for iterative development. Items are organized 
 
 **Testing & CI/CD Status** (2026-01-08): ✅ Comprehensive test suite implemented (100+ tests: 15 backend pytest, 62 frontend Vitest, 23+ E2E Playwright). GitHub Actions CI runs all tests on every push. Test-driven development established as standard practice.
 
-**Recent Achievements** (2026-01-08):
+**Recent Achievements** (2026-01-10):
+- ✅ **Data Consistency** - Fixed line manager mismatches, normalized company name to LogiCore Systems, fixed platform grouping inconsistencies
+- ✅ **Documentation Improvements** - Added REVIEW_AND_DATA_CLEANUP_SUGGESTIONS.md with actionable improvements
 - ✅ **Flow Metrics - Phase 1 Complete** (Backend + Modal Display + Canvas Overlay) - DORA metrics visualization
 - ✅ **Focus Mode** - Click to Dim Unrelated Teams - Reduces cognitive load when exploring relationships
 - ✅ Snapshot comparison view (side-by-side TT evolution tracking)
@@ -19,6 +21,60 @@ This backlog tracks enhancements for iterative development. Items are organized 
 - ✅ File naming conventions (tt- prefix for TT-specific modules)
 - ✅ E2E test flakiness resolution (robust async handling)
 - ✅ Value Streams view (Phase 2 - final Pre-TT organizational perspective)
+
+---
+
+### Fix Snapshot API Routing Confusion ⭐⭐⭐⭐ HIGH PRIORITY
+**Impact**: HIGH (architectural clarity) | **Effort**: 2-3 hours | **Priority**: 🥇 TODO | **Added**: 2026-01-10
+
+**Problem**:
+Snapshots create cognitive confusion due to misaligned API routing:
+- Snapshots are created from **TT teams** (`find_all_teams(view="tt")`)
+- Stored in `data/tt-snapshots/` directory
+- BUT routes are under `/api/pre-tt/snapshots/*` (conceptually wrong)
+- Frontend calls Pre-TT routes for TT snapshots
+
+**Proposed Solution**:
+Move snapshot routes to `/api/tt/snapshots/*` OR neutral `/api/snapshots/*` to align with actual behavior.
+
+**Files to Update**:
+- `backend/routes_pre_tt.py` - Move snapshot endpoints out
+- `backend/routes_tt.py` - Add snapshot endpoints
+- `frontend/api.js` - Update API calls
+- Documentation (README, SETUP, CONCEPTS) - Align paths and terminology
+
+**See**: `docs/REVIEW_AND_DATA_CLEANUP_SUGGESTIONS.md` §1.1 for full analysis
+
+---
+
+### Create Simplified TT Design Variant (tt-teams-initial) ⭐⭐⭐⭐ HIGH PRIORITY  
+**Impact**: HIGH (educational value) | **Effort**: 1 day | **Priority**: 🥇 TODO | **Added**: 2026-01-10
+
+**Problem**:
+Current `/data/tt-teams` dataset represents a **mid-stage** TT transformation (many platform teams, multiple value streams, complex platform grouping). This is realistic but not ideal for showing a "first step" in TT journey.
+
+**Proposed Solution**:
+Create a second TT dataset variant: `/data/tt-teams-initial` representing a realistic "first step" TT transformation:
+
+**Characteristics of "First Step" TT Design**:
+- 2-4 stream-aligned teams (split from baseline monolith/backend + overloaded UX)
+- 1 thin platform team (Thinnest Viable Platform) created from DevOps/DB bottleneck
+- 1 enabling team to accelerate adoption
+- Keep complicated subsystem boundary clear (route optimization or ML)
+- Clear origin mapping from Pre-TT teams
+
+**Implementation**:
+1. Create `/data/tt-teams-initial/` directory with simplified team set
+2. Add `origin_team` or `origin_teams` field to YAML (for traceability)
+3. Create mapping documentation showing baseline → TT transformation
+4. Add demo mode toggle to switch between "first step" and "mid-stage" examples
+
+**Benefits**:
+- Educational: Shows realistic first TT transformation step
+- Comparison: Users can see progression from simple → complex
+- Demo flexibility: Choose appropriate example for audience maturity
+
+**See**: `docs/REVIEW_AND_DATA_CLEANUP_SUGGESTIONS.md` §3.4 for full design
 
 ---
 
