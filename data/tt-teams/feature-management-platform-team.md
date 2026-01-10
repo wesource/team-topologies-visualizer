@@ -13,7 +13,7 @@ platform_grouping: Cloud Infrastructure Platform Grouping
 
 # Feature Management Platform Team
 
-**Team name and focus**
+## Team name and focus
 
 Feature Management Platform Team – Provides a robust internal platform for feature flag management, experimentation, and progressive delivery, enabling product teams to safely test, release, and control features in production with minimal risk.
 
@@ -23,7 +23,7 @@ platform
 
 ## Part of a platform grouping?
 
-Yes – Developer Experience Platform Grouping
+Yes – Cloud Infrastructure Platform Grouping
 
 ## Services provided (if applicable)
 - Feature flag management service (API & UI)

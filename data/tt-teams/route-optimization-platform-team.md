@@ -21,7 +21,9 @@ complicated-subsystem
 
 ## Part of a value stream?
 
-Yes - B2B Services (but serves both B2B and B2C teams)
+Yes - B2B Services
+
+Also serves B2C teams as a shared complicated-subsystem capability.
 
 This team provides specialized routing optimization capabilities requiring deep operations research expertise that would create excessive cognitive load for stream-aligned teams.
 

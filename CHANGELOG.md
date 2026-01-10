@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- **LogiCore naming consistency (2026-01-10)**: Normalized remaining legacy company-name references to "LogiCore" in example datasets and docs
+  - Ensures the baseline and TT-design narratives refer to the same fictional company
+  - Corrected a couple of Pre-TT `line_manager` metadata mismatches to align with `organization-hierarchy.json`
+  - Kept Pre-TT `business_stream` names intentionally not 1:1 with TT `value_stream` names (per modeling intent)
+- **TT dataset coherence (2026-01-10)**: Aligned TT markdown narrative sections with YAML metadata
+  - Added missing "Part of a platform grouping?" sections where `platform_grouping` is set
+  - Normalized a few TT team headings/labels to match the canonical YAML `name`
+
 ### Added
 - **Demo Mode (2026-01-08)**: Read-only mode for public demonstrations and workshops
   - **Backend**: `READ_ONLY_MODE` environment variable blocks writes (403 Forbidden)
@@ -742,7 +751,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Communication lines now hidden by default in Current State view (toggle to show)
 - Team list items in sidebar made more compact (reduced padding and margins)
 - SVG export updated to match canvas rendering (3px borders, 144px width, org-chart lines)
-- Renamed company from "LogiTech Solutions" to "FleetFlow Systems" to avoid confusion with real company
+- Renamed company from "LogiTech Solutions" to "LogiCore Systems" to avoid confusion with real company
 - **JavaScript chosen over TypeScript** - Documented decision in README (no build step, simpler for single-maintainer project)
 - All magic numbers replaced with LAYOUT constants from constants.js
 - Replaced inconsistent alert() calls with notification system
@@ -775,7 +784,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - End-to-end tests (Playwright, 23 tests)
 - ESLint configuration for JavaScript code quality
 - Docker/Podman containerization support
-- Example data for fictitious company (FleetFlow Systems)
+- Example data for fictitious company (LogiCore Systems)
 - Documentation (README.md, SETUP.md, CONCEPTS.md)
 
 ### Changed

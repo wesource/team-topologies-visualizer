@@ -13,6 +13,18 @@ value_stream: Financial Services
 
 # Payment Processing Team
 
+## Team name and focus
+
+Payment Processing Team – Owns payment processing capabilities and associated compliance/reliability concerns, enabling other teams to integrate payments via stable internal services.
+
+## Team type
+
+stream-aligned
+
+## Part of a value stream?
+
+Yes - Financial Services
+
 ## Services provided (if applicable)
 - Payment processing (Stripe, PayPal, Apple Pay, Google Pay, ACH, international methods, currency conversion)
 - PCI compliance (tokenization, secure storage, compliance reporting)

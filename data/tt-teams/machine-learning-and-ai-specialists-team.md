@@ -8,6 +8,7 @@ metadata:
   size: 6
   cognitive_load: high
   established: 2023-11
+value_stream: null
 ---
 
 # Machine Learning & AI Specialists Team
@@ -22,7 +23,9 @@ complicated-subsystem
 
 ## Part of a value stream?
 
-No - Serves both B2B Services and B2C Services
+No
+
+Serves both B2B Services and B2C Services.
 
 This team provides specialized ML/AI capabilities across multiple value streams:
 - **B2B Services**: Route optimization algorithms, fleet utilization forecasting, demand prediction, load planning optimization

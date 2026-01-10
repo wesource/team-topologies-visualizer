@@ -7,7 +7,7 @@ position:
 metadata:
   size: 5
   department: Engineering
-  line_manager: Marcus Thompson
+  line_manager: Rachel Martinez
   established: 2016-03
   cognitive_load: very-high
 product_line: RouteOptix

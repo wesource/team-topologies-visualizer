@@ -17,7 +17,7 @@ platform_grouping: Cloud Infrastructure Platform Grouping
 
 ## Team name and focus
 
-**Cloud Development Platform Team** - Provides AWS-based infrastructure and developer experience as a compelling internal product, enabling FleetFlow Systems engineering teams to deploy production services in under 30 minutes without manual approval tickets.
+**Cloud Development Platform Team** - Provides AWS-based infrastructure and developer experience as a compelling internal product, enabling LogiCore Systems engineering teams to deploy production services in under 30 minutes without manual approval tickets.
 
 ## Team type
 
@@ -142,7 +142,7 @@ _[Extended]_
 
 9:30 AM UTC daily standup (15 minutes, team-only)
 
-**Team availability**: Core hours 10am-4pm UTC Monday-Friday, flexible for global FleetFlow offices (Americas, Europe, APAC)
+**Team availability**: Core hours 10am-4pm UTC Monday-Friday, flexible for global LogiCore offices (Americas, Europe, APAC)
 
 ## Roadmap & Current Priorities
 _[Extended]_
@@ -206,7 +206,7 @@ _[Extended]_
 
 ### Customer Satisfaction
 - **NPS Score**: 8.2/10 (measured quarterly via internal surveys to stream-aligned teams)
-- **Target**: Maintain >8.0 (internal platform benchmark at FleetFlow)
+- **Target**: Maintain >8.0 (internal platform benchmark at LogiCore)
 - **Trend**: Improved from 7.1 in Q2 2024 to 8.2 in Q4 2025 (steady growth)
 
 ### Adoption & Usage
@@ -244,7 +244,7 @@ _[Extended]_
 
 **"Getting production infrastructure takes weeks of manual approvals, tickets, and back-and-forth with platform teams. We can't move fast enough to meet customer demands in the competitive logistics software market. Our competitors ship features 3x faster than us."**
 
-This was the state at FleetFlow Systems in early 2024 before this platform team was formed.
+This was the state at LogiCore Systems in early 2024 before this platform team was formed.
 
 ### How We Solve It
 
@@ -253,7 +253,7 @@ This was the state at FleetFlow Systems in early 2024 before this platform team 
 - **Cost transparency**: Real-time cost dashboards prevent surprise bills, teams own their AWS budgets (CFO no longer blocks AWS spend due to lack of visibility)
 - **Guardrails, not gates**: AWS Config rules prevent misconfigurations automatically (no manual approval tickets needed)
 
-**Result**: Reduced infrastructure provisioning from 10 days to 4 hours average. Teams now deploy 18x per week (up from 3x per week in early 2024). FleetFlow's logistics platform releases new features weekly instead of quarterly.
+**Result**: Reduced infrastructure provisioning from 10 days to 4 hours average. Teams now deploy 18x per week (up from 3x per week in early 2024). LogiCore's logistics platform releases new features weekly instead of quarterly.
 
 ### Secondary Problems
 
@@ -285,6 +285,6 @@ _[Extended]_
 - **SRE**: Rachel Patel (monitoring, alerting, SLO tracking, AWS service health)
 - **Full-Stack Developer**: James Wilson (developer portal UI/UX, self-service workflows, React frontend)
 
-**Team formation**: This team was established in March 2024 as part of FleetFlow Systems' Team Topologies transformation. Previously, AWS infrastructure was managed by a centralized "Cloud Ops" team (15 people, ticket-based, 2-week lead times). The transformation to a self-service platform team reduced time-to-infrastructure from 10 days to 4 hours and improved developer satisfaction (NPS) from 4.2 to 8.2.
+**Team formation**: This team was established in March 2024 as part of LogiCore Systems' Team Topologies transformation. Previously, AWS infrastructure was managed by a centralized "Cloud Ops" team (15 people, ticket-based, 2-week lead times). The transformation to a self-service platform team reduced time-to-infrastructure from 10 days to 4 hours and improved developer satisfaction (NPS) from 4.2 to 8.2.
 
 **Platform Philosophy**: We believe infrastructure should be invisible to developers - provision in <30 minutes, scales automatically, costs are predictable, security is default. Our measure of success is how rarely teams need to talk to us.

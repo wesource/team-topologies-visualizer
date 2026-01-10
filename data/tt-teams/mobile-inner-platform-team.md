@@ -21,7 +21,9 @@ platform
 
 ## Part of a value stream?
 
-Yes - Mobile Experience (inner platform serving mobile stream-aligned teams)
+Yes - Mobile Experience
+
+Inner platform serving mobile stream-aligned teams.
 
 This demonstrates the 2nd Edition pattern where platform teams can exist within value streams to serve domain-specific needs.
 

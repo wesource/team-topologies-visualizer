@@ -16,10 +16,10 @@ metadata:
 platform_grouping: Cloud Infrastructure Platform Grouping
 ---
 
-# API Gateway Team
+# API Gateway Platform Team
 
 ## Team name and focus
-API Gateway Team – Stream-aligned team delivering API gateway as a product experience for API consumers, focusing on developer experience, API documentation, and service reliability within the platform grouping.
+API Gateway Platform Team – Stream-aligned team delivering API gateway as a product experience for API consumers, focusing on developer experience, API documentation, and service reliability within the platform grouping.
 
 ## Team type
 stream-aligned

@@ -12,9 +12,15 @@ metadata:
 
 # Security Engineering Enablement Team
 
-Helps stream-aligned and platform teams improve security practices through facilitation and temporary collaboration. Not a gatekeeper or approval bottleneck.
+## Team name and focus
 
-## Team Type: Enabling
+Security Engineering Enablement Team – Helps stream-aligned and platform teams improve security practices through facilitation and temporary collaboration. Not a gatekeeper or approval bottleneck.
+
+## Team type
+
+enabling
+
+## Why This is an Enabling Team
 Enabling teams exist to **increase the autonomy** of stream-aligned teams by:
 - Upskilling teams in security practices
 - Removing security-related obstacles

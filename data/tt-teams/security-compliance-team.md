@@ -12,9 +12,15 @@ metadata:
 
 # Security Compliance Team
 
-Enabling team helping other teams adopt security best practices and meet compliance requirements.
+## Team name and focus
 
-## Team Type: Enabling Team
+Security Compliance Team – Enabling team helping other teams adopt security best practices and meet compliance requirements.
+
+## Team type
+
+enabling
+
+## Why This is an Enabling Team
 This is an **Enabling Team** because:
 - Helps other teams overcome obstacles and build new capabilities
 - Temporary, time-boxed engagements (not permanent dependencies)

@@ -10,3 +10,13 @@ metadata:
   established: 2023-01
 ---
 
+# Example Undefined Team
+
+## Team name and focus
+
+Example Undefined Team – Placeholder example file used for documentation/testing purposes.
+
+## Team type
+
+undefined
+

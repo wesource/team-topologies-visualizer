@@ -14,7 +14,7 @@ platform_grouping: Cloud Infrastructure Platform Grouping
 # Data Storage Platform Team
 
 ## Team name and focus
-Data Lake Platform Team – Provides managed data lake, database, and caching services for all data-driven teams, enabling scalable analytics and product features.
+Data Storage Platform Team – Provides managed data lake, database, and caching services for all data-driven teams, enabling scalable analytics and product features.
 
 ## Team type
 platform

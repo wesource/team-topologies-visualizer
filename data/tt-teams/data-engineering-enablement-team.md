@@ -8,6 +8,7 @@ metadata:
   size: 4
   cognitive_load: medium
   established: 2023-09
+value_stream: null
 ---
 
 # Data Engineering Enablement Team
@@ -20,7 +21,9 @@ enabling
 
 ## Part of a value stream?
 
-No - Enabling teams are cross-cutting, helping teams across all value streams
+No
+
+Enabling teams are cross-cutting, helping teams across all value streams.
 
 ## Services provided (if applicable)
 Enabling teams provide coaching and knowledge transfer, not long-term services:

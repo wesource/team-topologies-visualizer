@@ -14,7 +14,7 @@ platform_grouping: Cloud Infrastructure Platform Grouping
 # Developer Portal Team
 
 ## Team name and focus
-Developer Portal Team – Provides a unified developer portal (Backstage-based) as the "single pane of glass" for FleetFlow Systems engineers, aggregating service catalogs, documentation, deployment status, cost insights, and onboarding workflows in one self-service hub.
+Developer Portal Team – Provides a unified developer portal (Backstage-based) as the "single pane of glass" for LogiCore Systems engineers, aggregating service catalogs, documentation, deployment status, cost insights, and onboarding workflows in one self-service hub.
 
 ## Team type
 stream-aligned
@@ -24,7 +24,7 @@ Yes – Cloud Infrastructure Platform Grouping (stream-aligned team delivering i
 
 ## Services provided (if applicable)
 - Developer Portal (Backstage): Unified web portal at https://portal.company-internal
-- Service Catalog: Searchable catalog of all 120+ services at FleetFlow with owners, dependencies, SLOs
+- Service Catalog: Searchable catalog of all 120+ services at LogiCore with owners, dependencies, SLOs
 - Software Templates (Scaffolder): "Create New Service" wizard - generates repo, CI/CD, monitoring in <15 minutes
 - Tech Docs: Documentation auto-synced from GitHub repos, searchable in portal
 - Deployment Dashboard: Real-time deployment status, history, rollback buttons
@@ -46,7 +46,7 @@ Yes – Cloud Infrastructure Platform Grouping (stream-aligned team delivering i
 ## Software owned and evolved by this team
 
 - **Developer Portal** (https://github.company.com/portal/backstage-app) - Main Backstage application (TypeScript, React)
-- **Custom Backstage Plugins** (https://github.company.com/portal/plugins) - FleetFlow-specific plugins:
+- **Custom Backstage Plugins** (https://github.company.com/portal/plugins) - LogiCore-specific plugins:
   - Cost Dashboard plugin (integrates with AWS Cost Explorer)
   - Deployment Status plugin (GitHub Actions + ArgoCD)
   - On-Call widget plugin (PagerDuty)
@@ -70,7 +70,7 @@ Yes – Cloud Infrastructure Platform Grouping (stream-aligned team delivering i
 
 ## Glossary and terms ubiquitous language
 
-- **Service Catalog**: Inventory of all services at FleetFlow with metadata (owners, SLOs, dependencies)
+- **Service Catalog**: Inventory of all services at LogiCore with metadata (owners, SLOs, dependencies)
 - **catalog-info.yaml**: YAML file in each service's repo describing the service (auto-discovered by portal)
 - **Software Template (Scaffolder)**: "Create new X" wizards that generate boilerplate (repos, CI/CD, monitoring)
 - **Tech Docs**: Documentation-as-code (Markdown in repos, rendered in portal)

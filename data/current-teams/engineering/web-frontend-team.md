@@ -7,7 +7,7 @@ position:
 metadata:
   size: 6
   department: Engineering
-  line_manager: Marcus Thompson
+  line_manager: Michael Chen
   established: 2019-06
   cognitive_load: high
 product_line: DispatchHub

@@ -16,17 +16,19 @@ metadata:
 value_stream: Mobile Experience
 ---
 
-# Mobile Inner Platform Team
+# Mobile Platform Team
 
 ## Team name and focus
-Mobile Inner Platform Team – An **inner platform team** within the Mobile Experience value stream (2nd Edition concept), providing mobile-specific infrastructure to reduce cognitive load for mobile stream-aligned teams.
+Mobile Platform Team – An **inner platform team** within the Mobile Experience value stream (2nd Edition concept), providing mobile-specific infrastructure to reduce cognitive load for mobile stream-aligned teams.
 
 ## Team type
 platform
 
 ## Part of a value stream?
 
-Yes - Mobile Experience (inner platform serving mobile stream-aligned teams)
+Yes - Mobile Experience
+
+Inner platform serving mobile stream-aligned teams.
 
 This demonstrates the 2nd Edition pattern where platform teams can exist within value streams to serve domain-specific needs.
 

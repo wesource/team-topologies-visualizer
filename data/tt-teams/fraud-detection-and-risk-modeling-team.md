@@ -11,18 +11,26 @@ metadata:
 value_stream: Financial Services
 ---
 
-# Fraud Detection & Risk Modeling Team
+# Fraud Detection and Risk Modeling Team
 
-Complicated Subsystem team with deep expertise in statistical modeling, machine learning, and fraud detection algorithms. Shields stream-aligned teams from the complexity of fraud prevention.
+## Team name and focus
 
-## Team Type: Complicated Subsystem
+Fraud Detection and Risk Modeling Team – Complicated subsystem team with deep expertise in statistical modeling, machine learning, and fraud detection algorithms. Shields stream-aligned teams from the complexity of fraud prevention.
+
+## Team type
+
+complicated-subsystem
+
+## Part of a value stream?
+
+Yes - Financial Services
+
+## Why This is a Complicated Subsystem
 Exists because the domain is **too complex** for stream-aligned teams to handle alongside their other responsibilities:
 - Requires specialist knowledge (data science, statistics, ML engineering)
 - High cognitive load to maintain and evolve
 - Critical for business (revenue protection, regulatory compliance)
 - Better handled by dedicated specialists
-
-## Why This is a Complicated Subsystem
 - **Mathematical complexity**: Bayesian models, ensemble methods, neural networks
 - **Real-time constraints**: Fraud scoring in < 100ms while maintaining accuracy
 - **Data engineering**: Handling millions of transactions, feature engineering at scale

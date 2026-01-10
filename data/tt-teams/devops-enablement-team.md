@@ -21,7 +21,9 @@ enabling
 
 ## Part of a value stream?
 
-Yes - B2B Services (temporary engagement)
+Yes - B2B Services
+
+Temporary engagement.
 
 This enabling team is currently focused on helping B2B Services teams (Enterprise Fleet Portal, Enterprise CRM Integration, Enterprise Reporting) transition from traditional deployment models to cloud-native CI/CD practices. Once these teams are autonomous, the enabling team will move to help another value stream.
 
@@ -108,7 +110,7 @@ Announce major updates via #devops-enablement Slack channel.
 - **"Terraform Testing with Terratest"** - Jan 29, 2026, 2pm-4pm UTC (2 hours)
 
 ### Internal Team Projects
-- Updating DevOps Playbooks with FleetFlow Systems' patterns (learned from past 10 engagements)
+- Updating DevOps Playbooks with LogiCore Systems' patterns (learned from past 10 engagements)
 - Creating "Self-Assessment Quiz" - teams can evaluate their DevOps maturity before engaging us
 
 ## Teams we currently interact with

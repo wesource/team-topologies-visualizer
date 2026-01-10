@@ -298,7 +298,7 @@ These limitations keep the tool simple and git-friendly. Perfect for:
 
 ## Example Data
 
-The repository includes a **fictitious organization** (FleetFlow Systems) for demonstration:
+The repository includes a **fictitious organization** (LogiCore Systems) for demonstration:
 - Traditional team structure in Current State view
 - SAFe/LeSS-inspired team classifications
 - Team Topologies reorganization in TT Design view

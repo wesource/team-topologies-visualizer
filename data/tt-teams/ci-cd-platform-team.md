@@ -13,6 +13,18 @@ platform_grouping: Cloud Infrastructure Platform Grouping
 
 # CI/CD Platform Team
 
+## Team name and focus
+
+CI/CD Platform Team – Provides build, test, and deployment automation as an internal platform product, reducing delivery friction for all engineering teams.
+
+## Team type
+
+platform
+
+## Part of a platform grouping?
+
+Yes – Cloud Infrastructure Platform Grouping
+
 - **Reusable GitHub Actions Workflows** (https://github.company.com/platform/gha-workflows) - Build, test, deploy workflows (YAML)
 - **ArgoCD Applications** (https://github.company.com/platform/argocd-apps) - GitOps manifests (Helm, Kustomize)
 - **CI/CD Platform Infrastructure** (https://github.company.com/platform/cicd-infra) - Terraform for runners, ArgoCD clusters

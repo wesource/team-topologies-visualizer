@@ -112,6 +112,8 @@ Pre-TT perspectives let you visualize all three without changing the underlying 
 - Products can be mapped to business streams
 - Ungrouped content appears in right column
 
+**Important modeling note:** Pre-TT `business_stream` groupings represent the current-state view of the business (often inconsistent, overlapping, or historically named). They are **not required** to map 1:1 to TT-design `value_stream` groupings — the TT design may intentionally rename, merge, split, or redraw boundaries as part of the transformation.
+
 ### Comparison: When to Use Each Perspective
 
 | Perspective | Best For | Reveals |

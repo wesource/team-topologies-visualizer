@@ -13,9 +13,13 @@ platform_grouping: Cloud Infrastructure Platform Grouping
 
 # Data Pipeline Platform Team
 
-**Team name and focus**
+## Team name and focus
 
 Data Pipeline Platform Team – A platform team providing robust, scalable data pipeline orchestration and monitoring as an internal product. This team enables stream-aligned and complicated-subsystem teams to build, schedule, and monitor ETL/ELT workflows efficiently, reducing cognitive load and ensuring data reliability across the organization.
+
+## Team type
+
+platform
 
 
 ## Service-level expectations (SLA)
@@ -26,6 +30,10 @@ Data Pipeline Platform Team – A platform team providing robust, scalable data 
 - Data pipeline orchestration platform
 - Monitoring dashboards
 - ETL/ELT codebase
+
+## Part of a platform grouping?
+
+Yes – Cloud Infrastructure Platform Grouping
 
 ## Versioning approaches
 - Semantic versioning for pipeline definitions

@@ -21,7 +21,9 @@ complicated-subsystem
 
 ## Part of a value stream?
 
-Yes - B2B Services (but serves both B2B and B2C teams)
+Yes - B2B Services
+
+Also serves some B2C teams as a shared complicated-subsystem capability.
 
 **Why complicated-subsystem?** This team handles complex data science and ML engineering work (time-series forecasting, demand prediction, anomaly detection, predictive analytics) that would create excessive cognitive load for stream-aligned teams.
 

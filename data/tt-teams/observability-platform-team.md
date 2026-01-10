@@ -15,7 +15,7 @@ platform_grouping: Cloud Infrastructure Platform Grouping
 
 ## Team name and focus
 
-**Observability Platform Team** - Provides self-service monitoring, logging, and tracing as a compelling internal product, enabling FleetFlow Systems engineering teams to debug production issues in under 5 minutes without manual log access requests or tribal knowledge.
+**Observability Platform Team** - Provides self-service monitoring, logging, and tracing as a compelling internal product, enabling LogiCore Systems engineering teams to debug production issues in under 5 minutes without manual log access requests or tribal knowledge.
 
 ## Team type
 
@@ -23,14 +23,14 @@ platform
 
 ## Part of a platform grouping?
 
-Yes - Developer Experience Platform Grouping (works alongside Cloud Development, CI/CD, Portal teams)
+Yes - Cloud Infrastructure Platform Grouping (works alongside Cloud Development, CI/CD, Portal teams)
 
 ## Services provided (if applicable)
 
 - **Metrics Platform (Prometheus + Grafana)**: https://grafana.company-internal - Self-service dashboards, 50+ pre-built templates
 - **Distributed Tracing (Jaeger)**: https://jaeger.company-internal - Trace search, performance analysis, 7-day retention
 - **Log Aggregation (Loki)**: https://loki.company-internal - LogQL queries, 14-day retention, integration with Grafana
-- **OpenTelemetry SDKs**: Pre-configured libraries for Python, Node.js, Java, Go with FleetFlow defaults
+- **OpenTelemetry SDKs**: Pre-configured libraries for Python, Node.js, Java, Go with LogiCore defaults
 - **Alerting (AlertManager + PagerDuty)**: SLO-based alerting, on-call rotation management
 - **Dashboard Templates**: 50+ Jsonnet templates for common patterns (web service, worker, database, cache)
 
@@ -50,7 +50,7 @@ Yes - Developer Experience Platform Grouping (works alongside Cloud Development,
 
 - **Observability Platform Infrastructure** (https://github.company.com/platform/observability) - Terraform + Helm for Prometheus, Grafana, Jaeger, Loki
 - **Dashboard Template Library** (https://github.company.com/platform/grafana-templates) - 50+ Jsonnet/Grafonnet dashboards
-- **OpenTelemetry SDK Wrappers** (https://github.company.com/platform/otel-sdks) - FleetFlow-specific instrumentation libraries
+- **OpenTelemetry SDK Wrappers** (https://github.company.com/platform/otel-sdks) - LogiCore-specific instrumentation libraries
 - **Alerting Rules & Runbooks** (https://github.company.com/platform/alerting) - Shared Prometheus alerting rules, linked runbooks
 
 ## Versioning approaches

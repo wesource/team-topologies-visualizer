@@ -11,7 +11,7 @@ metadata:
 
 # Product Management Department
 
-Portfolio management, product strategy, and roadmap prioritization across all FleetFlow products. Acts as the bridge between business strategy and execution.
+Portfolio management, product strategy, and roadmap prioritization across all LogiCore products. Acts as the bridge between business strategy and execution.
 
 ## Department Goals
 - 📊 Maximize feature output across all products
