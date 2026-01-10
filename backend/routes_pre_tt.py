@@ -5,12 +5,8 @@ from typing import Any
 
 from fastapi import APIRouter, HTTPException
 
-from backend.comparison import compare_snapshots
 from backend.models import (
-    CreateSnapshotRequest,
     PositionUpdate,
-    Snapshot,
-    SnapshotMetadata,
     TeamData,
 )
 from backend.services import (
@@ -19,7 +15,6 @@ from backend.services import (
     find_team_by_name_or_slug,
     write_team_file_to_path,
 )
-from backend.snapshot_services import create_snapshot, list_snapshots, load_snapshot
 from backend.validation import validate_all_team_files
 
 router = APIRouter(prefix="/api/pre-tt", tags=["pre-tt"])
@@ -217,66 +212,3 @@ async def validate_files() -> dict[str, Any]:
     """Validate all Pre-TT team files for common issues"""
     validation_report = validate_all_team_files("current")
     return validation_report
-
-
-# Snapshot endpoints (Pre-TT evolution tracking)
-@router.post("/snapshots/create", response_model=Snapshot)
-async def create_new_snapshot(request: CreateSnapshotRequest):
-    """Create a new snapshot of the current Pre-TT state.
-
-    If team_names is provided, creates a filtered snapshot with only those teams.
-    Otherwise, includes all teams.
-    """
-    if os.getenv("READ_ONLY_MODE") == "true":
-        raise HTTPException(status_code=403, detail="Modifications not allowed in demo mode")
-
-    try:
-        snapshot = create_snapshot(
-            name=request.name,
-            description=request.description or "",
-            author=request.author or "",
-            team_names=request.team_names
-        )
-        return snapshot
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to create snapshot: {str(e)}")
-
-
-@router.get("/snapshots", response_model=list[SnapshotMetadata])
-async def get_snapshots():
-    """List all available Pre-TT snapshots with metadata"""
-    return list_snapshots()
-
-
-@router.get("/snapshots/{snapshot_id}", response_model=Snapshot)
-async def get_snapshot(snapshot_id: str):
-    """Load a specific Pre-TT snapshot by ID"""
-    snapshot = load_snapshot(snapshot_id)
-
-    if snapshot is None:
-        raise HTTPException(status_code=404, detail=f"Snapshot not found: {snapshot_id}")
-
-    return snapshot
-
-
-@router.get("/snapshots/compare/{before_id}/{after_id}")
-async def compare_snapshot_versions(before_id: str, after_id: str):
-    """
-    Compare two Pre-TT snapshots and return differences
-
-    Args:
-        before_id: ID of the earlier snapshot
-        after_id: ID of the later snapshot
-
-    Returns:
-        Comparison data with added, removed, moved, and type-changed teams
-    """
-    before = load_snapshot(before_id)
-    after = load_snapshot(after_id)
-
-    if before is None:
-        raise HTTPException(status_code=404, detail=f"Before snapshot not found: {before_id}")
-    if after is None:
-        raise HTTPException(status_code=404, detail=f"After snapshot not found: {after_id}")
-
-    return compare_snapshots(before, after)

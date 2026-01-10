@@ -7,7 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- **Snapshot API Routing (2026-01-10)**: Resolved architectural confusion in snapshot endpoint routing
+  - **Problem**: Snapshots created from TT teams (`find_all_teams(view="tt")`) but routes were under `/api/pre-tt/snapshots/*`
+  - **Solution**: Moved all snapshot endpoints to `/api/tt/snapshots/*` to align with actual data source
+  - **Changes**:
+    - Backend: Moved 4 snapshot endpoints from `routes_pre_tt.py` to `routes_tt.py`
+    - Frontend: Updated API calls in `api.js` to use `/api/tt/snapshots/*`
+    - Tests: Updated test files to use correct TT routes
+  - **Impact**: Improved architectural clarity, reduced user confusion about snapshot behavior
+- **LogiCore naming consistency (2026-01-10)**: Normalized remaining legacy company-name references to "LogiCore" in example datasets and docs
+  - Ensures the baseline and TT-design narratives refer to the same fictional company
+  - Corrected a couple of Pre-TT `line_manager` metadata mismatches to align with `organization-hierarchy.json`
+  - Kept Pre-TT `business_stream` names intentionally not 1:1 with TT `value_stream` names (per modeling intent)
+- **TT dataset coherence (2026-01-10)**: Aligned TT markdown narrative sections with YAML metadata
+  - Added missing "Part of a platform grouping?" sections where `platform_grouping` is set
+  - Normalized a few TT team headings/labels to match the canonical YAML `name`
+
 ### Added
+- **TT_TEAMS_VARIANT Environment Variable (2026-01-10)**: Allows switching between TT dataset variants
+  - **Default**: Uses `data/tt-teams/` directory (mid-stage transformation, 20+ teams)
+  - **tt-teams-initial**: Uses `data/tt-teams-initial/` directory (first step transformation, 5 teams)
+  - **Usage**: Set environment variable before starting backend: `$env:TT_TEAMS_VARIANT="tt-teams-initial"`
+  - **Purpose**: Educational demonstrations - show progression from simple first step to complex mid-stage
 - **TT Teams Initial Variant (2026-01-10)**: Created simplified "first step" TT transformation example for educational purposes
   - **Directory**: `data/tt-teams-initial/` - Realistic 3-6 month transformation from Pre-TT baseline
   - **Teams**: 5 focused teams representing initial transformation:
@@ -24,15 +46,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - Usage instructions (directory renaming until demo toggle implemented)
   - **Rationale**: Current `tt-teams/` represents mid-stage transformation - too complex for "first step" examples. This variant shows realistic initial transformation focusing on highest-pain areas first.
   - **Future enhancement**: Add UI toggle to switch between "First Step" and "Mid-Stage" examples without renaming directories
-
-### Fixed
-- **LogiCore naming consistency (2026-01-10)**: Normalized remaining legacy company-name references to "LogiCore" in example datasets and docs
-  - Ensures the baseline and TT-design narratives refer to the same fictional company
-  - Corrected a couple of Pre-TT `line_manager` metadata mismatches to align with `organization-hierarchy.json`
-  - Kept Pre-TT `business_stream` names intentionally not 1:1 with TT `value_stream` names (per modeling intent)
-- **TT dataset coherence (2026-01-10)**: Aligned TT markdown narrative sections with YAML metadata
-  - Added missing "Part of a platform grouping?" sections where `platform_grouping` is set
-  - Normalized a few TT team headings/labels to match the canonical YAML `name`
 
 ### Removed
 - **Dead code cleanup (2026-01-08)**: Removed `backend/routes.py` (286 lines) - file was not imported anywhere in codebase after routing architecture split into `routes_tt.py` and `routes_pre_tt.py`

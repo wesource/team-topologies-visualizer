@@ -42,7 +42,7 @@ class TestSnapshotNotFoundErrors:
 
     def test_get_nonexistent_snapshot_returns_404(self):
         """Getting a snapshot that doesn't exist should return 404"""
-        response = client.get("/api/pre-tt/snapshots/nonexistent-snapshot-12345")
+        response = client.get("/api/tt/snapshots/nonexistent-snapshot-12345")
         assert response.status_code == 404
         assert "not found" in response.json()["detail"].lower()
 
@@ -50,7 +50,7 @@ class TestSnapshotNotFoundErrors:
         """Comparing with nonexistent 'before' snapshot should return 404"""
         # First create a valid snapshot to use as 'after'
         create_response = client.post(
-            "/api/pre-tt/snapshots/create",
+            "/api/tt/snapshots/create",
             json={
                 "name": "Test Snapshot for Error Test",
                 "description": "Valid snapshot",
@@ -62,7 +62,7 @@ class TestSnapshotNotFoundErrors:
         valid_id = create_response.json()["snapshot_id"]
 
         # Try to compare with nonexistent before snapshot
-        response = client.get(f"/api/pre-tt/snapshots/compare/nonexistent-12345/{valid_id}")
+        response = client.get(f"/api/tt/snapshots/compare/nonexistent-12345/{valid_id}")
         assert response.status_code == 404
         assert "before snapshot not found" in response.json()["detail"].lower()
 
@@ -70,7 +70,7 @@ class TestSnapshotNotFoundErrors:
         """Comparing with nonexistent 'after' snapshot should return 404"""
         # First create a valid snapshot to use as 'before'
         create_response = client.post(
-            "/api/pre-tt/snapshots/create",
+            "/api/tt/snapshots/create",
             json={
                 "name": "Test Snapshot for Error Test 2",
                 "description": "Valid snapshot",
@@ -82,13 +82,13 @@ class TestSnapshotNotFoundErrors:
         valid_id = create_response.json()["snapshot_id"]
 
         # Try to compare with nonexistent after snapshot
-        response = client.get(f"/api/pre-tt/snapshots/compare/{valid_id}/nonexistent-67890")
+        response = client.get(f"/api/tt/snapshots/compare/{valid_id}/nonexistent-67890")
         assert response.status_code == 404
         assert "after snapshot not found" in response.json()["detail"].lower()
 
     def test_compare_with_both_snapshots_nonexistent_returns_404(self):
         """Comparing two nonexistent snapshots should return 404 for before first"""
-        response = client.get("/api/pre-tt/snapshots/compare/nonexistent-aaa/nonexistent-bbb")
+        response = client.get("/api/tt/snapshots/compare/nonexistent-aaa/nonexistent-bbb")
         assert response.status_code == 404
         # Should report the before snapshot error first
         assert "before" in response.json()["detail"].lower()
@@ -111,7 +111,7 @@ class TestDemoModeRestrictions:
         """Creating snapshot should be blocked in demo mode"""
         with patch.dict(os.environ, {"READ_ONLY_MODE": "true"}):
             response = client.post(
-                "/api/pre-tt/snapshots/create",
+                "/api/tt/snapshots/create",
                 json={
                     "name": "Test Snapshot",
                     "description": "Should fail",
@@ -129,7 +129,7 @@ class TestSnapshotCreationErrors:
     def test_create_snapshot_with_invalid_team_names(self):
         """Creating snapshot with invalid team names should handle gracefully"""
         response = client.post(
-            "/api/pre-tt/snapshots/create",
+            "/api/tt/snapshots/create",
             json={
                 "name": "Test Invalid Teams",
                 "description": "Contains nonexistent teams",
@@ -144,7 +144,7 @@ class TestSnapshotCreationErrors:
     def test_create_snapshot_with_empty_name(self):
         """Creating snapshot with empty name should fail validation"""
         response = client.post(
-            "/api/pre-tt/snapshots/create",
+            "/api/tt/snapshots/create",
             json={
                 "name": "",
                 "description": "Empty name test",
@@ -158,11 +158,11 @@ class TestSnapshotCreationErrors:
     def test_create_snapshot_handles_internal_errors(self):
         """Snapshot creation should handle internal errors gracefully"""
         # Mock create_snapshot to raise an exception
-        with patch("backend.routes_pre_tt.create_snapshot") as mock_create:
+        with patch("backend.routes_tt.create_snapshot") as mock_create:
             mock_create.side_effect = Exception("Simulated internal error")
 
             response = client.post(
-                "/api/pre-tt/snapshots/create",
+                "/api/tt/snapshots/create",
                 json={
                     "name": "Test Error Handling",
                     "description": "Should return 500",

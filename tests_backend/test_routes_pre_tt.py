@@ -185,8 +185,8 @@ class TestPreTTRoutesPrefixes:
         assert response.status_code == 200
 
     def test_pre_tt_snapshots_endpoint_exists(self):
-        """Pre-TT snapshots endpoint should exist"""
-        response = client.get("/api/pre-tt/snapshots")
+        """TT snapshots endpoint should exist (snapshots are for TT Design)"""
+        response = client.get("/api/tt/snapshots")
         assert response.status_code == 200
 
 

@@ -74,7 +74,7 @@ export async function updateTeamPosition(teamName, x, y, view) {
     return response.ok;
 }
 
-// Snapshot API functions
+// Snapshot API functions (TT Design evolution tracking)
 export async function createSnapshot(name, description = '', author = '', teamNames = undefined) {
     const body = { name, description, author };
 
@@ -83,7 +83,7 @@ export async function createSnapshot(name, description = '', author = '', teamNa
         body.team_names = teamNames;
     }
 
-    const response = await fetch(getApiUrl('/pre-tt/snapshots/create'), {
+    const response = await fetch(getApiUrl('/tt/snapshots/create'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
@@ -96,12 +96,12 @@ export async function createSnapshot(name, description = '', author = '', teamNa
 }
 
 export async function loadSnapshots() {
-    const response = await fetch(getApiUrl('/pre-tt/snapshots'));
+    const response = await fetch(getApiUrl('/tt/snapshots'));
     return await response.json();
 }
 
 export async function loadSnapshot(snapshotId) {
-    const response = await fetch(getApiUrl(`/pre-tt/snapshots/${snapshotId}`));
+    const response = await fetch(getApiUrl(`/tt/snapshots/${snapshotId}`));
     if (!response.ok) {
         throw new Error(`Snapshot not found: ${snapshotId}`);
     }
@@ -109,7 +109,7 @@ export async function loadSnapshot(snapshotId) {
 }
 
 export async function compareSnapshots(beforeId, afterId) {
-    const response = await fetch(getApiUrl(`/pre-tt/snapshots/compare/${beforeId}/${afterId}`));
+    const response = await fetch(getApiUrl(`/tt/snapshots/compare/${beforeId}/${afterId}`));
     if (!response.ok) {
         throw new Error('Failed to compare snapshots');
     }

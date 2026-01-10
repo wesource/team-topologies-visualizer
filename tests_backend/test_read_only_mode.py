@@ -47,7 +47,7 @@ def test_tt_position_blocked_in_read_only_mode(enable_read_only_mode):
 def test_snapshot_creation_blocked_in_read_only_mode(enable_read_only_mode):
     """Test that snapshot creation is blocked in read-only mode"""
     response = client.post(
-        "/api/pre-tt/snapshots/create",
+        "/api/tt/snapshots/create",
         json={"name": "Test Snapshot", "description": "Test"}
     )
     assert response.status_code == 403
