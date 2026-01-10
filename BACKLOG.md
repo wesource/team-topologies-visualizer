@@ -13,12 +13,12 @@ This backlog tracks enhancements for iterative development. Items are organized 
 
 **Recent Achievements** (2026-01-10):
 - ✅ **Snapshot API Routing** - Fixed architectural confusion by moving snapshot endpoints from `/api/pre-tt/snapshots` to `/api/tt/snapshots` to align with actual data source (TT teams)
+- ✅ **Line Thickness by Interaction Mode** - Visual hierarchy with pronounced differences (2px collaboration, 1px x-as-a-service, 0.5px facilitating)
 - ✅ **TT_TEAMS_VARIANT environment variable** - Allows switching between tt-teams dataset variants (default vs tt-teams-initial)
 - ✅ **Data Consistency** - Fixed line manager mismatches, normalized company name to LogiCore Systems, fixed platform grouping inconsistencies
 - ✅ **Documentation Improvements** - Added REVIEW_AND_DATA_CLEANUP_SUGGESTIONS.md with actionable improvements
-- ✅ **Flow Metrics - Phase 1 Complete** (Backend + Modal Display + Canvas Overlay) - DORA metrics visualization
+- ✅ **Flow Metrics - Phase 1 & 2 Complete** (Backend + Modal Display + Canvas Overlay) - DORA metrics visualization
 - ✅ **Focus Mode** - Click to Dim Unrelated Teams - Reduces cognitive load when exploring relationships
-- ✅ **Line Thickness by Interaction Mode** - Visual hierarchy already implemented (2px collaboration, 1px x-as-a-service, 0.5px facilitating)
 - ✅ Snapshot comparison view (side-by-side TT evolution tracking)
 - ✅ GitHub Actions CI/CD pipeline
 - ✅ File naming conventions (tt- prefix for TT-specific modules)
@@ -127,30 +127,6 @@ This backlog tracks enhancements for iterative development. Items are organized 
 - Value stream boxes show avg lead time and deployment frequency
 - Slowest value stream highlighted in red
 - Snapshot comparison shows "Lead time improved from 21d to 14d" badges
-
----
-
-### Line Thickness by Interaction Mode ⭐⭐⭐⭐ HIGH - QUICK WIN
-**Impact**: MEDIUM (visual clarity) | **Effort**: 1-2 hours | **Priority**: 🥈 NEXT | **Added**: 2026-01-07
-
-**Why This Matters**: Visual hierarchy helps distinguish collaboration (high-touch) from facilitating (lightweight) at a glance.
-
-**Current State**: INTERACTION_STYLES constant exists with line widths (collaboration: 4px, x-as-a-service: 3px, facilitating: 2px).
-
-**What Needs Changing**: Adjust to more pronounced differences following expert recommendation:
-- Collaboration: 3px (currently 4px)
-- X-as-a-Service: 1.5px (currently 3px)  
-- Facilitating: 1px (currently 2px)
-
-**Tasks**:
-- [ ] Update INTERACTION_STYLES constant in [frontend/renderer-common.js](frontend/renderer-common.js) or [frontend/constants.js](frontend/constants.js)
-- [ ] Test at various zoom levels (ensure 1px visible when zoomed in)
-- [ ] Verify focus mode boost (+2px) still applies correctly
-- [ ] Update screenshots if needed
-
-**Related Files**: [frontend/renderer-common.js](frontend/renderer-common.js), [frontend/constants.js](frontend/constants.js)
-
-**Success Criteria**: Users can distinguish relationship types by thickness alone at standard zoom.
 
 ---
 

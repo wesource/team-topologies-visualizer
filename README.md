@@ -692,13 +692,19 @@ See [DEVELOPMENT.md](DEVELOPMENT.md) for full development guide including testin
 ## Future Enhancements
 
 ### Value Stream Visualization and Grouping (2nd Edition Focus)
-The 2nd edition emphasizes **value stream grouping** and **platform grouping** as fractal organizational patterns. ✅ **Basic visual grouping is now implemented** - teams can be grouped by value stream (light yellow/orange) and platform grouping (light blue) in the TT Design view. Additional features to further support this mental model:
+The 2nd edition emphasizes **value stream grouping** and **platform grouping** as fractal organizational patterns.
 
-**Value Stream Mapping**
-- **Value stream identification** - Define and visualize distinct value streams (customer-facing flows of value)
-- **Stream-aligned team grouping** - Group multiple stream-aligned teams serving the same value stream
+✅ **Already Implemented:**
+- ✅ **Value stream identification** - Define and visualize distinct value streams with visual grouping
+- ✅ **Stream-aligned team grouping** - Group multiple stream-aligned teams (light yellow/orange boxes)
+- ✅ **Platform grouping** - Visualize platform groupings with light blue fractal-style boxes
+- ✅ **Filtering by value stream** - Toggle visibility of specific value streams
+- ✅ **Team-level flow metrics** - Lead time, deployment frequency, MTTR, change fail rate per team
+- ✅ **Focus mode** - Click to dim unrelated teams and highlight relationships
+
+**Value Stream Mapping** (Future Enhancements)
 - **End-to-end flow visualization** - Show how value flows from customer need to delivered capability
-- **Value stream health indicators** - Lead time, deployment frequency, team cognitive load per value stream
+- **Value stream health aggregation** - Aggregate team metrics to show value stream-level bottlenecks
 - **Cross-value-stream dependencies** - Identify and minimize dependencies between value streams
 - **Value stream ownership** - Clearly assign executive ownership/sponsorship to each value stream
 
@@ -717,10 +723,15 @@ The 2nd edition emphasizes **value stream grouping** and **platform grouping** a
 - **Multi-level groupings** - Support nested groupings (team → value stream grouping → portfolio → organization)
 
 ### Cognitive Load Management
-- **Cognitive load assessment** - Visual indicators for team cognitive load (domain, instrinsic, extraneous)
+✅ **Already Implemented:**
+- ✅ **Cognitive load assessment** - Visual indicators for team cognitive load with color-coded badges
+- ✅ **Cognitive load visualization** - Toggle checkbox to show/hide indicators on canvas
+- ✅ **Color-coded status** - Green (low), yellow (medium), red (high) indicators
+
+**Future Enhancements:**
 - **Domain complexity mapping** - Tag teams with their domain complexity level
 - **Responsibility mapping** - List and visualize all team responsibilities to identify overload
-- **Cognitive load heatmap** - Color-code teams by their cognitive load status
+- **Cognitive load heatmap** - Aggregate cognitive load patterns across organization
 - **Simplification opportunities** - Identify teams that could benefit from platform services or enabling support
 
 ### Team API and Boundaries
@@ -730,8 +741,15 @@ The 2nd edition emphasizes **value stream grouping** and **platform grouping** a
 - **Expected behaviors documentation** - Link to detailed team working agreements and interaction expectations
 
 ### Flow Metrics and Sensing
-- **Flow metrics per team** - Lead time, deployment frequency, MTTR, change fail rate
-- **Bottleneck identification** - Visual highlighting of teams that slow down the value stream
+✅ **Already Implemented:**
+- ✅ **Flow metrics per team** - Lead time, deployment frequency, MTTR, change fail rate
+- ✅ **Canvas overlay visualization** - Compact metric boxes with color-coded health (📊 14d 🟢)
+- ✅ **Team detail modal** - Full metric breakdown with warning indicators for poor values
+- ✅ **Toggle control** - Show/hide metrics overlay on canvas
+
+**Future Enhancements:**
+- **Value stream aggregation** - Aggregate team metrics to identify value stream bottlenecks
+- **Bottleneck identification** - Visual highlighting of slowest teams/value streams
 - **Dependency wait time tracking** - Measure time spent waiting on other teams
 - **Sensing loops** - Document feedback mechanisms teams use to sense environment changes
 - **Team maturity indicators** - Show team capability levels and areas needing enabling support
@@ -751,9 +769,8 @@ This would help teams:
 
 ### Additional Ideas
 - **Nested value streams within platform groupings** - Support 2nd Edition pattern where value streams can exist within platform groupings (e.g., Developer Experience value stream within Cloud Infrastructure Platform Grouping). Would require hierarchical grouping rendering with nested bounding boxes and updated layout algorithms.
-- **Visibility controls** - Toggle visibility of individual teams and departments in Current State view to focus on specific areas of the organization
-- **Filtering by value stream** - Show only teams belonging to a specific value stream
 - **Interaction mode timeline** - Show how team interaction modes change over time (Collaboration → X-as-a-Service)
+- **Snapshot comparison with metric deltas** - Show metric improvements/regressions between snapshots
 - **Platform maturity progression** - Visualize platform evolution from MVP to mature service
 - **Team stability tracking** - Visualize team membership stability and tenure
 - **Multi-organization portfolio view** - Support visualizing team topologies across multiple companies/business units
