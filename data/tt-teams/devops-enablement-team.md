@@ -99,9 +99,9 @@ Announce major updates via #devops-enablement Slack channel.
 ## What we're currently working on
 
 ### Q1 2026 Active Engagements
-- **Mobile App Experience Team** (Week 4 of 8): Kubernetes adoption, Helm charts, GitOps with ArgoCD
+- **Driver Experience Team** (Week 4 of 8): Kubernetes adoption, Helm charts, GitOps with ArgoCD
 - **Fraud Detection & Risk Modeling Team** (Week 2 of 10): ML model deployment pipelines, SageMaker CI/CD
-- **Data Engineering Team** (Starting Week 1): Airflow DAG testing, infrastructure-as-code for data pipelines
+- **Data Engineering Enablement Team** (Starting Week 1): Airflow DAG testing, infrastructure-as-code for data pipelines
 
 ### Upcoming Workshops (Open to All Teams)
 - **"GitOps Fundamentals with ArgoCD"** - Jan 15, 2026, 10am-1pm UTC (3 hours)
@@ -115,7 +115,7 @@ Announce major updates via #devops-enablement Slack channel.
 
 | Team Name | Interaction Mode | Purpose | Duration |
 |-----------|------------------|---------|----------|
-| Enterprise Sales Portal Team | Facilitating | Cloud-native deployment patterns, CI/CD setup | 8 weeks (ending Feb 2026) |
+| Enterprise Fleet Portal Team | Facilitating | Cloud-native deployment patterns, CI/CD setup | 8 weeks (ending Feb 2026) |
 | Enterprise CRM Integration Team | Facilitating | Infrastructure-as-code, GitOps workflows | 10 weeks (ending Mar 2026) |
 | Enterprise Reporting Team | Facilitating | Containerization, Kubernetes deployment | 8 weeks (ending Mar 2026) |
 
@@ -123,8 +123,8 @@ Announce major updates via #devops-enablement Slack channel.
 
 | Team Name | Interaction Mode | Purpose | Expected Duration |
 |-----------|------------------|---------|-------------------|
-| E-commerce Product Discovery Team | Facilitating | Advanced Kubernetes (HPA, resource limits, cost optimization) | 6 weeks |
-| ML Recommendations Team | Facilitating | MLOps practices, model versioning, A/B testing infrastructure | 10 weeks |
-| Enterprise Sales Portal Team | Facilitating | Blue-green deployments, canary releases, progressive delivery | 6 weeks |
+| Fleet Monitor Team | Facilitating | Advanced Kubernetes (HPA, resource limits, cost optimization) | 6 weeks |
+| Machine Learning & AI Specialists Team | Facilitating | MLOps practices, model versioning, A/B testing infrastructure | 10 weeks |
+| Enterprise Fleet Portal Team | Facilitating | Blue-green deployments, canary releases, progressive delivery | 6 weeks |
 
 **Note**: As an enabling team, we're designed to be temporary collaborators. If your team is repeatedly asking us for help with the same topics, it's a signal that we haven't successfully enabled autonomy yet - let's discuss how to adjust our approach!

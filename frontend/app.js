@@ -17,6 +17,16 @@ document.addEventListener('DOMContentLoaded', init);
 // Add Escape key handler for focus mode
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && state.focusedTeam) {
+        // Check if any modal is open - let modal handler take priority
+        const modalsOpen = document.getElementById('detailModal')?.style.display === 'block' ||
+                          document.getElementById('teamModal')?.style.display === 'block' ||
+                          document.getElementById('interactionModeModal')?.style.display === 'block' ||
+                          document.getElementById('keyboardShortcutsModal')?.style.display === 'block';
+
+        if (modalsOpen) {
+            return; // Let the modal close handler in modals.js handle it
+        }
+
         // Exit focus mode
         state.focusedTeam = null;
         state.focusedConnections.clear();

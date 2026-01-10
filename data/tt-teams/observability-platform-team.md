@@ -125,9 +125,9 @@ Yes - Developer Experience Platform Grouping (works alongside Cloud Development,
 
 | Team Name | Interaction Mode | Purpose | Expected Duration |
 |-----------|------------------|---------|-------------------|
-| Mobile App Experience Team | Collaboration | Add mobile app observability (crash reporting, performance monitoring) | 8 weeks |
-| Data Engineering Team | Collaboration | Custom dashboards for Airflow DAG monitoring | 4 weeks |
-| Security & Compliance Team | X-as-a-Service | Integrate security audit logs into observability platform | Ongoing |
+| Driver Experience Team | Collaboration | Add mobile app observability (crash reporting, performance monitoring) | 8 weeks |
+| Data Engineering Enablement Team | Collaboration | Custom dashboards for Airflow DAG monitoring | 4 weeks |
+| Security Compliance Team | X-as-a-Service | Integrate security audit logs into observability platform | Ongoing |
 
 **Platform Metrics (Q4 2025):**
 - **NPS Score**: 7.8/10 (industry avg for internal platforms: 6.5)

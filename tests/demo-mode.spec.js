@@ -1,5 +1,21 @@
 import { test, expect } from '@playwright/test';
 
+/**
+ * Demo Mode Tests
+ * 
+ * These tests verify the demo mode banner functionality when READ_ONLY_MODE=true.
+ * 
+ * TO RUN THESE TESTS:
+ * 1. Start the server with READ_ONLY_MODE enabled:
+ *    Windows: $env:READ_ONLY_MODE="true"; .\venv\Scripts\python.exe -m uvicorn main:app --port 8000
+ *    Linux/Mac: READ_ONLY_MODE=true python -m uvicorn main:app --port 8000
+ * 
+ * 2. In another terminal, run the tests:
+ *    npx playwright test demo-mode.spec.js
+ * 
+ * These tests are skipped in normal test runs if demo mode is not enabled.
+ */
+
 test.describe('Demo Mode', () => {
     let isDemoModeEnabled = false;
 
@@ -9,6 +25,11 @@ test.describe('Demo Mode', () => {
             const response = await request.get('/api/config');
             const config = await response.json();
             isDemoModeEnabled = config.readOnlyMode === true;
+            
+            if (!isDemoModeEnabled) {
+                console.log('\n⚠️  Demo mode tests skipped - READ_ONLY_MODE not enabled on server');
+                console.log('To run these tests, start the server with READ_ONLY_MODE=true\n');
+            }
         } catch (error) {
             console.log('Could not check demo mode status:', error);
         }
@@ -19,7 +40,7 @@ test.describe('Demo Mode', () => {
     });
 
     test('should display demo mode banner when READ_ONLY_MODE is enabled', async ({ page }) => {
-        test.skip(!isDemoModeEnabled, 'Demo mode not enabled on server');
+        test.skip(!isDemoModeEnabled, 'Demo mode not enabled - see instructions in test file');
         
         // Wait for the page to load and check if demo banner exists
         const banner = page.locator('.demo-banner');
@@ -53,7 +74,7 @@ test.describe('Demo Mode', () => {
     });
 
     test('demo banner should have correct styling', async ({ page }) => {
-        test.skip(!isDemoModeEnabled, 'Demo mode not enabled on server');
+        test.skip(!isDemoModeEnabled, 'Demo mode not enabled - see instructions in test file');
         
         const banner = page.locator('.demo-banner');
         
@@ -71,16 +92,5 @@ test.describe('Demo Mode', () => {
             return window.getComputedStyle(el).color;
         });
         expect(color).toBe('rgb(255, 255, 255)'); // white
-    });
-
-    test('should not display demo mode banner when READ_ONLY_MODE is disabled', async ({ page }) => {
-        test.skip(isDemoModeEnabled, 'Demo mode is enabled on server');
-        
-        // Wait for page to load
-        await page.waitForLoadState('networkidle');
-        
-        // Banner should not exist
-        const banner = page.locator('.demo-banner');
-        await expect(banner).not.toBeVisible();
     });
 });

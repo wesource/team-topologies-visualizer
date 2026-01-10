@@ -464,11 +464,9 @@ describe('autoAlignTTDesign', () => {
 
         // Enabling team should be positioned, and its actual height is 140px (not 80px)
         expect(enablingTeam).toBeDefined();
-        // const enablingBottom = enablingTeam.position.y + 140; // Actual height for enabling teams
 
         // Complicated-subsystem team should be positioned, and its actual height is 100px (not 80px)
         expect(complicatedTeam).toBeDefined();
-        // const complicatedBottom = complicatedTeam.position.y + 100; // Actual height for complicated-subsystem teams
 
         // The key assertion: when we calculate bounding boxes later, these teams should fit
         // This test verifies that the positioning logic accounts for the actual rendered heights

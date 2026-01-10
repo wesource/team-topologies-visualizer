@@ -55,7 +55,7 @@ Data Pipeline Platform Team – A platform team providing robust, scalable data 
 ## Teams we currently interact with
 | Team Name | Interaction Mode | Purpose | Duration |
 |-----------|------------------|---------|----------|
-| Data Engineering Team | Facilitating | Coaching on pipeline best practices | Occasional |
-| E-Commerce Recommendations Team | X-as-a-Service | Provide feature data pipelines | Ongoing |
+| Data Engineering Enablement Team | Facilitating | Coaching on pipeline best practices | Occasional |
+| Delivery Analytics Team | X-as-a-Service | Provide feature data pipelines | Ongoing |
 | Financial Reporting Team | X-as-a-Service | ETL for financial data | Ongoing |
 | All stream-aligned teams | X-as-a-Service | Consume data pipeline platform | Ongoing |

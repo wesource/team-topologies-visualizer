@@ -51,14 +51,14 @@ value_stream: Financial Services
 ## Teams we currently interact with
 | Team Name | Interaction Mode | Purpose | Duration |
 |-----------|------------------|---------|----------|
-| E-commerce Checkout Team | X-as-a-Service | Payment processing | Ongoing |
-| Mobile App Team | X-as-a-Service | Payment processing | Ongoing |
+| Billing Team | X-as-a-Service | Payment processing | Ongoing |
+| Driver Experience Team | X-as-a-Service | Payment processing | Ongoing |
 | Security Compliance Team | Facilitation | PCI compliance | 3 months |
 ## Teams we expect to interact with soon
 | Team Name | Interaction Mode | Purpose | Expected Duration |
 |-----------|------------------|---------|-------------------|
-| Enterprise Sales Portal Team | X-as-a-Service | Subscription billing | Ongoing |
-| Fraud Detection & Risk Modeling Team | Collaboration | Improve fraud scoring | 2 months |
+| Enterprise Fleet Portal Team | X-as-a-Service | Subscription billing | Ongoing |
+| Fraud Detection and Risk Modeling Team | Collaboration | Improve fraud scoring | 2 months |
 
 ## Why This is a Platform Team (Not Complicated Subsystem)
 While this domain has high complexity, it's a **platform** because:

@@ -73,8 +73,8 @@ Yes – Cloud Infrastructure Platform Grouping
 ## Teams we currently interact with
 | Team Name | Interaction Mode | Purpose | Duration |
 |-----------|------------------|---------|----------|
-| Data Engineering Team | Facilitating | Coaching on data architecture | Occasional |
-| E-Commerce Recommendations Team | X-as-a-Service | Provide data storage | Ongoing |
-| E-Commerce Checkout Team | X-as-a-Service | Store order data | Ongoing |
+| Data Engineering Enablement Team | Facilitating | Coaching on data architecture | Occasional |
+| Delivery Analytics Team | X-as-a-Service | Provide data storage | Ongoing |
+| Billing Team | X-as-a-Service | Store order data | Ongoing |
 | Financial Reporting Team | X-as-a-Service | Store financial data | Ongoing |
 | All stream-aligned teams | X-as-a-Service | Consume data storage platform | Ongoing |

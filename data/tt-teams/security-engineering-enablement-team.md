@@ -68,7 +68,7 @@ Facilitating is about **sensing and reducing obstacles** for other teams:
 - Security training: Secure Code Warrior, OWASP WebGoat
 
 ## Current Engagements (Q1 2026)
-1. **Mobile App Experience Team** (Weeks 4-11): OAuth2 implementation, biometric authentication patterns
+1. **Driver Experience Team** (Weeks 4-11): OAuth2 implementation, biometric authentication patterns
 2. **API Gateway Platform Team** (Weeks 1-6): WAF rule optimization, DDoS mitigation strategies
 3. **Payment Platform Team** (Planning): PCI-DSS v4.0 compliance preparation
 
@@ -130,5 +130,5 @@ Facilitating is about **sensing and reducing obstacles** for other teams:
 
 | Team Name | Interaction Mode | Purpose | Duration |
 |-----------|------------------|---------|----------|
-| Mobile App Experience Team | Facilitating | OAuth2 implementation, biometric auth | 8 weeks (ending Feb 2026) |
+| Driver Experience Team | Facilitating | OAuth2 implementation, biometric auth | 8 weeks (ending Feb 2026) |
 | API Gateway Platform Team | Facilitating | WAF optimization, DDoS mitigation | 6 weeks (ending Feb 2026) |

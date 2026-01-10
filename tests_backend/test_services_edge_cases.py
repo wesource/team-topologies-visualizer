@@ -13,6 +13,7 @@ import tempfile
 from pathlib import Path
 
 import pytest
+import yaml
 
 from backend.services import parse_team_file, team_name_to_slug
 
@@ -61,7 +62,7 @@ invalid_yaml: [unclosed bracket
 
         try:
             # Should raise an exception for invalid YAML
-            with pytest.raises(Exception):
+            with pytest.raises((yaml.YAMLError, ValueError)):
                 parse_team_file(temp_path)
         finally:
             temp_path.unlink()
@@ -218,7 +219,7 @@ metadata:
     def test_valid_deployment_frequencies_accepted(self):
         """Valid deployment frequencies should be accepted"""
         valid_frequencies = ['daily', 'weekly', 'monthly', 'quarterly']
-        
+
         for freq in valid_frequencies:
             with tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False, encoding='utf-8') as f:
                 f.write(f"""---

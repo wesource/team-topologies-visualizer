@@ -166,7 +166,7 @@ export function drawTeam(ctx, team, selectedTeam, teamColorMap, wrapText, curren
 /**
  * Draw team as default box (rounded corners in TT Design, sharp corners in Pre-TT view)
  */
-function drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, showTeamTypeBadges = false, _platformMetrics = null, currentView = 'current', showFlowMetrics = false) {
+function drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, showTeamTypeBadges = false, platformMetrics = null, currentView = 'current', showFlowMetrics = false) {
 
     // Rounded corners for stream-aligned and platform teams in TT Design view
     // Sharp corners in Pre-TT view (hierarchy, product lines, value streams)
@@ -196,10 +196,9 @@ function drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamCo
     drawCognitiveLoadIndicator(ctx, team, x, y, width, showCognitiveLoad);
 
     // Platform consumer badge (TT Design view only)
-    // TODO: Implement drawPlatformConsumerBadge function or remove this feature
-    // if (platformMetrics) {
-    //     drawPlatformConsumerBadge(ctx, team, platformMetrics, x, y, height);
-    // }
+    if (platformMetrics && platformMetrics.totalCount > 0) {
+        drawPlatformConsumerBadge(ctx, team, platformMetrics, x, y, height);
+    }
 
     // Flow metrics box (TT Design view only, when checkbox enabled)
     if (showFlowMetrics && currentView === 'tt') {
@@ -440,6 +439,56 @@ function drawUndefinedTeam(ctx, team, x, y, width, height, selectedTeam, teamCol
     // Draw comparison badge if in comparison mode
     if (comparisonBadge) {
         drawComparisonBadge(ctx, comparisonBadge, x, y, width, height);
+    }
+}
+
+/**
+ * Helper: Draw platform consumer badge showing number of consuming teams
+ * Positioned in bottom-left corner of platform teams
+ */
+function drawPlatformConsumerBadge(ctx, _team, platformMetrics, x, y, height) {
+    if (!platformMetrics || platformMetrics.totalCount === 0) return;
+
+    const count = platformMetrics.totalCount;
+    const isOverloaded = platformMetrics.isOverloaded;
+
+    // Badge dimensions
+    const badgePadding = 4;
+    const badgeHeight = 18;
+    const emoji = '👥';
+    const text = `${count}`;
+
+    // Measure text to calculate badge width
+    ctx.font = 'bold 11px sans-serif';
+    const textWidth = ctx.measureText(text).width;
+    const emojiWidth = 12; // Approximate emoji width
+    const badgeWidth = emojiWidth + textWidth + badgePadding * 3;
+
+    // Position in bottom-left corner
+    const badgeX = x + 6;
+    const badgeY = y + height - badgeHeight - 6;
+
+    // Draw badge background
+    ctx.fillStyle = isOverloaded ? '#ff9800' : '#1976d2'; // Orange if overloaded, blue otherwise
+    ctx.beginPath();
+    ctx.roundRect(badgeX, badgeY, badgeWidth, badgeHeight, 4);
+    ctx.fill();
+
+    // Draw emoji
+    ctx.font = '11px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#fff';
+    ctx.fillText(emoji, badgeX + badgePadding, badgeY + badgeHeight / 2);
+
+    // Draw count
+    ctx.font = 'bold 11px sans-serif';
+    ctx.fillText(text, badgeX + emojiWidth + badgePadding * 2, badgeY + badgeHeight / 2);
+
+    // Draw warning indicator if overloaded
+    if (isOverloaded) {
+        ctx.font = '10px sans-serif';
+        ctx.fillText('⚠️', badgeX + badgeWidth + 2, badgeY + badgeHeight / 2);
     }
 }
 

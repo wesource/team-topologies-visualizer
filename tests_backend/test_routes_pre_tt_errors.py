@@ -160,7 +160,7 @@ class TestSnapshotCreationErrors:
         # Mock create_snapshot to raise an exception
         with patch("backend.routes_pre_tt.create_snapshot") as mock_create:
             mock_create.side_effect = Exception("Simulated internal error")
-            
+
             response = client.post(
                 "/api/pre-tt/snapshots/create",
                 json={
@@ -182,15 +182,15 @@ class TestValidationEndpoint:
         response = client.get("/api/pre-tt/validate")
         assert response.status_code == 200
         data = response.json()
-        
+
         # Should have validation result structure
         assert "total_files" in data or "issues" in data or "files_with_errors" in data
-        
+
     def test_validate_detects_file_issues(self):
         """Validation should detect and report file issues"""
         response = client.get("/api/pre-tt/validate")
         assert response.status_code == 200
         data = response.json()
-        
+
         # Response should contain validation information
         assert isinstance(data, dict)

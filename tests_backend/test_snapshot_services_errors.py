@@ -15,8 +15,6 @@ from datetime import datetime
 from pathlib import Path
 from unittest.mock import patch
 
-import pytest
-
 from backend.models import TeamData
 from backend.snapshot_services import (
     calculate_statistics,
@@ -72,9 +70,9 @@ class TestCondenseTeamForSnapshot:
             interaction_modes={"Team A": "collaboration"},
             metadata={"size": 6, "cognitive_load": "high", "established": "2023-01"}
         )
-        
+
         condensed = condense_team_for_snapshot(team)
-        
+
         assert condensed.name == "Test Team"
         assert condensed.team_type == "stream-aligned"
         assert condensed.position == {"x": 100, "y": 200}
@@ -88,9 +86,9 @@ class TestCondenseTeamForSnapshot:
             name="Minimal Team",
             team_type="platform"
         )
-        
+
         condensed = condense_team_for_snapshot(team)
-        
+
         assert condensed.name == "Minimal Team"
         assert condensed.team_type == "platform"
         assert condensed.dependencies == []
@@ -106,9 +104,9 @@ class TestCondenseTeamForSnapshot:
                 "contact": {"email": "api-team@example.com"}
             }
         )
-        
+
         condensed = condense_team_for_snapshot(team)
-        
+
         assert condensed.team_api_summary is not None
         assert "purpose" in condensed.team_api_summary
         assert condensed.team_api_summary["purpose"] == "Provide API gateway"
@@ -120,7 +118,7 @@ class TestCalculateStatistics:
     def test_statistics_with_empty_teams(self):
         """Should handle empty team list"""
         stats = calculate_statistics([])
-        
+
         assert stats.total_teams == 0
         assert stats.stream_aligned == 0
         assert stats.platform == 0
@@ -136,9 +134,9 @@ class TestCalculateStatistics:
             TeamData(name="T4", team_type="enabling"),
             TeamData(name="T5", team_type="complicated-subsystem"),
         ]
-        
+
         stats = calculate_statistics(teams)
-        
+
         assert stats.total_teams == 5
         assert stats.stream_aligned == 2
         assert stats.platform == 1
@@ -153,9 +151,9 @@ class TestCalculateStatistics:
             TeamData(name="T3", team_type="stream-aligned", value_stream="VS2"),
             TeamData(name="T4", team_type="platform", value_stream=None),
         ]
-        
+
         stats = calculate_statistics(teams)
-        
+
         assert stats.value_streams == 2  # VS1 and VS2
 
     def test_statistics_counts_unique_platform_groupings(self):
@@ -166,9 +164,9 @@ class TestCalculateStatistics:
             TeamData(name="T3", team_type="platform", platform_grouping="PG2"),
             TeamData(name="T4", team_type="stream-aligned", platform_grouping=None),
         ]
-        
+
         stats = calculate_statistics(teams)
-        
+
         assert stats.platform_groupings == 2  # PG1 and PG2
 
 
@@ -183,7 +181,7 @@ class TestCreateSnapshotErrors:
             author="Test",
             team_names=[]
         )
-        
+
         assert snapshot.statistics.total_teams == 0
         assert len(snapshot.teams) == 0
 
@@ -195,7 +193,7 @@ class TestCreateSnapshotErrors:
             author="Test",
             team_names=["nonexistent-team-xyz-12345", "another-fake-team"]
         )
-        
+
         # Should succeed but have 0 teams (filtered out)
         assert isinstance(snapshot, object)
 
@@ -207,11 +205,11 @@ class TestCreateSnapshotErrors:
             author="Test",
             team_names=[]
         )
-        
+
         # Check file was created
         snapshot_file = Path("data/tt-snapshots") / f"{snapshot.snapshot_id}.json"
         assert snapshot_file.exists()
-        
+
         # Cleanup
         snapshot_file.unlink()
 
@@ -230,11 +228,11 @@ class TestLoadSnapshotErrors:
         snapshot_dir = Path("data/tt-snapshots")
         snapshot_dir.mkdir(parents=True, exist_ok=True)
         corrupted_file = snapshot_dir / "corrupted-test-snapshot.json"
-        
+
         try:
             with open(corrupted_file, 'w', encoding='utf-8') as f:
                 f.write("{ invalid json content }")
-            
+
             result = load_snapshot("corrupted-test-snapshot")
             assert result is None
         finally:
@@ -246,11 +244,11 @@ class TestLoadSnapshotErrors:
         snapshot_dir = Path("data/tt-snapshots")
         snapshot_dir.mkdir(parents=True, exist_ok=True)
         incomplete_file = snapshot_dir / "incomplete-test-snapshot.json"
-        
+
         try:
             with open(incomplete_file, 'w', encoding='utf-8') as f:
                 json.dump({"snapshot_id": "incomplete-test-snapshot"}, f)
-            
+
             result = load_snapshot("incomplete-test-snapshot")
             # Should return None due to missing required fields
             assert result is None
@@ -263,7 +261,7 @@ class TestLoadSnapshotErrors:
         snapshot_dir = Path("data/tt-snapshots")
         snapshot_dir.mkdir(parents=True, exist_ok=True)
         bad_datetime_file = snapshot_dir / "bad-datetime-test-snapshot.json"
-        
+
         try:
             with open(bad_datetime_file, 'w', encoding='utf-8') as f:
                 json.dump({
@@ -283,7 +281,7 @@ class TestLoadSnapshotErrors:
                         "platform_groupings": 0
                     }
                 }, f)
-            
+
             result = load_snapshot("bad-datetime-test-snapshot")
             # Should return None due to datetime parsing error
             assert result is None
@@ -299,14 +297,14 @@ class TestListSnapshotsErrors:
         """Should skip corrupted files and continue listing"""
         snapshot_dir = Path("data/tt-snapshots")
         snapshot_dir.mkdir(parents=True, exist_ok=True)
-        
+
         # Create a corrupted file
         corrupted_file = snapshot_dir / "corrupted-list-test.json"
-        
+
         try:
             with open(corrupted_file, 'w', encoding='utf-8') as f:
                 f.write("corrupted content")
-            
+
             # Should not crash, just skip the corrupted file
             snapshots = list_snapshots()
             assert isinstance(snapshots, list)
@@ -326,9 +324,9 @@ class TestListSnapshotsErrors:
         """Should sort snapshots by creation date, newest first"""
         snapshot_dir = Path("data/tt-snapshots")
         snapshot_dir.mkdir(parents=True, exist_ok=True)
-        
+
         files_to_cleanup = []
-        
+
         try:
             # Create snapshots with different dates
             dates = [
@@ -336,12 +334,12 @@ class TestListSnapshotsErrors:
                 datetime(2024, 1, 3, 10, 0, 0),
                 datetime(2024, 1, 2, 10, 0, 0),
             ]
-            
+
             for i, date in enumerate(dates):
                 snapshot_id = f"sort-test-{i}"
                 file_path = snapshot_dir / f"{snapshot_id}.json"
                 files_to_cleanup.append(file_path)
-                
+
                 with open(file_path, 'w', encoding='utf-8') as f:
                     json.dump({
                         "snapshot_id": snapshot_id,
@@ -360,17 +358,17 @@ class TestListSnapshotsErrors:
                             "platform_groupings": 0
                         }
                     }, f)
-            
+
             snapshots = list_snapshots()
-            
+
             # Filter to only our test snapshots
             test_snapshots = [s for s in snapshots if s.snapshot_id.startswith("sort-test-")]
-            
+
             # Should be sorted newest first (index 1, then 2, then 0)
             assert len(test_snapshots) >= 3
             # Verify newest is first
             assert test_snapshots[0].created_at > test_snapshots[1].created_at
-            
+
         finally:
             for file_path in files_to_cleanup:
                 if file_path.exists():

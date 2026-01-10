@@ -1,6 +1,7 @@
 // Tests for SVG export module
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
+// Mock the download function since we can't test actual file downloads in unit tests
 let exportModule;
 
 describe('SVG Export', () => {
@@ -203,6 +204,7 @@ describe('SVG Export', () => {
 
             const teamColorMap = { 'stream-aligned': '#4A90E2', 'platform': '#7ED321' };
             const state = { hideConnections: false };
+            const _mockBlob = new Blob(['test'], { type: 'image/svg+xml' });
             const mockCreateObjectURL = vi.fn(() => 'mock-url');
             global.URL.createObjectURL = mockCreateObjectURL;
 

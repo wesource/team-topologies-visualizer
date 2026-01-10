@@ -303,11 +303,12 @@ export async function showTeamDetails(team, currentView, allTeams = []) {
             if (existingEstablished) existingEstablished.remove();
         }
 
+        // Always remove existing flow metrics section first (cleanup from previous team)
+        const existingFlowMetrics = document.getElementById('detailFlowMetricsSection');
+        if (existingFlowMetrics) existingFlowMetrics.remove();
+
         // Flow metrics section - INSERT EARLY (outcomes are most important)
         if (teamData.flow_metrics) {
-            // Remove existing flow metrics section if any
-            const existingFlowMetrics = document.getElementById('detailFlowMetricsSection');
-            if (existingFlowMetrics) existingFlowMetrics.remove();
 
             const flowMetricsSection = document.createElement('div');
             flowMetricsSection.id = 'detailFlowMetricsSection';

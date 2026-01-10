@@ -39,7 +39,6 @@ export function autoAlignTTDesign(teams) {
 
     const ungroupedTeams = teams.filter(team => !groupedTeamNames.has(team.name));
 
-    // Separate ungrouped teams into wide and narrow
     // Layout configuration
     const startX = 100;
     const startY = 100;
@@ -236,9 +235,9 @@ export function autoAlignTTDesign(teams) {
                 currentYPos += 20; // Spacing between wide and narrow
             }
 
-            narrowUngrouped.forEach((team, index) => {
-                const row = Math.floor(index / narrowTeamsPerRow);
-                const col = index % narrowTeamsPerRow;
+            narrowUngrouped.forEach((team, _index) => {
+                const row = Math.floor(_index / narrowTeamsPerRow);
+                const col = _index % narrowTeamsPerRow;
 
                 // Calculate Y position by summing heights of all previous rows
                 let rowYPos = currentYPos;

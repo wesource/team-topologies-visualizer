@@ -190,16 +190,16 @@ See "Roadmap & Current Priorities" above for Q1 2026 focus areas.
 | API Gateway Platform Team | X-as-a-Service | Deploy API Gateway on our AWS accounts | Ongoing |
 | CI/CD Platform Team | X-as-a-Service | Pipelines deploy to our AWS infrastructure | Ongoing |
 | Developer Portal Team | X-as-a-Service | Portal runs on our ECS clusters, integrates our cost APIs | Ongoing |
-| Security & Compliance Team | X-as-a-Service | AWS guardrails and compliance automation | Ongoing |
+| Security Compliance Team | X-as-a-Service | AWS guardrails and compliance automation | Ongoing |
 | All stream-aligned teams | X-as-a-Service | Consume our platform for AWS infrastructure | Ongoing |
 
 ## Teams we expect to interact with soon
 
 | Team Name | Interaction Mode | Purpose | Expected Duration |
 |-----------|------------------|---------|-------------------|
-| Data Engineering Team | Collaboration | Build S3 Data Lake modules, EMR/Athena patterns | 8 weeks |
-| ML Recommendations Team | Collaboration | SageMaker infrastructure patterns, model hosting | 6 weeks |
-| Mobile App Experience Team | X-as-a-Service | Backend AWS resources for mobile APIs | Ongoing |
+| Data Engineering Enablement Team | Collaboration | Build S3 Data Lake modules, EMR/Athena patterns | 8 weeks |
+| Machine Learning & AI Specialists Team | Collaboration | SageMaker infrastructure patterns, model hosting | 6 weeks |
+| Driver Experience Team | X-as-a-Service | Backend AWS resources for mobile APIs | Ongoing |
 
 ## Platform Product Metrics
 _[Extended]_

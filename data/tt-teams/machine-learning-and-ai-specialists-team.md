@@ -78,11 +78,11 @@ This team provides specialized ML/AI capabilities across multiple value streams:
 ## Teams we currently interact with
 | Team Name | Interaction Mode | Purpose | Duration |
 |-----------|------------------|---------|----------|
-| Data Engineering Team | Collaboration | Feature engineering, data pipelines | Ongoing |
-| Platform Team | X-as-a-Service | Model deployment infrastructure | Ongoing |
-| E-commerce Product Discovery Team | Collaboration | Integrate recommendations | 3 months |
+| Data Engineering Enablement Team | Collaboration | Feature engineering, data pipelines | Ongoing |
+| Data Pipeline Platform Team | X-as-a-Service | Model deployment infrastructure | Ongoing |
+| Fleet Monitor Team | Collaboration | Integrate recommendations | 3 months |
 
 ## Teams we expect to interact with soon
 | Team Name | Interaction Mode | Purpose | Expected Duration |
 |-----------|------------------|---------|-------------------|
-| Mobile App Experience Team | Collaboration | Mobile recommendations | 2 months |
+| Driver Experience Team | Collaboration | Mobile recommendations | 2 months |

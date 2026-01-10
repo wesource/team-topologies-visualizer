@@ -79,7 +79,7 @@ No - This is an inner platform within Mobile Experience value stream, not part o
 
 | Team Name | Interaction Mode | Purpose | Duration |
 |-----------|------------------|---------|----------|
-| Mobile App Team | X-as-a-Service | Provide CI/CD, analytics, crash reporting | Ongoing |
-| Mobile App Experience Team | X-as-a-Service | Provide CI/CD, push, analytics | Ongoing |
-| Mobile Push Notifications Team | X-as-a-Service | Provide push infrastructure | Ongoing |
+| Driver Experience Team | X-as-a-Service | Provide CI/CD, analytics, crash reporting | Ongoing |
+| Driver Feedback Team | X-as-a-Service | Provide CI/CD, push, analytics | Ongoing |
+| Delivery Notifications Team | X-as-a-Service | Provide push infrastructure | Ongoing |
 | Cloud Development Platform Team | X-as-a-Service | Run on their AWS/Kubernetes infrastructure | Ongoing |

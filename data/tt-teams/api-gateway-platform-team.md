@@ -66,14 +66,14 @@ N/A - This is a stream-aligned team delivering API gateway as a product experien
 ## Teams we currently interact with
 | Team Name | Interaction Mode | Purpose | Duration |
 |-----------|------------------|---------|----------|
-| Security & Compliance Team | Collaboration | Define compliance policies | Ongoing |
+| Security Compliance Team | Collaboration | Define compliance policies | Ongoing |
 | Developer Portal Team | X-as-a-Service | Expose API metrics | Ongoing |
 | All platform teams | Collaboration | Service mesh integration | Ongoing |
 ## Teams we expect to interact with soon
 | Team Name | Interaction Mode | Purpose | Expected Duration |
 |-----------|------------------|---------|-------------------|
-| E-commerce Checkout Team | X-as-a-Service | New API onboarding | 2 months |
-| Fraud Detection & Risk Modeling Team | Collaboration | Secure fraud APIs | 3 months |
+| Billing Team | X-as-a-Service | New API onboarding | 2 months |
+| Fraud Detection and Risk Modeling Team | Collaboration | Secure fraud APIs | 3 months |
 
 ## X-as-a-Service Offerings
 - Self-service API route configuration

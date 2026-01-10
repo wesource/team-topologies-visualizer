@@ -92,9 +92,9 @@ platform_grouping: Cloud Infrastructure Platform Grouping
 
 | Team Name | Interaction Mode | Purpose | Expected Duration |
 |-----------|------------------|---------|-------------------|
-| Mobile App Experience Team | Collaboration | Build iOS/Android pipelines with App Store/Play Store automation | 6 weeks |
-| Data Engineering Team | Collaboration | Custom pipelines for Airflow DAG deployments, Spark job CI/CD | 4 weeks |
-| ML Recommendations Team | Collaboration | ML model deployment pipelines (train, test, deploy to SageMaker) | 8 weeks |
+| Driver Experience Team | Collaboration | Build iOS/Android pipelines with App Store/Play Store automation | 6 weeks |
+| Data Engineering Enablement Team | Collaboration | Custom pipelines for Airflow DAG deployments, Spark job CI/CD | 4 weeks |
+| Machine Learning & AI Specialists Team | Collaboration | ML model deployment pipelines (train, test, deploy to SageMaker) | 8 weeks |
 
 **Platform Metrics (Q4 2025):**
 - **NPS Score**: 8.7/10 (CI/CD is critical for developer velocity)

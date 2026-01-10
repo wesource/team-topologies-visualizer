@@ -155,7 +155,7 @@ def test_parse_real_team_file_api_gateway():
 
     # Should have parsed dependencies
     assert len(team.dependencies) > 0
-    assert "Security & Compliance Team" in team.dependencies or "Security and Compliance Team" in team.dependencies
+    assert "Security Compliance Team" in team.dependencies
 
     # Should have interaction modes
     assert len(team.interaction_modes) > 0

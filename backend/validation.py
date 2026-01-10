@@ -174,9 +174,9 @@ def validate_all_team_files(view: str = "tt") -> dict[str, Any]:
                         if view == "tt":
                             markdown_content = parts[2].strip()
                             if "## Teams we currently interact with" in markdown_content:
-                                # Extract table section
+                                # Extract table section (increased limit to handle longer sections)
                                 table_start = markdown_content.find("## Teams we currently interact with")
-                                section = markdown_content[table_start:table_start + 1000]
+                                section = markdown_content[table_start:table_start + 3000]
 
                                 # Check if table is present
                                 if '|' not in section:
