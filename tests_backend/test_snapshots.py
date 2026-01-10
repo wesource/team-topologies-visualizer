@@ -23,7 +23,7 @@ def cleanup_snapshots():
     yield
     # Clean up after test - catch all test-generated snapshots
     # Patterns: test-*, empty-snapshot-*, invalid-teams-test-*, file-test-snapshot-*, -YYYYMMDD-*.json (empty name)
-    patterns = ["test-*.json", "empty-snapshot-*.json", "invalid-teams-*.json", 
+    patterns = ["test-*.json", "empty-snapshot-*.json", "invalid-teams-*.json",
                 "file-test-*.json", "-2*.json"]  # Last pattern catches empty name snapshots like "-20260110-*.json"
     for pattern in patterns:
         for snapshot_file in SNAPSHOTS_DIR.glob(pattern):

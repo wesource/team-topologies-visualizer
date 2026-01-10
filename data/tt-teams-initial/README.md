@@ -4,26 +4,24 @@ This directory contains a **simplified "first step"** Team Topologies design rep
 
 ## How to Use This Variant
 
-**To view this initial transformation in the webapp**:
+**Set the environment variable before starting the app**:
 
-1. **Temporarily rename directories**:
-   ```powershell
-   # Backup current tt-teams
-   Rename-Item data\tt-teams data\tt-teams-midstage
-   
-   # Make tt-teams-initial active
-   Rename-Item data\tt-teams-initial data\tt-teams
-   ```
+```bash
+# Linux/Mac
+export TT_TEAMS_VARIANT=tt-teams-initial
+python -m uvicorn main:app --reload
 
-2. **Start the application** and view the TT-Design view
+# Windows PowerShell
+$env:TT_TEAMS_VARIANT="tt-teams-initial"
+python -m uvicorn main:app --reload
+```
 
-3. **Restore original** when done:
-   ```powershell
-   Rename-Item data\tt-teams data\tt-teams-initial
-   Rename-Item data\tt-teams-midstage data\tt-teams
-   ```
+**Docker:**
+```bash
+docker run -p 8000:8000 -e TT_TEAMS_VARIANT=tt-teams-initial team-topologies-viz
+```
 
-**Note**: Future enhancement planned to add a demo mode toggle for switching between variants without renaming directories.
+**To switch back to mid-stage variant**, unset the variable or set it to `tt-teams` (default).
 
 ## Design Philosophy
 

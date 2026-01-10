@@ -90,6 +90,39 @@ docker run -p 8000:8000 -e READ_ONLY_MODE=true team-topologies-viz
 
 Demo mode displays a banner and blocks all write operations (position updates, snapshot creation) while allowing full interaction with the visualization.
 
+### TT Design Variants
+
+The tool includes two Team Topologies design examples:
+
+1. **`data/tt-teams/` (default)** - Mid-stage transformation
+   - Multiple platform teams with specialized capabilities
+   - Complex value stream alignments
+   - Platform groupings for related services
+   - Represents 12-24 months of TT evolution
+
+2. **`data/tt-teams-initial/`** - First-step transformation
+   - 5 focused teams (2 stream-aligned, 1 platform, 1 enabling, 1 complicated-subsystem)
+   - Split monolith into focused teams
+   - Thinnest Viable Platform approach
+   - Represents 3-6 months initial transformation
+   - See [data/tt-teams-initial/README.md](data/tt-teams-initial/README.md) for details
+
+**Switch between variants** using the `TT_TEAMS_VARIANT` environment variable:
+
+```bash
+# Use simplified first-step variant
+export TT_TEAMS_VARIANT=tt-teams-initial  # Linux/Mac
+$env:TT_TEAMS_VARIANT="tt-teams-initial"  # Windows PowerShell
+
+# Then start the app
+python -m uvicorn main:app --reload
+```
+
+**Docker:**
+```bash
+docker run -p 8000:8000 -e TT_TEAMS_VARIANT=tt-teams-initial team-topologies-viz
+```
+
 See [SETUP.md](docs/SETUP.md) for detailed installation and configuration instructions.
 
 ## Why This Tool?
