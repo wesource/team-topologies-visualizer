@@ -111,11 +111,20 @@ class TestTTUpdateTeamPosition:
 
         if len(teams) > 0:
             team_name = teams[0]["name"]
+            # Save original position
+            original_pos = teams[0]["position"]
+
             response = client.patch(
                 f"/api/tt/teams/{team_name}/position",
                 json={"x": 100, "y": 200}
             )
             assert response.status_code == 200
+
+            # Restore original position
+            client.patch(
+                f"/api/tt/teams/{team_name}/position",
+                json=original_pos
+            )
 
     def test_update_position_returns_updated_position(self):
         """Should return the updated position in response"""
@@ -124,6 +133,8 @@ class TestTTUpdateTeamPosition:
 
         if len(teams) > 0:
             team_name = teams[0]["name"]
+            # Save original position
+            original_pos = teams[0]["position"]
             new_x, new_y = 150, 250
 
             response = client.patch(
@@ -135,6 +146,12 @@ class TestTTUpdateTeamPosition:
             assert "position" in result
             assert result["position"]["x"] == new_x
             assert result["position"]["y"] == new_y
+
+            # Restore original position
+            client.patch(
+                f"/api/tt/teams/{team_name}/position",
+                json=original_pos
+            )
 
     def test_update_nonexistent_team_position_returns_404(self):
         """Should return 404 when updating non-existent team"""
