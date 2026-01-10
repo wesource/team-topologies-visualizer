@@ -126,7 +126,7 @@ def parse_team_file(file_path: Path) -> TeamData:
 
                 if dependencies:
                     data['dependencies'] = dependencies
-            
+
             # Parse interaction modes from markdown (always from markdown for now)
             if 'interaction_modes' not in data:
                 _, interaction_modes = _parse_interaction_tables(markdown_content)

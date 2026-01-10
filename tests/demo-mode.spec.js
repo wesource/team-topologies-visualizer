@@ -1,18 +1,31 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Demo Mode', () => {
+    let isDemoModeEnabled = false;
+
+    test.beforeAll(async ({ request }) => {
+        // Check if demo mode is actually enabled on the server
+        try {
+            const response = await request.get('/api/config');
+            const config = await response.json();
+            isDemoModeEnabled = config.readOnlyMode === true;
+        } catch (error) {
+            console.log('Could not check demo mode status:', error);
+        }
+    });
+
     test.beforeEach(async ({ page }) => {
-        // Set READ_ONLY_MODE environment variable
-        // Note: In a real scenario, this would be set on the server side
         await page.goto('/static/index.html');
     });
 
     test('should display demo mode banner when READ_ONLY_MODE is enabled', async ({ page }) => {
+        test.skip(!isDemoModeEnabled, 'Demo mode not enabled on server');
+        
         // Wait for the page to load and check if demo banner exists
         const banner = page.locator('.demo-banner');
         
         // Check if banner is visible
-        await expect(banner).toBeVisible();
+        await expect(banner).toBeVisible({ timeout: 5000 });
         
         // Check banner content
         await expect(banner).toContainText('Demo Mode');
@@ -40,7 +53,12 @@ test.describe('Demo Mode', () => {
     });
 
     test('demo banner should have correct styling', async ({ page }) => {
+        test.skip(!isDemoModeEnabled, 'Demo mode not enabled on server');
+        
         const banner = page.locator('.demo-banner');
+        
+        // Wait for banner to be visible first
+        await expect(banner).toBeVisible({ timeout: 5000 });
         
         // Check background gradient exists
         const background = await banner.evaluate(el => {
@@ -53,5 +71,16 @@ test.describe('Demo Mode', () => {
             return window.getComputedStyle(el).color;
         });
         expect(color).toBe('rgb(255, 255, 255)'); // white
+    });
+
+    test('should not display demo mode banner when READ_ONLY_MODE is disabled', async ({ page }) => {
+        test.skip(isDemoModeEnabled, 'Demo mode is enabled on server');
+        
+        // Wait for page to load
+        await page.waitForLoadState('networkidle');
+        
+        // Banner should not exist
+        const banner = page.locator('.demo-banner');
+        await expect(banner).not.toBeVisible();
     });
 });
