@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **TT Teams Initial Variant (2026-01-10)**: Created simplified "first step" TT transformation example for educational purposes
+  - **Directory**: `data/tt-teams-initial/` - Realistic 3-6 month transformation from Pre-TT baseline
+  - **Teams**: 5 focused teams representing initial transformation:
+    - 2 stream-aligned teams (Dispatch & Fleet, Delivery & Routing) - Split from Backend Services monolith
+    - 1 platform team (Cloud Platform) - Transformed from DevOps bottleneck using Thinnest Viable Platform approach
+    - 1 enabling team (DevOps Enablement) - New team to accelerate cloud-native adoption (time-boxed engagements)
+    - 1 complicated-subsystem team (Route Optimization Platform) - Kept clear boundary from baseline
+  - **Traceability**: Each team includes `origin_team` or `origin_teams` field in YAML for transformation tracking
+  - **Documentation**: Comprehensive README.md with:
+    - Transformation strategy and design philosophy
+    - Origin mapping table (baseline → TT teams)
+    - Success criteria and flow metrics improvements
+    - Phase 2 roadmap for continued evolution
+    - Usage instructions (directory renaming until demo toggle implemented)
+  - **Rationale**: Current `tt-teams/` represents mid-stage transformation - too complex for "first step" examples. This variant shows realistic initial transformation focusing on highest-pain areas first.
+  - **Future enhancement**: Add UI toggle to switch between "First Step" and "Mid-Stage" examples without renaming directories
+
 ### Fixed
 - **LogiCore naming consistency (2026-01-10)**: Normalized remaining legacy company-name references to "LogiCore" in example datasets and docs
   - Ensures the baseline and TT-design narratives refer to the same fictional company
@@ -15,6 +33,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **TT dataset coherence (2026-01-10)**: Aligned TT markdown narrative sections with YAML metadata
   - Added missing "Part of a platform grouping?" sections where `platform_grouping` is set
   - Normalized a few TT team headings/labels to match the canonical YAML `name`
+
+### Removed
+- **Dead code cleanup (2026-01-08)**: Removed `backend/routes.py` (286 lines) - file was not imported anywhere in codebase after routing architecture split into `routes_tt.py` and `routes_pre_tt.py`
 
 ### Added
 - **Demo Mode (2026-01-08)**: Read-only mode for public demonstrations and workshops
