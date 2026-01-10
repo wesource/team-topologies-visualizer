@@ -7,11 +7,11 @@ A web application with dual visualization of organizational team structures. Vis
 ## Screenshots
 
 <div align="center">
-  <a href="tests/tests/screenshots/current-state-view.png">
-    <img src="tests/tests/screenshots/current-state-view.png" alt="Pre-TT View" width="45%" />
+  <a href="tests/screenshots/current-state-view.png">
+    <img src="tests/screenshots/current-state-view.png" alt="Pre-TT View" width="45%" />
   </a>
-  <a href="tests/tests/screenshots/tt-vision-view.png">
-    <img src="tests/tests/screenshots/tt-vision-view.png" alt="TT Design View" width="45%" />
+  <a href="tests/screenshots/tt-vision-view.png">
+    <img src="tests/screenshots/tt-vision-view.png" alt="TT Design View" width="45%" />
   </a>
   <br/>
   <em>Baseline (org hierarchy) and TT Design (value streams & platform groupings)</em>
