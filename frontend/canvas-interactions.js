@@ -193,6 +193,20 @@ export class CanvasInteractionHandler {
                 this.state.focusedTeam = null;
                 this.state.focusedConnections.clear();
             } else {
+                // Auto-enable interaction lines if they're disabled (Option C)
+                if (!this.state.showInteractionModes) {
+                    this.state.showInteractionModes = true;
+
+                    // Update checkbox UI to reflect the change
+                    const checkbox = document.getElementById('showInteractionModes');
+                    if (checkbox) {
+                        checkbox.checked = true;
+                    }
+
+                    // Show notification to inform user
+                    this.showFocusModeNotification('✓ Interaction lines enabled for focus mode');
+                }
+
                 // Enter focus mode (new team)
                 this.state.focusedTeam = clickedTeam;
                 this.state.focusedConnections = getDirectRelationships(clickedTeam, this.state.teams);
@@ -215,6 +229,51 @@ export class CanvasInteractionHandler {
         this.draggedTeam = null;
         this.dragStartPosition = null;
         this.hasDragged = false;
+    }
+
+    /**
+     * Show a temporary notification for focus mode actions
+     * @param {string} message - Notification message
+     */
+    showFocusModeNotification(message) {
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed;
+            top: 70px;
+            right: 10px;
+            background: rgba(52, 152, 219, 0.95);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            z-index: 1001;
+            animation: slideIn 0.3s ease-out;
+        `;
+        notification.textContent = message;
+
+        // Add CSS animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes fadeOut {
+                from { opacity: 1; }
+                to { opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        document.body.appendChild(notification);
+
+        // Auto-remove after 3 seconds with fade-out
+        setTimeout(() => {
+            notification.style.animation = 'fadeOut 0.3s ease-out';
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
     }
 
     /**

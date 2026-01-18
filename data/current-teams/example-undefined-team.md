@@ -2,8 +2,8 @@
 name: Example Undefined Team
 team_type: undefined
 position:
-  x: 267.97967816559117
-  y: 878.8605331843046
+  x: 271.6160418019548
+  y: 879.7696240933955
 metadata:
   size: 7
 ---

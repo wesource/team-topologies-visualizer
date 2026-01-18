@@ -2,8 +2,8 @@
 name: Web Frontend Team
 team_type: feature-team
 position:
-  x: 300.0
-  y: 410.0
+  x: 469.45389422344147
+  y: 507.5168419448255
 metadata:
   size: 6
   department: Engineering

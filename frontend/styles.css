@@ -560,8 +560,10 @@ header h1 {
 
 #teamCanvas {
     display: block;
-    min-width: 2500px;
-    min-height: 1500px;
+    width: 100%;
+    height: 100%;
+    min-width: 100%; /* Fill available space */
+    min-height: 100%; /* Fill available space */
     cursor: move;
 }
 
@@ -1812,4 +1814,107 @@ header h1 {
 /* Hide first h1 in team description (duplicate of modal header) */
 #detailDescription .team-api-content > h1:first-child {
     display: none;
+}
+/* Responsive Design for Smaller Screens (e.g., 2015 MacBook) */
+@media screen and (max-width: 1440px) {
+    /* Reduce header padding */
+    header {
+        padding: 0.75rem 1rem;
+    }
+    
+    /* Make controls more compact */
+    .controls-row {
+        gap: 0.75rem;
+    }
+    
+    .btn {
+        padding: 0.4rem 0.75rem;
+        font-size: 0.85rem;
+    }
+    
+    /* Reduce sidebar width */
+    .sidebar {
+        width: 220px;
+        min-width: 220px;
+    }
+    
+    /* Adjust font sizes */
+    h1 {
+        font-size: 1.3rem;
+    }
+    
+    h3 {
+        font-size: 1rem;
+    }
+}
+
+@media screen and (max-width: 1280px) {
+    /* Further reduce spacing */
+    header {
+        padding: 0.5rem 0.75rem;
+    }
+    
+    .header-row {
+        gap: 0.5rem;
+    }
+    
+    .controls-row {
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+    
+    /* Smaller buttons */
+    .btn {
+        padding: 0.35rem 0.6rem;
+        font-size: 0.8rem;
+    }
+    
+    /* Even narrower sidebar */
+    .sidebar {
+        width: 200px;
+        min-width: 200px;
+        font-size: 0.9rem;
+    }
+    
+    /* Compact team list items */
+    .team-item {
+        padding: 0.4rem 0.5rem;
+        font-size: 0.85rem;
+    }
+    
+    /* Smaller legends */
+    .legend-item {
+        font-size: 0.85rem;
+    }
+    
+    .legend-color {
+        width: 14px;
+        height: 14px;
+    }
+}
+
+/* Very small desktop screens (e.g., old MacBook Air) */
+@media screen and (max-width: 1024px) {
+    /* Stack controls if needed */
+    .header-actions {
+        flex-wrap: wrap;
+        gap: 0.35rem;
+    }
+    
+    /* Make sidebar collapsible or narrower */
+    .sidebar {
+        width: 180px;
+        min-width: 180px;
+        padding: 0.75rem;
+    }
+    
+    h1 {
+        font-size: 1.1rem;
+    }
+    
+    /* Smaller modal widths */
+    .modal-content {
+        max-width: 90%;
+        margin: 2% auto;
+    }
 }

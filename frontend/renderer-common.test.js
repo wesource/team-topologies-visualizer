@@ -2,7 +2,7 @@
  * Unit tests for renderer-common.ts
  */
 import { describe, it, expect, beforeEach } from 'vitest';
-import { wrapText, INTERACTION_STYLES, getTeamAtPosition, initCanvasPolyfills, getCognitiveLoadIndicator } from './renderer-common';
+import { wrapText, INTERACTION_STYLES, getTeamAtPosition, initCanvasPolyfills, getCognitiveLoadIndicator, getBoxEdgePoint } from './renderer-common';
 describe('wrapText', () => {
     let mockCtx;
     beforeEach(() => {
@@ -278,5 +278,169 @@ describe('Corner radius for team types', () => {
         // Complicated-subsystem teams should not have rounded corners
         const complicatedType = 'complicated-subsystem-team';
         expect(complicatedType).toBe('complicated-subsystem-team');
+    });
+});
+
+describe('getBoxEdgePoint', () => {
+    const centerX = 100;
+    const centerY = 100;
+    const width = 144;
+    const height = 80;
+    const halfWidth = width / 2;
+    const halfHeight = height / 2;
+
+    describe('Right edge (angle 0°)', () => {
+        it('should return right edge center for angle 0', () => {
+            const angle = 0; // 0° - pointing right
+            const point = getBoxEdgePoint(centerX, centerY, width, height, angle);
+            expect(point.x).toBe(centerX + halfWidth);
+            expect(point.y).toBe(centerY);
+        });
+
+        it('should return right edge center for angle 30°', () => {
+            const angle = Math.PI / 6; // 30°
+            const point = getBoxEdgePoint(centerX, centerY, width, height, angle);
+            expect(point.x).toBe(centerX + halfWidth);
+            expect(point.y).toBe(centerY);
+        });
+
+        it('should return right edge center for angle -30°', () => {
+            const angle = -Math.PI / 6; // -30°
+            const point = getBoxEdgePoint(centerX, centerY, width, height, angle);
+            expect(point.x).toBe(centerX + halfWidth);
+            expect(point.y).toBe(centerY);
+        });
+    });
+
+    describe('Left edge (angle 180°)', () => {
+        it('should return left edge center for angle 180°', () => {
+            const angle = Math.PI; // 180° - pointing left
+            const point = getBoxEdgePoint(centerX, centerY, width, height, angle);
+            expect(point.x).toBe(centerX - halfWidth);
+            expect(point.y).toBe(centerY);
+        });
+
+        it('should return left edge center for angle 150°', () => {
+            const angle = (5 * Math.PI) / 6; // 150°
+            const point = getBoxEdgePoint(centerX, centerY, width, height, angle);
+            expect(point.x).toBe(centerX - halfWidth);
+            expect(point.y).toBe(centerY);
+        });
+
+        it('should return left edge center for angle -150°', () => {
+            const angle = -(5 * Math.PI) / 6; // -150°
+            const point = getBoxEdgePoint(centerX, centerY, width, height, angle);
+            expect(point.x).toBe(centerX - halfWidth);
+            expect(point.y).toBe(centerY);
+        });
+    });
+
+    describe('Bottom edge (angle 90°)', () => {
+        it('should return bottom edge center for angle 90°', () => {
+            const angle = Math.PI / 2; // 90° - pointing down
+            const point = getBoxEdgePoint(centerX, centerY, width, height, angle);
+            expect(point.x).toBe(centerX);
+            expect(point.y).toBe(centerY + halfHeight);
+        });
+
+        it('should return bottom edge center for angle 60°', () => {
+            const angle = Math.PI / 3; // 60°
+            const point = getBoxEdgePoint(centerX, centerY, width, height, angle);
+            expect(point.x).toBe(centerX);
+            expect(point.y).toBe(centerY + halfHeight);
+        });
+
+        it('should return bottom edge center for angle 120°', () => {
+            const angle = (2 * Math.PI) / 3; // 120°
+            const point = getBoxEdgePoint(centerX, centerY, width, height, angle);
+            expect(point.x).toBe(centerX);
+            expect(point.y).toBe(centerY + halfHeight);
+        });
+    });
+
+    describe('Top edge (angle -90° or 270°)', () => {
+        it('should return top edge center for angle -90°', () => {
+            const angle = -Math.PI / 2; // -90° - pointing up
+            const point = getBoxEdgePoint(centerX, centerY, width, height, angle);
+            expect(point.x).toBe(centerX);
+            expect(point.y).toBe(centerY - halfHeight);
+        });
+
+        it('should return top edge center for angle 270°', () => {
+            const angle = (3 * Math.PI) / 2; // 270° - pointing up
+            const point = getBoxEdgePoint(centerX, centerY, width, height, angle);
+            expect(point.x).toBe(centerX);
+            expect(point.y).toBe(centerY - halfHeight);
+        });
+
+        it('should return top edge center for angle -60°', () => {
+            const angle = -Math.PI / 3; // -60°
+            const point = getBoxEdgePoint(centerX, centerY, width, height, angle);
+            expect(point.x).toBe(centerX);
+            expect(point.y).toBe(centerY - halfHeight);
+        });
+    });
+
+    describe('Edge cases', () => {
+        it('should handle different box sizes', () => {
+            const smallWidth = 50;
+            const smallHeight = 30;
+            const angle = 0;
+            const point = getBoxEdgePoint(centerX, centerY, smallWidth, smallHeight, angle);
+            expect(point.x).toBe(centerX + smallWidth / 2);
+            expect(point.y).toBe(centerY);
+        });
+
+        it('should handle different center positions', () => {
+            const newCenterX = 500;
+            const newCenterY = 300;
+            const angle = Math.PI / 2;
+            const point = getBoxEdgePoint(newCenterX, newCenterY, width, height, angle);
+            expect(point.x).toBe(newCenterX);
+            expect(point.y).toBe(newCenterY + halfHeight);
+        });
+
+        it('should always return a point on the box perimeter', () => {
+            const angles = [0, Math.PI / 4, Math.PI / 2, (3 * Math.PI) / 4, Math.PI, -(3 * Math.PI) / 4, -Math.PI / 2, -Math.PI / 4];
+
+            angles.forEach(angle => {
+                const point = getBoxEdgePoint(centerX, centerY, width, height, angle);
+
+                // Check that point is within or on box bounds
+                expect(point.x).toBeGreaterThanOrEqual(centerX - halfWidth);
+                expect(point.x).toBeLessThanOrEqual(centerX + halfWidth);
+                expect(point.y).toBeGreaterThanOrEqual(centerY - halfHeight);
+                expect(point.y).toBeLessThanOrEqual(centerY + halfHeight);
+
+                // Check that point is actually on an edge (at least one coordinate should be at boundary)
+                const onEdge =
+                    point.x === centerX - halfWidth || // left edge
+                    point.x === centerX + halfWidth || // right edge
+                    point.y === centerY - halfHeight || // top edge
+                    point.y === centerY + halfHeight;   // bottom edge
+
+                expect(onEdge).toBe(true);
+            });
+        });
+    });
+
+    describe('Symmetry', () => {
+        it('should return symmetric points for opposite angles (0° and 180°)', () => {
+            const rightPoint = getBoxEdgePoint(centerX, centerY, width, height, 0);
+            const leftPoint = getBoxEdgePoint(centerX, centerY, width, height, Math.PI);
+
+            expect(rightPoint.x).toBe(centerX + halfWidth);
+            expect(leftPoint.x).toBe(centerX - halfWidth);
+            expect(rightPoint.y).toBe(leftPoint.y);
+        });
+
+        it('should return symmetric points for opposite angles (90° and -90°)', () => {
+            const bottomPoint = getBoxEdgePoint(centerX, centerY, width, height, Math.PI / 2);
+            const topPoint = getBoxEdgePoint(centerX, centerY, width, height, -Math.PI / 2);
+
+            expect(bottomPoint.y).toBe(centerY + halfHeight);
+            expect(topPoint.y).toBe(centerY - halfHeight);
+            expect(bottomPoint.x).toBe(topPoint.x);
+        });
     });
 });

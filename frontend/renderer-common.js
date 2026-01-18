@@ -452,16 +452,16 @@ function drawPlatformConsumerBadge(ctx, _team, platformMetrics, x, y, height) {
     const count = platformMetrics.totalCount;
     const isOverloaded = platformMetrics.isOverloaded;
 
-    // Badge dimensions
-    const badgePadding = 4;
-    const badgeHeight = 18;
+    // Badge dimensions (doubled from original 18px to 36px)
+    const badgePadding = 8; // Doubled from 4
+    const badgeHeight = 36; // Doubled from 18
     const emoji = '👥';
     const text = `${count}`;
 
     // Measure text to calculate badge width
-    ctx.font = 'bold 11px sans-serif';
+    ctx.font = 'bold 22px sans-serif'; // Doubled from 11px
     const textWidth = ctx.measureText(text).width;
-    const emojiWidth = 12; // Approximate emoji width
+    const emojiWidth = 24; // Doubled from 12
     const badgeWidth = emojiWidth + textWidth + badgePadding * 3;
 
     // Position in bottom-left corner
@@ -471,18 +471,18 @@ function drawPlatformConsumerBadge(ctx, _team, platformMetrics, x, y, height) {
     // Draw badge background
     ctx.fillStyle = isOverloaded ? '#ff9800' : '#1976d2'; // Orange if overloaded, blue otherwise
     ctx.beginPath();
-    ctx.roundRect(badgeX, badgeY, badgeWidth, badgeHeight, 4);
+    ctx.roundRect(badgeX, badgeY, badgeWidth, badgeHeight, 8); // Doubled corner radius from 4 to 8
     ctx.fill();
 
     // Draw emoji
-    ctx.font = '11px sans-serif';
+    ctx.font = '22px sans-serif'; // Doubled from 11px
     ctx.textAlign = 'left';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = '#fff';
     ctx.fillText(emoji, badgeX + badgePadding, badgeY + badgeHeight / 2);
 
     // Draw count
-    ctx.font = 'bold 11px sans-serif';
+    ctx.font = 'bold 22px sans-serif'; // Doubled from 11px
     ctx.fillText(text, badgeX + emojiWidth + badgePadding * 2, badgeY + badgeHeight / 2);
 
     // Draw warning indicator if overloaded
@@ -678,40 +678,39 @@ function drawTeamName(ctx, team, x, y, width, height, wrapText) {
  * @param {number} angle - Angle in radians from box center
  * @returns {{x: number, y: number}} - Intersection point coordinates
  */
-function getBoxEdgePoint(centerX, centerY, width, height, angle) {
-    // Calculate which edge the line intersects based on angle
+export function getBoxEdgePoint(centerX, centerY, width, height, angle) {
+    // Return the center point of the appropriate edge for cleaner, more symmetrical connections
     const halfWidth = width / 2;
     const halfHeight = height / 2;
 
-    // Calculate intersection with each edge
-    const tanAngle = Math.tan(angle);
-
-    // Check right edge (angle between -π/2 and π/2, roughly)
+    // Determine which edge to use based on angle direction
     if (Math.abs(Math.cos(angle)) > Math.abs(Math.sin(angle))) {
+        // More horizontal: use left or right edge center
         if (Math.cos(angle) > 0) {
-            // Right edge
+            // Right edge center
             return {
                 x: centerX + halfWidth,
-                y: centerY + halfWidth * tanAngle
+                y: centerY
             };
         } else {
-            // Left edge
+            // Left edge center
             return {
                 x: centerX - halfWidth,
-                y: centerY - halfWidth * tanAngle
+                y: centerY
             };
         }
     } else {
+        // More vertical: use top or bottom edge center
         if (Math.sin(angle) > 0) {
-            // Bottom edge
+            // Bottom edge center
             return {
-                x: centerX + halfHeight / tanAngle,
+                x: centerX,
                 y: centerY + halfHeight
             };
         } else {
-            // Top edge
+            // Top edge center
             return {
-                x: centerX - halfHeight / tanAngle,
+                x: centerX,
                 y: centerY - halfHeight
             };
         }
@@ -728,6 +727,15 @@ function getBoxEdgePoint(centerX, centerY, width, height, angle) {
  * In 'tt' view, shows styled lines representing interaction modes (collaboration, x-as-a-service, facilitating)
  */
 export function drawConnections(ctx, teams, currentView = 'current', showInteractionModes = true, currentPerspective = 'hierarchy', customTeamPositions = null, focusedTeam = null, focusedConnections = null) {
+    console.log('🔷 drawConnections called:', {
+        view: currentView,
+        perspective: currentPerspective,
+        showInteractionModes,
+        teamCount: teams.length,
+        hasCustomPositions: !!customTeamPositions,
+        customPositionsSize: customTeamPositions?.size
+    });
+
     if (currentView === 'current') {
         // Current State view: show simple "Actual Comms" from dependencies
         teams.forEach(team => {
@@ -763,12 +771,14 @@ export function drawConnections(ctx, teams, currentView = 'current', showInterac
 function drawConnection(ctx, from, to, mode, currentView = 'current', currentPerspective = 'hierarchy', customTeamPositions = null, focusedTeam = null, focusedConnections = null) {
     const style = INTERACTION_STYLES[mode] || INTERACTION_STYLES['collaboration'];
 
+    console.log(`🔹 drawConnection (TT interaction): ${from.name} --[${mode}]--> ${to.name}`);
+
     // Apply opacity and line width based on focus mode
     let opacity = 1.0;
     let lineWidthBoost = 0;
     if (focusedTeam && focusedConnections) {
-        // Check if both endpoints are in focused network
-        if (focusedConnections.has(from.name) && focusedConnections.has(to.name)) {
+        // Only highlight connections where the focused team is one of the endpoints
+        if (from.name === focusedTeam.name || to.name === focusedTeam.name) {
             opacity = 1.0; // Full opacity for focused connections
             lineWidthBoost = 2; // Make focused lines thicker (+2px)
         } else {
@@ -829,6 +839,9 @@ function drawConnection(ctx, from, to, mode, currentView = 'current', currentPer
         fromCenterY = from.position.y + fromHeight / 2;
         toCenterX = to.position.x + toWidth / 2;
         toCenterY = to.position.y + toHeight / 2;
+
+        console.log(`  📦 ${from.name} box:`, { x: from.position.x, y: from.position.y, width: fromWidth, height: fromHeight });
+        console.log(`  📦 ${to.name} box:`, { x: to.position.x, y: to.position.y, width: toWidth, height: toHeight });
     }
 
     // Calculate angle between centers
@@ -837,6 +850,10 @@ function drawConnection(ctx, from, to, mode, currentView = 'current', currentPer
     // Calculate edge intersection points instead of centers
     const fromEdge = getBoxEdgePoint(fromCenterX, fromCenterY, fromWidth, fromHeight, angle);
     const toEdge = getBoxEdgePoint(toCenterX, toCenterY, toWidth, toHeight, angle + Math.PI); // Opposite direction
+
+    console.log(`  🎯 Centers: from (${fromCenterX.toFixed(1)}, ${fromCenterY.toFixed(1)}) -> to (${toCenterX.toFixed(1)}, ${toCenterY.toFixed(1)})`);
+    console.log(`  📍 Line: from edge (${fromEdge.x.toFixed(1)}, ${fromEdge.y.toFixed(1)}) -> to edge (${toEdge.x.toFixed(1)}, ${toEdge.y.toFixed(1)})`);
+    console.log(`  🎨 Style: ${style.color}, width: ${style.width + lineWidthBoost}px, dash: [${style.dash}], opacity: ${opacity}`);
 
     ctx.strokeStyle = style.color;
     ctx.lineWidth = style.width + lineWidthBoost;
@@ -858,11 +875,14 @@ function drawConnection(ctx, from, to, mode, currentView = 'current', currentPer
 }
 
 function drawActualCommsConnection(ctx, from, to, currentView = 'current', currentPerspective = 'hierarchy', customTeamPositions = null, focusedTeam = null, focusedConnections = null) {
+    console.log(`🔸 drawActualCommsConnection (pre-TT): ${from.name} --[dependency]--> ${to.name}`);
+
     // Apply opacity and line width based on focus mode
     let opacity = 1.0;
     let lineWidthBoost = 0;
     if (focusedTeam && focusedConnections) {
-        if (focusedConnections.has(from.name) && focusedConnections.has(to.name)) {
+        // Only highlight connections where the focused team is one of the endpoints
+        if (from.name === focusedTeam.name || to.name === focusedTeam.name) {
             opacity = 1.0; // Full opacity for focused connections
             lineWidthBoost = 2; // Make focused lines thicker (+2px)
         } else {
@@ -922,6 +942,9 @@ function drawActualCommsConnection(ctx, from, to, currentView = 'current', curre
         fromCenterY = from.position.y + fromHeight / 2;
         toCenterX = to.position.x + toWidth / 2;
         toCenterY = to.position.y + toHeight / 2;
+
+        console.log(`  📦 ${from.name} box:`, { x: from.position.x, y: from.position.y, width: fromWidth, height: fromHeight });
+        console.log(`  📦 ${to.name} box:`, { x: to.position.x, y: to.position.y, width: toWidth, height: toHeight });
     }
 
     // Calculate angle between centers
@@ -939,6 +962,11 @@ function drawActualCommsConnection(ctx, from, to, currentView = 'current', curre
     const lineFromY = fromEdge.y;
     const lineToX = toEdge.x - shortenBy * Math.cos(angle); // Shorten at 'to' end for arrow
     const lineToY = toEdge.y - shortenBy * Math.sin(angle);
+
+    console.log(`  🎯 Centers: from (${fromCenterX.toFixed(1)}, ${fromCenterY.toFixed(1)}) -> to (${toCenterX.toFixed(1)}, ${toCenterY.toFixed(1)})`);
+    console.log(`  📍 Line edges: from (${fromEdge.x.toFixed(1)}, ${fromEdge.y.toFixed(1)}) -> to (${toEdge.x.toFixed(1)}, ${toEdge.y.toFixed(1)})`);
+    console.log(`  📍 Final line: (${lineFromX.toFixed(1)}, ${lineFromY.toFixed(1)}) -> (${lineToX.toFixed(1)}, ${lineToY.toFixed(1)})`);
+    console.log(`  🎨 Style: #666666, width: ${4 + lineWidthBoost}px, opacity: ${opacity}`);
 
     ctx.save(); // Save context state
 

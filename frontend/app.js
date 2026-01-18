@@ -46,7 +46,7 @@ function init() {
     state.ctx = state.canvas.getContext('2d');
     initCanvasPolyfills();
     resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('resize', handleResize);
     // Setup interaction handler
     if (state.canvas && state.ctx) {
         _interactionHandler = new CanvasInteractionHandler(state.canvas, state, () => draw(state));
@@ -67,12 +67,40 @@ function init() {
     // Load initial data
     loadAllTeams();
 }
+// Debounce resize events to improve performance
+let resizeTimeout;
 function resizeCanvas() {
-    if (!state.canvas)
-        return;
-    state.canvas.width = state.canvas.offsetWidth;
-    state.canvas.height = state.canvas.offsetHeight;
+    if (!state.canvas) return;
+
+    // Get the actual available space
+    const canvasArea = state.canvas.parentElement;
+    if (!canvasArea) return;
+
+    // Calculate available dimensions
+    const availableWidth = canvasArea.clientWidth;
+    const availableHeight = canvasArea.clientHeight;
+
+    // Set canvas size to fill available space, but respect minimum sizes
+    // Minimum sizes ensure content is usable even on small screens
+    const minWidth = Math.min(1200, availableWidth); // Flexible minimum
+    const minHeight = Math.min(800, availableHeight); // Flexible minimum
+
+    state.canvas.width = Math.max(availableWidth, minWidth);
+    state.canvas.height = Math.max(availableHeight, minHeight);
+
+    // Adjust initial scale for smaller screens
+    if (availableWidth < 1400 && state.scale === 1) {
+        // Auto-zoom out slightly on smaller screens for better overview
+        state.scale = 0.85;
+    }
+
     draw(state);
+}
+
+// Debounced resize handler
+function handleResize() {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(resizeCanvas, 150);
 }
 async function loadAllTeams() {
     try {

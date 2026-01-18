@@ -8,6 +8,55 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
+- **Communication Lines Rendering (2026-01-18)**: Fixed multiple bugs related to connection line positioning and rendering
+  - **getBoxEdgePoint**: Changed from geometric intersection calculation to simple edge center positioning
+    - Lines now start/end at center of box edges instead of arbitrary offset positions
+    - Added 17 comprehensive unit tests covering all edges and angles (all passing)
+    - Simplified algorithm from 40+ lines with clamping to ~25 lines
+  - **Business Streams SVG Export**: Added missing communication lines to business streams view export
+    - Implemented position tracking using teamPositions Map during team drawing
+    - Added connection line rendering with SVG arrow markers
+    - Added text wrapping for long team names (e.g., "Americas E-commerce Solutions Team") using wrapTextForSVG helper
+    - Lines properly show team dependencies in exported SVG files
+  - **Focus Mode Highlighting**: Fixed incorrect highlighting behavior
+    - Changed from highlighting ALL connections between network teams to only connections with focused team as endpoint
+    - Updated logic in drawConnection() and drawActualCommsConnection()
+    - Added unit tests for getDirectRelationships() function
+
+- **Focus Mode UX (2026-01-18)**: Implemented auto-enable interaction lines when entering focus mode (Option C)
+  - When user clicks team to enter focus mode while interaction lines are disabled, automatically enables them
+  - Shows notification: "✓ Interaction lines enabled for focus mode" (auto-dismisses after 3s with smooth fade animation)
+  - Updates checkbox UI automatically to reflect state change
+  - Ensures focus mode always has clear purpose without requiring manual settings adjustment
+
+- **Canvas Responsiveness (2026-01-18)**: Major improvements for smaller desktop screens (e.g., 2015 MacBook)
+  - **Auto-resize**: Canvas now dynamically fills available space instead of fixed 2500x1500px
+  - **Debounced resize handler**: 150ms delay prevents performance issues during window resize
+  - **Smart scaling**: Auto-zooms to 85% on screens < 1400px for better content overview
+  - **Flexible minimums**: Minimum canvas sizes adapt to actual screen size
+  - **Responsive CSS**: Added 3 breakpoint levels with progressive UI compacting:
+    - ≤ 1440px: Reduced padding, compact buttons (220px sidebar)
+    - ≤ 1280px: Even more compact, smaller fonts (200px sidebar)
+    - ≤ 1024px: Ultra-compact for old MacBook Air (180px sidebar, wrapping controls)
+  - All UI elements remain accessible on smaller displays
+
+- **Platform Consumer Badge Size (2026-01-18)**: Doubled the size of platform consumer badges in TT Design view
+  - Badge height: 18px → 36px
+  - Font sizes: 11px → 22px
+  - Padding: 4px → 8px
+  - Improved visibility and readability
+
+- **Debug Mode System (2026-01-18)**: Added configurable debug logging
+  - CONFIG.DEBUG_MODE flag (disabled by default)
+  - debugLog() function that respects DEBUG_MODE
+  - Browser console helpers: window.enableDebugMode() and window.disableDebugMode()
+  - Can be enabled at runtime for troubleshooting without code changes
+
+- **Component Team Type (2026-01-18)**: Removed from active team types, preserved as example
+  - Moved component-team from active team_types array to _commented_team_types_examples
+  - Added explanatory notes about organizational anti-patterns
+  - Keeps reference example in data file for educational purposes
+
 - **Snapshot API Routing (2026-01-10)**: Resolved architectural confusion in snapshot endpoint routing
   - **Problem**: Snapshots created from TT teams (`find_all_teams(view="tt")`) but routes were under `/api/pre-tt/snapshots/*`
   - **Solution**: Moved all snapshot endpoints to `/api/tt/snapshots/*` to align with actual data source
@@ -16,10 +65,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - Frontend: Updated API calls in `api.js` to use `/api/tt/snapshots/*`
     - Tests: Updated test files to use correct TT routes
   - **Impact**: Improved architectural clarity, reduced user confusion about snapshot behavior
+
 - **LogiCore naming consistency (2026-01-10)**: Normalized remaining legacy company-name references to "LogiCore" in example datasets and docs
   - Ensures the baseline and TT-design narratives refer to the same fictional company
   - Corrected a couple of Pre-TT `line_manager` metadata mismatches to align with `organization-hierarchy.json`
   - Kept Pre-TT `business_stream` names intentionally not 1:1 with TT `value_stream` names (per modeling intent)
+
 - **TT dataset coherence (2026-01-10)**: Aligned TT markdown narrative sections with YAML metadata
   - Added missing "Part of a platform grouping?" sections where `platform_grouping` is set
   - Normalized a few TT team headings/labels to match the canonical YAML `name`

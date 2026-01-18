@@ -23,8 +23,39 @@ export const CONFIG = {
     VIEWS: {
         CURRENT: 'current',
         TT: 'tt'
-    }
+    },
+
+    // Debug mode (enables verbose console logging)
+    // Set to true to see detailed rendering and connection logs
+    DEBUG_MODE: false
 };
+
+/**
+ * Debug logger - only logs when DEBUG_MODE is enabled
+ * @param {...any} args - Arguments to log
+ */
+export function debugLog(...args) {
+    if (CONFIG.DEBUG_MODE) {
+        console.log(...args);
+    }
+}
+
+/**
+ * Enable/disable debug mode at runtime
+ * Usage in browser console:
+ *   - enableDebugMode()  to turn on
+ *   - disableDebugMode() to turn off
+ */
+if (typeof window !== 'undefined') {
+    window.enableDebugMode = () => {
+        CONFIG.DEBUG_MODE = true;
+        console.log('✅ Debug mode enabled - you will now see detailed console outputs');
+    };
+    window.disableDebugMode = () => {
+        CONFIG.DEBUG_MODE = false;
+        console.log('❌ Debug mode disabled');
+    };
+}
 
 // Helper to build full API URLs
 export function getApiUrl(endpoint) {

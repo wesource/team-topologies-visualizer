@@ -613,6 +613,39 @@ function downloadSVG(svgContent, filename) {
     URL.revokeObjectURL(url);
 }
 
+// Helper function to wrap text into multiple lines for SVG
+function wrapTextForSVG(text, maxWidth, fontSize = 11) {
+    // Approximate character width (adjust based on font)
+    const charWidth = fontSize * 0.6;
+    const maxChars = Math.floor(maxWidth / charWidth);
+
+    if (text.length <= maxChars) {
+        return [text];
+    }
+
+    const words = text.split(' ');
+    const lines = [];
+    let currentLine = '';
+
+    words.forEach(word => {
+        const testLine = currentLine ? `${currentLine} ${word}` : word;
+        if (testLine.length <= maxChars) {
+            currentLine = testLine;
+        } else {
+            if (currentLine) {
+                lines.push(currentLine);
+            }
+            currentLine = word;
+        }
+    });
+
+    if (currentLine) {
+        lines.push(currentLine);
+    }
+
+    return lines;
+}
+
 function generateBusinessStreamsSVG(businessStreamsData, teamColorMap) {
     let elements = [];
     if (!businessStreamsData || !businessStreamsData.business_streams) return elements;
@@ -630,6 +663,9 @@ function generateBusinessStreamsSVG(businessStreamsData, teamColorMap) {
     const business_streams = Object.values(businessStreamsData.business_streams);
     const startX = 50;
     let currentY = 100;
+
+    // Track team positions for drawing connections later
+    const teamPositions = new Map();
 
     // Title
     elements += `<text x="${startX}" y="${currentY - 40}" style="font-family: sans-serif; font-size: 24px; font-weight: bold; fill: #333;" text-anchor="start">Business Streams View</text>\n`;
@@ -676,7 +712,25 @@ function generateBusinessStreamsSVG(businessStreamsData, teamColorMap) {
 
                 const teamColor = teamColorMap[team.team_type] || '#666';
                 elements += `<rect x="${teamX}" y="${teamY}" width="${TEAM_WIDTH}" height="${TEAM_HEIGHT}" fill="${teamColor}" stroke="${darkenColor(teamColor, 0.7)}" stroke-width="2" rx="0" ry="0"/>\n`;
-                elements += `<text x="${teamX + TEAM_WIDTH / 2}" y="${teamY + TEAM_HEIGHT / 2 + 5}" class="team-text" text-anchor="middle" font-size="11" fill="#000">${escapeXml(team.name)}</text>\n`;
+
+                // Wrap text if too long
+                const lines = wrapTextForSVG(team.name, TEAM_WIDTH - 10, 11);
+                const lineHeight = 12;
+                const totalHeight = lines.length * lineHeight;
+                const startY = teamY + (TEAM_HEIGHT / 2) - (totalHeight / 2) + lineHeight * 0.8;
+
+                elements += `<text x="${teamX + TEAM_WIDTH / 2}" y="${startY}" class="team-text" text-anchor="middle" font-size="11" fill="#000">`;
+                lines.forEach((line, i) => {
+                    if (i === 0) {
+                        elements += `${escapeXml(line)}`;
+                    } else {
+                        elements += `<tspan x="${teamX + TEAM_WIDTH / 2}" dy="${lineHeight}">${escapeXml(line)}</tspan>`;
+                    }
+                });
+                elements += '</text>\n';
+
+                // Store team position and object for connection drawing
+                teamPositions.set(team.name, { x: teamX, y: teamY, width: TEAM_WIDTH, height: TEAM_HEIGHT, team });
 
                 teamX += TEAM_WIDTH + TEAM_SPACING;
             });
@@ -717,7 +771,25 @@ function generateBusinessStreamsSVG(businessStreamsData, teamColorMap) {
 
                 const teamColor = teamColorMap[team.team_type] || '#666';
                 elements += `<rect x="${teamX}" y="${teamY}" width="${TEAM_WIDTH}" height="${TEAM_HEIGHT}" fill="${teamColor}" stroke="${darkenColor(teamColor, 0.7)}" stroke-width="2" rx="0" ry="0"/>\n`;
-                elements += `<text x="${teamX + TEAM_WIDTH / 2}" y="${teamY + TEAM_HEIGHT / 2 + 5}" class="team-text" text-anchor="middle" font-size="11" fill="#000">${escapeXml(team.name)}</text>\n`;
+
+                // Wrap text if too long
+                const lines = wrapTextForSVG(team.name, TEAM_WIDTH - 10, 11);
+                const lineHeight = 12;
+                const totalHeight = lines.length * lineHeight;
+                const startY = teamY + (TEAM_HEIGHT / 2) - (totalHeight / 2) + lineHeight * 0.8;
+
+                elements += `<text x="${teamX + TEAM_WIDTH / 2}" y="${startY}" class="team-text" text-anchor="middle" font-size="11" fill="#000">`;
+                lines.forEach((line, i) => {
+                    if (i === 0) {
+                        elements += `${escapeXml(line)}`;
+                    } else {
+                        elements += `<tspan x="${teamX + TEAM_WIDTH / 2}" dy="${lineHeight}">${escapeXml(line)}</tspan>`;
+                    }
+                });
+                elements += '</text>\n';
+
+                // Store team position and object for connection drawing
+                teamPositions.set(team.name, { x: teamX, y: teamY, width: TEAM_WIDTH, height: TEAM_HEIGHT, team });
 
                 teamX += TEAM_WIDTH + TEAM_SPACING;
             });
@@ -743,10 +815,54 @@ function generateBusinessStreamsSVG(businessStreamsData, teamColorMap) {
 
             const teamColor = teamColorMap[team.team_type] || '#666';
             elements += `<rect x="${teamX}" y="${teamY}" width="${TEAM_WIDTH}" height="${TEAM_HEIGHT}" fill="${teamColor}" stroke="${darkenColor(teamColor, 0.7)}" stroke-width="2" rx="0" ry="0"/>\n`;
-            elements += `<text x="${teamX + TEAM_WIDTH / 2}" y="${teamY + TEAM_HEIGHT / 2 + 5}" class="team-text" text-anchor="middle" font-size="11" fill="#000">${escapeXml(team.name)}</text>\n`;
+
+            // Wrap text if too long
+            const lines = wrapTextForSVG(team.name, TEAM_WIDTH - 10, 11);
+            const lineHeight = 12;
+            const totalHeight = lines.length * lineHeight;
+            const startY = teamY + (TEAM_HEIGHT / 2) - (totalHeight / 2) + lineHeight * 0.8;
+
+            elements += `<text x="${teamX + TEAM_WIDTH / 2}" y="${startY}" class="team-text" text-anchor="middle" font-size="11" fill="#000">`;
+            lines.forEach((line, i) => {
+                if (i === 0) {
+                    elements += `${escapeXml(line)}`;
+                } else {
+                    elements += `<tspan x="${teamX + TEAM_WIDTH / 2}" dy="${lineHeight}">${escapeXml(line)}</tspan>`;
+                }
+            });
+            elements += '</text>\n';
+
+            // Store team position and object for connection drawing
+            teamPositions.set(team.name, { x: teamX, y: teamY, width: TEAM_WIDTH, height: TEAM_HEIGHT, team });
 
             teamX += TEAM_WIDTH + TEAM_SPACING;
         });
+    }
+
+    // Draw connection lines between teams (based on dependencies)
+    const connectionLines = [];
+    teamPositions.forEach(({ team, x: fromX, y: fromY, width, height }) => {
+        if (team.dependencies && Array.isArray(team.dependencies)) {
+            team.dependencies.forEach(depName => {
+                const toPos = teamPositions.get(depName);
+                if (toPos) {
+                    // Calculate center points
+                    const fromCenterX = fromX + width / 2;
+                    const fromCenterY = fromY + height / 2;
+                    const toCenterX = toPos.x + toPos.width / 2;
+                    const toCenterY = toPos.y + toPos.height / 2;
+
+                    // Draw line with arrow
+                    connectionLines.push(`<line x1="${fromCenterX}" y1="${fromCenterY}" x2="${toCenterX}" y2="${toCenterY}" stroke="#666666" stroke-width="2" opacity="0.5" marker-end="url(#arrowhead)"/>\n`);
+                }
+            });
+        }
+    });
+
+    // Add arrow marker definition if we have connections
+    if (connectionLines.length > 0) {
+        elements = '<defs><marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><polygon points="0 0, 10 3, 0 6" fill="#666666" /></marker></defs>\n' + elements;
+        elements += connectionLines.join('');
     }
 
     return elements;
