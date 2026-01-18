@@ -133,6 +133,14 @@ function updateTestState(state, teamsToRender) {
         );
         testState.setAttribute('data-search-term', state.searchTerm || '');
         testState.setAttribute('data-current-view', state.currentView);
+        
+        // Focus mode state for E2E testing
+        testState.setAttribute('data-focused-team', state.focusedTeam ? state.focusedTeam.name : '');
+        testState.setAttribute('data-focused-connections', 
+            state.focusedConnections && state.focusedConnections.size > 0 
+                ? JSON.stringify(Array.from(state.focusedConnections)) 
+                : ''
+        );
     }
 }
 
