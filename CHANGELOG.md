@@ -8,6 +8,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
+- **Console Warning Spam (2026-01-18)**: Eliminated excessive dependency warnings appearing on every mouse movement
+  - Implemented warning deduplication using Set to track shown warnings - each unique warning now only appears once
+  - Changed from console.warn to debugLog - warnings only shown when DEBUG_MODE is enabled
+  - Warnings were appearing hundreds of times during normal interaction due to draw calls on mouse events
+  
+- **Business Streams Double-Click (2026-01-18)**: Fixed team modal not opening on double-click in business-streams view
+  - Added missing `business-streams` perspective check in handleDoubleClick handler
+  - Previously only checked for `value-streams` and `product-lines`, leaving business-streams broken
+  - Now follows same pattern as handleMouseDown for consistent behavior across all perspectives
+  
+- **QA Team Naming (2026-01-18)**: Standardized team name to "QA & Testing Team" across all files
+  - Fixed inconsistent references in mobile-app-team.md ("QA and Testing Team" vs "QA & Testing Team")
+  - Eliminates dependency warnings about missing target teams
+
+### Changed
+- **Demo Mode Banner (2026-01-18)**: Updated banner emoji from 🎮 (game controller) to ✨ (sparkles)
+  - Better conveys "showcase/try it out" feel rather than gaming connotation
+
+### Fixed
 - **Communication Lines Rendering (2026-01-18)**: Fixed multiple bugs related to connection line positioning and rendering
   - **getBoxEdgePoint**: Changed from geometric intersection calculation to simple edge center positioning
     - Lines now start/end at center of box edges instead of arbitrary offset positions

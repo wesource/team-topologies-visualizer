@@ -332,9 +332,14 @@ export class CanvasInteractionHandler {
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
 
-        const customPositions = this.state.currentPerspective === 'value-streams'
-            ? this.state.valueStreamsTeamPositions
-            : this.state.productLinesTeamPositions;
+        let customPositions = null;
+        if (this.state.currentPerspective === 'value-streams') {
+            customPositions = this.state.valueStreamsTeamPositions;
+        } else if (this.state.currentPerspective === 'product-lines') {
+            customPositions = this.state.productLinesTeamPositions;
+        } else if (this.state.currentPerspective === 'business-streams') {
+            customPositions = this.state.businessStreamsTeamPositions;
+        }
 
         const team = getTeamAtPosition(
             this.state.teams,

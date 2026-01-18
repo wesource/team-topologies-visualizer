@@ -6,6 +6,7 @@
 
 import { drawTeam, wrapText, getTeamBoxWidth, getTeamBoxHeight } from './renderer-common.js';
 import { state } from './state-management.js';
+import { debugLog } from './config.js';
 
 const LAYOUT = {
     businessStreamWidth: 600,
@@ -26,7 +27,7 @@ const LAYOUT = {
  * Render Business Streams view with nested Product sections
  */
 export function renderBusinessStreamsView(ctx, data) {
-    console.log('🌊 renderBusinessStreamsView called with data:', data);
+    debugLog('🌊 renderBusinessStreamsView called with data:', data);
     const { business_streams, products_without_business_stream, ungrouped_teams, teams } = data;
 
     // Clear position tracking map
@@ -105,7 +106,7 @@ function drawBusinessStreamContainer(ctx, x, y, width, height, bsData) {
     ctx.font = 'bold 18px Inter, system-ui, -apple-system, sans-serif';
     ctx.textAlign = 'left';
     const vsNameX = x + 20;
-    console.log(`Value Stream "${bsData.name}" x-position: ${vsNameX} (container x: ${x})`);
+    debugLog(`Value Stream "${bsData.name}" x-position: ${vsNameX} (container x: ${x})`);
     ctx.fillText(bsData.name, vsNameX, y + 30);
 
     // Team count badge - calculate from products
@@ -131,7 +132,7 @@ function drawProductSection(ctx, x, y, width, height, productName, teams, allTea
     ctx.font = 'bold 14px Inter, system-ui, -apple-system, sans-serif';
     ctx.textAlign = 'left';
     const productNameX = x + LAYOUT.productPadding;
-    console.log(`Product "${productName}" x-position: ${productNameX} (section x: ${x}, padding: ${LAYOUT.productPadding})`);
+    debugLog(`Product "${productName}" x-position: ${productNameX} (section x: ${x}, padding: ${LAYOUT.productPadding})`);
     ctx.fillText(productName, productNameX, y + 22);
 
     // Render teams as cards
@@ -162,7 +163,7 @@ function drawProductSection(ctx, x, y, width, height, productName, teams, allTea
 
         // Debug logging for specific teams
         if (team.name === 'Web Frontend Team' || team.name === 'Database Team') {
-            console.log(`📍 Team "${team.name}" positioned at:`, {
+            debugLog(`📍 Team "${team.name}" positioned at:`, {
                 x: teamX,
                 y: teamY,
                 width: actualWidth,
@@ -246,7 +247,7 @@ function drawUngroupedTeams(ctx, x, y, teams, allTeams) {
 
         // Debug logging for specific teams
         if (team.name === 'Web Frontend Team' || team.name === 'Database Team') {
-            console.log(`📍 Ungrouped team "${team.name}" positioned at:`, {
+            debugLog(`📍 Ungrouped team "${team.name}" positioned at:`, {
                 x: teamX,
                 y: teamY,
                 width: actualWidth,

@@ -66,7 +66,7 @@ Develops native mobile applications for drivers and end-customers in LogiCore's 
 - App Store review (2-7 days) complicates deployment timing
 
 **Shared Service Bottleneck**:
-- QA and Testing Team must manually test on both platforms
+- QA & Testing Team must manually test on both platforms
 - Testing bottleneck delays releases by 1-2 weeks
 - Cannot release iOS and Android independently due to backend dependencies
 
@@ -83,7 +83,7 @@ Develops native mobile applications for drivers and end-customers in LogiCore's 
 ## Dependencies
 - **Backend Services Team**: All business logic, delivery data, real-time updates
 - **API Framework Team**: Mobile SDK, authentication, push notifications
-- **QA and Testing Team**: Manual device testing before release
+- **QA & Testing Team**: Manual device testing before release
 
 ## Coordination Overhead
 - Weekly "Mobile-Backend Sync" meeting (90 minutes)

@@ -1,4 +1,8 @@
 import { LAYOUT } from './constants.js';
+import { debugLog } from './config.js';
+
+// Track warnings to avoid console spam (only show each unique warning once)
+const shownWarnings = new Set();
 
 // Interaction mode styles (colors match Team Topologies book symbols)
 // Line thickness communicates interaction intensity: thick=high-touch, thin=lightweight
@@ -727,14 +731,7 @@ export function getBoxEdgePoint(centerX, centerY, width, height, angle) {
  * In 'tt' view, shows styled lines representing interaction modes (collaboration, x-as-a-service, facilitating)
  */
 export function drawConnections(ctx, teams, currentView = 'current', showInteractionModes = true, currentPerspective = 'hierarchy', customTeamPositions = null, focusedTeam = null, focusedConnections = null) {
-    console.log('🔷 drawConnections called:', {
-        view: currentView,
-        perspective: currentPerspective,
-        showInteractionModes,
-        teamCount: teams.length,
-        hasCustomPositions: !!customTeamPositions,
-        customPositionsSize: customTeamPositions?.size
-    });
+    // Debug: drawConnections called
 
     if (currentView === 'current') {
         // Current State view: show simple "Actual Comms" from dependencies
@@ -742,14 +739,19 @@ export function drawConnections(ctx, teams, currentView = 'current', showInterac
             if (team.dependencies && Array.isArray(team.dependencies)) {
                 // Debug logging for specific team
                 if (team.name === 'Web Frontend Team') {
-                    console.log(`🔗 ${team.name} has dependencies:`, team.dependencies);
+                    // Debug: ${team.name} has dependencies
                 }
                 team.dependencies.forEach(targetName => {
                     const target = teams.find(t => t.name === targetName);
                     if (target) {
                         drawActualCommsConnection(ctx, team, target, currentView, currentPerspective, customTeamPositions, focusedTeam, focusedConnections);
                     } else {
-                        console.warn(`⚠️ Dependency target "${targetName}" not found for team "${team.name}"`);
+                        // Only show each unique warning once to avoid console spam
+                        const warningKey = `${team.name}:${targetName}`;
+                        if (!shownWarnings.has(warningKey)) {
+                            shownWarnings.add(warningKey);
+                            debugLog(`⚠️ Dependency target "${targetName}" not found for team "${team.name}"`);
+                        }
                     }
                 });
             }
@@ -771,7 +773,7 @@ export function drawConnections(ctx, teams, currentView = 'current', showInterac
 function drawConnection(ctx, from, to, mode, currentView = 'current', currentPerspective = 'hierarchy', customTeamPositions = null, focusedTeam = null, focusedConnections = null) {
     const style = INTERACTION_STYLES[mode] || INTERACTION_STYLES['collaboration'];
 
-    console.log(`🔹 drawConnection (TT interaction): ${from.name} --[${mode}]--> ${to.name}`);
+    // Debug: drawConnection (TT interaction)
 
     // Apply opacity and line width based on focus mode
     let opacity = 1.0;
@@ -795,15 +797,7 @@ function drawConnection(ctx, from, to, mode, currentView = 'current', currentPer
         const fromBounds = customTeamPositions.get(from.name);
         const toBounds = customTeamPositions.get(to.name);
 
-        // Debug logging to diagnose missing positions
-        if ((from.name === 'Web Frontend Team' && to.name === 'Database Team') || (from.name === 'Database Team' && to.name === 'Web Frontend Team')) {
-            console.log(`🔍 Checking connection ${from.name} -> ${to.name}:`, {
-                fromBounds: fromBounds ? 'found' : 'MISSING',
-                toBounds: toBounds ? 'found' : 'MISSING',
-                perspective: currentPerspective,
-                mapSize: customTeamPositions.size
-            });
-        }
+        // Debug: checking connection positions
 
         if (fromBounds && toBounds) {
             fromWidth = fromBounds.width || 120;
@@ -815,15 +809,7 @@ function drawConnection(ctx, from, to, mode, currentView = 'current', currentPer
             toCenterX = toBounds.x + toWidth / 2;
             toCenterY = toBounds.y + toHeight / 2;
 
-            // Debug logging for specific teams
-            if ((from.name === 'Web Frontend Team' && to.name === 'Database Team') || (from.name === 'Database Team' && to.name === 'Web Frontend Team')) {
-                console.log(`✅ Connection ${from.name} -> ${to.name}:`, {
-                    fromBounds,
-                    toBounds,
-                    fromCenter: { x: fromCenterX, y: fromCenterY },
-                    toCenter: { x: toCenterX, y: toCenterY }
-                });
-            }
+            // Debug: connection details
         } else {
             // One or both teams not visible in this perspective - skip drawing
             ctx.globalAlpha = 1.0;
@@ -840,8 +826,8 @@ function drawConnection(ctx, from, to, mode, currentView = 'current', currentPer
         toCenterX = to.position.x + toWidth / 2;
         toCenterY = to.position.y + toHeight / 2;
 
-        console.log(`  📦 ${from.name} box:`, { x: from.position.x, y: from.position.y, width: fromWidth, height: fromHeight });
-        console.log(`  📦 ${to.name} box:`, { x: to.position.x, y: to.position.y, width: toWidth, height: toHeight });
+        debugLog(`  📦 ${from.name} box:`, { x: from.position.x, y: from.position.y, width: fromWidth, height: fromHeight });
+        debugLog(`  📦 ${to.name} box:`, { x: to.position.x, y: to.position.y, width: toWidth, height: toHeight });
     }
 
     // Calculate angle between centers
@@ -851,9 +837,7 @@ function drawConnection(ctx, from, to, mode, currentView = 'current', currentPer
     const fromEdge = getBoxEdgePoint(fromCenterX, fromCenterY, fromWidth, fromHeight, angle);
     const toEdge = getBoxEdgePoint(toCenterX, toCenterY, toWidth, toHeight, angle + Math.PI); // Opposite direction
 
-    console.log(`  🎯 Centers: from (${fromCenterX.toFixed(1)}, ${fromCenterY.toFixed(1)}) -> to (${toCenterX.toFixed(1)}, ${toCenterY.toFixed(1)})`);
-    console.log(`  📍 Line: from edge (${fromEdge.x.toFixed(1)}, ${fromEdge.y.toFixed(1)}) -> to edge (${toEdge.x.toFixed(1)}, ${toEdge.y.toFixed(1)})`);
-    console.log(`  🎨 Style: ${style.color}, width: ${style.width + lineWidthBoost}px, dash: [${style.dash}], opacity: ${opacity}`);
+    // Debug: line centers, edges, and style
 
     ctx.strokeStyle = style.color;
     ctx.lineWidth = style.width + lineWidthBoost;
@@ -875,7 +859,7 @@ function drawConnection(ctx, from, to, mode, currentView = 'current', currentPer
 }
 
 function drawActualCommsConnection(ctx, from, to, currentView = 'current', currentPerspective = 'hierarchy', customTeamPositions = null, focusedTeam = null, focusedConnections = null) {
-    console.log(`🔸 drawActualCommsConnection (pre-TT): ${from.name} --[dependency]--> ${to.name}`);
+    // Debug: drawActualCommsConnection
 
     // Apply opacity and line width based on focus mode
     let opacity = 1.0;
@@ -901,7 +885,7 @@ function drawActualCommsConnection(ctx, from, to, currentView = 'current', curre
 
         // Debug logging to diagnose missing positions
         if ((from.name === 'Web Frontend Team' && to.name === 'Database Team') || (from.name === 'Database Team' && to.name === 'Web Frontend Team')) {
-            console.log(`🔍 ActualComms checking ${from.name} -> ${to.name}:`, {
+            debugLog(`🔍 ActualComms checking ${from.name} -> ${to.name}:`, {
                 fromPos: fromPos ? 'found' : 'MISSING',
                 toPos: toPos ? 'found' : 'MISSING',
                 perspective: currentPerspective,
@@ -921,7 +905,7 @@ function drawActualCommsConnection(ctx, from, to, currentView = 'current', curre
 
             // Debug logging for actual coordinates
             if ((from.name === 'Web Frontend Team' && to.name === 'Database Team') || (from.name === 'Database Team' && to.name === 'Web Frontend Team')) {
-                console.log(`✅ ActualComms drawing ${from.name} -> ${to.name}:`, {
+                debugLog(`✅ ActualComms drawing ${from.name} -> ${to.name}:`, {
                     fromPos,
                     toPos,
                     fromCenter: { x: fromCenterX, y: fromCenterY },
@@ -943,8 +927,8 @@ function drawActualCommsConnection(ctx, from, to, currentView = 'current', curre
         toCenterX = to.position.x + toWidth / 2;
         toCenterY = to.position.y + toHeight / 2;
 
-        console.log(`  📦 ${from.name} box:`, { x: from.position.x, y: from.position.y, width: fromWidth, height: fromHeight });
-        console.log(`  📦 ${to.name} box:`, { x: to.position.x, y: to.position.y, width: toWidth, height: toHeight });
+        debugLog(`  📦 ${from.name} box:`, { x: from.position.x, y: from.position.y, width: fromWidth, height: fromHeight });
+        debugLog(`  📦 ${to.name} box:`, { x: to.position.x, y: to.position.y, width: toWidth, height: toHeight });
     }
 
     // Calculate angle between centers
@@ -963,10 +947,10 @@ function drawActualCommsConnection(ctx, from, to, currentView = 'current', curre
     const lineToX = toEdge.x - shortenBy * Math.cos(angle); // Shorten at 'to' end for arrow
     const lineToY = toEdge.y - shortenBy * Math.sin(angle);
 
-    console.log(`  🎯 Centers: from (${fromCenterX.toFixed(1)}, ${fromCenterY.toFixed(1)}) -> to (${toCenterX.toFixed(1)}, ${toCenterY.toFixed(1)})`);
-    console.log(`  📍 Line edges: from (${fromEdge.x.toFixed(1)}, ${fromEdge.y.toFixed(1)}) -> to (${toEdge.x.toFixed(1)}, ${toEdge.y.toFixed(1)})`);
-    console.log(`  📍 Final line: (${lineFromX.toFixed(1)}, ${lineFromY.toFixed(1)}) -> (${lineToX.toFixed(1)}, ${lineToY.toFixed(1)})`);
-    console.log(`  🎨 Style: #666666, width: ${4 + lineWidthBoost}px, opacity: ${opacity}`);
+    debugLog(`  🎯 Centers: from (${fromCenterX.toFixed(1)}, ${fromCenterY.toFixed(1)}) -> to (${toCenterX.toFixed(1)}, ${toCenterY.toFixed(1)})`);
+    debugLog(`  📍 Line edges: from (${fromEdge.x.toFixed(1)}, ${fromEdge.y.toFixed(1)}) -> to (${toEdge.x.toFixed(1)}, ${toEdge.y.toFixed(1)})`);
+    debugLog(`  📍 Final line: (${lineFromX.toFixed(1)}, ${lineFromY.toFixed(1)}) -> (${lineToX.toFixed(1)}, ${lineToY.toFixed(1)})`);
+    debugLog(`  🎨 Style: #666666, width: ${4 + lineWidthBoost}px, opacity: ${opacity}`);
 
     ctx.save(); // Save context state
 

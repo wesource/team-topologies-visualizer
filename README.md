@@ -569,6 +569,25 @@ npm run lint -- --fix   # Auto-fix issues
 ```
 
 **Configuration:** See `ruff.toml` (backend) and `frontend/eslint.config.js` (frontend)
+
+## Debug Mode
+
+**By default, debug console output is disabled** to keep the browser console clean during normal use.
+
+To enable detailed logging for troubleshooting:
+1. Open browser developer console (F12)
+2. Run: `enableDebugMode()`
+3. Refresh the page to see detailed rendering logs
+
+To disable:
+- Run: `disableDebugMode()`
+
+Debug mode shows detailed information about:
+- Team rendering positions and dimensions
+- Connection line calculations
+- Filter operations
+- Canvas state updates
+
 ## Testing
 
 The project includes comprehensive automated testing (332 tests total across 3 layers: backend unit, frontend unit, and E2E tests).

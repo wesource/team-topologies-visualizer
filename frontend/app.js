@@ -181,7 +181,7 @@ function showDemoBanner() {
     const banner = document.createElement('div');
     banner.className = 'demo-banner';
     banner.innerHTML = `
-        <span class="demo-banner-icon">🎮</span>
+        <span class="demo-banner-icon">✨</span>
         <strong>Demo Mode:</strong> Feel free to explore and interact with the visualization. 
         Changes won't be saved.
     `;

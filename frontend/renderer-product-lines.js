@@ -3,6 +3,7 @@
  * Vertical product lanes + horizontal shared teams row
  */
 import { darkenColor, getCognitiveLoadIndicator } from './renderer-common.js';
+import { debugLog } from './config.js';
 
 const PRODUCT_LANE_WIDTH = 300;
 const PRODUCT_LANE_PADDING = 20;
@@ -116,7 +117,7 @@ function drawProductTeamCard(ctx, team, x, y, width, teamColorMap, wrapText, sho
 
         // Debug logging for specific teams
         if (team.name === 'Web Frontend Team' || team.name === 'Database Team') {
-            console.log(`📦 Product team "${team.name}" positioned at:`, {
+            debugLog(`📦 Product team "${team.name}" positioned at:`, {
                 x, y, width, height: TEAM_CARD_HEIGHT,
                 center: { x: x + width / 2, y: y + TEAM_CARD_HEIGHT / 2 }
             });
@@ -244,7 +245,7 @@ function drawSharedTeamCard(ctx, team, x, y, teamColorMap, wrapText, showCogniti
 
         // Debug logging for specific teams
         if (team.name === 'Web Frontend Team' || team.name === 'Database Team') {
-            console.log(`🔧 Shared team "${team.name}" positioned at:`, {
+            debugLog(`🔧 Shared team "${team.name}" positioned at:`, {
                 x, y, width: cardWidth, height: cardHeight,
                 center: { x: x + cardWidth / 2, y: y + cardHeight / 2 }
             });
