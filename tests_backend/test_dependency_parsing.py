@@ -10,11 +10,13 @@ def test_parse_dependency_bullets_basic():
 - Database Team - Schema changes, database performance tuning
 - API Framework Team - Shared API infrastructure and standards
 """
-    dependencies = _parse_dependency_bullets(markdown)
+    dependencies, notes = _parse_dependency_bullets(markdown)
 
     assert len(dependencies) == 2
     assert "Database Team" in dependencies
     assert "API Framework Team" in dependencies
+    assert len(notes) == 2
+    assert any("Database Team: Schema changes" in note for note in notes)
 
 
 def test_parse_dependency_bullets_bold_format():
@@ -24,11 +26,12 @@ def test_parse_dependency_bullets_bold_format():
 - **Backend Services Team**: All business logic and data access
 - **Database Team**: Read replicas, reporting queries
 """
-    dependencies = _parse_dependency_bullets(markdown)
+    dependencies, notes = _parse_dependency_bullets(markdown)
 
     assert len(dependencies) == 2
     assert "Backend Services Team" in dependencies
     assert "Database Team" in dependencies
+    assert len(notes) == 2
 
 
 def test_parse_dependency_bullets_mixed_formats():
@@ -39,7 +42,7 @@ def test_parse_dependency_bullets_mixed_formats():
 - **API Team**: Description with colon
 - QA Team - Another dash description
 """
-    dependencies = _parse_dependency_bullets(markdown)
+    dependencies, notes = _parse_dependency_bullets(markdown)
 
     assert len(dependencies) == 3
     assert "Database Team" in dependencies
@@ -57,9 +60,10 @@ Some content without dependencies section.
 ## Other Section
 More content.
 """
-    dependencies = _parse_dependency_bullets(markdown)
+    dependencies, notes = _parse_dependency_bullets(markdown)
 
     assert dependencies == []
+    assert notes == []
 
 
 def test_parse_dependency_bullets_empty_section():
@@ -69,9 +73,10 @@ def test_parse_dependency_bullets_empty_section():
 
 ## Next Section
 """
-    dependencies = _parse_dependency_bullets(markdown)
+    dependencies, notes = _parse_dependency_bullets(markdown)
 
     assert dependencies == []
+    assert notes == []
 
 
 def test_parse_dependency_bullets_with_description():
@@ -81,14 +86,15 @@ def test_parse_dependency_bullets_with_description():
 - Backend Services Team - Provides all REST APIs and business logic layer
 - Database Platform Team - Schema changes and performance tuning
 """
-    dependencies = _parse_dependency_bullets(markdown)
+    dependencies, notes = _parse_dependency_bullets(markdown)
 
     assert len(dependencies) == 2
     # Should not include descriptions
     assert "Backend Services Team" in dependencies
     assert "Database Platform Team" in dependencies
-    # Descriptions should be stripped
-    assert "Provides all REST APIs" not in str(dependencies)
+    # Descriptions should be in notes
+    assert len(notes) == 2
+    assert any("Provides all REST APIs" in note for note in notes)
 
 
 def test_parse_dependency_bullets_case_insensitive_header():
@@ -98,7 +104,7 @@ def test_parse_dependency_bullets_case_insensitive_header():
 - Team A - Description
 - Team B - Description
 """
-    dependencies = _parse_dependency_bullets(markdown)
+    dependencies, notes = _parse_dependency_bullets(markdown)
 
     assert len(dependencies) == 2
     assert "Team A" in dependencies
@@ -114,7 +120,7 @@ def test_parse_dependency_bullets_stops_at_next_section():
 ## Next Section
 - Not A Team - Should not be included
 """
-    dependencies = _parse_dependency_bullets(markdown)
+    dependencies, notes = _parse_dependency_bullets(markdown)
 
     assert len(dependencies) == 1
     assert "Valid Team" in dependencies
@@ -129,7 +135,7 @@ def test_parse_dependency_bullets_filters_header_text():
 - Database Team - Real dependency
 - API Framework Team - Another real dependency
 """
-    dependencies = _parse_dependency_bullets(markdown)
+    dependencies, notes = _parse_dependency_bullets(markdown)
 
     # Should filter out "Teams We Depend On" but include actual teams
     assert "Database Team" in dependencies
@@ -145,7 +151,7 @@ def test_parse_dependency_bullets_trims_whitespace():
 -   Database Team   - Description with extra spaces
 - **  API Team  **: Description
 """
-    dependencies = _parse_dependency_bullets(markdown)
+    dependencies, notes = _parse_dependency_bullets(markdown)
 
     assert "Database Team" in dependencies
     assert "API Team" in dependencies
@@ -175,7 +181,7 @@ The backend monolith team responsible for core logistics services.
 
 **Cognitive Load**: very-high
 """
-    dependencies = _parse_dependency_bullets(markdown)
+    dependencies, notes = _parse_dependency_bullets(markdown)
 
     assert len(dependencies) == 2
     assert "Database Team" in dependencies
@@ -188,7 +194,41 @@ def test_parse_dependency_bullets_handles_colons_in_description():
 ## Dependencies
 - Platform Team - Uses services: authentication, logging, metrics
 """
-    dependencies = _parse_dependency_bullets(markdown)
+    dependencies, notes = _parse_dependency_bullets(markdown)
 
     assert len(dependencies) == 1
     assert "Platform Team" in dependencies
+
+
+def test_parse_dependency_notes_only():
+    """Test parsing narrative notes without team references"""
+    markdown = """
+## Dependencies
+- Blocks all teams from releasing (must wait for QA approval)
+- Depends on all development teams' code for testing
+"""
+    dependencies, notes = _parse_dependency_bullets(markdown)
+
+    # These should be recognized as notes, not team names
+    assert len(dependencies) == 0
+    assert len(notes) == 2
+    assert any("Blocks all teams" in note for note in notes)
+    assert any("Depends on all development teams" in note for note in notes)
+
+
+def test_parse_dependency_mixed_teams_and_notes():
+    """Test parsing mix of actual team references and narrative notes"""
+    markdown = """
+## Dependencies
+- Backend Services Team - Core business logic
+- Web Frontend Team - UI integration
+- Blocks all teams from releasing (must wait for approval)
+"""
+    dependencies, notes = _parse_dependency_bullets(markdown)
+
+    # Should extract 2 teams and 3 notes total
+    assert len(dependencies) == 2
+    assert "Backend Services Team" in dependencies
+    assert "Web Frontend Team" in dependencies
+    assert len(notes) == 3  # 2 team notes + 1 standalone note
+    assert any("Blocks all teams" in note for note in notes)

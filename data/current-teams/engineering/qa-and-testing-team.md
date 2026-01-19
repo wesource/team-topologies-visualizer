@@ -1,6 +1,15 @@
 ---
 name: QA & Testing Team
 team_type: support-team
+dependencies:
+  - Backend Services Team
+  - Web Frontend Team
+  - Mobile App Team
+  - Route Optimization Team
+  - DevOps and Infrastructure Team
+dependency_notes:
+  - Depends on all development teams' code for testing
+  - Blocks all teams from releasing (must wait for QA approval)
 position:
   x: 520.0
   y: 410.0
@@ -78,8 +87,11 @@ Verifies system integration and quality across all development teams in LogiCore
 - No clear test ownership or quality standards
 
 ## Dependencies
-- **All Development Teams**: Depends on their code for testing
-- Blocks all teams from releasing (must wait for QA approval)
+- Backend Services Team
+- Web Frontend Team
+- Mobile App Team
+- Route Optimization Team
+- DevOps and Infrastructure Team
 
 ## Test Coverage Issues
 - Unit test coverage: ~35% (low, inconsistent across teams)

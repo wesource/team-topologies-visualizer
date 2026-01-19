@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Dependency Notes Field (2026-01-18)**: Separated narrative text from team references in dependencies
+  - Added `dependency_notes` field to TeamData model for free-text notes about dependencies
+  - Updated parsing logic to distinguish team references from narrative statements
+  - Prevents rendering errors from non-resolvable dependency targets like "All Development Teams" or "Blocks all teams from releasing"
+  - Improved sample data in QA & Testing Team to use clean team references + notes structure
+  - Added tests for mixed teams and notes parsing scenarios
+
+### Changed
+- **Documentation Simplification (2026-01-18)**: Shortened README and CONCEPTS for a cleaner first-read
+  - Added a short AI disclaimer near the top of README
+  - Removed the "Fractal Organizational Patterns" section from CONCEPTS
+
+- **TT Color Palette Alignment (2026-01-19)**: Updated TT team-type fill colors to match Team Shape Templates
+  - Updated `data/tt-teams/tt-team-types.json` and `data/tt-teams-initial/tt-team-types.json`
+  - Removed outdated color names from the team type bullets in CONCEPTS
+
 ### Fixed
 - **Console Warning Spam (2026-01-18)**: Eliminated excessive dependency warnings appearing on every mouse movement
   - Implemented warning deduplication using Set to track shown warnings - each unique warning now only appears once

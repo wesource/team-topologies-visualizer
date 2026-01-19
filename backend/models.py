@@ -28,6 +28,7 @@ class TeamData(BaseModel):
     team_type: str | None = "other"  # stream-aligned, enabling, complicated-subsystem, platform, OR for current: dev-team, ops-team, etc
     description: str | None = ""
     dependencies: list[str] | None = []
+    dependency_notes: list[str] | None = []  # Free text notes about dependencies (separate from team references)
     interaction_modes: dict[str, str] | None = {}  # {team_name: interaction_mode}
     line_manager: str | None = None  # For current org structure
     product_line: str | None = None  # For Product Lines view (Pre-TT only)
@@ -73,6 +74,7 @@ class SnapshotTeamCondensed(BaseModel):
     value_stream: str | None = None
     platform_grouping: str | None = None
     dependencies: list[str] | None = []
+    dependency_notes: list[str] | None = []
     interaction_modes: dict[str, str] | None = {}
     metadata: dict[str, Any] | None = {}
     team_api_summary: dict[str, Any] | None = None  # Key Team API fields only

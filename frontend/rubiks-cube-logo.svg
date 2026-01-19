@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Rubik's Cube - 3x3 isometric view (unsolved - multiple perspectives metaphor) -->
+  <defs>
+    <!-- Shadow for depth -->
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="2" dy="2" stdDeviation="1.5" flood-opacity="0.4"/>
+    </filter>
+    <!-- Colors matching Team Topologies palette -->
+    <style>
+      .cube-yellow { fill: #F9E2A0; }
+      .cube-green { fill: #66BB6A; }
+      .cube-blue { fill: #9ED3E6; }
+      .cube-orange { fill: #F4B183; }
+      .cube-white { fill: #FAFAFA; }
+      .cube-purple { fill: #C5B3E6; }
+      .grid-line { stroke: #1a1a1a; stroke-width: 1.2; stroke-linecap: round; }
+      .face-border { stroke: #000; stroke-width: 1.5; fill: none; }
+    </style>
+  </defs>
+  
+  <!-- Top face - 9 squares (mixed colors showing it's unsolved) -->
+  <g filter="url(#shadow)">
+    <!-- Row 1 (top) -->
+    <path d="M 40 20 L 50 15 L 60 20 L 50 25 Z" class="cube-yellow"/>
+    <path d="M 30 25 L 40 20 L 50 25 L 40 30 Z" class="cube-white"/>
+    <path d="M 50 25 L 60 20 L 70 25 L 60 30 Z" class="cube-yellow"/>
+    <!-- Row 2 (middle) -->
+    <path d="M 40 30 L 50 25 L 60 30 L 50 35 Z" class="cube-yellow"/>
+    <path d="M 30 35 L 40 30 L 50 35 L 40 40 Z" class="cube-green"/>
+    <path d="M 50 35 L 60 30 L 70 35 L 60 40 Z" class="cube-white"/>
+    <!-- Row 3 (bottom) -->
+    <path d="M 40 40 L 50 35 L 60 40 L 50 45 Z" class="cube-yellow"/>
+    <path d="M 20 30 L 30 35 L 40 40 L 30 35 Z" class="cube-purple"/>
+    <path d="M 50 45 L 60 40 L 70 35 L 60 40 Z" class="cube-yellow"/>
+    <!-- Grid lines for top face (proper isometric 3x3 grid) -->
+    <!-- Lines parallel to left-right diagonal (going from top-right to bottom-left) -->
+    <line x1="60" y1="20" x2="30" y2="35" class="grid-line"/>
+    <line x1="70" y1="25" x2="40" y2="40" class="grid-line"/>
+    <!-- Lines parallel to right-left diagonal (going from top-left to bottom-right) -->
+    <line x1="30" y1="25" x2="60" y2="40" class="grid-line"/>
+    <line x1="40" y1="20" x2="70" y2="35" class="grid-line"/>
+    <path d="M 20 30 L 50 15 L 80 30 L 50 45 Z" class="face-border"/>
+  </g>
+  
+  <!-- Left face - 9 squares (mixed colors) -->
+  <g filter="url(#shadow)">
+    <!-- Row 1 -->
+    <path d="M 20 30 L 30 35 L 30 48 L 20 43 Z" class="cube-orange"/>
+    <path d="M 30 35 L 40 40 L 40 53 L 30 48 Z" class="cube-green"/>
+    <path d="M 40 40 L 50 45 L 50 58 L 40 53 Z" class="cube-orange"/>
+    <!-- Row 2 -->
+    <path d="M 20 43 L 30 48 L 30 61 L 20 56 Z" class="cube-blue"/>
+    <path d="M 30 48 L 40 53 L 40 66 L 30 61 Z" class="cube-orange"/>
+    <path d="M 40 53 L 50 58 L 50 71 L 40 66 Z" class="cube-green"/>
+    <!-- Row 3 -->
+    <path d="M 20 56 L 30 61 L 30 74 L 20 69 Z" class="cube-orange"/>
+    <path d="M 30 61 L 40 66 L 40 79 L 30 74 Z" class="cube-orange"/>
+    <path d="M 40 66 L 50 71 L 50 84 L 40 79 Z" class="cube-purple"/>
+    <!-- Grid lines for left face -->
+    <line x1="30" y1="35" x2="30" y2="74" class="grid-line"/>
+    <line x1="40" y1="40" x2="40" y2="79" class="grid-line"/>
+    <line x1="20" y1="43" x2="50" y2="58" class="grid-line"/>
+    <line x1="20" y1="56" x2="50" y2="71" class="grid-line"/>
+    <path d="M 20 30 L 50 45 L 50 84 L 20 69 Z" class="face-border"/>
+  </g>
+  
+  <!-- Right face - 9 squares (mixed colors) -->
+  <g filter="url(#shadow)">
+    <!-- Row 1 -->
+    <path d="M 50 45 L 60 40 L 60 53 L 50 58 Z" class="cube-blue"/>
+    <path d="M 60 40 L 70 35 L 70 48 L 60 53 Z" class="cube-white"/>
+    <path d="M 70 35 L 80 30 L 80 43 L 70 48 Z" class="cube-blue"/>
+    <!-- Row 2 -->
+    <path d="M 50 58 L 60 53 L 60 66 L 50 71 Z" class="cube-green"/>
+    <path d="M 60 53 L 70 48 L 70 61 L 60 66 Z" class="cube-blue"/>
+    <path d="M 70 48 L 80 43 L 80 56 L 70 61 Z" class="cube-white"/>
+    <!-- Row 3 -->
+    <path d="M 50 71 L 60 66 L 60 79 L 50 84 Z" class="cube-blue"/>
+    <path d="M 60 66 L 70 61 L 70 74 L 60 79 Z" class="cube-blue"/>
+    <path d="M 70 61 L 80 56 L 80 69 L 70 74 Z" class="cube-purple"/>
+    <!-- Grid lines for right face -->
+    <line x1="60" y1="40" x2="60" y2="79" class="grid-line"/>
+    <line x1="70" y1="35" x2="70" y2="74" class="grid-line"/>
+    <line x1="50" y1="58" x2="80" y2="43" class="grid-line"/>
+    <line x1="50" y1="71" x2="80" y2="56" class="grid-line"/>
+    <path d="M 50 45 L 80 30 L 80 69 L 50 84 Z" class="face-border"/>
+  </g>
+</svg>

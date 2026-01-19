@@ -127,10 +127,23 @@ def parse_team_file(file_path: Path) -> TeamData:
 
                 # Also parse Pre-TT style dependencies from bullet lists
                 if not dependencies:
-                    dependencies = _parse_dependency_bullets(markdown_content)
+                    dependencies, dependency_notes = _parse_dependency_bullets(markdown_content)
+                    if dependency_notes and 'dependency_notes' not in data:
+                        data['dependency_notes'] = dependency_notes
+                else:
+                    # If we got dependencies from interaction tables, try bullet parsing for notes
+                    _, dependency_notes = _parse_dependency_bullets(markdown_content)
+                    if dependency_notes and 'dependency_notes' not in data:
+                        data['dependency_notes'] = dependency_notes
 
                 if dependencies:
                     data['dependencies'] = dependencies
+            else:
+                # Even if dependencies are in YAML, parse notes from markdown
+                if 'dependency_notes' not in data:
+                    _, dependency_notes = _parse_dependency_bullets(markdown_content)
+                    if dependency_notes:
+                        data['dependency_notes'] = dependency_notes
 
             # Parse interaction modes from markdown (always from markdown for now)
             if 'interaction_modes' not in data:
@@ -201,13 +214,15 @@ def _parse_interaction_tables(markdown_content: str) -> tuple[list[str], dict[st
     return dependencies, interaction_modes
 
 
-def _parse_dependency_bullets(markdown_content: str) -> list[str]:
+def _parse_dependency_bullets(markdown_content: str) -> tuple[list[str], list[str]]:
     """Parse Pre-TT style dependencies from bullet lists under ## Dependencies section.
 
     Expected format:
     ## Dependencies
     - Database Team - Schema changes, database performance tuning
     - API Framework Team - Shared API infrastructure and standards
+    - All Development Teams - Depends on their code for testing
+    - Blocks all teams from releasing (must wait for QA approval)
 
     Or:
     ## Dependencies
@@ -215,9 +230,10 @@ def _parse_dependency_bullets(markdown_content: str) -> list[str]:
     - **Database Team**: Read replicas, reporting queries
 
     Returns:
-        List of team names
+        Tuple of (dependencies: list of team names, dependency_notes: list of free text)
     """
     dependencies = []
+    dependency_notes = []
 
     # Find the "Dependencies" section
     dependencies_match = re.search(
@@ -227,7 +243,7 @@ def _parse_dependency_bullets(markdown_content: str) -> list[str]:
     )
 
     if not dependencies_match:
-        return dependencies
+        return dependencies, dependency_notes
 
     section_content = dependencies_match.group(1)
 
@@ -235,27 +251,53 @@ def _parse_dependency_bullets(markdown_content: str) -> list[str]:
     lines = section_content.strip().split('\n')
     for line in lines:
         if line.strip().startswith('-'):
-            # Extract team name from bullet point
-            # Handle both formats:
-            # - Database Team - Description
-            # - **Backend Services Team**: Description
-            line = line.strip()[1:].strip()  # Remove '-' and whitespace
+            original_line = line.strip()[1:].strip()  # Remove '-' and whitespace
 
             # Check for bold markdown **Team Name**:
-            bold_match = re.match(r'\*\*([^*]+)\*\*:', line)
+            bold_match = re.match(r'\*\*([^*]+)\*\*:\s*(.+)', original_line)
             if bold_match:
                 team_name = bold_match.group(1).strip()
+                description = bold_match.group(2).strip()
                 dependencies.append(team_name)
-            else:
-                # Check for plain format: Team Name - Description
-                dash_match = re.match(r'([^-:]+?)(?:\s*[-:]|$)', line)
-                if dash_match:
-                    team_name = dash_match.group(1).strip()
-                    # Filter out common non-team text
-                    if team_name and not team_name.lower().startswith(('teams we', 'internal', 'external')):
-                        dependencies.append(team_name)
+                # Store the full line as a note for context
+                dependency_notes.append(f"{team_name}: {description}")
+                continue
 
-    return dependencies
+            # Check for plain format: Team Name - Description
+            dash_match = re.match(r'([^-:]+?)\s*[-:]\s*(.+)', original_line)
+            if dash_match:
+                team_name = dash_match.group(1).strip()
+                description = dash_match.group(2).strip()
+
+                # Check if this looks like a team name or just a note
+                # Heuristic: if it starts with common non-team words or doesn't look like a proper noun, treat as note
+                lower_name = team_name.lower()
+                is_likely_note = (
+                    lower_name.startswith(('blocks', 'depends', 'requires', 'waits', 'all teams', 'teams we', 'internal', 'external')) or
+                    not team_name[0].isupper() or
+                    len(team_name.split()) > 5  # Very long names are probably sentences
+                )
+
+                if is_likely_note:
+                    # This is a note, not a team reference
+                    dependency_notes.append(original_line)
+                else:
+                    # This looks like a team reference
+                    dependencies.append(team_name)
+                    dependency_notes.append(f"{team_name}: {description}")
+            else:
+                # No dash/colon separator - could be just a note or plain team name
+                plain_text = original_line.strip()
+
+                # Check if it looks like a note (starts with lowercase, contains multiple words in sentence form)
+                if plain_text and (plain_text[0].islower() or
+                                   plain_text.lower().startswith(('blocks', 'depends', 'requires', 'waits'))):
+                    dependency_notes.append(plain_text)
+                elif plain_text:
+                    # Assume it's a team name without description
+                    dependencies.append(plain_text)
+
+    return dependencies, dependency_notes
 
 
 def write_team_file(team: TeamData, data_dir: Path) -> Path:

@@ -72,6 +72,59 @@
    docker stop <container-id>
    ```
 
+## Demo Mode (Read-Only)
+
+For public demonstrations or workshops where you want users to explore without saving changes:
+
+**Local:**
+
+```bash
+# Windows
+.\start-demo.ps1
+
+# Linux/Mac
+./start-demo.sh
+```
+
+**Docker:**
+
+```bash
+docker run -p 8000:8000 -e READ_ONLY_MODE=true team-topologies-viz
+```
+
+Demo mode displays a banner and blocks all write operations (position updates, snapshot creation) while allowing full interaction with the visualization.
+
+## TT Design Variants
+
+The repo includes two example TT designs:
+
+- **Mid-Stage Transformation** (default): [data/tt-teams/](../data/tt-teams/)
+- **First-Step Transformation** (optional): [data/tt-teams-initial/](../data/tt-teams-initial/) (see [data/tt-teams-initial/README.md](../data/tt-teams-initial/README.md))
+
+You can switch which TT dataset is loaded by setting the `TT_TEAMS_VARIANT` environment variable.
+
+**Local (Linux/Mac):**
+
+```bash
+export TT_TEAMS_VARIANT=tt-teams-initial
+python -m uvicorn main:app --reload
+```
+
+**Local (Windows PowerShell):**
+
+```powershell
+$env:TT_TEAMS_VARIANT="tt-teams-initial"
+python -m uvicorn main:app --reload
+```
+
+**Docker/Podman:**
+
+```bash
+docker run -p 8000:8000 -e TT_TEAMS_VARIANT=tt-teams-initial team-topologies-viz
+```
+
+If `TT_TEAMS_VARIANT` is not set, the app uses the default variant.
+
 ## Testing
 
 ### Running Tests Locally
