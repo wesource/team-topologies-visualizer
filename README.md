@@ -95,6 +95,7 @@ Open http://localhost:8000/static/index.html
 
 - **[docs/SETUP.md](docs/SETUP.md)**: Installation, configuration, demo mode, TT design variants
 - **[docs/CONCEPTS.md](docs/CONCEPTS.md)**: Team Topologies concepts and how they map to the tool
+- **[docs/EXAMPLE_DATA.md](docs/EXAMPLE_DATA.md)**: Example organization, transformation story, dataset variants
 - **[DEVELOPMENT.md](DEVELOPMENT.md)**: Developer workflow and testing
 
 ## Quick Customization
@@ -115,11 +116,12 @@ Want to understand the team Markdown/YAML structure (or create your own starting
 
 Includes a fictitious organization (**LogiCore Systems**) to illustrate typical “before vs after” patterns during a Team Topologies adoption.
 
-- **Baseline view**: a pre-transformation structure with common scaling pain (technology component teams, handoffs, shared-service bottlenecks)
-- **TT Design view**: a Team Topologies-inspired design with stream-aligned teams, platform capabilities, enabling support, and clearer ownership
+**Two TT design variants**: Mid-stage transformation (default, ~34 teams) and first-step transformation (optional, ~20 teams) showing realistic progression.
 
-More context and details: [docs/CONCEPTS.md](docs/CONCEPTS.md#example-data-logicore-systems)
+See **[docs/EXAMPLE_DATA.md](docs/EXAMPLE_DATA.md)** for the complete story, how to switch variants, and detailed comparison.
+
 **Data Management**: All team data is stored as markdown files in `data/`. Use git for version control and backup - commit regularly to preserve your team topology designs.
+
 **Disclaimer**: All example data (company/team/product names, technical details) is entirely fictitious for demonstration purposes.
 
 ## Testing

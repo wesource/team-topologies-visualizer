@@ -2,14 +2,13 @@
 name: Route Optimization Platform Team
 team_type: complicated-subsystem
 position:
-  x: 200.0
-  y: 600.0
+  x: 839.0
+  y: 627.0
 metadata:
   size: 4
   cognitive_load: high
   established: 2024-06
 value_stream: N/A (provides specialized capability)
-origin_team: Route Optimization Team
 ---
 
 # Route Optimization Platform Team

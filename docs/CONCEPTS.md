@@ -182,44 +182,13 @@ Capture immutable "state at a point in time" for your TT Design:
 
 ## Example Data: LogiCore Systems
 
-The repository includes a fictitious organization to demonstrate transformation concepts.
+The repository includes a fictitious organization (**LogiCore Systems**) to demonstrate transformation concepts. The example shows a delivery/logistics tech company transitioning from component teams to Team Topologies design.
 
-### The Company
+Two dataset variants are available:
+- **First-step transformation** (~20 teams) - Initial 3-6 months
+- **Mid-stage transformation** (~34 teams, default) - More mature design
 
-**LogiCore Systems** started in 2015 as a small route optimization tool for local delivery companies. After rapid growth driven by the e-commerce boom, they now serve:
-
-- **B2B Services**: DispatchHub, FleetMonitor, RouteOptix for fleet operators
-- **B2C Services**: Driver mobile apps, customer delivery tracking, proof of delivery
-
-### The Challenge
-
-Like many successful startups that scaled quickly, LogiCore faces typical organizational challenges:
-- Monolithic architecture with component teams by technology layer
-- Handoffs creating delays (Dev → QA → Ops)
-- Shared service bottlenecks (Database team blocking everyone)
-- Weekly "integration meetings" with 15+ people
-- Teams owning too many responsibilities (cognitive overload)
-
-Their baseline structure shows **SAFe/LeSS influence** - they attempted to scale using Agile Release Trains and feature teams, but still struggle with coordination overhead and handoffs.
-
-### The Transformation
-
-**Baseline view** (~22 teams):
-- Component teams: Backend Services, Web Frontend, Mobile, QA & Testing
-- Platform teams: Database, DevOps & Infrastructure
-- Organized by function/technology, not value flow
-
-**TT Design view** (~34 teams):
-- **Value streams**: B2B Services, B2C Services with dedicated stream-aligned teams
-- **Platform grouping**: Cloud Infrastructure Platform Grouping (CI/CD, Observability, API Gateway, etc.)
-- **Enabling teams**: DevOps Enablement, Data Engineering Enablement, Security Compliance
-- **Complicated Subsystem**: Route Optimization Platform
-
-**Note**: Team count increased because monolithic teams were split into focused, autonomous teams with clear boundaries.
-
-### Disclaimer
-
-All example data (company/team/product names, technical details, organizational structure) is completely fictitious for demonstration purposes only.
+For the complete story, transformation details, and how to switch between variants, see **[EXAMPLE_DATA.md](EXAMPLE_DATA.md)**.
 
 ## References
 

@@ -112,12 +112,9 @@ Demo mode displays a banner and blocks all write operations (position updates, s
 
 ## TT Design Variants
 
-The repo includes two example TT designs:
+The repo includes **two example TT designs** (mid-stage and first-step transformations). See **[EXAMPLE_DATA.md](EXAMPLE_DATA.md)** for detailed explanation of each variant and when to use them.
 
-- **Mid-Stage Transformation** (default): [data/tt-teams/](../data/tt-teams/)
-- **First-Step Transformation** (optional): [data/tt-teams-initial/](../data/tt-teams-initial/) (see [data/tt-teams-initial/README.md](../data/tt-teams-initial/README.md))
-
-You can switch which TT dataset is loaded by setting the `TT_TEAMS_VARIANT` environment variable.
+**To switch variants**, set the `TT_TEAMS_VARIANT` environment variable:
 
 **Local (Linux/Mac):**
 

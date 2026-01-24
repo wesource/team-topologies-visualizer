@@ -2,14 +2,13 @@
 name: Cloud Platform Team
 team_type: platform
 position:
-  x: 200.0
-  y: 400.0
+  x: 121.0
+  y: 634.0
 metadata:
   size: 5
   cognitive_load: medium
   established: 2026-01
 value_stream: N/A (enables all stream-aligned teams)
-origin_team: DevOps & Infrastructure Team
 ---
 
 # Cloud Platform Team

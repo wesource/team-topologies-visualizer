@@ -2,14 +2,13 @@
 name: DevOps Enablement Team
 team_type: enabling
 position:
-  x: 600.0
-  y: 400.0
+  x: 1161.0
+  y: 633.0
 metadata:
   size: 3
   cognitive_load: medium
   established: 2026-01
 value_stream: N/A (enables stream-aligned teams)
-origin_teams: ["DevOps & Infrastructure Team", "New hires"]
 ---
 
 # DevOps Enablement Team

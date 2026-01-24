@@ -2,8 +2,8 @@
 name: Route Optimization Team
 team_type: feature-team
 position:
-  x: 36.0
-  y: 720.0
+  x: 80.0
+  y: 530.0
 metadata:
   size: 5
   department: Engineering

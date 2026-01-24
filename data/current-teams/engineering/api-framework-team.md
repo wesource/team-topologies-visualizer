@@ -2,8 +2,8 @@
 name: API Framework Team
 team_type: platform-team
 position:
-  x: 1170.6703061709918
-  y: 531.8248634800989
+  x: 1180.0
+  y: 410.0
 metadata:
   size: 4
   department: Engineering

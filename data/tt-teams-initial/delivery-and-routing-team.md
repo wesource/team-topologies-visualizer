@@ -2,14 +2,13 @@
 name: Delivery & Routing Team
 team_type: stream-aligned
 position:
-  x: 400.0
-  y: 500.0
+  x: 134.0
+  y: 165.0
 metadata:
   size: 6
   cognitive_load: medium
   established: 2026-01
 value_stream: B2B Fleet Management
-origin_team: Backend Services Team
 ---
 
 # Delivery & Routing Team

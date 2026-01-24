@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added tests for mixed teams and notes parsing scenarios
 
 ### Changed
+- **Local AI context refresh (2026-01-24)**: Updated `.ai-context.md` to match current run workflow
+  - Documented canonical local server start command on Windows using venv Python
+  - Added `TT_TEAMS_VARIANT` instructions for switching TT datasets (`tt-teams` vs `tt-teams-initial`)
+  - Fixed outdated `run-all-tests.ps1` path references to `scripts/run-all-tests.ps1`
 - **Docs QA pass (2026-01-19)**: Tightened setup/docs for first-time readers
   - Standardized local Python setup steps (create venv, activate, install, run)
   - Fixed incorrect template filenames in SETUP docs
