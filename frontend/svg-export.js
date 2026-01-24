@@ -94,7 +94,7 @@ function generateCurrentStateSVG(organizationHierarchy, teams, teamColorMap) {
     const boxHeight = LAYOUT.DEPT_BOX_HEIGHT;
 
     // Title
-    elements += '<text x="50" y="60" style="font-family: Arial, sans-serif; font-size: 24px; font-weight: bold; fill: #333;" text-anchor="start">Hierarchy View</text>\n';
+    elements += '<text x="50" y="30" style="font-family: Arial, sans-serif; font-size: 24px; font-weight: bold; fill: #333;" text-anchor="start">Hierarchy View</text>\n';
 
     // Draw company leadership
     const company = organizationHierarchy.company;
