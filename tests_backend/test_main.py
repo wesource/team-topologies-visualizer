@@ -36,6 +36,7 @@ class TestParseTeamFile:
     def test_parse_valid_markdown_with_frontmatter(self, temp_md_file):
         """Should parse markdown with YAML frontmatter correctly."""
         content = """---
+team_id: test-team
 name: Test Team
 team_type: platform-team
 dependencies:
@@ -55,18 +56,20 @@ This is the description.
         assert 'This is the description.' in result.description
 
     def test_parse_markdown_without_frontmatter(self, temp_md_file):
-        """Should handle markdown without frontmatter."""
+        """Should raise ValueError when markdown lacks frontmatter with team_id."""
         content = """# Test Team
 This is just a description without frontmatter.
 """
         file_path = temp_md_file(content)
-        result = parse_team_file(file_path)
 
-        assert result.description == content
+        # Since team_id is now required, files without YAML frontmatter should fail
+        with pytest.raises(ValueError, match="Missing team_id"):
+            parse_team_file(file_path)
 
     def test_parse_position_from_frontmatter(self, temp_md_file):
         """Should parse position coordinates from frontmatter."""
         content = """---
+team_id: positioned-team
 name: Positioned Team
 position:
   x: 100
@@ -83,6 +86,7 @@ Content
     def test_parse_interaction_modes(self, temp_md_file):
         """Should parse interaction modes from frontmatter."""
         content = """---
+team_id: connected-team
 name: Connected Team
 interaction_modes:
   team-a: collaboration
@@ -107,9 +111,12 @@ class TestGetDataDir:
         assert 'data' in str(data_dir)
 
     def test_get_data_dir_tt(self):
-        """Should return tt-teams directory for 'tt' view."""
+        """Should return correct tt-teams directory based on TT_TEAMS_VARIANT env var."""
+        import os
         data_dir = get_data_dir('tt')
-        assert data_dir.name == 'tt-teams'
+        # Check that it's a tt-teams variant directory (respects TT_TEAMS_VARIANT env var)
+        variant = os.getenv('TT_TEAMS_VARIANT', 'tt-teams')
+        assert data_dir.name == variant
         assert 'data' in str(data_dir)
 
     def test_get_data_dir_default(self):
@@ -129,6 +136,7 @@ class TestTeamDataStructure:
     def test_team_has_required_fields(self, temp_md_file):
         """Team data should have all required fields."""
         content = """---
+team_id: complete-team
 name: Complete Team
 team_type: platform-team
 position:
@@ -148,6 +156,7 @@ position:
     def test_position_has_numeric_coordinates(self, temp_md_file):
         """Position should have numeric x and y coordinates."""
         content = """---
+team_id: test-team
 name: Test Team
 position:
   x: 150

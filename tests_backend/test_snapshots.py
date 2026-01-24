@@ -45,6 +45,7 @@ def test_generate_snapshot_id():
 def test_condense_team_for_snapshot():
     """Test team data condensation for snapshots"""
     team = TeamData(
+        team_id="test-team",
         name="Test Team",
         team_type="stream-aligned",
         position={"x": 100.0, "y": 200.0},
@@ -69,24 +70,28 @@ def test_calculate_statistics():
     """Test statistics calculation"""
     teams = [
         TeamData(
+            team_id="team-1",
             name="Team 1",
             team_type="stream-aligned",
             value_stream="VS1",
             position={"x": 0, "y": 0}
         ),
         TeamData(
+            team_id="team-2",
             name="Team 2",
             team_type="platform",
             platform_grouping="PG1",
             position={"x": 0, "y": 0}
         ),
         TeamData(
+            team_id="team-3",
             name="Team 3",
             team_type="stream-aligned",
             value_stream="VS1",
             position={"x": 0, "y": 0}
         ),
         TeamData(
+            team_id="team-4",
             name="Team 4",
             team_type="enabling",
             position={"x": 0, "y": 0}

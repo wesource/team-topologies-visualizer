@@ -68,22 +68,20 @@ invalid_yaml: [unclosed bracket
             temp_path.unlink()
 
     def test_parse_file_without_front_matter(self):
-        """Should handle files without YAML front matter"""
+        """Should raise ValueError when file lacks team_id in YAML front matter"""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False, encoding='utf-8') as f:
             f.write("# Just a plain markdown file\n\nNo YAML front matter here.")
             temp_path = Path(f.name)
 
         try:
-            team = parse_team_file(temp_path)
-            # Should create team with filename as name
-            assert team.name == temp_path.stem
-            assert team.team_type == "stream-aligned"
-            assert "plain markdown" in team.description.lower()
+            # Should raise ValueError because team_id is required
+            with pytest.raises(ValueError, match="Missing team_id"):
+                parse_team_file(temp_path)
         finally:
             temp_path.unlink()
 
     def test_parse_file_with_incomplete_front_matter(self):
-        """Should handle incomplete front matter (only one delimiter)"""
+        """Should raise ValueError for incomplete front matter (missing team_id)"""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False, encoding='utf-8') as f:
             f.write("""---
 name: Incomplete Team
@@ -92,10 +90,9 @@ This is markdown content.""")
             temp_path = Path(f.name)
 
         try:
-            team = parse_team_file(temp_path)
-            # Should treat as plain markdown (no front matter)
-            # Actually treats the whole file as plain markdown
-            assert team.description is not None
+            # Should raise ValueError because team_id is required
+            with pytest.raises(ValueError, match="Missing team_id"):
+                parse_team_file(temp_path)
         finally:
             temp_path.unlink()
 
@@ -103,6 +100,7 @@ This is markdown content.""")
         """Should handle empty YAML front matter"""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False, encoding='utf-8') as f:
             f.write("""---
+team_id: test-team
 name: Test Team
 team_type: stream-aligned
 ---
@@ -125,6 +123,7 @@ class TestFlowMetricsValidation:
         """Negative lead time should raise ValueError"""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False, encoding='utf-8') as f:
             f.write("""---
+team_id: test-team
 name: Test Team
 team_type: stream-aligned
 metadata:
@@ -144,6 +143,7 @@ metadata:
         """Change fail rate above 1.0 should raise ValueError"""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False, encoding='utf-8') as f:
             f.write("""---
+team_id: test-team
 name: Test Team
 team_type: stream-aligned
 metadata:
@@ -163,6 +163,7 @@ metadata:
         """Change fail rate below 0.0 should raise ValueError"""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False, encoding='utf-8') as f:
             f.write("""---
+team_id: test-team
 name: Test Team
 team_type: stream-aligned
 metadata:
@@ -182,6 +183,7 @@ metadata:
         """Negative MTTR should raise ValueError"""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False, encoding='utf-8') as f:
             f.write("""---
+team_id: test-team
 name: Test Team
 team_type: stream-aligned
 metadata:
@@ -201,6 +203,7 @@ metadata:
         """Invalid deployment frequency should raise ValueError"""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False, encoding='utf-8') as f:
             f.write("""---
+team_id: test-team
 name: Test Team
 team_type: stream-aligned
 metadata:
@@ -223,6 +226,7 @@ metadata:
         for freq in valid_frequencies:
             with tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False, encoding='utf-8') as f:
                 f.write(f"""---
+team_id: test-team
 name: Test Team
 team_type: stream-aligned
 metadata:
@@ -242,6 +246,7 @@ metadata:
         """Valid flow metrics should be accepted"""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False, encoding='utf-8') as f:
             f.write("""---
+team_id: test-team
 name: Test Team
 team_type: stream-aligned
 metadata:
@@ -271,6 +276,7 @@ class TestMetadataFieldParsing:
         """Established date should be flattened from metadata"""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False, encoding='utf-8') as f:
             f.write("""---
+team_id: test-team
 name: Test Team
 team_type: stream-aligned
 metadata:
@@ -289,6 +295,7 @@ metadata:
         """Cognitive load should be flattened from metadata"""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False, encoding='utf-8') as f:
             f.write("""---
+team_id: test-team
 name: Test Team
 team_type: stream-aligned
 metadata:
@@ -307,6 +314,7 @@ metadata:
         """Team size should be flattened from metadata"""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False, encoding='utf-8') as f:
             f.write("""---
+team_id: test-team
 name: Test Team
 team_type: stream-aligned
 metadata:
@@ -325,6 +333,7 @@ metadata:
         """Value stream should be extracted from metadata if not at top level"""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False, encoding='utf-8') as f:
             f.write("""---
+team_id: test-team
 name: Test Team
 team_type: stream-aligned
 metadata:
@@ -343,6 +352,7 @@ metadata:
         """Platform grouping should be extracted from metadata"""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False, encoding='utf-8') as f:
             f.write("""---
+team_id: test-team
 name: Test Team
 team_type: platform
 metadata:

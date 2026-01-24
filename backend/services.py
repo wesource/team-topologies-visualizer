@@ -192,12 +192,8 @@ def parse_team_file(file_path: Path) -> TeamData:
 
             return TeamData(**data)
 
-    # If no front matter, treat as plain markdown
-    return TeamData(
-        name=file_path.stem,
-        team_type="stream-aligned",
-        description=content
-    )
+    # If no front matter, raise error since team_id is required
+    raise ValueError(f"Missing team_id in {file_path.name}. All teams must have a unique team_id.")
 
 
 def _parse_interaction_tables(markdown_content: str) -> tuple[list[str], dict[str, str]]:

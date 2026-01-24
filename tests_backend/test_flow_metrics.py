@@ -10,6 +10,7 @@ from backend.services import parse_team_file
 def test_parse_flow_metrics_all_fields():
     """Test parsing team file with all flow metrics fields"""
     yaml_content = """---
+team_id: test-team
 name: Test Team
 team_type: stream-aligned
 position:
@@ -43,6 +44,7 @@ metadata:
 def test_parse_flow_metrics_partial_fields():
     """Test parsing team with only some flow metrics"""
     yaml_content = """---
+team_id: test-team
 name: Test Team
 team_type: stream-aligned
 position:
@@ -73,6 +75,7 @@ metadata:
 def test_parse_team_without_flow_metrics():
     """Test parsing team without flow metrics (should be None)"""
     yaml_content = """---
+team_id: test-team
 name: Test Team
 team_type: stream-aligned
 position:
@@ -97,6 +100,7 @@ metadata:
 def test_validate_lead_time_negative():
     """Test that negative lead time raises ValueError"""
     yaml_content = """---
+team_id: test-team
 name: Test Team
 team_type: stream-aligned
 position:
@@ -122,6 +126,7 @@ metadata:
 def test_validate_change_fail_rate_out_of_range():
     """Test that change_fail_rate outside 0.0-1.0 raises ValueError"""
     yaml_content = """---
+team_id: test-team
 name: Test Team
 team_type: stream-aligned
 position:
@@ -147,6 +152,7 @@ metadata:
 def test_validate_mttr_negative():
     """Test that negative MTTR raises ValueError"""
     yaml_content = """---
+team_id: test-team
 name: Test Team
 team_type: stream-aligned
 position:
@@ -172,6 +178,7 @@ metadata:
 def test_validate_deployment_frequency_invalid():
     """Test that invalid deployment frequency raises ValueError"""
     yaml_content = """---
+team_id: test-team
 name: Test Team
 team_type: stream-aligned
 position:
@@ -197,6 +204,7 @@ metadata:
 def test_deployment_frequency_case_insensitive():
     """Test that deployment frequency is case-insensitive"""
     yaml_content = """---
+team_id: test-team
 name: Test Team
 team_type: stream-aligned
 position:
@@ -222,6 +230,7 @@ metadata:
 def test_flow_metrics_with_zero_values():
     """Test that zero values are valid"""
     yaml_content = """---
+team_id: test-team
 name: Test Team
 team_type: stream-aligned
 position:

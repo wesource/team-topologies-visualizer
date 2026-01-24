@@ -61,6 +61,7 @@ class TestCondenseTeamForSnapshot:
     def test_condense_team_with_full_data(self):
         """Should condense team with all fields"""
         team = TeamData(
+            team_id="test-team",
             name="Test Team",
             team_type="stream-aligned",
             position={"x": 100, "y": 200},
@@ -83,6 +84,7 @@ class TestCondenseTeamForSnapshot:
     def test_condense_team_with_minimal_data(self):
         """Should handle team with minimal data"""
         team = TeamData(
+            team_id="minimal-team",
             name="Minimal Team",
             team_type="platform"
         )
@@ -96,6 +98,7 @@ class TestCondenseTeamForSnapshot:
     def test_condense_team_with_team_api(self):
         """Should extract Team API summary"""
         team = TeamData(
+            team_id="api-team",
             name="API Team",
             team_type="platform",
             team_api={
@@ -128,11 +131,11 @@ class TestCalculateStatistics:
     def test_statistics_counts_team_types_correctly(self):
         """Should count each team type correctly"""
         teams = [
-            TeamData(name="T1", team_type="stream-aligned"),
-            TeamData(name="T2", team_type="stream-aligned"),
-            TeamData(name="T3", team_type="platform"),
-            TeamData(name="T4", team_type="enabling"),
-            TeamData(name="T5", team_type="complicated-subsystem"),
+            TeamData(team_id="t1", name="T1", team_type="stream-aligned"),
+            TeamData(team_id="t2", name="T2", team_type="stream-aligned"),
+            TeamData(team_id="t3", name="T3", team_type="platform"),
+            TeamData(team_id="t4", name="T4", team_type="enabling"),
+            TeamData(team_id="t5", name="T5", team_type="complicated-subsystem"),
         ]
 
         stats = calculate_statistics(teams)
@@ -146,10 +149,10 @@ class TestCalculateStatistics:
     def test_statistics_counts_unique_value_streams(self):
         """Should count unique value streams"""
         teams = [
-            TeamData(name="T1", team_type="stream-aligned", value_stream="VS1"),
-            TeamData(name="T2", team_type="stream-aligned", value_stream="VS1"),
-            TeamData(name="T3", team_type="stream-aligned", value_stream="VS2"),
-            TeamData(name="T4", team_type="platform", value_stream=None),
+            TeamData(team_id="t1", name="T1", team_type="stream-aligned", value_stream="VS1"),
+            TeamData(team_id="t2", name="T2", team_type="stream-aligned", value_stream="VS1"),
+            TeamData(team_id="t3", name="T3", team_type="stream-aligned", value_stream="VS2"),
+            TeamData(team_id="t4", name="T4", team_type="platform", value_stream=None),
         ]
 
         stats = calculate_statistics(teams)
@@ -159,10 +162,10 @@ class TestCalculateStatistics:
     def test_statistics_counts_unique_platform_groupings(self):
         """Should count unique platform groupings"""
         teams = [
-            TeamData(name="T1", team_type="platform", platform_grouping="PG1"),
-            TeamData(name="T2", team_type="platform", platform_grouping="PG1"),
-            TeamData(name="T3", team_type="platform", platform_grouping="PG2"),
-            TeamData(name="T4", team_type="stream-aligned", platform_grouping=None),
+            TeamData(team_id="t1", name="T1", team_type="platform", platform_grouping="PG1"),
+            TeamData(team_id="t2", name="T2", team_type="platform", platform_grouping="PG1"),
+            TeamData(team_id="t3", name="T3", team_type="platform", platform_grouping="PG2"),
+            TeamData(team_id="t4", name="T4", team_type="stream-aligned", platform_grouping=None),
         ]
 
         stats = calculate_statistics(teams)

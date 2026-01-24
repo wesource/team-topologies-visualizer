@@ -7,6 +7,7 @@ from backend.services import parse_team_file
 # Test parsing of new Team API fields (team_api, purpose, established, cognitive_load, etc.)
 def test_parse_team_api_fields():
     content = '''---
+team_id: api-gateway-platform-team
 name: API Gateway Platform Team
 team_type: platform
 position:
@@ -59,6 +60,7 @@ This is the description.
 
 def test_parse_purpose_and_flattened_fields():
     content = '''---
+team_id: data-platform-team
 name: Data Platform Team
 team_type: platform
 purpose: "Provide scalable data platform for analytics and ML"

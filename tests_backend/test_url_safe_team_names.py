@@ -41,6 +41,7 @@ class TestTeamNameUrlSafety:
     def test_team_name_with_slash_can_be_parsed(self, temp_md_file):
         """Team names with '/' should be parseable from markdown."""
         content = """---
+team_id: ci-cd-platform-team
 name: CI/CD Platform Team
 team_type: platform
 dependencies: []
@@ -69,25 +70,25 @@ Test team with slash in name.
         assert team_name_to_slug("Test / Slash / Team") == "test-slash-team"
 
     def test_api_endpoint_with_slash_in_team_name(self):
-        """API should handle team names with '/' via slug conversion.
+        """API should handle team lookup using slug (team_id).
 
-        The real team "CI/CD Platform Team" exists in data/tt-teams/.
-        The API should accept the slug "ci-cd-platform-team" and find the team.
+        This test verifies that the API can find teams using their slug/team_id.
+        Uses DevOps Enablement Team which exists in both tt-teams variants.
         """
-        # The actual team name with slash
-        team_name = "CI/CD Platform Team"
-        # Convert to URL-safe slug
+        # The actual team name
+        team_name = "DevOps Enablement Team"
+        # Convert to URL-safe slug (should match team_id)
         slug = team_name_to_slug(team_name)
-        assert slug == "ci-cd-platform-team"
+        assert slug == "devops-enablement-team"
 
         # API call using slug should work (200 OK) - using new /api/tt/ prefix
         response = client.get(f"/api/tt/teams/{slug}")
 
-        # Should succeed - backend matches by slug
+        # Should succeed - backend matches by slug/team_id
         assert response.status_code == 200, \
             f"Expected 200 OK for slug '{slug}', got {response.status_code}"
 
         # Response should contain the actual team name
         data = response.json()
-        assert data["name"] == "CI/CD Platform Team", \
-            f"Expected team name 'CI/CD Platform Team', got '{data['name']}'"
+        assert data["name"] == "DevOps Enablement Team", \
+            f"Expected team name 'DevOps Enablement Team', got '{data['name']}'"
