@@ -158,7 +158,7 @@ function generateCurrentStateSVG(organizationHierarchy, teams, teamColorMap) {
         // Other departments
         if (dept.regions) {
             const regionCount = dept.regions.length;
-            const regionSpacing = 200;
+            const regionSpacing = LAYOUT.LINE_MANAGER_SPACING;
             const regionStartX = deptX - ((regionCount - 1) * regionSpacing) / 2;
             const regionY = deptY + levelHeight;
             dept.regions.forEach((region, regionIndex) => {
