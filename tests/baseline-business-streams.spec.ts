@@ -2,18 +2,18 @@ import { test, expect } from '@playwright/test';
 
 const BASE_URL = 'http://127.0.0.1:8000';
 
-test.describe('Pre-TT Business Streams View', () => {
+test.describe('Baseline Business Streams View', () => {
     test.beforeEach(async ({ page }) => {
         await page.goto(`${BASE_URL}/static/index.html`);
         // Wait for initial TT teams load
         await page.waitForResponse(response => response.url().includes('/api/tt/teams'), { timeout: 10000 });
         await page.waitForTimeout(500);
 
-        // Switch to Pre-TT view
-        const preTTRadio = page.locator('input[type="radio"][value="current"]');
-        await preTTRadio.check();
-        // Wait for Pre-TT data to load
-        await page.waitForResponse(response => response.url().includes('/api/pre-tt/'), { timeout: 10000 });
+        // Switch to Baseline view
+        const baselineRadio = page.locator('input[type="radio"][value="current"]');
+        await baselineRadio.check();
+        // Wait for Baseline data to load
+        await page.waitForResponse(response => response.url().includes('/api/baseline/'), { timeout: 10000 });
         await page.waitForTimeout(500);
     });
 
@@ -34,7 +34,7 @@ test.describe('Pre-TT Business Streams View', () => {
     test('should load Business Streams data', async ({ page }) => {
         // Listen for the API call
         const responsePromise = page.waitForResponse(
-            response => response.url().includes('/api/pre-tt/business-streams') && response.status() === 200
+            response => response.url().includes('/api/baseline/business-streams') && response.status() === 200
         );
 
         // Switch to Business Streams perspective
@@ -61,7 +61,7 @@ test.describe('Pre-TT Business Streams View', () => {
 
         // Take screenshot for visual verification
         await page.screenshot({
-            path: 'screenshots/pre-tt-business-streams-view.png',
+            path: 'screenshots/baseline-business-streams-view.png',
             fullPage: false
         });
 
@@ -85,7 +85,7 @@ test.describe('Pre-TT Business Streams View', () => {
         await page.waitForTimeout(1500);
 
         // Get the API response to verify Business Streams have proper structure
-        const response = await page.request.get('/api/pre-tt/business-streams');
+        const response = await page.request.get('/api/baseline/business-streams');
         const data = await response.json();
 
         // Each Business Stream should have metadata
@@ -107,7 +107,7 @@ test.describe('Pre-TT Business Streams View', () => {
         await page.waitForTimeout(1500);
 
         // Get the API response
-        const response = await page.request.get('/api/pre-tt/business-streams');
+        const response = await page.request.get('/api/baseline/business-streams');
         const data = await response.json();
 
         // Verify nested structure: value_stream -> products -> teams
@@ -124,7 +124,7 @@ test.describe('Pre-TT Business Streams View', () => {
         }
     });
 
-    test('should support switching between all three Pre-TT perspectives', async ({ page }) => {
+    test('should support switching between all three Baseline perspectives', async ({ page }) => {
         // Test full perspective switching workflow
 
         // Start with Hierarchy (default)

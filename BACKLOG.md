@@ -12,16 +12,10 @@ This is the public backlog for ideas, priorities, and possible improvements.
 - **Later / Maybe**: longer-term ideas and experiments
 - For contribution ideas, look for items that are small, well-scoped, and testable.
 
-**Context note**: The tool defaults to "TT Design" view. The other view is "Pre-TT" (previously "Current State") and represents the baseline/starting point before TT transformation.
-
 ## Now (top priorities)
 
 Edit this list as your priorities change:
 
-- (Soon) Terminology unification: Rename code/data folders to use "baseline" consistently
-	- Change: `data/current-teams/` → `data/baseline-teams/`, `routes_pre_tt.py` → `routes_baseline.py`, API paths `/api/pre-tt/*` → `/api/baseline/*`
-	- Update: All documentation references (README, CONCEPTS, SETUP, DEVELOPMENT) to use "Baseline" as the canonical term
-	- Benefit: Eliminates confusion between "Pre-TT", "Current State", and "Baseline" - one term everywhere
 - (Soon) UI-driven validation rule visibility: Make Python code own the complete validation spec and expose it via API
 	- Goal: When users click "Validate", show not just errors but also what *should* be valid (field constraints, allowed values, relationship rules)
 	- Implementation: Define validation schema in Python (e.g., Pydantic or custom spec), expose via `/api/validation-schema` endpoint, render in UI modal
@@ -46,6 +40,14 @@ Edit this list as your priorities change:
 
 ## Completed
 
+- ✅ **DONE (2026-01-24)** Terminology unification: Renamed all "Pre-TT/current-teams" references to "Baseline/baseline-teams"
+	- ✅ Backend: renamed `routes_pre_tt.py` → `routes_baseline.py`, updated API paths `/api/pre-tt/*` → `/api/baseline/*`
+	- ✅ Data: renamed `data/current-teams/` → `data/baseline-teams/`, config file `current-team-types.json` → `baseline-team-types.json`
+	- ✅ Frontend: updated all API calls, comments, and variable names to use "baseline" terminology
+	- ✅ Tests: renamed E2E test files, updated all endpoint paths and test descriptions (82 E2E tests)
+	- ✅ Screenshots: renamed all test screenshots from `pre-tt-*` to `baseline-*`
+	- ✅ Comments: updated all Python docstrings and comments to use "Baseline" instead of "Pre-TT"
+	- **Result**: Eliminated confusion - now using "Baseline" consistently everywhere in code, docs, and UI
 - ✅ **DONE (2026-01-25)** Stable team IDs: introduced mandatory `team_id` in YAML everywhere (replaced name-based references in API)
 	- ✅ Data model: added `team_id` to TeamData model; enforced uniqueness and slug-safe format
 	- ✅ Validation: fail if `team_id` is missing/duplicate/invalid format; parse_team_file validates on every load

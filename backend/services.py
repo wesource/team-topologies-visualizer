@@ -153,7 +153,7 @@ def parse_team_file(file_path: Path) -> TeamData:
                 # Parse interaction tables from markdown content (for visualization connections)
                 dependencies, interaction_modes = _parse_interaction_tables(markdown_content)
 
-                # Also parse Pre-TT style dependencies from bullet lists
+                # Also parse Baseline style dependencies from bullet lists
                 if not dependencies:
                     dependencies, dependency_notes = _parse_dependency_bullets(markdown_content)
                     if dependency_notes and 'dependency_notes' not in data:
@@ -250,7 +250,7 @@ def _parse_interaction_tables(markdown_content: str) -> tuple[list[str], dict[st
 
 
 def _parse_dependency_bullets(markdown_content: str) -> tuple[list[str], list[str]]:
-    """Parse Pre-TT style dependencies from bullet lists under ## Dependencies section.
+    """Parse Baseline style dependencies from bullet lists under ## Dependencies section.
 
     Expected format:
     ## Dependencies

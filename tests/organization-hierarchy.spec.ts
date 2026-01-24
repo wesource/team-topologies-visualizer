@@ -4,7 +4,7 @@ const BASE_URL = 'http://127.0.0.1:8000';
 
 test.describe('Organization Hierarchy', () => {
   test('organization hierarchy should have exactly 6 departments', async ({ page }) => {
-    const response = await page.request.get(`${BASE_URL}/api/pre-tt/organization-hierarchy`);
+    const response = await page.request.get(`${BASE_URL}/api/baseline/organization-hierarchy`);
     expect(response.status()).toBe(200);
     
     const data = await response.json();
@@ -13,8 +13,8 @@ test.describe('Organization Hierarchy', () => {
 
   test('organization hierarchy should match actual teams', async ({ page }) => {
     const [orgResponse, teamsResponse] = await Promise.all([
-      page.request.get(`${BASE_URL}/api/pre-tt/organization-hierarchy`),
-      page.request.get(`${BASE_URL}/api/pre-tt/teams`)
+      page.request.get(`${BASE_URL}/api/baseline/organization-hierarchy`),
+      page.request.get(`${BASE_URL}/api/baseline/teams`)
     ]);
     
     const orgData = await orgResponse.json();
@@ -44,7 +44,7 @@ test.describe('Organization Hierarchy', () => {
   });
 
   test('Customer Solutions department has 4 regions', async ({ page }) => {
-    const response = await page.request.get(`${BASE_URL}/api/pre-tt/organization-hierarchy`);
+    const response = await page.request.get(`${BASE_URL}/api/baseline/organization-hierarchy`);
     const data = await response.json();
     
     const customerSolutions = data.company.children.find((d: any) => d.name === 'Customer Solutions Department');
@@ -53,7 +53,7 @@ test.describe('Organization Hierarchy', () => {
   });
 
   test('Engineering department has 6 line managers', async ({ page }) => {
-    const response = await page.request.get(`${BASE_URL}/api/pre-tt/organization-hierarchy`);
+    const response = await page.request.get(`${BASE_URL}/api/baseline/organization-hierarchy`);
     const data = await response.json();
     
     const engineering = data.company.children.find((d: any) => d.name === 'Engineering Department');
@@ -62,7 +62,7 @@ test.describe('Organization Hierarchy', () => {
   });
 
   test('all department names should be defined', async ({ page }) => {
-    const response = await page.request.get(`${BASE_URL}/api/pre-tt/organization-hierarchy`);
+    const response = await page.request.get(`${BASE_URL}/api/baseline/organization-hierarchy`);
     const data = await response.json();
     
     for (const dept of data.company.children) {
@@ -72,7 +72,7 @@ test.describe('Organization Hierarchy', () => {
   });
 
   test('organization should not have duplicate departments', async ({ page }) => {
-    const response = await page.request.get(`${BASE_URL}/api/pre-tt/organization-hierarchy`);
+    const response = await page.request.get(`${BASE_URL}/api/baseline/organization-hierarchy`);
     const data = await response.json();
     
     const deptNames = data.company.children.map((d: any) => d.name);
@@ -81,7 +81,7 @@ test.describe('Organization Hierarchy', () => {
   });
 
   test('all regions should have names', async ({ page }) => {
-    const response = await page.request.get(`${BASE_URL}/api/pre-tt/organization-hierarchy`);
+    const response = await page.request.get(`${BASE_URL}/api/baseline/organization-hierarchy`);
     const data = await response.json();
     
     for (const dept of data.company.children) {
@@ -94,7 +94,7 @@ test.describe('Organization Hierarchy', () => {
   });
 
   test('all line managers should have names', async ({ page }) => {
-    const response = await page.request.get(`${BASE_URL}/api/pre-tt/organization-hierarchy`);
+    const response = await page.request.get(`${BASE_URL}/api/baseline/organization-hierarchy`);
     const data = await response.json();
     
     for (const dept of data.company.children) {
@@ -107,7 +107,7 @@ test.describe('Organization Hierarchy', () => {
   });
 
   test('all teams should have an organization context', async ({ page }) => {
-    const response = await page.request.get(`${BASE_URL}/api/pre-tt/organization-hierarchy`);
+    const response = await page.request.get(`${BASE_URL}/api/baseline/organization-hierarchy`);
     const data = await response.json();
     
     let teamCount = 0;

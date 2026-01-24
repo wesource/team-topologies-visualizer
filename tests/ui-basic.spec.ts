@@ -23,14 +23,14 @@ test.describe('UI Basic Features', () => {
     await expect(ttVisionRadio).toBeChecked(); // TT Design is default
   });
 
-  test('should switch between Pre-TT and TT Design', async ({ page }) => {
+  test('should switch between Baseline and TT Design', async ({ page }) => {
     await page.goto(`${BASE_URL}/static/index.html`);
     await page.waitForResponse(response => response.url().includes('/api/tt/teams'), { timeout: 10000 });
     
     const currentStateRadio = page.locator('input[value="current"]');
     const ttVisionRadio = page.locator('input[value="tt"]');
     
-    // Switch to Pre-TT view
+    // Switch to Baseline view
     await currentStateRadio.click();
     await page.waitForTimeout(500);
     await expect(currentStateRadio).toBeChecked();
@@ -84,15 +84,15 @@ test.describe('UI Basic Features', () => {
     await expect(legend).toContainText('Platform');
   });
 
-  test('should render Pre-TT view for visual verification', async ({ page }) => {
+  test('should render Baseline view for visual verification', async ({ page }) => {
     await page.goto(`${BASE_URL}/static/index.html`);
     
-    // Switch to Pre-TT view
+    // Switch to Baseline view
     const currentStateRadio = page.locator('input[value="current"]');
     await currentStateRadio.click();
     await page.waitForTimeout(1000);
     
-    await page.screenshot({ path: 'screenshots/pre-tt-view.png', fullPage: true });
+    await page.screenshot({ path: 'screenshots/baseline-view.png', fullPage: true });
   });
 
   test('should render TT Design view for visual verification', async ({ page }) => {

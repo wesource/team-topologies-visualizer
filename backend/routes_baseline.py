@@ -169,7 +169,7 @@ async def get_business_streams():
 
 @router.get("/teams", response_model=list[TeamData])
 async def get_teams():
-    """Get all Pre-TT teams"""
+    """Get all Baseline teams"""
     return find_all_teams("current")
 
 
@@ -187,7 +187,7 @@ async def get_current_team(team_id: str):
 
 @router.patch("/teams/{team_id}/position")
 async def update_team_position(team_id: str, position: PositionUpdate):
-    """Update only the position of a Pre-TT team (for drag-and-drop on canvas)"""
+    """Update only the position of a Baseline team (for drag-and-drop on canvas)"""
     if os.getenv("READ_ONLY_MODE") == "true":
         raise HTTPException(status_code=403, detail="Modifications not allowed in demo mode")
 
@@ -209,6 +209,6 @@ async def update_team_position(team_id: str, position: PositionUpdate):
 
 @router.get("/validate")
 async def validate_files() -> dict[str, Any]:
-    """Validate all Pre-TT team files for common issues"""
+    """Validate all Baseline team files for common issues"""
     validation_report = validate_all_team_files("current")
     return validation_report

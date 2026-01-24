@@ -5,7 +5,7 @@ const BASE_URL = 'http://127.0.0.1:8000';
 test.describe('Backend Data Validation', () => {
   
   test('organization hierarchy should not have duplicate departments', async ({ request }) => {
-    const response = await request.get(`${BASE_URL}/api/pre-tt/organization-hierarchy`);
+    const response = await request.get(`${BASE_URL}/api/baseline/organization-hierarchy`);
     expect(response.ok()).toBeTruthy();
     
     const data = await response.json();
@@ -23,7 +23,7 @@ test.describe('Backend Data Validation', () => {
   });
 
   test('all department names should be defined', async ({ request }) => {
-    const response = await request.get(`${BASE_URL}/api/pre-tt/organization-hierarchy`);
+    const response = await request.get(`${BASE_URL}/api/baseline/organization-hierarchy`);
     expect(response.ok()).toBeTruthy();
     
     const data = await response.json();
@@ -39,7 +39,7 @@ test.describe('Backend Data Validation', () => {
   });
 
   test('all line managers should have names', async ({ request }) => {
-    const response = await request.get(`${BASE_URL}/api/pre-tt/organization-hierarchy`);
+    const response = await request.get(`${BASE_URL}/api/baseline/organization-hierarchy`);
     expect(response.ok()).toBeTruthy();
     
     const data = await response.json();
@@ -57,7 +57,7 @@ test.describe('Backend Data Validation', () => {
   });
 
   test('all regions should have names', async ({ request }) => {
-    const response = await request.get(`${BASE_URL}/api/pre-tt/organization-hierarchy`);
+    const response = await request.get(`${BASE_URL}/api/baseline/organization-hierarchy`);
     expect(response.ok()).toBeTruthy();
     
     const data = await response.json();
@@ -75,7 +75,7 @@ test.describe('Backend Data Validation', () => {
   });
 
   test('team types should have all required fields', async ({ request }) => {
-    const response = await request.get(`${BASE_URL}/api/pre-tt/team-types`);
+    const response = await request.get(`${BASE_URL}/api/baseline/team-types`);
     expect(response.ok()).toBeTruthy();
     
     const data = await response.json();
@@ -91,7 +91,7 @@ test.describe('Backend Data Validation', () => {
   });
 
   test('teams API should return valid team data', async ({ request }) => {
-    const response = await request.get(`${BASE_URL}/api/pre-tt/teams`);
+    const response = await request.get(`${BASE_URL}/api/baseline/teams`);
     expect(response.ok()).toBeTruthy();
     
     const teams = await response.json();
@@ -111,7 +111,7 @@ test.describe('Backend Data Validation', () => {
   });
 
   test('hierarchy structure should have exactly 6 departments', async ({ request }) => {
-    const response = await request.get(`${BASE_URL}/api/pre-tt/organization-hierarchy`);
+    const response = await request.get(`${BASE_URL}/api/baseline/organization-hierarchy`);
     expect(response.ok()).toBeTruthy();
     
     const data = await response.json();
@@ -136,7 +136,7 @@ test.describe('Backend Data Validation', () => {
   });
 
   test('company leadership should be defined', async ({ request }) => {
-    const response = await request.get(`${BASE_URL}/api/pre-tt/organization-hierarchy`);
+    const response = await request.get(`${BASE_URL}/api/baseline/organization-hierarchy`);
     expect(response.ok()).toBeTruthy();
     
     const data = await response.json();
@@ -148,8 +148,8 @@ test.describe('Backend Data Validation', () => {
   });
 
   test('team names in hierarchy should match actual teams', async ({ request }) => {
-    const hierarchyResponse = await request.get(`${BASE_URL}/api/pre-tt/organization-hierarchy`);
-    const teamsResponse = await request.get(`${BASE_URL}/api/pre-tt/teams`);
+    const hierarchyResponse = await request.get(`${BASE_URL}/api/baseline/organization-hierarchy`);
+    const teamsResponse = await request.get(`${BASE_URL}/api/baseline/teams`);
     
     expect(hierarchyResponse.ok()).toBeTruthy();
     expect(teamsResponse.ok()).toBeTruthy();

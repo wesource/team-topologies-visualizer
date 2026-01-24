@@ -161,7 +161,7 @@ def test_parse_dependency_bullets_trims_whitespace():
 
 
 def test_parse_dependency_bullets_real_world_example():
-    """Test parsing real Pre-TT team file format"""
+    """Test parsing real Baseline team file format"""
     markdown = """
 # Backend Services Team
 

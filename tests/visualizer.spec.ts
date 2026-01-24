@@ -34,12 +34,12 @@ test.describe('Team Topologies Visualizer', () => {
     test('should load organization hierarchy API', async ({ page }) => {
       await page.goto(`${BASE_URL}/static/index.html`);
       
-      // Switch to current view (Pre-TT) to trigger organization hierarchy load
+      // Switch to current view (Baseline) to trigger organization hierarchy load
       await page.locator('input[value="current"]').click();
       
       // Wait for API calls
       const hierarchyResponse = await page.waitForResponse(
-        response => response.url().includes('/api/pre-tt/organization-hierarchy') && response.status() === 200
+        response => response.url().includes('/api/baseline/organization-hierarchy') && response.status() === 200
       );
       
       const hierarchyData = await hierarchyResponse.json();
@@ -57,7 +57,7 @@ test.describe('Team Topologies Visualizer', () => {
       await page.locator('input[value="current"]').click();
       
       const teamsResponse = await page.waitForResponse(
-        response => response.url().includes('/api/pre-tt/teams') && response.status() === 200
+        response => response.url().includes('/api/baseline/teams') && response.status() === 200
       );
       
       const teams = await teamsResponse.json();
@@ -94,17 +94,17 @@ test.describe('Team Topologies Visualizer', () => {
     expect(count).toBeGreaterThan(0);
   });
 
-  test('should switch between Pre-TT and TT Design', async ({ page }) => {
+  test('should switch between Baseline and TT Design', async ({ page }) => {
     await page.goto(`${BASE_URL}/static/index.html`);
     
     // Wait for initial load (TT Design is default)
     await page.waitForResponse(response => response.url().includes('/api/tt/teams'));
     
-    // Click Pre-TT (current) radio button
+    // Click Baseline (current) radio button
     await page.locator('input[value="current"]').click();
     
     // Wait for current teams to load
-    await page.waitForResponse(response => response.url().includes('/api/pre-tt/teams'));
+    await page.waitForResponse(response => response.url().includes('/api/baseline/teams'));
     
     // Verify current is now checked
     await expect(page.locator('input[value="current"]')).toBeChecked();
@@ -138,15 +138,15 @@ test.describe('Team Topologies Visualizer', () => {
     expect(count).toBeGreaterThan(0);
   });
 
-  test('should take screenshot of Pre-TT view for visual verification', async ({ page }) => {
+  test('should take screenshot of Baseline view for visual verification', async ({ page }) => {
     await page.goto(`${BASE_URL}/static/index.html`);
     
-    // Switch to Pre-TT view (current)
+    // Switch to Baseline view (current)
     await page.locator('input[value="current"]').click();
     
     // Wait for all data to load
-    await page.waitForResponse(response => response.url().includes('/api/pre-tt/organization-hierarchy'));
-    await page.waitForResponse(response => response.url().includes('/api/pre-tt/teams'));
+    await page.waitForResponse(response => response.url().includes('/api/baseline/organization-hierarchy'));
+    await page.waitForResponse(response => response.url().includes('/api/baseline/teams'));
     await page.waitForTimeout(500); // Minimal wait for rendering
     
     // Take screenshot
@@ -197,19 +197,19 @@ test.describe('Team Topologies Visualizer', () => {
 
   test('API endpoints should return valid JSON', async ({ request }) => {
     // Test team types endpoint
-    const teamTypesResponse = await request.get(`${BASE_URL}/api/pre-tt/team-types`);
+    const teamTypesResponse = await request.get(`${BASE_URL}/api/baseline/team-types`);
     expect(teamTypesResponse.ok()).toBeTruthy();
     const teamTypes = await teamTypesResponse.json();
     expect(teamTypes).toHaveProperty('team_types');
     
     // Test organization hierarchy endpoint
-    const hierarchyResponse = await request.get(`${BASE_URL}/api/pre-tt/organization-hierarchy`);
+    const hierarchyResponse = await request.get(`${BASE_URL}/api/baseline/organization-hierarchy`);
     expect(hierarchyResponse.ok()).toBeTruthy();
     const hierarchy = await hierarchyResponse.json();
     expect(hierarchy).toHaveProperty('company');
     
     // Test teams endpoint
-    const teamsResponse = await request.get(`${BASE_URL}/api/pre-tt/teams`);
+    const teamsResponse = await request.get(`${BASE_URL}/api/baseline/teams`);
     expect(teamsResponse.ok()).toBeTruthy();
     const teams = await teamsResponse.json();
     expect(Array.isArray(teams)).toBe(true);
@@ -224,7 +224,7 @@ test.describe('Team Topologies Visualizer', () => {
       await page.locator('input[value="current"]').click();
       
       const hierarchyResponse = await page.waitForResponse(
-        response => response.url().includes('/api/pre-tt/organization-hierarchy')
+        response => response.url().includes('/api/baseline/organization-hierarchy')
       );
       
       const hierarchyData = await hierarchyResponse.json();
@@ -251,7 +251,7 @@ test.describe('Team Topologies Visualizer', () => {
       await page.locator('input[value="current"]').click();
       
       const hierarchyResponse = await page.waitForResponse(
-        response => response.url().includes('/api/pre-tt/organization-hierarchy')
+        response => response.url().includes('/api/baseline/organization-hierarchy')
       );
       
       const hierarchyData = await hierarchyResponse.json();

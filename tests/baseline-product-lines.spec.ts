@@ -2,18 +2,18 @@ import { test, expect } from '@playwright/test';
 
 const BASE_URL = 'http://127.0.0.1:8000';
 
-test.describe('Pre-TT Product Lines View', () => {
+test.describe('Baseline Product Lines View', () => {
     test.beforeEach(async ({ page }) => {
         await page.goto(`${BASE_URL}/static/index.html`);
         // Wait for initial TT teams load
         await page.waitForResponse(response => response.url().includes('/api/tt/teams'), { timeout: 10000 });
         await page.waitForTimeout(500);
 
-        // Switch to Pre-TT view
-        const preTTRadio = page.locator('input[type="radio"][value="current"]');
-        await preTTRadio.check();
-        // Wait for Pre-TT data to load
-        await page.waitForResponse(response => response.url().includes('/api/pre-tt/'), { timeout: 10000 });
+        // Switch to Baseline view
+        const baselineRadio = page.locator('input[type="radio"][value="current"]');
+        await baselineRadio.check();
+        // Wait for Baseline data to load
+        await page.waitForResponse(response => response.url().includes('/api/baseline/'), { timeout: 10000 });
         await page.waitForTimeout(500);
     });
 
@@ -34,7 +34,7 @@ test.describe('Pre-TT Product Lines View', () => {
     test('should load product lines data', async ({ page }) => {
         // Listen for the API call
         const responsePromise = page.waitForResponse(
-            response => response.url().includes('/api/pre-tt/product-lines') && response.status() === 200
+            response => response.url().includes('/api/baseline/product-lines') && response.status() === 200
         );
 
         // Switch to Product Lines perspective
@@ -60,7 +60,7 @@ test.describe('Pre-TT Product Lines View', () => {
 
         // Take screenshot for visual verification
         await page.screenshot({
-            path: 'screenshots/pre-tt-product-lines-view.png',
+            path: 'screenshots/baseline-product-lines-view.png',
             fullPage: false
         });
 
@@ -84,7 +84,7 @@ test.describe('Pre-TT Product Lines View', () => {
         await page.waitForTimeout(1500);
 
         // Get the API response to verify shared teams exist
-        const response = await page.request.get('/api/pre-tt/product-lines');
+        const response = await page.request.get('/api/baseline/product-lines');
         const data = await response.json();
 
         if (data.shared_teams && data.shared_teams.length > 0) {

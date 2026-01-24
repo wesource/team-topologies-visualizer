@@ -33,7 +33,7 @@ class TeamData(BaseModel):
     interaction_modes: dict[str, str] | None = {}  # {team_id: interaction_mode}
     interactions: list[dict[str, Any]] | None = None  # Alternative format: [{team: team_id, mode, purpose}, ...]
     line_manager: str | None = None  # For current org structure
-    product_line: str | None = None  # For Product Lines view (Pre-TT only)
+    product_line: str | None = None  # For Product Lines view (Baseline only)
     business_stream: str | None = None  # For Business Streams view (Baseline only)
     position: dict[str, float] | None = {"x": 0, "y": 0}
     metadata: dict[str, Any] | None = {}
