@@ -190,10 +190,16 @@ class TestTTValidateEndpoint:
         response = client.get("/api/tt/validate")
         report = response.json()
 
-        # Validation report should have these keys
-        assert "total_files" in report
-        assert "files_with_errors" in report
-        assert "files_with_warnings" in report
-        assert "issues" in report
-        assert isinstance(report["total_files"], int)
-        assert isinstance(report["issues"], list)
+        # Validation report should have top-level keys: teams, config_files, team_schema
+        assert "teams" in report
+        assert "config_files" in report
+        assert "team_schema" in report
+
+        # Teams section should have these keys
+        teams_report = report["teams"]
+        assert "total_files" in teams_report
+        assert "files_with_errors" in teams_report
+        assert "files_with_warnings" in teams_report
+        assert "issues" in teams_report
+        assert isinstance(teams_report["total_files"], int)
+        assert isinstance(teams_report["issues"], list)

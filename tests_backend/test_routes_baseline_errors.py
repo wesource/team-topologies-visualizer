@@ -186,7 +186,7 @@ class TestValidationEndpoint:
         # Should have new structure with teams and config_files
         assert "teams" in data
         assert "config_files" in data
-        
+
         # Teams validation should have expected structure
         teams_data = data["teams"]
         assert "total_files" in teams_data or "issues" in teams_data or "files_with_errors" in teams_data

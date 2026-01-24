@@ -60,10 +60,27 @@ Edit this list as your priorities change:
 		- Add backward-compat warnings when name-based references are detected
 
 ## Next
+- **Flow-aware auto-align in TT Design view** (PRIORITY: Foundation for flow visualization)
+	- **Problem**: Current auto-align stacks teams vertically within groupings, but doesn't respect Team Topologies "left-to-right flow of change" principle
+	- **Solution**: Arrange teams horizontally within groupings based on flow direction
+	- **Implementation**:
+		1. Add optional `flow_layer` field to team metadata (`upstream | midstream | downstream`)
+		2. Infer flow layer from team type when not specified (platform→left, stream-aligned→right)
+		3. Analyze `interaction_modes` to refine positioning (X-as-a-Service providers→left, consumers→right)
+		4. Modify auto-align algorithm to position teams left-to-right by flow within each grouping
+		5. Keep stream-aligned teams rightmost (closest to customers, per Team Shape Templates principle)
+	- **Benefits**: 
+		- Diagrams align with Team Topologies canonical visualization patterns
+		- Shows flow of capabilities from platforms through to stream-aligned teams
+		- Self-documenting architecture (left=provides capabilities, right=delivers to customers)
+	- **Reference**: https://github.com/TeamTopologies/Team-Shape-Templates - "There is always an implied flow of change from left to right"
+	- **Tests**: Update tt-design-alignment.test.js to verify flow-based positioning
+	- **Data migration**: `flow_layer` is optional, no migration needed (defaults work)
 - Flow of change arrows in TT Design view
 	- Add optional "Flow of change" visualization as described in https://teamtopologies.com/key-concepts
 	- Implementation: checkbox option (default off) in TT Design view to show directional arrows indicating flow between teams
 	- Export: include flow arrows in SVG export when enabled
+	- **Note**: Build on top of flow-aware auto-align (teams already positioned by flow direction)
 - Review Team Shape Templates alignment
 	- Review https://github.com/TeamTopologies/Team-Shape-Templates to ensure visual consistency
 	- Check: should platform boxes have rounded corners in TT Design view, or should they follow the standard rectangular style from the official templates?

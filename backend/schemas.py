@@ -371,16 +371,16 @@ class BaselineTeamFrontmatter(BaseModel):
         json_schema_extra = {
             "title": "Baseline Team File",
             "description": """YAML frontmatter for baseline team markdown files.
-            
+
             📝 Markdown Section Requirements:
             After the YAML frontmatter (---), the markdown content should include a 'Dependencies' section with a table listing team dependencies:
-            
+
             ## Dependencies
             | Team Name | Type | Purpose |
             |-----------|------|----------|
             | Team A    | API  | Consumes user authentication API |
             | Team B    | Data | Shares customer database |
-            
+
             Columns: Team Name (string), Type (string), Purpose (string describing the dependency)"""
         }
 
@@ -446,19 +446,19 @@ class TTTeamFrontmatter(BaseModel):
         json_schema_extra = {
             "title": "TT Design Team File",
             "description": """YAML frontmatter for TT Design team markdown files.
-            
+
             📝 Markdown Section Requirements:
             After the YAML frontmatter (---), the markdown content should include a 'Teams we currently interact with' section with a table listing interactions with other teams:
-            
+
             ## Teams we currently interact with
             | Team Name | Interaction Mode | Purpose |
             |-----------|------------------|---------|
             | E-commerce Checkout | X-as-a-Service | Provide authentication for checkout flow |
             | Mobile App Team | Collaboration | Build mobile-specific auth features |
             | DevOps Enablement | Facilitating | Learn Kubernetes deployment patterns |
-            
+
             Columns: Team Name (string), Interaction Mode (Collaboration|X-as-a-Service|Facilitating), Purpose (string describing the interaction)
-            
+
             ℹ️ This section is included in both base and extended Team API templates and is important for documenting team interactions."""
         }
 

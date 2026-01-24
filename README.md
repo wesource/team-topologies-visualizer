@@ -15,7 +15,7 @@ This tool is inspired by **Team Topologies** by Matthew Skelton and Manuel Pais 
 ## Documentation Organization
 
 **Root folder** = quick reference (README, CONTRIBUTING, DEVELOPMENT)  
-**docs/ folder** = in-depth guides (SETUP, CONCEPTS, ARCHITECTURE, TESTING)
+**docs/ folder** = in-depth guides (SETUP, CONCEPTS, ARCHITECTURE, TESTING, FLOW_OF_CHANGE)
 
 This keeps the root clean while providing detailed documentation for those who need it.
 
