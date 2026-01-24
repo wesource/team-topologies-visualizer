@@ -1,5 +1,6 @@
 ---
 name: Billing Team
+team_id: billing-team
 team_type: stream-aligned
 position:
   x: 204.0

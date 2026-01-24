@@ -1,5 +1,6 @@
 ---
 name: Mobile Inner Platform Team
+team_id: mobile-inner-platform-team
 team_type: platform
 position:
   x: 1054.0

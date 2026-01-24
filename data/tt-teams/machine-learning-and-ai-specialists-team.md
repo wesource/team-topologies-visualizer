@@ -1,5 +1,6 @@
 ---
 name: Machine Learning & AI Specialists Team
+team_id: machine-learning-and-ai-specialists-team
 team_type: complicated-subsystem
 position:
   x: 2120.0

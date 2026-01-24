@@ -3,6 +3,7 @@
 # Follows Team Topologies Team API format - stores structure in YAML, narrative in Markdown
 
 # REQUIRED
+team_id: [unique-team-identifier]  # Unique slug-safe ID (e.g., "mobile-app-team", "api-platform-team")
 name: [Your Team Name]
 team_type: [stream-aligned | platform | enabling | complicated-subsystem | undefined]
 position:  # Canvas coordinates (auto-updated when dragging)

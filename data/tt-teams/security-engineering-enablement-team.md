@@ -1,5 +1,6 @@
 ---
 name: Security Engineering Enablement Team
+team_id: security-engineering-enablement-team
 team_type: enabling
 position:
   x: 1960.0

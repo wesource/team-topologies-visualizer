@@ -1,5 +1,6 @@
 ---
 name: Feature Management Platform Team
+team_id: feature-management-platform-team
 team_type: platform
 position:
   x: 204.0

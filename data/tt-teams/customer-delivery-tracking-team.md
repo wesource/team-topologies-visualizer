@@ -1,5 +1,6 @@
 ---
 name: Customer Delivery Tracking Team
+team_id: customer-delivery-tracking-team
 team_type: stream-aligned
 position:
   x: 1054.0

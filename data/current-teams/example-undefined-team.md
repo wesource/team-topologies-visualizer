@@ -1,5 +1,6 @@
 ---
 name: Example Undefined Team
+team_id: example-undefined-team
 team_type: undefined
 position:
   x: 518.6160418019548

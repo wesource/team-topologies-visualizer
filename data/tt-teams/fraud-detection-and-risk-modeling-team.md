@@ -1,5 +1,6 @@
 ---
 name: Fraud Detection and Risk Modeling Team
+team_id: fraud-detection-and-risk-modeling-team
 team_type: complicated-subsystem
 position:
   x: 130.0

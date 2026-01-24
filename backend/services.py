@@ -36,6 +36,27 @@ def team_name_to_slug(team_name: str) -> str:
     return slug
 
 
+def validate_team_id(team_id: str, file_path: Path) -> None:
+    """Validate team_id format (slug-safe: lowercase alphanumeric with dashes).
+
+    Args:
+        team_id: The team_id to validate
+        file_path: Path to the team file (for error messages)
+
+    Raises:
+        ValueError: If team_id format is invalid
+    """
+    if not team_id:
+        raise ValueError(f"Missing team_id in {file_path.name}. All teams must have a unique team_id.")
+
+    # Check if team_id is slug-safe: lowercase letters, numbers, and dashes only
+    if not re.match(r'^[a-z0-9]+(-[a-z0-9]+)*$', team_id):
+        raise ValueError(
+            f"Invalid team_id '{team_id}' in {file_path.name}. "
+            f"team_id must be slug-safe: lowercase alphanumeric with dashes only (e.g., 'api-gateway-team')"
+        )
+
+
 def get_data_dir(view: str = "tt") -> Path:
     """Get the appropriate data directory based on view"""
     return TT_TEAMS_DIR if view == "tt" else CURRENT_TEAMS_DIR
@@ -54,6 +75,13 @@ def parse_team_file(file_path: Path) -> TeamData:
             markdown_content = parts[2].strip()
             # Parse YAML
             data = yaml.safe_load(yaml_content) or {}
+
+            # Validate team_id format (required field)
+            if 'team_id' in data:
+                validate_team_id(data['team_id'], file_path)
+            else:
+                raise ValueError(f"Missing team_id in {file_path.name}. All teams must have a unique team_id.")
+
             # Always set description from markdown body
             data['description'] = markdown_content
 
@@ -321,6 +349,7 @@ def write_team_file_to_path(team: TeamData, file_path: Path) -> Path:
     """Write team data to a specific file path with YAML front matter"""
     # Prepare YAML front matter
     yaml_data = {
+        'team_id': team.team_id,  # REQUIRED: unique identifier
         'name': team.name,
         'team_type': team.team_type,
         'position': team.position or {"x": 0, "y": 0},
@@ -406,11 +435,59 @@ def find_all_teams(view: str = "tt") -> list[TeamData]:
     return teams
 
 
+def check_duplicate_team_ids(view: str = "tt") -> dict[str, list[str]]:
+    """Check for duplicate team_ids across all teams.
+
+    Args:
+        view: "tt" or "current"
+
+    Returns:
+        Dictionary mapping team_id to list of files that use it.
+        Empty dict if no duplicates found.
+    """
+    data_dir = get_data_dir(view)
+    exclude_files = {
+        'company-leadership.md',
+        'engineering-dept.md',
+        'customer-solutions-dept.md',
+        'product-management-dept.md',
+        'infrastructure-dept.md',
+        'support-dept.md',
+        'organization-hierarchy.json',
+        'current-team-types.json',
+        'tt-team-types.json'
+    }
+
+    team_id_to_files = {}  # Maps team_id -> list of files using it
+
+    for file_path in data_dir.rglob("*.md"):
+        if file_path.name in exclude_files:
+            continue
+        if any(part.startswith('.') for part in file_path.parts):
+            continue
+
+        try:
+            team = parse_team_file(file_path)
+            if team.team_id:
+                if team.team_id not in team_id_to_files:
+                    team_id_to_files[team.team_id] = []
+                team_id_to_files[team.team_id].append(str(file_path))
+        except Exception as e:
+            print(f"Error parsing {file_path} during duplicate check: {e}")
+
+    # Filter to only duplicates (team_ids used by more than one file)
+    duplicates = {tid: files for tid, files in team_id_to_files.items() if len(files) > 1}
+    return duplicates
+
+
 def find_team_by_name(team_name: str, view: str = "tt") -> tuple[TeamData, Path] | None:
     """Find a team by name and return the team data and file path
 
     Searches by actual team name in file content, not by filename.
     This handles cases where filename doesn't match team name.
+
+    DEPRECATED: Prefer find_team_by_id() for stable references.
+    This function is kept for backward compatibility with name-based lookups.
     """
     data_dir = get_data_dir(view)
 
@@ -439,6 +516,46 @@ def find_team_by_name(team_name: str, view: str = "tt") -> tuple[TeamData, Path]
                 return team, file_path
         except Exception as e:
             print(f"Error parsing {file_path} while searching for {team_name}: {e}")
+
+    return None
+
+
+def find_team_by_id(team_id: str, view: str = "tt") -> tuple[TeamData, Path] | None:
+    """Find a team by team_id (stable identifier).
+
+    This is the PREFERRED method for team lookups.
+    team_id is a stable, slug-safe identifier that doesn't change when team names change.
+
+    Args:
+        team_id: Unique team identifier (e.g., "api-gateway-team")
+        view: "tt" or "current"
+
+    Returns:
+        Tuple of (TeamData, file_path) or None if not found
+    """
+    data_dir = get_data_dir(view)
+    exclude_files = {
+        'company-leadership.md',
+        'engineering-dept.md',
+        'customer-solutions-dept.md',
+        'product-management-dept.md',
+        'infrastructure-dept.md',
+        'support-dept.md',
+        'organization-hierarchy.json',
+        'current-team-types.json',
+        'tt-team-types.json'
+    }
+
+    for file_path in data_dir.rglob("*.md"):
+        if file_path.name in exclude_files:
+            continue
+
+        try:
+            team = parse_team_file(file_path)
+            if team.team_id == team_id:
+                return team, file_path
+        except Exception as e:
+            print(f"Error parsing {file_path} while searching for team_id {team_id}: {e}")
 
     return None
 

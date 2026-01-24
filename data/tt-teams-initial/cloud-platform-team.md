@@ -1,4 +1,5 @@
 ---
+team_id: cloud-platform-team
 name: Cloud Platform Team
 team_type: platform
 position:

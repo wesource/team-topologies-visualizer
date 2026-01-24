@@ -1,5 +1,6 @@
 ---
 name: Fleet Monitor Team
+team_id: fleet-monitor-team
 team_type: stream-aligned
 position:
   x: 204.0

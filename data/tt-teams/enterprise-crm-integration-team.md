@@ -1,5 +1,6 @@
 ---
 name: Enterprise CRM Integration Team
+team_id: enterprise-crm-integration-team
 team_type: stream-aligned
 position:
   x: 204.0

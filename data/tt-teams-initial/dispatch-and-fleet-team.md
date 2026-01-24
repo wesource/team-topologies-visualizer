@@ -1,5 +1,6 @@
 ---
 name: Dispatch & Fleet Team
+team_id: dispatch-and-fleet-team
 team_type: stream-aligned
 position:
   x: 204.0

@@ -1,5 +1,6 @@
 ---
 name: Payment Processing Team
+team_id: payment-processing-team
 team_type: stream-aligned
 position:
   x: 204.0

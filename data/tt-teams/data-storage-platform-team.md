@@ -1,5 +1,6 @@
 ---
 name: Data Storage Platform Team
+team_id: data-storage-platform-team
 team_type: platform
 position:
   x: 204.0

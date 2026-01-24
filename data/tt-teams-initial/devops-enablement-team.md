@@ -1,5 +1,6 @@
 ---
 name: DevOps Enablement Team
+team_id: devops-enablement-team
 team_type: enabling
 position:
   x: 1800.0

@@ -1,5 +1,6 @@
 ---
 name: Enterprise Fleet Portal Team
+team_id: enterprise-fleet-portal-team
 team_type: stream-aligned
 position:
   x: 204.0

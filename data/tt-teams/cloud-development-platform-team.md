@@ -1,5 +1,6 @@
 ---
 name: Cloud Development Platform Team
+team_id: cloud-development-platform-team
 team_type: platform
 position:
   x: 204.0

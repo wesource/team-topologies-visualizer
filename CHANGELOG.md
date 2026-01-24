@@ -8,6 +8,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Stable Team IDs (2026-01-25) [BREAKING]**: Introduced mandatory `team_id` field for all teams
+  - Added `team_id: str` as required field in TeamData model (first field after YAML marker)
+  - team_id must be slug-safe: lowercase alphanumeric with dashes only (e.g., "api-gateway-team")
+  - Created migration script `scripts/migrate_add_team_ids.py` with dry-run mode
+  - Migrated all 41 team files (34 tt-teams + 5 tt-teams-initial + 2 current-teams)
+  - Added validate_team_id() function to enforce format requirements
+  - Added check_duplicate_team_ids() function to detect ID collisions
+  - Added find_team_by_id() as preferred lookup method (stable across team name changes)
+  - Updated all 3 templates with team_id field and usage guidance
+  - Added 16 new tests for team_id validation, parsing, and lookup
+  - **BREAKING CHANGE**: All team files must now have a unique team_id field
+  - **Migration Path**: Run `python scripts/migrate_add_team_ids.py --apply` for new installations
+  - **Why**: Team names can change, but team_id remains stable for reliable references
+  - **Next Steps**: Update interaction/dependency references to use team_id instead of names
+
 - **High-DPI Canvas Support (2026-01-24)**: Implemented devicePixelRatio scaling for crisp text rendering
   - Canvas now renders at native device resolution (2x on Retina displays)
   - Text and graphics appear sharp on high-DPI screens

@@ -1,5 +1,6 @@
 ---
 name: Enterprise Reporting Team
+team_id: enterprise-reporting-team
 team_type: stream-aligned
 position:
   x: 204.0

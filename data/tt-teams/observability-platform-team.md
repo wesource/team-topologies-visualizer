@@ -1,5 +1,6 @@
 ---
 name: Observability Platform Team
+team_id: observability-platform-team
 team_type: platform
 position:
   x: 204.0

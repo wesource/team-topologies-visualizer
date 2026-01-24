@@ -1,5 +1,6 @@
 ---
 name: Financial Reporting Team
+team_id: financial-reporting-team
 team_type: stream-aligned
 position:
   x: 204.0

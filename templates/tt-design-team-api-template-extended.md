@@ -3,6 +3,7 @@
 # Includes additional Team API fields beyond the base template
 
 # REQUIRED
+team_id: [unique-team-identifier]  # Unique slug-safe ID (e.g., "mobile-app-team", "api-platform-team")
 name: [Your Team Name]
 team_type: [stream-aligned | platform | enabling | complicated-subsystem | undefined]
 position:  # Canvas coordinates (auto-updated when dragging)

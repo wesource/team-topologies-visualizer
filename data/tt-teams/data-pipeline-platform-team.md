@@ -1,5 +1,6 @@
 ---
 name: Data Pipeline Platform Team
+team_id: data-pipeline-platform-team
 team_type: platform
 position:
   x: 204.0

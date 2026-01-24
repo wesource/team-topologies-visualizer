@@ -1,5 +1,6 @@
 ---
 name: CI/CD Platform Team
+team_id: ci-cd-platform-team
 team_type: platform
 position:
   x: 204.0

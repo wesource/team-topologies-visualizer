@@ -1,5 +1,6 @@
 ---
 name: Security Compliance Team
+team_id: security-compliance-team
 team_type: enabling
 position:
   x: 1800.0

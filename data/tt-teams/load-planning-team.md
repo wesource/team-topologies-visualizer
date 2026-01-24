@@ -1,5 +1,6 @@
 ---
 name: Load Planning Team
+team_id: load-planning-team
 team_type: stream-aligned
 position:
   x: 204.0

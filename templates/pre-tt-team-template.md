@@ -3,6 +3,7 @@
 # Captures your current organization structure before Team Topologies transformation
 
 # REQUIRED
+team_id: [unique-team-identifier]  # Unique slug-safe ID (e.g., "mobile-app-team", "api-platform-team")
 name: [Your Team Name]  # Display name in all views
 team_type: [feature-team | platform-team | support-team | undefined]  # Current classification
 position:  # Canvas coordinates (auto-updated when dragging teams)

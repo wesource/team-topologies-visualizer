@@ -1,5 +1,6 @@
 ---
 name: Developer Portal Team
+team_id: developer-portal-team
 team_type: stream-aligned
 position:
   x: 204.0

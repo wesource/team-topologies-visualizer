@@ -1,5 +1,6 @@
 ---
 name: LogiCore Systems Leadership
+team_id: company-leadership
 team_type: executive
 metadata:
   level: C-Suite

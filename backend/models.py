@@ -24,13 +24,14 @@ class FlowMetrics(BaseModel):
 
 class TeamData(BaseModel):
     """Team data model with YAML front matter fields and Team API extensions"""
-    name: str
+    team_id: str  # REQUIRED: unique, slug-safe identifier (e.g., "api-gateway-team")
+    name: str  # Display name
     team_type: str | None = "other"  # stream-aligned, enabling, complicated-subsystem, platform, OR for current: dev-team, ops-team, etc
     description: str | None = ""
     dependencies: list[str] | None = []
     dependency_notes: list[str] | None = []  # Free text notes about dependencies (separate from team references)
-    interaction_modes: dict[str, str] | None = {}  # {team_name: interaction_mode}
-    interactions: list[dict[str, Any]] | None = None  # Alternative format: [{team, mode, purpose}, ...]
+    interaction_modes: dict[str, str] | None = {}  # {team_id: interaction_mode}
+    interactions: list[dict[str, Any]] | None = None  # Alternative format: [{team: team_id, mode, purpose}, ...]
     line_manager: str | None = None  # For current org structure
     product_line: str | None = None  # For Product Lines view (Pre-TT only)
     business_stream: str | None = None  # For Business Streams view (Baseline only)

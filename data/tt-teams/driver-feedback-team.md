@@ -1,5 +1,6 @@
 ---
 name: Driver Feedback Team
+team_id: driver-feedback-team
 team_type: stream-aligned
 position:
   x: 1054.0

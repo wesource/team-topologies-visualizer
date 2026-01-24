@@ -1,5 +1,6 @@
 ---
 name: Mobile Platform Team
+team_id: mobile-platform-team
 team_type: platform
 position:
   x: 1054.0

@@ -1,5 +1,6 @@
 ---
 name: Delivery Analytics Team
+team_id: delivery-analytics-team
 team_type: complicated-subsystem
 position:
   x: 130.0

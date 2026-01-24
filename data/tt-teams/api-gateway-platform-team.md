@@ -1,5 +1,6 @@
 ---
 name: API Gateway Platform Team
+team_id: api-gateway-platform-team
 team_type: stream-aligned
 position:
   x: 204.0

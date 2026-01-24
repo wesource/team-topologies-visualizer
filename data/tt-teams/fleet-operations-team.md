@@ -1,5 +1,6 @@
 ---
 name: Fleet Operations Team
+team_id: fleet-operations-team
 team_type: stream-aligned
 position:
   x: 204.0

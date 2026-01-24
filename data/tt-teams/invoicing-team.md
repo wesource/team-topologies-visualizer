@@ -1,5 +1,6 @@
 ---
 name: Invoicing Team
+team_id: invoicing-team
 team_type: stream-aligned
 position:
   x: 204.0

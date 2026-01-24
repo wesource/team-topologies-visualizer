@@ -1,5 +1,6 @@
 ---
 name: Delivery Notifications Team
+team_id: delivery-notifications-team
 team_type: stream-aligned
 position:
   x: 1054.0
