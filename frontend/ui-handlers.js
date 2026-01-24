@@ -235,7 +235,7 @@ export async function handleAutoAlign(draw) {
     // Save all updated positions to backend
     try {
         const updatePromises = realignedTeams.map(team =>
-            updateTeamPosition(team.name, team.position.x, team.position.y, state.currentView)
+            updateTeamPosition(team.team_id, team.position.x, team.position.y, state.currentView)
         );
 
         await Promise.all(updatePromises);
@@ -267,7 +267,7 @@ export async function handleAutoAlignTT(draw) {
     // Save all updated positions to backend
     try {
         const updatePromises = realignedTeams.map(team =>
-            updateTeamPosition(team.name, team.position.x, team.position.y, state.currentView)
+            updateTeamPosition(team.team_id, team.position.x, team.position.y, state.currentView)
         );
 
         await Promise.all(updatePromises);
@@ -325,7 +325,7 @@ export async function handleUndo(draw) {
                     team.position.x = teamSnapshot.x;
                     team.position.y = teamSnapshot.y;
                     // Save to backend
-                    updatePromises.push(updateTeamPosition(team.name, teamSnapshot.x, teamSnapshot.y, state.currentView));
+                    updatePromises.push(updateTeamPosition(team.team_id, teamSnapshot.x, teamSnapshot.y, state.currentView));
                 }
             }
         });

@@ -261,7 +261,8 @@ export function showInfoModal(type, id) {
 export async function showTeamDetails(team, currentView, allTeams = []) {
     try {
         console.log('showTeamDetails called with currentView:', currentView);
-        const teamData = await loadTeamDetails(team.name, currentView);
+        // Use team_id for API lookup (stable across name changes)
+        const teamData = await loadTeamDetails(team.team_id, currentView);
 
         // Set team name and type
         const detailTeamName = document.getElementById('detailTeamName');

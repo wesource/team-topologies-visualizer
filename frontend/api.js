@@ -54,19 +54,17 @@ export async function loadTeams(view) {
     return await response.json();
 }
 
-export async function loadTeamDetails(teamName, view) {
+export async function loadTeamDetails(teamId, view) {
     const prefix = getViewPrefix(view);
-    // Use URL-safe slug instead of URL-encoding the team name
-    const slug = teamNameToSlug(teamName);
-    const response = await fetch(getApiUrl(`${prefix}/teams/${slug}`));
+    // Use team_id directly (already slug-safe)
+    const response = await fetch(getApiUrl(`${prefix}/teams/${teamId}`));
     return await response.json();
 }
 
-export async function updateTeamPosition(teamName, x, y, view) {
+export async function updateTeamPosition(teamId, x, y, view) {
     const prefix = getViewPrefix(view);
-    // Use URL-safe slug instead of URL-encoding the team name
-    const slug = teamNameToSlug(teamName);
-    const response = await fetch(getApiUrl(`${prefix}/teams/${slug}/position`), {
+    // Use team_id directly (already slug-safe)
+    const response = await fetch(getApiUrl(`${prefix}/teams/${teamId}/position`), {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ x, y })

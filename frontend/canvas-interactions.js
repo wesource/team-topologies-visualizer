@@ -177,7 +177,7 @@ export class CanvasInteractionHandler {
         // Handle team drag end
         if (this.draggedTeam && this.hasDragged) {
             try {
-                await updateTeamPosition(this.draggedTeam.name, this.draggedTeam.position.x, this.draggedTeam.position.y, this.state.currentView);
+                await updateTeamPosition(this.draggedTeam.team_id, this.draggedTeam.position.x, this.draggedTeam.position.y, this.state.currentView);
             } catch (error) {
                 console.error('Failed to update team position:', error);
             }

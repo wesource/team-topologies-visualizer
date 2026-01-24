@@ -20,9 +20,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added 16 new tests for team_id validation, parsing, and lookup
   - Updated API routes to use team_id instead of team_name: `/api/tt/teams/{team_id}` and `/api/pre-tt/teams/{team_id}`
   - Removed dependency on find_team_by_name_or_slug() in API routes (now uses find_team_by_id())
+  - **Frontend changes**: Updated API client to use team_id for all team lookups and position updates
+    - loadTeamDetails() now expects team_id parameter (was teamName)
+    - updateTeamPosition() now expects team_id parameter (was teamName)
+    - All team detail modals and drag-and-drop operations use team.team_id
+    - Removed usage of teamNameToSlug() function (no longer needed)
   - Fixed all 212 backend tests to work with mandatory team_id
   - **BREAKING CHANGE**: All team files must now have a unique team_id field
   - **BREAKING CHANGE**: API endpoints now expect team_id parameter instead of team name/slug
+  - **BREAKING CHANGE**: Frontend API functions now require team_id instead of team name
   - **Migration Path**: Run `python scripts/migrate_add_team_ids.py --apply` for new installations
   - **Why**: Team names can change, but team_id remains stable for reliable references and API calls
 
