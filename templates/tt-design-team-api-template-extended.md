@@ -1,16 +1,20 @@
 ---
-# Minimal YAML front matter - only what the visualization tool needs
-# Everything else is in the markdown body for human readability
+# TT Design Team Template (Extended)
+# Includes additional Team API fields beyond the base template
+
+# REQUIRED
 name: [Your Team Name]
 team_type: [stream-aligned | platform | enabling | complicated-subsystem | undefined]
-position:
+position:  # Canvas coordinates (auto-updated when dragging)
   x: 100
   y: 100
+
+# RECOMMENDED
 metadata:
-  size: 7  # Number of people on the team (5-9 recommended)
+  size: 7  # Team size (5-9 recommended per Team Topologies)
   cognitive_load: medium  # low | medium | high | very-high
-  established: 2024-01  # YYYY-MM format - shows team age/maturity in modal
-  flow_metrics:  # Optional: DORA metrics for team performance
+  established: 2024-01  # YYYY-MM - shows age in modal
+  flow_metrics:  # Optional: DORA metrics for health indicators
     lead_time_days: 10  # Median days from commit to production
     deployment_frequency: weekly  # daily | weekly | monthly | quarterly
     change_fail_rate: 0.10  # 0.0 to 1.0 (e.g., 0.10 = 10%)

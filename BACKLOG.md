@@ -18,6 +18,14 @@ This is the public backlog for ideas, priorities, and possible improvements.
 
 Edit this list as your priorities change:
 
+- (Soon) Terminology unification: Rename code/data folders to use "baseline" consistently
+	- Change: `data/current-teams/` → `data/baseline-teams/`, `routes_pre_tt.py` → `routes_baseline.py`, API paths `/api/pre-tt/*` → `/api/baseline/*`
+	- Update: All documentation references (README, CONCEPTS, SETUP, DEVELOPMENT) to use "Baseline" as the canonical term
+	- Benefit: Eliminates confusion between "Pre-TT", "Current State", and "Baseline" - one term everywhere
+- (Soon) UI-driven validation rule visibility: Make Python code own the complete validation spec and expose it via API
+	- Goal: When users click "Validate", show not just errors but also what *should* be valid (field constraints, allowed values, relationship rules)
+	- Implementation: Define validation schema in Python (e.g., Pydantic or custom spec), expose via `/api/validation-schema` endpoint, render in UI modal
+	- Benefit: Self-documenting data format, reduces documentation drift, helps users fix errors faster
 - (Soon) Stable team IDs: introduce mandatory `team_id` in YAML and use it everywhere (replace name-based references)
 	- Data model: add `team_id` to every team markdown file; keep `name` for display; enforce uniqueness and slug-safe format.
 	- References: update `dependencies` and `interaction_modes` (and any other cross-team links) to use `team_id` as the canonical reference.
@@ -73,11 +81,3 @@ Edit this list as your priorities change:
 - More platform-as-a-product indicators (maturity, adoption funnel, pain points)
 - Diff-style views for snapshots (beyond side-by-side)
 
----
-
-## Detailed backlog (legacy)
-
-Most of the content that used to live here was historical implementation detail and completed work. To keep this backlog actionable and contributor-friendly, those sections have been removed.
-
-- For completed work, use [CHANGELOG.md](CHANGELOG.md).
-- For current work, treat **Now / Next / Later** above as the source of truth.

@@ -7,6 +7,8 @@ import { loadTeamDetails } from './api.js';
 import { showError } from './notifications.js';
 import { getCognitiveLoadIndicator } from './renderer-common.js';
 import { calculatePlatformConsumers } from './platform-metrics.js';
+// marked.js v14.1.3 - Markdown parser for team detail modals
+// Loaded from jsDelivr CDN (pinned version for stability)
 import { marked } from 'https://cdn.jsdelivr.net/npm/marked@14.1.3/+esm';
 
 // Configure marked with safe defaults

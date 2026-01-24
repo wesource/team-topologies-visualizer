@@ -42,8 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Updated `data/tt-teams/tt-team-types.json` and `data/tt-teams-initial/tt-team-types.json`
   - Removed outdated color names from the team type bullets in CONCEPTS
 
-- **Demo Mode Banner (2026-01-18)**: Updated banner emoji from 🎮 (game controller) to ✨ (sparkles)
-  - Better conveys "showcase/try it out" feel rather than gaming connotation
+- **Demo Mode Banner (2026-01-18)**: Updated banner emoji to sparkles for better "showcase/try it out" feel
 
 ### Fixed
 - **Console Warning Spam (2026-01-18)**: Eliminated excessive dependency warnings appearing on every mouse movement
@@ -76,7 +75,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Focus Mode UX (2026-01-18)**: Implemented auto-enable interaction lines when entering focus mode (Option C)
   - When user clicks team to enter focus mode while interaction lines are disabled, automatically enables them
-  - Shows notification: "✓ Interaction lines enabled for focus mode" (auto-dismisses after 3s with smooth fade animation)
+  - Shows notification: "Interaction lines enabled for focus mode" (auto-dismisses after 3s with smooth fade animation)
   - Updates checkbox UI automatically to reflect state change
   - Ensures focus mode always has clear purpose without requiring manual settings adjustment
 
@@ -363,7 +362,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **🎉 Evolution Tracking with Snapshots**: Major new feature for tracking Team Topologies transformation over time
   - **The Problem**: Addresses the "static visualization trap" where TT designs are created once and never updated, becoming outdated within months
   - **Create Snapshots**: Capture the current TT Design state as an immutable JSON snapshot
-    - Click "📸 Create Snapshot" button (only visible in TT Design view)
+    - Click "Create Snapshot" button (only visible in TT Design view)
     - Modal with name (auto-suggested: "TT Design vX.X - YYYY-MM-DD"), description, and author fields
     - Preview shows team count, value streams, and platform groupings before creating
     - Condensed JSON format (not full markdown) for efficient storage
@@ -375,7 +374,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - Each snapshot displays: name, date/time, author, team counts, statistics, and description
     - Click any snapshot to load frozen view
   - **Snapshot View Mode**: Browse historical states in read-only mode
-    - Banner shows "📸 Viewing Snapshot: [name] ([date])" at top
+    - Banner shows "Viewing Snapshot: [name] ([date])" at top
     - Canvas becomes fully read-only (no drag-and-drop editing)
     - Panning, zooming, and team details still work
     - "Return to Live View" button switches back to editable current state
@@ -396,7 +395,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - Snapshot ID generation with timestamp for uniqueness
   - **Frontend**:
     - New `frontend/snapshot-handlers.js` module (370+ lines) handling all snapshot UI
-    - Two new toolbar buttons: "📸 Create Snapshot" and "🕐 Timeline" (TT Design view only)
+    - Two new toolbar buttons: "Create Snapshot" and "Timeline" (TT Design view only)
     - Create Snapshot modal with form validation and preview
     - Timeline browser panel with slide-in animation
     - Snapshot view banner with gradient background
@@ -478,7 +477,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **File Validation Report**: New validation system to catch errors in team markdown files
   - Created `backend/validation.py` module (161 lines) extracted from `services.py` for better organization
   - API endpoint: `GET /api/validate?view={tt|current}` returns comprehensive validation report
-  - Frontend: "✓ Validate Files" button in toolbar with modal display
+  - Frontend: "Validate Files" button in toolbar with modal display
   - Validation checks:
     - YAML front matter structure (presence, duplicate blocks, valid syntax)
     - Required fields: `name`, `team_type`

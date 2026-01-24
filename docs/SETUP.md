@@ -3,9 +3,9 @@
 ## Prerequisites
 
 **Option 1: Local Python**
-- Python 3.10 or higher
-  - CI runs tests on Python 3.11 (Ubuntu) in [`.github/workflows/ci.yml`](../.github/workflows/ci.yml)
+- Python 3.10 or higher (CI tests on 3.11; newer versions like 3.12-3.13 should work)
 - Modern web browser with HTML5 Canvas support
+- Works on Windows, macOS, and Linux
 
 **Option 2: Docker/Podman**
 - Docker or Podman installed

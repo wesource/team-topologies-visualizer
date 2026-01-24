@@ -1,15 +1,18 @@
 ---
-# REQUIRED FIELDS
-name: [Your Team Name]  # Team name as shown in visualizations
-team_type: [feature-team | platform-team | support-team | undefined]  # Current team classification
-position:  # Canvas position (auto-managed when dragging)
+# Pre-TT (Baseline) Team Template
+# Captures your current organization structure before Team Topologies transformation
+
+# REQUIRED
+name: [Your Team Name]  # Display name in all views
+team_type: [feature-team | platform-team | support-team | undefined]  # Current classification
+position:  # Canvas coordinates (auto-updated when dragging teams)
   x: 100
   y: 100
 
-# OPTIONAL FIELDS (but recommended for full visualization features)
-product_line: [Product Name]  # Groups teams in Product Lines view (e.g., DispatchHub, RouteOptix)
-business_stream: [Business Stream Name]  # Groups teams in Business Streams view (e.g., B2B Fleet Management, B2C Driver Experience)
-dependencies: []  # Teams this team depends on - creates communication lines (e.g., [Database Team, API Framework Team])
+# RECOMMENDED (enables all visualization perspectives)
+product_line: [Product Name]  # For Product Lines view - must match data/current-teams/products.json
+business_stream: [Business Stream Name]  # For Business Streams view - must match data/current-teams/business-streams.json
+dependencies: []  # List of team names this team coordinates with (e.g., [Database Team, API Framework Team])
 metadata:
   size: 7  # Number of team members - used for display and validation warnings
   department: [Department]  # e.g., Engineering, Product Management, Customer Solutions

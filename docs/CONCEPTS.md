@@ -73,7 +73,12 @@ Based on [Team Topologies Shape Templates](https://github.com/TeamTopologies/Tea
 
 ## Team Files (Markdown + YAML)
 
-Teams are stored as markdown files with YAML front matter:
+Teams are stored as markdown files with YAML front matter.
+
+**Templates**: See [`templates/`](../templates/) directory for annotated examples:
+- [`pre-tt-team-template.md`](../templates/pre-tt-team-template.md) - Baseline teams
+- [`tt-design-team-api-template-base.md`](../templates/tt-design-team-api-template-base.md) - TT teams (minimal)
+- [`tt-design-team-api-template-extended.md`](../templates/tt-design-team-api-template-extended.md) - TT teams (full)
 
 If you haven’t run into it before: **YAML front matter** is a small YAML “metadata header” at the top of a Markdown file, wrapped between `---` lines. It’s commonly used by static site generators and tools to store structured fields (like `name`, `team_type`, and `position`) separately from the human-readable Markdown content below.
 

@@ -3,14 +3,21 @@
 A web app for visualizing team structures using **Team Topologies (TT)** concepts.
 
 Two complementary views:
-- **Baseline**: your current/reference structure (pre-TT), shown from multiple perspectives (hierarchy, product lines, business streams)
-- **TT Design**: your intended Team Topologies design (team types, interaction modes, groupings)
+- **Baseline**: your current/reference structure before Team Topologies transformation
+- **TT Design**: your target Team Topologies design (team types, interaction modes, groupings)
 
-See [docs/CONCEPTS.md](docs/CONCEPTS.md#the-tools-two-views) for the view model and naming rationale.
+See [docs/CONCEPTS.md](docs/CONCEPTS.md#the-tools-two-views) for view details and why these names.
 
 This tool is inspired by **Team Topologies** by Matthew Skelton and Manuel Pais — especially the concepts summarized at https://teamtopologies.com/key-concepts (more references at the end of this README).
 
-> **Note**: This project was built with AI assistance to explore Team Topologies hands-on and experiment with webapp development in VS Code.
+> **Note**: This project was built with extensive AI assistance (GitHub Copilot + Claude). As a non-native Python and JavaScript developer, this AI-driven co-creation approach enabled me to use tools and techniques — including FastAPI, Canvas rendering, and comprehensive test automation — in ways that would have taken much longer solo.
+
+## Documentation Organization
+
+**Root folder** = quick reference (README, CONTRIBUTING, DEVELOPMENT)  
+**docs/ folder** = in-depth guides (SETUP, CONCEPTS, ARCHITECTURE, TESTING)
+
+This keeps the root clean while providing detailed documentation for those who need it.
 
 ## Why This Tool?
 
@@ -36,6 +43,8 @@ What I wanted from a tool like this was something that helps when adopting Team 
 
 ## Quick Start
 
+**Note**: This tool was developed on Windows. Command examples use Windows syntax, but macOS/Linux equivalents are shown where they differ (e.g., venv activation).
+
 ### Local Python
 
 ```bash
@@ -45,8 +54,7 @@ py -m venv venv
 python -m pip install -r requirements.txt
 python -m uvicorn main:app --reload
 
-# Linux/Mac
-python3 -m venv venv
+# Linux/Mac  
 source venv/bin/activate
 python -m pip install -r requirements.txt
 python -m uvicorn main:app --reload
@@ -57,21 +65,13 @@ Open http://localhost:8000/static/index.html
 ### Docker/Podman
 
 ```bash
-# Build
 docker build -t team-topologies-viz .
-# or with Podman
-podman build -t team-topologies-viz .
-
-# Run (Linux/Mac)
 docker run -p 8000:8000 -v ./data:/app/data team-topologies-viz
-
-# Run (Windows PowerShell with Podman)
-podman run -p 8000:8000 -v ${PWD}/data:/app/data team-topologies-viz
 ```
 
-The `-v` flag mounts your local `data/` directory for editing team files outside the container.
-
 Open http://localhost:8000/static/index.html
+
+**Full setup instructions**: See [docs/SETUP.md](docs/SETUP.md) for detailed installation, configuration, Docker/Podman options, demo mode, and TT design variants.
 
 ## Key Features
 
@@ -93,18 +93,9 @@ Open http://localhost:8000/static/index.html
 
 ## Documentation
 
-- **[docs/SETUP.md](docs/SETUP.md)**: Installation, configuration, API reference, customization
+- **[docs/SETUP.md](docs/SETUP.md)**: Installation, configuration, demo mode, TT design variants
 - **[docs/CONCEPTS.md](docs/CONCEPTS.md)**: Team Topologies concepts and how they map to the tool
 - **[DEVELOPMENT.md](DEVELOPMENT.md)**: Developer workflow and testing
-
-## TT Design Variants
-
-The repo includes two example TT designs (based on the example data described below):
-
-- **Mid-Stage Transformation** (default): [data/tt-teams/](data/tt-teams/)
-- **First-Step Transformation** (optional): [data/tt-teams-initial/](data/tt-teams-initial/) (see [data/tt-teams-initial/README.md](data/tt-teams-initial/README.md))
-
-To switch variants via `TT_TEAMS_VARIANT`, see [docs/SETUP.md](docs/SETUP.md#tt-design-variants).
 
 ## Quick Customization
 
@@ -128,28 +119,19 @@ Includes a fictitious organization (**LogiCore Systems**) to illustrate typical 
 - **TT Design view**: a Team Topologies-inspired design with stream-aligned teams, platform capabilities, enabling support, and clearer ownership
 
 More context and details: [docs/CONCEPTS.md](docs/CONCEPTS.md#example-data-logicore-systems)
-
+**Data Management**: All team data is stored as markdown files in `data/`. Use git for version control and backup - commit regularly to preserve your team topology designs.
 **Disclaimer**: All example data (company/team/product names, technical details) is entirely fictitious for demonstration purposes.
 
 ## Testing
 
 ```bash
-# Run all tests (requires PowerShell)
+# Run all tests (Windows PowerShell)
 pwsh ./scripts/run-all-tests.ps1
-
-# Backend only
-python -m pytest tests_backend/ -v
-
-# Frontend only
-cd frontend && npm test
-
-# E2E only
-cd tests && npx playwright test
 ```
 
-The test suite is split across backend (pytest), frontend (Vitest), and E2E (Playwright). To avoid docs drift, exact test counts are not listed here.
+The test suite includes backend (pytest), frontend (Vitest), and E2E (Playwright) tests.
 
-For OS-specific notes (especially Windows venv/PowerShell details), see [DEVELOPMENT.md](DEVELOPMENT.md).
+**Detailed test instructions**: See [DEVELOPMENT.md](DEVELOPMENT.md#testing) for individual test commands, coverage options, and Windows-specific notes.
 
 ## Linting
 
@@ -163,14 +145,12 @@ cd frontend && npm run lint -- --fix
 
 ## Technologies
 
-- **Backend**: Python 3.10+, FastAPI, PyYAML, Markdown
+- **Backend**: Python 3.10+, FastAPI
 - **Frontend**: HTML5 Canvas, Vanilla JavaScript (no build step)
 - **Testing**: pytest, Vitest, Playwright
-- **Data Format**: Markdown with YAML front matter
+- **Data**: Markdown with YAML front matter
 
-Python: Requires 3.10+; CI runs 3.11 (see [.github/workflows/ci.yml](.github/workflows/ci.yml)).
-
-More details: [docs/SETUP.md](docs/SETUP.md), [DEVELOPMENT.md](DEVELOPMENT.md), and [DEPENDENCIES.md](DEPENDENCIES.md)
+**Full dependency list and rationale**: See [DEPENDENCIES.md](DEPENDENCIES.md)
 
 ## Contributing
 

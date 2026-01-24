@@ -1,130 +1,42 @@
 # Development Guide
 
-Comprehensive guide for developing, testing, and contributing to the Team Topologies Visualizer.
+Quick reference for developing, testing, and contributing to the Team Topologies Visualizer.
 
 ## Project Context
 
 **Date**: January 2026  
-**Approach**: AI-assisted development (GitHub Copilot)  
+**Approach**: AI-assisted development (GitHub Copilot + Claude)  
 **Purpose**: Learning project - exploring FastAPI, frontend Canvas rendering, and testing while building a practical Team Topologies visualization tool
 
-## Architecture Overview
+## Architecture
 
-For a detailed list of third-party libraries (and why they’re used), see [DEPENDENCIES.md](DEPENDENCIES.md).
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for full technical design details, module structure, and key decisions.
 
-### Technology Stack
-
-**Backend**:
-- **Python 3.10+** - Core language
-- **FastAPI** - Modern async web framework
-- **Pydantic** - Data validation with type hints
-- **uvicorn** - ASGI server
-
-**Frontend**:
-- **Vanilla JavaScript (ES6 modules)** - No build step required
-- **HTML5 Canvas** - Interactive visualization
-- **marked.js** - Markdown rendering with GitHub Flavored Markdown (GFM) support
-  - Replaces custom regex parsing for security and robustness
-   - Note: `marked` parses Markdown to HTML but does **not** sanitize HTML by default; if you expect untrusted content, sanitize the rendered output before injecting into the DOM.
-   - CDN import is defined in the frontend code
-
-**Testing**:
-- **pytest** - Backend unit tests (Python)
-- **Vitest** - Frontend unit tests (JavaScript)
-- **Playwright** - End-to-end browser tests (with hidden DOM for canvas testing)
-- **ESLint** - JavaScript linting
-
-**Data Format**:
-- **Markdown with YAML front matter** - Team files (Team API template)
-- **JSON** - Configuration files (team types, org hierarchy)
-
-### Backend (Python + FastAPI)
-
-Modular architecture with clear separation of concerns:
-
-- **main.py** (42 lines) - Application setup, CORS middleware, router inclusion, static file serving
-- **backend/models.py** - Pydantic data models (TeamData, PositionUpdate) for type validation
-- **backend/services.py** - File operations and business logic (parse_team_file, write_team_file, find_all_teams, etc.)
-- **backend/routes_pre_tt.py** - Pre-TT (Baseline) API endpoints
-- **backend/routes_tt.py** - TT Design API endpoints
-
-### Frontend (Vanilla JavaScript ES6 Modules)
-
-**Core modules**:
-- **constants.js** - Shared layout constants (LAYOUT object with dimensions, spacing, offsets)
-- **config.js** - API configuration (API_BASE_URL, getApiUrl helper)
-- **notifications.js** - Unified notification system (showError, showSuccess, showInfo, showWarning)
-- **layout-utils.js** - Shared position calculation functions
-
-**Feature modules**:
-- **api.js** - API client layer for backend communication
-- **app.js** - Main application orchestration and initialization
-- **canvas-interactions.js** - Canvas event handling (drag, zoom, pan, click)
-- **renderer-common.js** - Shared rendering utilities (drawTeam, wrapText, darkenColor)
-- **renderer-current.js** - Current State org-chart view rendering
-- **svg-export.js** - SVG export functionality
-- **team-alignment.js** - Auto-align teams functionality
-
-**Why Vanilla JavaScript?**
-- No build step required - simplicity for straightforward visualization app
-- Direct browser execution - edit and refresh workflow
-- Lower learning curve for contributors
-- TypeScript was evaluated but added more complexity than value for single-maintainer learning project
-
-### Data Storage
-
-- **Markdown files with YAML front matter** - Human-readable, git-friendly team data
-- **JSON configuration files** - Team type definitions with colors and descriptions
-- **No database** - Keeps the solution simple and version-control friendly
+**Quick Overview**:
+- **Backend**: Python 3.10+ with FastAPI (modular: models, services, routes)
+- **Frontend**: Vanilla JavaScript with HTML5 Canvas (ES6 modules, no build step)
+- **Data**: Markdown + YAML (git-friendly, human-readable)
 
 ## Testing
 
-The project uses three layers of tests to ensure quality during development.
+See [docs/TESTING.md](docs/TESTING.md) for comprehensive testing guide including hidden DOM pattern for canvas testing.
 
-**Gotcha (demo mode)**: If you started the server via demo mode (which sets `READ_ONLY_MODE=true`) in the same shell/session, unset it before running tests that expect write endpoints to work.
+**Quick Commands**:
+```powershell
+# Run all tests
+.\scripts\run-all-tests.ps1
 
-### Test Architecture Overview
-
-**Three-Layer Testing Strategy**:
-1. **Backend Unit Tests** (10 tests, ~0.5s) - Python/pytest
-2. **Frontend Unit Tests** (62 tests, ~1.3s) - JavaScript/Vitest
-3. **E2E Tests** (40 tests, ~11s) - Playwright with hidden DOM for canvas testing
-
-### Backend Unit Tests (Fast)
-
-Tests core Python functions in isolation. Run these frequently during backend development.
-
-**Location**: `tests_backend/`  
-**Framework**: pytest  
-**Coverage**: 10 tests covering:
-- parse_team_file() - YAML front matter parsing
-- get_data_dir() - Directory resolution
-- Team API field validation
-- URL-safe team name slugification
-- Interaction table parsing
-**Speed**: ~0.5s
-
-```bash
-# Run all backend unit tests (Windows venv)
+# Backend only (Windows)
 .\venv\Scripts\python.exe -m pytest tests_backend/ -v
 
-# Linux/Mac
-python -m pytest tests_backend/ -v
+# Frontend only
+cd frontend && npm test
 
-# With coverage report
-python -m pytest tests_backend/ --cov=backend --cov=main --cov-report=html
-
-# Run specific test
-python -m pytest tests_backend/test_main.py::test_parse_team_file -v
+# E2E only
+cd tests && npx playwright test
 ```
 
-### Frontend Unit Tests (Fast)
-
-Tests JavaScript modules (wrapText, API functions, rendering utilities) in isolation. Run these during frontend development.
-
-**Location**: `frontend/`  
-**Framework**: Vitest  
-**Coverage**: 62 tests covering:
+## Development Workflow
 - Text wrapping and rendering utilities
 - API client functions
 - Current state alignment algorithms
@@ -298,6 +210,25 @@ npm run test:serial
 ```powershell
 # Run all tests in sequence (Windows)
 .\scripts\run-all-tests.ps1
+```
+
+## Testing
+
+See [docs/TESTING.md](docs/TESTING.md) for comprehensive testing guide including hidden DOM pattern for canvas testing.
+
+**Quick Commands**:
+```powershell
+# Run all tests
+.\scripts\run-all-tests.ps1
+
+# Backend only (Windows)
+.\venv\Scripts\python.exe -m pytest tests_backend/ -v
+
+# Frontend only
+cd frontend && npm test
+
+# E2E only
+cd tests && npx playwright test
 ```
 
 ## Development Workflow

@@ -8,6 +8,8 @@ A good way to start is to pick something from **Now** or **Next**, or propose a 
 
 ## Getting Started
 
+**First time?** See [docs/SETUP.md](docs/SETUP.md) for detailed environment setup instructions.
+
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
 3. Make your changes

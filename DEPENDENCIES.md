@@ -59,8 +59,7 @@ We follow a pragmatic approach:
   - Benefits: Fast, no build step (besides tests/lint), no framework lock-in
   - HTML5 Canvas API used directly for visualization
 
-- **marked** (Markdown rendering)
-  - Why: Render team and concept markdown inside modals (GitHub-flavored-ish Markdown)
+- **marked** (Markdown rendering)  - Version: 14.1.3 (loaded from jsDelivr CDN)  - Why: Render team and concept markdown inside modals (GitHub-flavored-ish Markdown)
   - How it’s used at runtime: imported as an ES module from a pinned CDN URL in `frontend/modals.js`.
   - Why it may not “feel” like a dependency: the app has no frontend build step, so browser runtime dependencies are loaded directly (CDN), while `frontend/package.json` exists mainly for tests/lint tooling.
 
