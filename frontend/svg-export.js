@@ -516,7 +516,7 @@ function drawSVGDefaultBox(text, x, y, width, height, bgColor, textColor, fontSi
     const startY = y + height / 2 - (lines.length - 1) * lineHeight / 2;
     lines.forEach((line, i) => {
         box += `
-    <text x="${x + width / 2}" y="${startY + i * lineHeight}" fill="${textColor}" font-size="${fontSize}" font-weight="${fontWeight}" text-anchor="middle" dominant-baseline="middle">${escapeXml(line)}</text>`;
+    <text x="${x + width / 2}" y="${startY + i * lineHeight}" fill="${textColor}" font-family="Arial, sans-serif" font-size="${fontSize}" font-weight="${fontWeight}" text-anchor="middle" dominant-baseline="middle">${escapeXml(line)}</text>`;
     });
     box += '\n  </g>';
     return box;
