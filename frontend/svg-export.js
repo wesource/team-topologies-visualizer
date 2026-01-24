@@ -19,13 +19,27 @@ export function exportToSVG(state, organizationHierarchy, teams, teamColorMap, c
     if ((currentView === 'tt' || isHierarchy) && teams.length > 0) {
         const padding = 100;
         const minX = Math.min(...teams.map(t => t.position.x)) - padding;
-        const minY = Math.min(...teams.map(t => t.position.y)) - padding;
+        let minY = Math.min(...teams.map(t => t.position.y)) - padding;
         const maxX = Math.max(...teams.map(t => t.position.x + LAYOUT.TEAM_BOX_WIDTH)) + padding;
         const maxY = Math.max(...teams.map(t => t.position.y + LAYOUT.TEAM_BOX_HEIGHT)) + padding;
+        
+        // For hierarchy view, include the organization hierarchy at the top
+        if (isHierarchy) {
+            minY = 0; // Start from top to include title and org hierarchy
+        }
+        
         width = maxX - minX;
         height = maxY - minY;
         viewBox = `${minX} ${minY} ${width} ${height}`;
     }
+    
+    // Calculate background rect position based on viewBox
+    const viewBoxParts = viewBox.split(' ').map(Number);
+    const bgX = viewBoxParts[0];
+    const bgY = viewBoxParts[1];
+    const bgWidth = viewBoxParts[2];
+    const bgHeight = viewBoxParts[3];
+    
     let svg = `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="${viewBox}">
   <defs>
@@ -37,7 +51,7 @@ export function exportToSVG(state, organizationHierarchy, teams, teamColorMap, c
       .connection-line { stroke-width: 2; fill: none; }
     </style>
   </defs>
-  <rect x="${currentView === 'tt' && teams.length > 0 ? Math.min(...teams.map(t => t.position.x)) - 100 : 0}" y="${currentView === 'tt' && teams.length > 0 ? Math.min(...teams.map(t => t.position.y)) - 100 : 0}" width="${width}" height="${height}" fill="white"/>
+  <rect x="${bgX}" y="${bgY}" width="${bgWidth}" height="${bgHeight}" fill="white"/>
 `;
     if (currentView === 'current' && isProductLines && state.productLinesData) {
         svg += generateProductLinesSVG(state.productLinesData, teamColorMap, showConnections);
