@@ -16,7 +16,7 @@ from backend.models import (
 from backend.services import (
     TT_TEAMS_DIR,
     find_all_teams,
-    find_team_by_name_or_slug,
+    find_team_by_id,
     write_team_file_to_path,
 )
 from backend.snapshot_services import create_snapshot, list_snapshots, load_snapshot
@@ -45,25 +45,25 @@ async def get_teams():
     return find_all_teams("tt")
 
 
-@router.get("/teams/{team_name}", response_model=TeamData)
-async def get_team(team_name: str):
-    """Get a specific TT-Design team by name or URL-safe slug"""
-    result = find_team_by_name_or_slug(team_name, "tt")
+@router.get("/teams/{team_id}", response_model=TeamData)
+async def get_team(team_id: str):
+    """Get a specific TT-Design team by team_id (stable identifier)"""
+    result = find_team_by_id(team_id, "tt")
 
     if result is None:
-        raise HTTPException(status_code=404, detail=f"Team not found: {team_name}")
+        raise HTTPException(status_code=404, detail=f"Team not found: {team_id}")
 
     team, _ = result
     return team
 
 
-@router.patch("/teams/{team_name}/position")
-async def update_team_position(team_name: str, position: PositionUpdate):
+@router.patch("/teams/{team_id}/position")
+async def update_team_position(team_id: str, position: PositionUpdate):
     """Update only the position of a TT-Design team (for drag-and-drop on canvas)"""
     if os.getenv("READ_ONLY_MODE") == "true":
         raise HTTPException(status_code=403, detail="Modifications not allowed in demo mode")
 
-    result = find_team_by_name_or_slug(team_name, "tt")
+    result = find_team_by_id(team_id, "tt")
 
     if result is None:
         raise HTTPException(status_code=404, detail="Team not found")

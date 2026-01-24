@@ -3,8 +3,8 @@ team_id: cloud-platform-team
 name: Cloud Platform Team
 team_type: platform
 position:
-  x: 1800.0
-  y: 100.0
+  x: 150.0
+  y: 250.0
 metadata:
   size: 5
   cognitive_load: medium

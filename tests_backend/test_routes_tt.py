@@ -71,13 +71,13 @@ class TestTTTeamDetailEndpoint:
 
     def test_get_team_by_name_returns_200(self):
         """Should return 200 for existing team"""
-        # First get a valid team name
+        # First get a valid team_id
         teams_response = client.get("/api/tt/teams")
         teams = teams_response.json()
 
         if len(teams) > 0:
-            team_name = teams[0]["name"]
-            response = client.get(f"/api/tt/teams/{team_name}")
+            team_id = teams[0]["team_id"]
+            response = client.get(f"/api/tt/teams/{team_id}")
             assert response.status_code == 200
 
     def test_get_nonexistent_team_returns_404(self):
@@ -91,14 +91,14 @@ class TestTTTeamDetailEndpoint:
         teams = teams_response.json()
 
         if len(teams) > 0:
-            team_name = teams[0]["name"]
-            response = client.get(f"/api/tt/teams/{team_name}")
+            team_id = teams[0]["team_id"]
+            response = client.get(f"/api/tt/teams/{team_id}")
             team = response.json()
 
             assert "name" in team
             assert "team_type" in team
             assert "position" in team
-            assert team["name"] == team_name
+            assert team["team_id"] == team_id
 
 
 class TestTTUpdateTeamPosition:
@@ -110,19 +110,19 @@ class TestTTUpdateTeamPosition:
         teams = teams_response.json()
 
         if len(teams) > 0:
-            team_name = teams[0]["name"]
+            team_id = teams[0]["team_id"]
             # Save original position
             original_pos = teams[0]["position"]
 
             response = client.patch(
-                f"/api/tt/teams/{team_name}/position",
+                f"/api/tt/teams/{team_id}/position",
                 json={"x": 100, "y": 200}
             )
             assert response.status_code == 200
 
             # Restore original position
             client.patch(
-                f"/api/tt/teams/{team_name}/position",
+                f"/api/tt/teams/{team_id}/position",
                 json=original_pos
             )
 
@@ -132,13 +132,13 @@ class TestTTUpdateTeamPosition:
         teams = teams_response.json()
 
         if len(teams) > 0:
-            team_name = teams[0]["name"]
+            team_id = teams[0]["team_id"]
             # Save original position
             original_pos = teams[0]["position"]
             new_x, new_y = 150, 250
 
             response = client.patch(
-                f"/api/tt/teams/{team_name}/position",
+                f"/api/tt/teams/{team_id}/position",
                 json={"x": new_x, "y": new_y}
             )
 
@@ -149,7 +149,7 @@ class TestTTUpdateTeamPosition:
 
             # Restore original position
             client.patch(
-                f"/api/tt/teams/{team_name}/position",
+                f"/api/tt/teams/{team_id}/position",
                 json=original_pos
             )
 
@@ -167,11 +167,11 @@ class TestTTUpdateTeamPosition:
         teams = teams_response.json()
 
         if len(teams) > 0:
-            team_name = teams[0]["name"]
+            team_id = teams[0]["team_id"]
 
             # Missing required fields
             response = client.patch(
-                f"/api/tt/teams/{team_name}/position",
+                f"/api/tt/teams/{team_id}/position",
                 json={"x": 100}  # Missing 'y'
             )
             assert response.status_code == 422
