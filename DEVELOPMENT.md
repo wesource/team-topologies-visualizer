@@ -5,15 +5,17 @@ Comprehensive guide for developing, testing, and contributing to the Team Topolo
 ## Project Context
 
 **Date**: January 2026  
-**Approach**: AI-assisted development (GitHub Copilot / Claude Sonnet 4)  
-**Purpose**: Learning project - exploring Python, FastAPI, and testing tools while building a practical Team Topologies visualization tool
+**Approach**: AI-assisted development (GitHub Copilot)  
+**Purpose**: Learning project - exploring FastAPI, frontend Canvas rendering, and testing while building a practical Team Topologies visualization tool
 
 ## Architecture Overview
+
+For a detailed list of third-party libraries (and why they’re used), see [DEPENDENCIES.md](DEPENDENCIES.md).
 
 ### Technology Stack
 
 **Backend**:
-- **Python 3.11+** - Core language
+- **Python 3.8+** - Core language
 - **FastAPI** - Modern async web framework
 - **Pydantic** - Data validation with type hints
 - **uvicorn** - ASGI server
@@ -21,10 +23,10 @@ Comprehensive guide for developing, testing, and contributing to the Team Topolo
 **Frontend**:
 - **Vanilla JavaScript (ES6 modules)** - No build step required
 - **HTML5 Canvas** - Interactive visualization
-- **marked.js v14** - Markdown rendering with GitHub Flavored Markdown (GFM) support
+- **marked.js** - Markdown rendering with GitHub Flavored Markdown (GFM) support
   - Replaces custom regex parsing for security and robustness
   - XSS protection and comprehensive markdown feature support
-  - CDN import: `https://cdn.jsdelivr.net/npm/marked@14.1.3/+esm`
+   - CDN import is defined in the frontend code
 
 **Testing**:
 - **pytest** - Backend unit tests (Python)
@@ -43,7 +45,8 @@ Modular architecture with clear separation of concerns:
 - **main.py** (42 lines) - Application setup, CORS middleware, router inclusion, static file serving
 - **backend/models.py** - Pydantic data models (TeamData, PositionUpdate) for type validation
 - **backend/services.py** - File operations and business logic (parse_team_file, write_team_file, find_all_teams, etc.)
-- **backend/routes.py** - FastAPI router with all API endpoints
+- **backend/routes_pre_tt.py** - Pre-TT (Baseline) API endpoints
+- **backend/routes_tt.py** - TT Design API endpoints
 
 ### Frontend (Vanilla JavaScript ES6 Modules)
 
@@ -76,7 +79,7 @@ Modular architecture with clear separation of concerns:
 
 ## Testing
 
-The project includes **112 tests total** across three layers to ensure quality during development.
+The project uses three layers of tests to ensure quality during development.
 
 ### Test Architecture Overview
 
@@ -100,17 +103,17 @@ Tests core Python functions in isolation. Run these frequently during backend de
 **Speed**: ~0.5s
 
 ```bash
-# Run all backend unit tests (with activated venv)
-pytest tests_backend/ -v
-
-# Or Windows direct path
+# Run all backend unit tests (Windows venv)
 .\venv\Scripts\python.exe -m pytest tests_backend/ -v
 
+# Linux/Mac
+python -m pytest tests_backend/ -v
+
 # With coverage report
-pytest tests_backend/ --cov=backend --cov=main --cov-report=html
+python -m pytest tests_backend/ --cov=backend --cov=main --cov-report=html
 
 # Run specific test
-pytest tests_backend/test_main.py::test_parse_team_file -v
+python -m pytest tests_backend/test_main.py::test_parse_team_file -v
 ```
 
 ### Frontend Unit Tests (Fast)
@@ -156,7 +159,7 @@ Full application tests using Playwright. Run these before commits to verify ever
 **Framework**: Playwright  
 **Coverage**: 40 tests across 6 focused, independent test files  
 **Speed**: ~11s with 6 parallel workers  
-**Requirement**: Server must be running on localhost:8000
+**Note**: Playwright is configured to start/stop the backend server on port 8000 automatically.
 
 #### Hidden DOM for Canvas Testing
 
@@ -170,9 +173,9 @@ Full application tests using Playwright. Run these before commits to verify ever
 ```html
 <!-- Added to frontend/index.html -->
 <div id="canvasTestState" style="display: none;" 
-     data-total-teams="34" 
-     data-filtered-teams="12"
-     data-active-filters='{"valueStreams":["E-commerce"],"platformGroupings":[]}'
+   data-total-teams="..." 
+   data-filtered-teams="..."
+   data-active-filters='{"valueStreams":["..."],"platformGroupings":[]}'
      data-search-term=""
      data-current-view="tt"></div>
 ```
@@ -180,10 +183,10 @@ Full application tests using Playwright. Run these before commits to verify ever
 Updated in `renderer.js` after each `draw()` call via `updateTestState()` function.
 
 **Benefits**:
-- ✅ **Reliable assertions** - Test actual state, not indirect indicators
-- ✅ **No race conditions** - State updates atomically with canvas render
-- ✅ **Better debugging** - Inspect state in browser DevTools during test failures
-- ✅ **Future-proof** - Easy to add more attributes as needed
+- **Reliable assertions** - Test actual state, not indirect indicators
+- **No race conditions** - State updates atomically with canvas render
+- **Better debugging** - Inspect state in browser DevTools during test failures
+- **Future-proof** - Easy to add more attributes as needed
 
 **Example Test Usage**:
 ```typescript
@@ -293,12 +296,6 @@ npm run test:serial
 ```powershell
 # Run all tests in sequence (Windows)
 .\run-all-tests.ps1
-
-# Output:
-# Backend:  10 tests ✓ (~0.5s)
-# Frontend: 62 tests ✓ (~1.3s)
-# E2E:      32 tests ✓ (~12s)
-# Total:    104 tests in ~14s
 ```
 
 ## Development Workflow
@@ -311,7 +308,7 @@ npm run test:serial
    cd team-topologies-visualizer
    py -m venv venv
    .\venv\Scripts\activate
-   pip install -r requirements.txt
+   python -m pip install -r requirements.txt
    ```
 
 2. **Install frontend dependencies**
@@ -347,7 +344,7 @@ python -m uvicorn main:app --reload --port 8000
 **Backend changes**:
 1. Edit Python files in `backend/` or `main.py`
 2. Server automatically reloads (hot-reload enabled)
-3. Run backend unit tests: `pytest tests_backend/ -v`
+3. Run backend unit tests: `python -m pytest tests_backend/ -v` (or `\.\venv\Scripts\python.exe -m pytest tests_backend/ -v` on Windows)
 4. Test manually in browser
 
 **Frontend changes**:
@@ -394,7 +391,7 @@ python -m uvicorn main:app --reload --port 8000
 **Solution**: Split into focused modules:
 - models.py: Data validation with Pydantic
 - services.py: Business logic and file operations
-- routes.py: API endpoint definitions
+- routes_pre_tt.py / routes_tt.py: API endpoint definitions
 - main.py: Application setup (now 42 lines)
 
 **Benefits**: 
@@ -509,30 +506,20 @@ git commit -m "docs: Update CONCEPTS.md with references"
 
 ## Performance Considerations
 
-### Canvas Rendering
+This app is optimized for local use and workshops (not massive scale). If you ever need to scale it up (many users / 100+ teams), these are the main levers:
 
-- **Optimize draw calls**: Batch similar operations
-- **Avoid redundant renders**: Only redraw when data changes
-- **Use requestAnimationFrame**: For smooth animations
-
-### File Operations
-
-- **Cache team data**: Load once, reuse until refresh
-- **Lazy loading**: Load team details only when needed
-- **Async operations**: Don't block UI during file reads
+- **Rendering**: avoid unnecessary redraws; keep draw work proportional to what changed
+- **Data loading**: cache loaded team data and refresh explicitly
+- **Interactions**: keep pan/zoom/drag handlers lightweight
 
 ## Future Improvements
 
-### Potential Enhancements
+Some power-user features already exist (e.g., undo/redo and keyboard shortcuts). Remaining ideas (if you want to grow scope):
 
-1. **TypeScript migration**: If project grows and team expands
-2. **Database backend**: For larger organizations (100+ teams)
-3. **Real-time collaboration**: Multiple users editing simultaneously
-4. **Undo/redo**: Canvas operation history
-5. **Keyboard shortcuts**: Power user features
-6. **Mobile support**: Touch-optimized interactions
-7. **Dark mode**: Alternative color scheme
-8. **Team templates**: Quick team creation from presets
+- **Mobile support**: Touch-optimized interactions
+- **Dark mode**: Alternative color scheme
+- **Real-time collaboration**: Multiple users editing simultaneously
+- **Alternative storage**: optional DB backend for very large org models
 
 ### Technical Debt
 

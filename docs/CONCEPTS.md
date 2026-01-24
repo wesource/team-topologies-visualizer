@@ -6,6 +6,10 @@ For authoritative definitions, see the [Team Topologies book](https://teamtopolo
 
 ## The Tool's Two Views
 
+**Why these names?**
+- **Baseline** is a reference point for comparison ("where we started / what we’re comparing against"), even if you’re years into adoption.
+- **TT Design** is intentionally not a “final target state” — it’s a living design you keep refining.
+
 ### Baseline View
 
 Your current organization visualized from multiple perspectives:
@@ -14,7 +18,7 @@ Your current organization visualized from multiple perspectives:
 - **Product Lines**: Teams grouped by product/project
 - **Business Streams**: Teams grouped by customer-facing value streams
 
-> **🧊 "The Rubik's Cube Principle"**: The same teams look different from different angles, but they're still the same teams.
+> **"The Rubik's Cube Principle"**: The same teams look different from different angles, but they're still the same teams.
 
 These perspectives reveal misalignments without changing underlying team data.
 
@@ -64,7 +68,7 @@ Based on [Team Topologies Shape Templates](https://github.com/TeamTopologies/Tea
 ## The 3 Interaction Modes
 
 - **Collaboration**: High-touch, time-boxed joint delivery (solid purple line)
-- **X-as-a-Service**: Low-touch self-service consumption (dashed black line)  
+- **X-as-a-Service**: Low-touch self-service consumption (dashed black line)
 - **Facilitating**: Temporary coaching/enablement (dotted green line)
 
 ## Team Files (Markdown + YAML)
@@ -104,7 +108,7 @@ The tool parses these and renders them as interaction lines.
 
 ### Cognitive Load
 
-Toggle traffic-light indicators (🟢🟡🔴) to visualize team overload.
+Toggle simple green/yellow/red indicators to visualize team overload.
 
 ### Focus Mode
 
@@ -163,7 +167,7 @@ In TT Design, stream-aligned teams can be grouped by value stream:
 
 Capture immutable "state at a point in time" for your TT Design:
 
-- Click "📸 Create Snapshot" in TT Design view
+- Click "Create Snapshot" in TT Design view
 - Compare snapshots to visualize evolution
 - Stored as JSON in `data/tt-snapshots/`
 

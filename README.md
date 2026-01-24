@@ -1,15 +1,14 @@
-# Team Topologies Visualizer
+# <img src="frontend/rubiks-cube-logo.svg" alt="Rubik's cube" width="36" style="vertical-align: middle;" /> Team Topologies Visualizer
 
-A web app for visualizing organizational team structures using **Team Topologies (TT)** concepts, to help you plan and communicate your organization's transformation journey.
+A web app for visualizing team structures using **Team Topologies (TT)** concepts.
 
-Supports two complementary views:
-- **Baseline**: your baseline reference point (typically pre-TT), captured from multiple perspectives: hierarchy, product lines, business streams — e.g., value streams / SAFe “trains”
-- **TT Design**: your Team Topologies design (team types + interaction modes + groupings)
+Two complementary views:
+- **Baseline**: your current/reference structure (pre-TT), shown from multiple perspectives (hierarchy, product lines, business streams)
+- **TT Design**: your intended Team Topologies design (team types, interaction modes, groupings)
 
-**View naming (why “Baseline” and “TT Design”?)**
+See [docs/CONCEPTS.md](docs/CONCEPTS.md#the-tools-two-views) for the view model and naming rationale.
 
-- **Baseline** is a reference point for comparison. Even years into a TT adoption, it’s still useful as the “where we started / what we’re comparing against”.
-- **TT Design** is intentionally not a “final target state” — it’s a living design you keep refining over time.
+This tool is inspired by **Team Topologies** by Matthew Skelton and Manuel Pais — especially the concepts summarized at https://teamtopologies.com/key-concepts (more references at the end of this README).
 
 > **Note**: This project was built with AI assistance to explore Team Topologies hands-on and experiment with webapp development in VS Code.
 
@@ -100,7 +99,7 @@ Open http://localhost:8000/static/index.html
 
 ## TT Design Variants
 
-The repo includes two example TT designs:
+The repo includes two example TT designs (based on the example data described below):
 
 - **Mid-Stage Transformation** (default): [data/tt-teams/](data/tt-teams/)
 - **First-Step Transformation** (optional): [data/tt-teams-initial/](data/tt-teams-initial/) (see [data/tt-teams-initial/README.md](data/tt-teams-initial/README.md))
@@ -121,21 +120,14 @@ data/tt-teams/tt-team-types.json
 
 ## Example Data
 
-Includes a fictitious organization (**LogiCore Systems**) - a logistics software company that grew from a small route optimization startup to serving both B2B (fleet operators) and B2C (drivers/customers) markets.
+Includes a fictitious organization (**LogiCore Systems**) to illustrate typical “before vs after” patterns during a Team Topologies adoption.
 
-**Baseline view** shows their pre-transformation structure with typical scaling anti-patterns:
-- Component teams organized by technology (Backend, Frontend, Mobile, QA)
-- Handoffs between teams (Dev → QA → Ops)
-- Shared service bottlenecks (Database team everyone waits for)
-- ~22 teams with unclear boundaries and coordination overhead
+- **Baseline view**: a pre-transformation structure with common scaling pain (technology component teams, handoffs, shared-service bottlenecks)
+- **TT Design view**: a Team Topologies-inspired design with stream-aligned teams, platform capabilities, enabling support, and clearer ownership
 
-**TT Design view** shows reorganization using Team Topologies principles:
-- Stream-aligned teams for B2B Services and B2C Services value streams
-- True platform teams providing self-service capabilities
-- Enabling teams for capability building
-- ~34 teams with clear ownership and reduced dependencies
+More context and details: [docs/CONCEPTS.md](docs/CONCEPTS.md#example-data-logicore-systems)
 
-**Disclaimer**: All example data (company names, products, technical details) is entirely fictitious for demonstration purposes.
+**Disclaimer**: All example data (company/team/product names, technical details) is entirely fictitious for demonstration purposes.
 
 ## Testing
 
@@ -146,7 +138,7 @@ cd frontend; npm test             # Frontend only
 cd tests; npx playwright test     # E2E only
 ```
 
-**Test Coverage**: 544 total tests (133 backend + 329 frontend + 82 E2E)
+The test suite is split across backend (pytest), frontend (Vitest), and E2E (Playwright). To avoid docs drift, exact test counts are not listed here.
 
 ## Linting
 
@@ -165,6 +157,8 @@ npm run lint -- --fix
 - **Frontend**: HTML5 Canvas, Vanilla JavaScript (no build step)
 - **Testing**: pytest, Vitest, Playwright
 - **Data Format**: Markdown with YAML front matter
+
+More details: [docs/SETUP.md](docs/SETUP.md), [DEVELOPMENT.md](DEVELOPMENT.md), and [DEPENDENCIES.md](DEPENDENCIES.md)
 
 ## Contributing
 

@@ -10,7 +10,7 @@ npx playwright install
 
 ## Running Tests
 
-### ✨ Automatic Server Start (Recommended)
+### Automatic Server Start (Recommended)
 
 The test suite now automatically starts and stops the backend server:
 
@@ -19,7 +19,7 @@ cd tests
 npm test
 ```
 
-That's it! The Playwright config will:
+The Playwright config will:
 - Start the FastAPI backend server automatically
 - Wait for it to be ready
 - Run all tests
@@ -61,26 +61,20 @@ This runs backend tests → frontend tests → E2E tests in sequence.
 The test configuration includes:
 - **Automatic retries**: Tests retry once locally, twice in CI
 - **Timeout settings**: 60s per test, 30s for navigation
-- **Parallel execution**: 6 workers for faster test runs
+- **Parallel execution**: Worker count is auto-detected locally
 - **Screenshot on failure**: Automatic screenshot capture for debugging
 
 ## What's Tested
 
-✅ Application loads correctly
-✅ Canvas element is rendered
-✅ API endpoints return valid data (organization hierarchy, teams, team types)
-✅ View switching (Pre-TT ↔ TT Design)
-✅ Team sidebar displays teams
-✅ Organization hierarchy structure (6 departments)
-✅ Customer Solutions has 4 regions
-✅ Engineering has 5 line managers
-✅ Legend displays team types
-✅ Markdown rendering in team detail modals
-✅ Screenshot regression tests
-
-## Test Results
-
-Recent test run: **19-24/24 tests passing** (some occasional timeouts)
+- Application loads correctly
+- Canvas element is rendered
+- API endpoints return valid data (organization hierarchy, teams, team types)
+- View switching (Pre-TT and TT Design)
+- Team sidebar displays teams
+- Organization hierarchy structure (departments, regions, line managers)
+- Legend displays team types
+- Markdown rendering in team detail modals
+- Screenshot regression tests
 
 ## Troubleshooting
 
@@ -90,8 +84,8 @@ Recent test run: **19-24/24 tests passing** (some occasional timeouts)
 - Increase timeouts in `playwright.config.ts` if needed
 
 **Server won't start?**
-- Ensure virtual environment is set up: `python -m venv venv`
-- Install dependencies: `pip install -r requirements.txt`
+- Ensure virtual environment is set up: `py -m venv venv` (Windows) or `python3 -m venv venv` (Linux/Mac)
+- Activate it, then install dependencies: `python -m pip install -r requirements.txt`
 - Test server manually: `.\venv\Scripts\python.exe -m uvicorn main:app --port 8000`
 
 ## Screenshots

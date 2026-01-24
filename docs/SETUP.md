@@ -18,19 +18,34 @@
 
 2. **Create a virtual environment**
    ```bash
+   # Windows
    py -m venv venv
+
+   # Linux/Mac
+   python3 -m venv venv
    ```
 
-3. **Install dependencies**
+3. **Activate the virtual environment**
    ```bash
-   .\venv\Scripts\pip.exe install -r requirements.txt
-   ```
-   
-   Or on Linux/Mac:
-   ```bash
+   # Windows
+   .\venv\Scripts\activate
+
+   # Linux/Mac
    source venv/bin/activate
-   pip install -r requirements.txt
    ```
+
+4. **Install dependencies**
+   ```bash
+   python -m pip install -r requirements.txt
+   ```
+
+5. **Start the server**
+   ```bash
+   python -m uvicorn main:app --reload
+   ```
+
+6. **Open the app**
+  - Open http://localhost:8000/static/index.html
 
 ### Option B: Docker/Podman Setup
 
@@ -129,7 +144,7 @@ If `TT_TEAMS_VARIANT` is not set, the app uses the default variant.
 
 ### Running Tests Locally
 
-The project has 332 tests across three layers: backend (pytest), frontend (Vitest), and E2E (Playwright).
+Tests are split across three layers: backend (pytest), frontend (Vitest), and E2E (Playwright).
 
 #### Backend Tests (pytest)
 
@@ -219,9 +234,7 @@ GitHub Actions automatically runs all tests and generates coverage reports:
 4. Download and unzip the report
 5. Open `index.html` in browser
 
-**Current coverage:**
-- Backend: ~50% (758 statements, 382 missed)
-- Frontend: Generated per-module (varies)
+Coverage changes over time. Use the commands above to generate up-to-date coverage reports locally.
 
 ## Linting
 
@@ -263,10 +276,10 @@ npm run lint -- --fix
 
 Before committing code:
 
-1. ✅ Run linters (Python + JavaScript)
-2. ✅ Run relevant tests (at minimum, test the area you changed)
-3. ✅ Check no console errors in browser (for frontend changes)
-4. ✅ Verify app still loads (run uvicorn and open browser)
+1. Run linters (Python + JavaScript)
+2. Run relevant tests (at minimum, test the area you changed)
+3. Check for console errors in the browser (for frontend changes)
+4. Verify the app still loads (run uvicorn and open browser)
 
 **Tip**: The CI pipeline runs linters and tests automatically, but catching issues locally saves time.
 
@@ -384,9 +397,9 @@ If the container is already running (see setup above), just open:
 
 Use the radio buttons in the header to switch between:
 - **Pre-TT** - Shows the current organizational state with three perspectives:
-  - **📊 Hierarchy**: Traditional org chart (line managers, departments)
-  - **🏭 Product Lines**: Vertical product lanes + horizontal shared teams row
-  - **🌊 Value Streams**: Swimlane layout showing teams grouped by customer journey
+  - **Hierarchy**: Traditional org chart (line managers, departments)
+  - **Product Lines**: Vertical product lanes + horizontal shared teams row
+  - **Value Streams**: Swimlane layout showing teams grouped by customer journey
 - **TT Design** - Shows the target Team Topologies patterns
 
 **Perspective Selector** (Pre-TT only):
@@ -403,7 +416,7 @@ Use the radio buttons in the header to switch between:
 - **Click teams** in the sidebar to select them
 - **Zoom** using mouse wheel
 - **Connections** between teams show interaction modes with different line styles
-- **Auto-align Teams** (Current State view only) - Click the "⚡ Auto-align Teams" button to automatically position teams vertically under their line managers in an org-chart layout. Teams are spaced 120px apart and aligned at a consistent X offset from their manager. Positions are automatically saved to each team's markdown file.
+- **Auto-align Teams** (Current State view only) - Click the "Auto-align Teams" button to automatically position teams vertically under their line managers in an org-chart layout. Positions are automatically saved to each team's markdown file.
 - **Show Communication Lines** checkbox (Pre-TT view) - Toggle to show dependencies and coordination lines between teams. Hidden by default to provide a cleaner org-chart visualization. When enabled, shows organic dependencies that exist today (not designed interaction modes).
 - **Show Interaction Modes** checkbox (TT Design view) - Toggle interaction mode lines (collaboration, X-as-a-Service, facilitating) on/off to reduce visual clutter when focusing on team structure. These are designed patterns, not organic dependencies.
 - **Refresh** button - Reload all team markdown files and configuration from disk. Useful when editing files externally. Preserves your current zoom/pan position on the canvas.
@@ -412,11 +425,11 @@ Use the radio buttons in the header to switch between:
 
 After manually editing team markdown files, use the validation feature to catch errors before they cause issues:
 
-1. **Click the "✓ Validate Files" button** in the toolbar
+1. **Click the "Validate Files" button** in the toolbar
 2. **Review the validation report** showing:
    - Summary statistics (total files, valid files, warnings, errors)
    - Detailed issues organized by file
-   - Color-coded severity (🔴 errors must be fixed, 🟡 warnings are recommendations)
+  - Severity levels (errors must be fixed; warnings are recommendations)
 3. **Fix any errors** by editing the markdown files:
    - YAML syntax errors or duplicate front matter blocks
    - Missing required fields (name, team_type, position)
@@ -438,8 +451,9 @@ This helps maintain data quality when editing files directly, catching issues be
 The `templates/` directory contains ready-to-use markdown templates to help you create new teams quickly:
 
 **Available templates:**
-- `team-api-template-base.md` - Strictly follows the [official Team API template](https://github.com/TeamTopologies/Team-API-template) from Team Topologies
-- `team-api-template-extended.md` - Adds platform product metrics, roadmap, and team member sections
+- `templates/pre-tt-team-template.md` - Starting point for baseline (Pre-TT) teams
+- `templates/tt-design-team-api-template-base.md` - Minimal Team API for TT Design teams
+- `templates/tt-design-team-api-template-extended.md` - Extended Team API with optional platform product metrics
 
 **How to use templates:**
 
@@ -449,11 +463,14 @@ The `templates/` directory contains ready-to-use markdown templates to help you 
 
 2. **Copy template to your data directory:**
    ```bash
-   # For TT Design teams
-   cp templates/team-api-template-base.md data/tt-teams/my-new-team.md
-   
-   # For Pre-TT teams (simpler structure)
-   # Create from scratch or copy an existing current-teams file
+  # Bash (Linux/Mac)
+  cp templates/tt-design-team-api-template-base.md data/tt-teams/my-new-team.md
+
+  # PowerShell (Windows)
+  Copy-Item templates/tt-design-team-api-template-base.md data/tt-teams/my-new-team.md
+
+  # For Pre-TT teams, start from:
+  # templates/pre-tt-team-template.md
    ```
 
 3. **Edit the YAML front matter:**
@@ -470,7 +487,7 @@ The `templates/` directory contains ready-to-use markdown templates to help you 
    - Keep "## Teams we currently interact with" table for automatic dependency parsing
 
 5. **Validate your new file:**
-   - Click "✓ Validate Files" to check for errors
+  - Click "Validate Files" to check for errors
    - Fix any filename mismatches or missing required fields
 
 6. **Refresh the application:**
@@ -482,7 +499,7 @@ The `templates/` directory contains ready-to-use markdown templates to help you 
 - Add industry-specific sections (HIPAA compliance, SOC2 controls, etc.)
 - Share templates across your organization for consistency
 
-See [CONCEPTS.md](CONCEPTS.md#team-api-outward-facing-team-interface) for detailed guidance on Team APIs and when to use each template.
+See [CONCEPTS.md](CONCEPTS.md) for the team file format overview.
 
 ## Team Files
 

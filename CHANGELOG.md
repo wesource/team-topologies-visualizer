@@ -16,6 +16,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added tests for mixed teams and notes parsing scenarios
 
 ### Changed
+- **Docs QA pass (2026-01-19)**: Tightened setup/docs for first-time readers
+  - Standardized local Python setup steps (create venv, activate, install, run)
+  - Fixed incorrect template filenames in SETUP docs
+  - Removed hard-coded test count/coverage numbers to reduce documentation drift
+  - Removed emoji-heavy button labels in docs to keep tone consistent
+  - Restructured BACKLOG into Now/Next/Later and clarified contributor guidance
+  - Shortened README intro and moved view-naming rationale into CONCEPTS
+  - Linked DEVELOPMENT tech stack notes to DEPENDENCIES and trimmed long-term/perf sections
+
 - **Documentation Simplification (2026-01-18)**: Shortened README and CONCEPTS for a cleaner first-read
   - Added a short AI disclaimer near the top of README
   - Removed the "Fractal Organizational Patterns" section from CONCEPTS
@@ -23,6 +32,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **TT Color Palette Alignment (2026-01-19)**: Updated TT team-type fill colors to match Team Shape Templates
   - Updated `data/tt-teams/tt-team-types.json` and `data/tt-teams-initial/tt-team-types.json`
   - Removed outdated color names from the team type bullets in CONCEPTS
+
+- **Demo Mode Banner (2026-01-18)**: Updated banner emoji from 🎮 (game controller) to ✨ (sparkles)
+  - Better conveys "showcase/try it out" feel rather than gaming connotation
 
 ### Fixed
 - **Console Warning Spam (2026-01-18)**: Eliminated excessive dependency warnings appearing on every mouse movement
@@ -38,12 +50,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **QA Team Naming (2026-01-18)**: Standardized team name to "QA & Testing Team" across all files
   - Fixed inconsistent references in mobile-app-team.md ("QA and Testing Team" vs "QA & Testing Team")
   - Eliminates dependency warnings about missing target teams
-
-### Changed
-- **Demo Mode Banner (2026-01-18)**: Updated banner emoji from 🎮 (game controller) to ✨ (sparkles)
-  - Better conveys "showcase/try it out" feel rather than gaming connotation
-
-### Fixed
 - **Communication Lines Rendering (2026-01-18)**: Fixed multiple bugs related to connection line positioning and rendering
   - **getBoxEdgePoint**: Changed from geometric intersection calculation to simple edge center positioning
     - Lines now start/end at center of box edges instead of arbitrary offset positions

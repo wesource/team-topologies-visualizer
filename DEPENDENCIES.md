@@ -5,10 +5,10 @@ This document lists all external components and libraries used in the Team Topol
 ## Philosophy
 
 We follow a pragmatic approach:
-- ✅ **Use proven libraries** for common problems (HTTP, validation, parsing)
-- ✅ **Keep dependencies minimal** - only add when there's clear value
-- ✅ **Prefer standard library** when performance/features are sufficient
-- ❌ **Avoid reinventing** solved problems (don't build our own YAML parser)
+- **Use proven libraries** for common problems (HTTP, validation, parsing)
+- **Keep dependencies minimal** - only add when there's clear value
+- **Prefer standard library** when performance/features are sufficient
+- **Avoid reinventing** solved problems (don't build our own YAML parser)
 
 ---
 
@@ -54,7 +54,7 @@ We follow a pragmatic approach:
 ## Frontend (JavaScript)
 
 ### Core Libraries
-- **None (Vanilla JavaScript)** 🎉
+- **None (Vanilla JavaScript)**
   - Why: Project is simple enough, no framework needed
   - Benefits: Fast, no build step (besides tests), no framework lock-in
   - HTML5 Canvas API used directly for visualization
@@ -140,17 +140,17 @@ httpx==0.28.1            # HTTP client (tests only)
 ## What We DON'T Use (And Why)
 
 ### Frontend
-- ❌ **React/Vue/Angular**: Overkill for our use case, vanilla JS is sufficient
-- ❌ **TypeScript**: Would add build step, type checking less critical for this project
-- ❌ **Lodash/Underscore**: Modern JS has built-in array methods
-- ❌ **Axios**: Fetch API works fine for our needs
-- ❌ **D3.js**: Canvas API gives us full control for custom visualization
+- **React/Vue/Angular**: Overkill for our use case, vanilla JS is sufficient
+- **TypeScript**: Would add build step, type checking less critical for this project
+- **Lodash/Underscore**: Modern JS has built-in array methods
+- **Axios**: Fetch API works fine for our needs
+- **D3.js**: Canvas API gives us full control for custom visualization
 
 ### Backend
-- ❌ **SQLAlchemy/Database**: Files are perfect for this scale
-- ❌ **Celery/Task Queue**: No async jobs needed
-- ❌ **Redis/Cache**: File system caching sufficient
-- ❌ **Custom YAML parser**: PyYAML is battle-tested
+- **SQLAlchemy/Database**: Files are perfect for this scale
+- **Celery/Task Queue**: No async jobs needed
+- **Redis/Cache**: File system caching sufficient
+- **Custom YAML parser**: PyYAML is battle-tested
 
 ---
 
@@ -197,8 +197,8 @@ All dependencies use permissive licenses compatible with our project:
 - **Apache 2.0**: Pydantic
 - **PSF**: Python standard library
 
-✅ No GPL or restrictive licenses that would affect our code.
+No GPL or restrictive licenses that would affect our code.
 
 ---
 
-Last updated: January 3, 2026
+Last updated: January 2026
