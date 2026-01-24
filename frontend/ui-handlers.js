@@ -15,7 +15,7 @@ export function handleViewChange(e, loadAllTeams, _draw) {
     clearPositionHistory();
     updateUndoButtonState();
 
-    // Show/hide perspective selector (Pre-TT only)
+    // Show/hide perspective selector (Baseline only)
     const perspectiveSelector = document.getElementById('perspectiveSelector');
     if (perspectiveSelector) {
         if (state.currentView === 'current') {
@@ -42,7 +42,7 @@ export function handleViewChange(e, loadAllTeams, _draw) {
         }
     }
 
-    // Show/hide team type badges checkbox (visible in Pre-TT view)
+    // Show/hide team type badges checkbox (visible in Baseline view)
     const teamTypeBadgesLabel = document.getElementById('teamTypeBadgesLabel');
     const cognitiveLoadBadgesDivider = document.getElementById('cognitiveLoadBadgesDivider');
     if (teamTypeBadgesLabel && cognitiveLoadBadgesDivider) {
@@ -152,11 +152,11 @@ export async function handlePerspectiveChange(e, draw) {
     const target = e.target;
     state.currentPerspective = target.value;
 
-    // Show team type badges checkbox for all Pre-TT perspectives
+    // Show team type badges checkbox for all Baseline perspectives
     const teamTypeBadgesLabel = document.getElementById('teamTypeBadgesLabel');
     const cognitiveLoadBadgesDivider = document.getElementById('cognitiveLoadBadgesDivider');
     if (teamTypeBadgesLabel && cognitiveLoadBadgesDivider) {
-        // Always show in Pre-TT view (hierarchy, product-lines, business-streams)
+        // Always show in Baseline view (hierarchy, product-lines, business-streams)
         teamTypeBadgesLabel.style.display = 'flex';
         cognitiveLoadBadgesDivider.style.display = 'block';
     }
@@ -372,7 +372,7 @@ export function setupUIEventListeners(loadAllTeams, draw, openAddTeamModal, clos
         radio.addEventListener('change', (e) => handleViewChange(e, loadAllTeams, draw));
     });
 
-    // Perspective selector (Pre-TT: Hierarchy vs Product Lines)
+    // Perspective selector (Baseline: Hierarchy vs Product Lines vs Business Streams)
     document.querySelectorAll('input[name="perspective"]').forEach(radio => {
         radio.addEventListener('change', (e) => handlePerspectiveChange(e, draw));
     });

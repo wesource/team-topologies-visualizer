@@ -17,7 +17,7 @@ const SHARED_TEAM_SPACING = 20;
 /**
  * Draw Product Lines View with hybrid layout
  * @param {CanvasRenderingContext2D} ctx - Canvas context
- * @param {Object} productLinesData - Data from /api/pre-tt/product-lines
+ * @param {Object} productLinesData - Data from /api/baseline/product-lines
  * @param {Array} teams - All teams (for position updates)
  * @param {Object} teamColorMap - Team type colors
  * @param {Function} wrapText - Text wrapping function

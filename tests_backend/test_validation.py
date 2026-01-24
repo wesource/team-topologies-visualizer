@@ -13,14 +13,14 @@ def temp_data_dir():
     with tempfile.TemporaryDirectory() as tmpdir:
         temp_path = Path(tmpdir)
         # Create subdirectories
-        (temp_path / "current-teams").mkdir(parents=True)
+        (temp_path / "baseline-teams").mkdir(parents=True)
         (temp_path / "tt-teams").mkdir(parents=True)
         yield temp_path
 
 
 def write_team_file(data_dir: Path, filename: str, content: str, view: str = "tt"):
     """Helper to write a team file"""
-    target_dir = data_dir / ("tt-teams" if view == "tt" else "current-teams")
+    target_dir = data_dir / ("tt-teams" if view == "tt" else "baseline-teams")
     target_dir.mkdir(parents=True, exist_ok=True)
     file_path = target_dir / filename
     file_path.write_text(content, encoding='utf-8')
@@ -29,9 +29,9 @@ def write_team_file(data_dir: Path, filename: str, content: str, view: str = "tt
 
 def write_config_file(data_dir: Path, view: str, config_content: str):
     """Helper to write team types config"""
-    target_dir = data_dir / ("tt-teams" if view == "tt" else "current-teams")
+    target_dir = data_dir / ("tt-teams" if view == "tt" else "baseline-teams")
     target_dir.mkdir(parents=True, exist_ok=True)
-    config_file = target_dir / ("current-team-types.json" if view == "current" else "tt-team-types.json")
+    config_file = target_dir / ("baseline-team-types.json" if view == "baseline" else "tt-team-types.json")
     config_file.write_text(config_content, encoding='utf-8')
 
 
@@ -164,8 +164,8 @@ team_type: invalid-type
         assert any("Invalid team_type: 'invalid-type'" in error for error in result["issues"][0]["errors"])
 
     def test_invalid_team_type_current_view(self, temp_data_dir, monkeypatch):
-        """Should detect invalid team type in current view"""
-        monkeypatch.setattr('backend.validation.get_data_dir', lambda view: temp_data_dir / "current-teams")
+        """Should detect invalid team type in baseline view"""
+        monkeypatch.setattr('backend.validation.get_data_dir', lambda view: temp_data_dir / "baseline-teams")
 
         # Write config file with valid types
         config = """{
@@ -173,7 +173,7 @@ team_type: invalid-type
     {"id": "feature-team", "name": "Feature Team", "color": "#3498db"}
   ]
 }"""
-        write_config_file(temp_data_dir, "current", config)
+        write_config_file(temp_data_dir, "baseline", config)
 
         content = """---
 name: Test Team
@@ -181,9 +181,9 @@ team_type: invalid-type
 ---
 # Description
 """
-        write_team_file(temp_data_dir, "test-team.md", content, "current")
+        write_team_file(temp_data_dir, "test-team.md", content, "baseline")
 
-        result = validate_all_team_files("current")
+        result = validate_all_team_files("baseline")
 
         assert result["files_with_errors"] == 1
         assert any("Invalid team_type: 'invalid-type'" in error for error in result["issues"][0]["errors"])
@@ -282,8 +282,8 @@ metadata:
         assert any("outside recommended range (5-9 people)" in warning for warning in result["issues"][0]["warnings"])
 
     def test_dependencies_reference_nonexistent_team(self, temp_data_dir, monkeypatch):
-        """Should warn if dependencies reference non-existent teams (current view)"""
-        monkeypatch.setattr('backend.validation.get_data_dir', lambda view: temp_data_dir / "current-teams")
+        """Should warn if dependencies reference non-existent teams (baseline view)"""
+        monkeypatch.setattr('backend.validation.get_data_dir', lambda view: temp_data_dir / "baseline-teams")
 
         # Write config
         config = """{
@@ -291,7 +291,7 @@ metadata:
     {"id": "feature-team", "name": "Feature Team", "color": "#3498db"}
   ]
 }"""
-        write_config_file(temp_data_dir, "current", config)
+        write_config_file(temp_data_dir, "baseline", config)
 
         content = """---
 name: Test Team
@@ -301,16 +301,16 @@ dependencies:
 ---
 # Description
 """
-        write_team_file(temp_data_dir, "test-team.md", content, "current")
+        write_team_file(temp_data_dir, "test-team.md", content, "baseline")
 
-        result = validate_all_team_files("current")
+        result = validate_all_team_files("baseline")
 
         assert result["files_with_warnings"] == 1
         assert any("Dependency 'Nonexistent Team' not found" in warning for warning in result["issues"][0]["warnings"])
 
     def test_interaction_modes_reference_nonexistent_team(self, temp_data_dir, monkeypatch):
-        """Should warn if interaction_modes reference non-existent teams (current view)"""
-        monkeypatch.setattr('backend.validation.get_data_dir', lambda view: temp_data_dir / "current-teams")
+        """Should warn if interaction_modes reference non-existent teams (baseline view)"""
+        monkeypatch.setattr('backend.validation.get_data_dir', lambda view: temp_data_dir / "baseline-teams")
 
         # Write config
         config = """{
@@ -318,7 +318,7 @@ dependencies:
     {"id": "feature-team", "name": "Feature Team", "color": "#3498db"}
   ]
 }"""
-        write_config_file(temp_data_dir, "current", config)
+        write_config_file(temp_data_dir, "baseline", config)
 
         content = """---
 name: Test Team
@@ -329,9 +329,9 @@ interaction_modes:
 ---
 # Description
 """
-        write_team_file(temp_data_dir, "test-team.md", content, "current")
+        write_team_file(temp_data_dir, "test-team.md", content, "baseline")
 
-        result = validate_all_team_files("current")
+        result = validate_all_team_files("baseline")
 
         assert result["files_with_warnings"] == 1
         assert any("references unknown team: 'Nonexistent Team'" in warning for warning in result["issues"][0]["warnings"])

@@ -104,10 +104,10 @@ Content
 class TestGetDataDir:
     """Test data directory selection based on view."""
 
-    def test_get_data_dir_current(self):
-        """Should return current-teams directory for 'current' view."""
-        data_dir = get_data_dir('current')
-        assert data_dir.name == 'current-teams'
+    def test_get_data_dir_baseline(self):
+        """Should return baseline-teams directory for 'baseline' view."""
+        data_dir = get_data_dir('baseline')
+        assert data_dir.name == 'baseline-teams'
         assert 'data' in str(data_dir)
 
     def test_get_data_dir_tt(self):
@@ -120,14 +120,14 @@ class TestGetDataDir:
         assert 'data' in str(data_dir)
 
     def test_get_data_dir_default(self):
-        """Should return current-teams directory for invalid view."""
+        """Should return baseline-teams directory for invalid view."""
         data_dir = get_data_dir('invalid')
-        assert data_dir.name == 'current-teams'
+        assert data_dir.name == 'baseline-teams'
 
     def test_get_data_dir_none(self):
-        """Should return current-teams directory when view is None."""
+        """Should return baseline-teams directory when view is None."""
         data_dir = get_data_dir(None)
-        assert data_dir.name == 'current-teams'
+        assert data_dir.name == 'baseline-teams'
 
 
 class TestTeamDataStructure:
@@ -216,22 +216,22 @@ class TestFilenameConsistency:
                 error_msg += f"  {m['file']} -> Team: '{m['team_name']}' (expected: {m['expected']})\n"
             pytest.fail(error_msg)
 
-    def test_current_teams_filenames_match_team_names(self):
-        """All current-teams filenames should match team names (lowercase, spaces->hyphens)."""
-        from backend.services import CURRENT_TEAMS_DIR
+    def test_baseline_teams_filenames_match_team_names(self):
+        """All baseline-teams filenames should match team names (lowercase, spaces->hyphens)."""
+        from backend.services import BASELINE_TEAMS_DIR
 
         mismatches = []
         # Files that are intentionally different (hierarchy/dept files)
         skip_files = {
             'company-leadership.md',  # Leadership structure file
             'organization-hierarchy.json',
-            'current-team-types.json',
+            'baseline-team-types.json',
             'README.md',  # Documentation file
             'example-undefined-team.md'  # Example file for undefined team type
         }
         # Also skip files ending with -dept.md as they're department/hierarchy files
 
-        for file_path in CURRENT_TEAMS_DIR.rglob("*.md"):
+        for file_path in BASELINE_TEAMS_DIR.rglob("*.md"):
             # Skip known hierarchy files
             if file_path.name in skip_files or file_path.name.endswith('-dept.md'):
                 continue

@@ -24,10 +24,10 @@ def disable_read_only_mode():
         yield
 
 
-def test_pre_tt_position_blocked_in_read_only_mode(enable_read_only_mode):
-    """Test that Pre-TT position updates are blocked in read-only mode"""
+def test_baseline_position_blocked_in_read_only_mode(enable_read_only_mode):
+    """Test that Baseline position updates are blocked in read-only mode"""
     response = client.patch(
-        "/api/pre-tt/teams/test-team/position",
+        "/api/baseline/teams/test-team/position",
         json={"x": 100, "y": 200}
     )
     assert response.status_code == 403

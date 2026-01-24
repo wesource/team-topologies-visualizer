@@ -664,7 +664,7 @@ export async function showValidationReport(view) {
     modal.style.display = 'block';
 
     try {
-        const prefix = view === 'current' ? '/pre-tt' : '/tt';
+        const prefix = view === 'current' ? '/baseline' : '/tt';
         const response = await fetch(`/api${prefix}/validate`);
         const report = await response.json();
 

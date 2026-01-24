@@ -2,10 +2,10 @@
 import { getApiUrl } from './config.js';
 
 /**
- * Get the API prefix based on view (Pre-TT or TT-Design)
+ * Get the API prefix based on view (Baseline or TT-Design)
  */
 function getViewPrefix(view) {
-    return view === 'current' ? '/pre-tt' : '/tt';
+    return view === 'current' ? '/baseline' : '/tt';
 }
 
 /**
@@ -34,17 +34,17 @@ export async function loadTeamTypes(view) {
 }
 
 export async function loadOrganizationHierarchy() {
-    const response = await fetch(getApiUrl('/pre-tt/organization-hierarchy'));
+    const response = await fetch(getApiUrl('/baseline/organization-hierarchy'));
     return await response.json();
 }
 
 export async function loadProductLines() {
-    const response = await fetch(getApiUrl('/pre-tt/product-lines'));
+    const response = await fetch(getApiUrl('/baseline/product-lines'));
     return await response.json();
 }
 
 export async function loadBusinessStreams() {
-    const response = await fetch(getApiUrl('/pre-tt/business-streams'));
+    const response = await fetch(getApiUrl('/baseline/business-streams'));
     return await response.json();
 }
 

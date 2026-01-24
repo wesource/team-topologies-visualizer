@@ -1,5 +1,5 @@
 """
-Tests for Pre-TT API error handling and edge cases
+Tests for Baseline API error handling and edge cases
 
 Tests focus on:
 - 404 errors for missing teams/snapshots
@@ -23,14 +23,14 @@ class TestTeamNotFoundErrors:
 
     def test_get_nonexistent_team_returns_404(self):
         """Getting a team that doesn't exist should return 404"""
-        response = client.get("/api/pre-tt/teams/nonexistent-team-xyz-12345")
+        response = client.get("/api/baseline/teams/nonexistent-team-xyz-12345")
         assert response.status_code == 404
         assert "not found" in response.json()["detail"].lower()
 
     def test_update_position_nonexistent_team_returns_404(self):
         """Updating position of nonexistent team should return 404"""
         response = client.patch(
-            "/api/pre-tt/teams/nonexistent-team-xyz-12345/position",
+            "/api/baseline/teams/nonexistent-team-xyz-12345/position",
             json={"x": 100, "y": 200}
         )
         assert response.status_code == 404
@@ -101,7 +101,7 @@ class TestDemoModeRestrictions:
         """Updating team position should be blocked in demo mode"""
         with patch.dict(os.environ, {"READ_ONLY_MODE": "true"}):
             response = client.patch(
-                "/api/pre-tt/teams/web-frontend-team/position",
+                "/api/baseline/teams/web-frontend-team/position",
                 json={"x": 100, "y": 200}
             )
             assert response.status_code == 403
@@ -175,11 +175,11 @@ class TestSnapshotCreationErrors:
 
 
 class TestValidationEndpoint:
-    """Tests for /api/pre-tt/validate endpoint"""
+    """Tests for /api/baseline/validate endpoint"""
 
     def test_validate_returns_success_for_valid_files(self):
         """Validation should return success status for valid files"""
-        response = client.get("/api/pre-tt/validate")
+        response = client.get("/api/baseline/validate")
         assert response.status_code == 200
         data = response.json()
 
@@ -188,7 +188,7 @@ class TestValidationEndpoint:
 
     def test_validate_detects_file_issues(self):
         """Validation should detect and report file issues"""
-        response = client.get("/api/pre-tt/validate")
+        response = client.get("/api/baseline/validate")
         assert response.status_code == 200
         data = response.json()
 

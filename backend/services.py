@@ -13,9 +13,9 @@ from backend.models import TeamData
 # - "tt-teams-initial" - Simplified first-step transformation (3-6 months)
 TT_TEAMS_VARIANT = os.getenv("TT_TEAMS_VARIANT", "tt-teams")
 TT_TEAMS_DIR = Path(f"data/{TT_TEAMS_VARIANT}")
-CURRENT_TEAMS_DIR = Path("data/current-teams")
+BASELINE_TEAMS_DIR = Path("data/baseline-teams")
 TT_TEAMS_DIR.mkdir(parents=True, exist_ok=True)
-CURRENT_TEAMS_DIR.mkdir(parents=True, exist_ok=True)
+BASELINE_TEAMS_DIR.mkdir(parents=True, exist_ok=True)
 
 
 def team_name_to_slug(team_name: str) -> str:
@@ -59,7 +59,7 @@ def validate_team_id(team_id: str, file_path: Path) -> None:
 
 def get_data_dir(view: str = "tt") -> Path:
     """Get the appropriate data directory based on view"""
-    return TT_TEAMS_DIR if view == "tt" else CURRENT_TEAMS_DIR
+    return TT_TEAMS_DIR if view == "tt" else BASELINE_TEAMS_DIR
 
 
 def parse_team_file(file_path: Path) -> TeamData:

@@ -6,7 +6,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from backend.routes_pre_tt import router as pre_tt_router
+from backend.routes_baseline import router as baseline_router
 from backend.routes_tt import router as tt_router
 
 app = FastAPI(
@@ -20,15 +20,15 @@ app = FastAPI(
 async def startup_event():
     tt_variant = os.getenv("TT_TEAMS_VARIANT", "tt-teams")
     tt_dir = Path("data") / tt_variant
-    current_dir = Path("data/current-teams")
+    baseline_dir = Path("data/baseline-teams")
 
     print("\n" + "=" * 80)
     print("🚀 Team Topologies Visualizer Starting Up")
     print("=" * 80)
     print(f"📂 TT Design Teams Directory: {tt_dir.absolute()}")
     print(f"   Files found: {len(list(tt_dir.glob('*.md')))}")
-    print(f"📂 Baseline Teams Directory: {current_dir.absolute()}")
-    print(f"   Files found: {len(list(current_dir.rglob('*.md')))}")
+    print(f"📂 Baseline Teams Directory: {baseline_dir.absolute()}")
+    print(f"   Files found: {len(list(baseline_dir.rglob('*.md')))}")
     print(f"🔧 Environment: TT_TEAMS_VARIANT={os.getenv('TT_TEAMS_VARIANT', 'NOT SET (using default: tt-teams)')}")
     print("=" * 80 + "\n")
 
@@ -42,8 +42,8 @@ app.add_middleware(
 )
 
 # Include API routes with prefixes
-app.include_router(pre_tt_router)  # /api/pre-tt/*
-app.include_router(tt_router)      # /api/tt/*
+app.include_router(baseline_router)  # /api/baseline/*
+app.include_router(tt_router)        # /api/tt/*
 
 # Serve static frontend files
 app.mount("/static", StaticFiles(directory="frontend"), name="static")

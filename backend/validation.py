@@ -12,7 +12,7 @@ def validate_all_team_files(view: str = "tt") -> dict[str, Any]:
     """Validate all team files and return a report of issues
 
     Args:
-        view: The view to validate ('tt' or 'current')
+        view: The view to validate ('tt' or 'baseline')
 
     Returns:
         Dictionary containing validation report with:
@@ -57,17 +57,17 @@ def validate_all_team_files(view: str = "tt") -> dict[str, Any]:
     # Valid team types for each view
     valid_types = {
         "tt": ["stream-aligned", "platform", "enabling", "complicated-subsystem", "undefined"],
-        "current": []  # Will load from config
+        "baseline": []  # Will load from config
     }
 
-    # Load valid team types for current view
-    if view == "current":
-        config_file = data_dir / "current-team-types.json"
+    # Load valid team types for baseline view
+    if view == "baseline":
+        config_file = data_dir / "baseline-team-types.json"
         if config_file.exists():
             with open(config_file, encoding='utf-8') as f:
                 config = json.load(f)
                 # team_types is now an array like TT config
-                valid_types["current"] = [t["id"] for t in config.get("team_types", [])]
+                valid_types["baseline"] = [t["id"] for t in config.get("team_types", [])]
 
     # Check all markdown files
     for file_path in data_dir.rglob("*.md"):
@@ -148,8 +148,8 @@ def validate_all_team_files(view: str = "tt") -> dict[str, Any]:
                                                 f"Team size {size} outside recommended range (5-9 people)"
                                             )
 
-                            # Check 8: Dependencies reference existing teams (Pre-TT view)
-                            if view == "current" and 'dependencies' in data:
+                            # Check 8: Dependencies reference existing teams (Baseline view)
+                            if view == "baseline" and 'dependencies' in data:
                                 deps = data['dependencies']
                                 if isinstance(deps, list):
                                     for dep in deps:
@@ -158,8 +158,8 @@ def validate_all_team_files(view: str = "tt") -> dict[str, Any]:
                                                 f"Dependency '{dep}' not found - team does not exist"
                                             )
 
-                            # Check 9: Interaction modes reference existing teams (Pre-TT view)
-                            if view == "current" and 'interaction_modes' in data:
+                            # Check 9: Interaction modes reference existing teams (Baseline view)
+                            if view == "baseline" and 'interaction_modes' in data:
                                 modes = data['interaction_modes']
                                 if isinstance(modes, dict):
                                     for mode, teams in modes.items():

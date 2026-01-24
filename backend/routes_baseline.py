@@ -1,4 +1,4 @@
-"""API routes for Pre-TT (current-teams) data management"""
+"""API routes for Baseline (baseline-teams) data management"""
 import json
 import os
 from typing import Any
@@ -10,20 +10,20 @@ from backend.models import (
     TeamData,
 )
 from backend.services import (
-    CURRENT_TEAMS_DIR,
+    BASELINE_TEAMS_DIR,
     find_all_teams,
     find_team_by_id,
     write_team_file_to_path,
 )
 from backend.validation import validate_all_team_files
 
-router = APIRouter(prefix="/api/pre-tt", tags=["pre-tt"])
+router = APIRouter(prefix="/api/baseline", tags=["baseline"])
 
 
 @router.get("/team-types")
 async def get_team_types():
-    """Get team type definitions with colors and descriptions for Pre-TT view"""
-    config_file = CURRENT_TEAMS_DIR / "current-team-types.json"
+    """Get team type definitions with colors and descriptions for Baseline view"""
+    config_file = BASELINE_TEAMS_DIR / "baseline-team-types.json"
 
     if not config_file.exists():
         raise HTTPException(status_code=404, detail="Team types configuration not found")
@@ -36,8 +36,8 @@ async def get_team_types():
 
 @router.get("/organization-hierarchy")
 async def get_organization_hierarchy():
-    """Get the organizational hierarchy for Pre-TT current state view"""
-    hierarchy_file = CURRENT_TEAMS_DIR / "organization-hierarchy.json"
+    """Get the organizational hierarchy for Baseline view"""
+    hierarchy_file = BASELINE_TEAMS_DIR / "organization-hierarchy.json"
 
     if not hierarchy_file.exists():
         raise HTTPException(status_code=404, detail="Organization hierarchy not found")
@@ -50,8 +50,8 @@ async def get_organization_hierarchy():
 
 @router.get("/product-lines")
 async def get_product_lines():
-    """Get teams grouped by product lines for Product Lines view (Pre-TT only)"""
-    products_file = CURRENT_TEAMS_DIR / "products.json"
+    """Get teams grouped by product lines for Product Lines view (Baseline only)"""
+    products_file = BASELINE_TEAMS_DIR / "products.json"
 
     if not products_file.exists():
         raise HTTPException(status_code=404, detail="Products configuration not found")
@@ -99,7 +99,7 @@ async def get_product_lines():
 @router.get("/business-streams")
 async def get_business_streams():
     """Get teams grouped by business streams for Business Streams view (Baseline only)"""
-    business_streams_file = CURRENT_TEAMS_DIR / "business-streams.json"
+    business_streams_file = BASELINE_TEAMS_DIR / "business-streams.json"
 
     if not business_streams_file.exists():
         raise HTTPException(status_code=404, detail="Business streams configuration not found")

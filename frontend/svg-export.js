@@ -485,7 +485,7 @@ function drawSVGBox(text, x, y, width, height, bgColor, textColor, isBold, teamT
 }
 
 /**
- * Draw default team box (rounded corners in TT Design, sharp corners in Pre-TT view)
+ * Draw default team box (rounded corners in TT Design, sharp corners in Baseline view)
  */
 function drawSVGDefaultBox(text, x, y, width, height, bgColor, textColor, fontSize, fontWeight, borderColor, currentView = 'current') {
     // Wrap text
@@ -506,7 +506,7 @@ function drawSVGDefaultBox(text, x, y, width, height, bgColor, textColor, fontSi
         lines.push(currentLine);
 
     // Rounded corners for TT Design view (stream-aligned, platform teams)
-    // Sharp corners for Pre-TT view
+    // Sharp corners for Baseline view
     const rx = currentView === 'tt' ? '8' : '0';
 
     let box = `<g>

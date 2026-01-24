@@ -1,4 +1,4 @@
-"""Tests for Pre-TT dependency parsing from markdown bullet lists"""
+"""Tests for dependency parsing from markdown bullet lists"""
 
 from backend.services import _parse_dependency_bullets
 

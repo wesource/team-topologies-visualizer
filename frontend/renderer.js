@@ -25,7 +25,7 @@ export function draw(state) {
     // Filter teams using new multi-select filter system
     const teamsToRender = getFilteredTeams();
 
-    // Draw Pre-TT views (hierarchy, product-lines, or business-streams)
+    // Draw Baseline views (hierarchy, product-lines, or business-streams)
     if (state.currentView === 'current') {
         if (state.currentPerspective === 'business-streams' && state.businessStreamsData) {
             // Business Streams View (nested layout)

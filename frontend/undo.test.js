@@ -223,7 +223,7 @@ describe('undo.js - Position History Management', () => {
             pushPositionSnapshot();
             expect(canUndo()).toBe(true);
 
-            // User switches to Pre-TT view - history should be cleared
+            // User switches to Baseline view - history should be cleared
             state.currentView = 'current';
             clearPositionHistory();
             expect(canUndo()).toBe(false);

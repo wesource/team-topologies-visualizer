@@ -1,9 +1,9 @@
 """
-Tests for Pre-TT API routes (routes_pre_tt.py)
+Tests for Baseline API routes (routes_baseline.py)
 
-These tests validate the Pre-TT specific endpoints:
-- /api/pre-tt/business-streams - Value stream grouping data
-- /api/pre-tt/product-lines - Product lines grouping data
+These tests validate the Baseline specific endpoints:
+- /api/baseline/business-streams - Value stream grouping data
+- /api/baseline/product-lines - Product lines grouping data
 """
 
 import json
@@ -17,30 +17,30 @@ client = TestClient(app)
 
 
 class TestValueStreamsEndpoint:
-    """Tests for /api/pre-tt/business-streams endpoint"""
+    """Tests for /api/baseline/business-streams endpoint"""
 
     def test_business_streams_endpoint_returns_200(self):
         """Value streams endpoint should return 200 status"""
-        response = client.get("/api/pre-tt/business-streams")
+        response = client.get("/api/baseline/business-streams")
         assert response.status_code == 200
 
     def test_business_streams_returns_json(self):
         """Value streams endpoint should return valid JSON"""
-        response = client.get("/api/pre-tt/business-streams")
+        response = client.get("/api/baseline/business-streams")
         assert response.headers["content-type"] == "application/json"
         data = response.json()
         assert isinstance(data, dict)
 
     def test_business_streams_has_expected_structure(self):
         """Value streams response should have business_streams key with dict"""
-        response = client.get("/api/pre-tt/business-streams")
+        response = client.get("/api/baseline/business-streams")
         data = response.json()
         assert "business_streams" in data
         assert isinstance(data["business_streams"], dict)
 
     def test_business_streams_contains_product_data(self):
         """Each value stream should contain products dict"""
-        response = client.get("/api/pre-tt/business-streams")
+        response = client.get("/api/baseline/business-streams")
         data = response.json()
         business_streams = data["business_streams"]
 
@@ -55,7 +55,7 @@ class TestValueStreamsEndpoint:
 
     def test_business_streams_teams_have_required_fields(self):
         """Teams in value stream products should have required fields"""
-        response = client.get("/api/pre-tt/business-streams")
+        response = client.get("/api/baseline/business-streams")
         data = response.json()
         business_streams = data["business_streams"]
 
@@ -74,12 +74,12 @@ class TestValueStreamsEndpoint:
 
     def test_business_streams_config_file_exists(self):
         """Value streams config file should exist"""
-        config_path = Path("data/current-teams/business-streams.json")
+        config_path = Path("data/baseline-teams/business-streams.json")
         assert config_path.exists(), f"Config file not found: {config_path}"
 
     def test_business_streams_config_is_valid_json(self):
         """Value streams config should be valid JSON"""
-        config_path = Path("data/current-teams/business-streams.json")
+        config_path = Path("data/baseline-teams/business-streams.json")
         with open(config_path, encoding="utf-8") as f:
             data = json.load(f)
             assert isinstance(data, dict)
@@ -87,23 +87,23 @@ class TestValueStreamsEndpoint:
 
 
 class TestProductLinesEndpoint:
-    """Tests for /api/pre-tt/product-lines endpoint"""
+    """Tests for /api/baseline/product-lines endpoint"""
 
     def test_product_lines_endpoint_returns_200(self):
         """Product lines endpoint should return 200 status"""
-        response = client.get("/api/pre-tt/product-lines")
+        response = client.get("/api/baseline/product-lines")
         assert response.status_code == 200
 
     def test_product_lines_returns_json(self):
         """Product lines endpoint should return valid JSON"""
-        response = client.get("/api/pre-tt/product-lines")
+        response = client.get("/api/baseline/product-lines")
         assert response.headers["content-type"] == "application/json"
         data = response.json()
         assert isinstance(data, dict)
 
     def test_product_lines_has_expected_structure(self):
         """Product lines response should have products and shared_teams keys"""
-        response = client.get("/api/pre-tt/product-lines")
+        response = client.get("/api/baseline/product-lines")
         data = response.json()
         assert "products" in data
         assert "shared_teams" in data
@@ -112,7 +112,7 @@ class TestProductLinesEndpoint:
 
     def test_product_lines_products_have_required_fields(self):
         """Each product should have required fields"""
-        response = client.get("/api/pre-tt/product-lines")
+        response = client.get("/api/baseline/product-lines")
         data = response.json()
         products = data["products"]
 
@@ -128,7 +128,7 @@ class TestProductLinesEndpoint:
 
     def test_product_lines_teams_have_required_fields(self):
         """Teams in products should have required fields"""
-        response = client.get("/api/pre-tt/product-lines")
+        response = client.get("/api/baseline/product-lines")
         data = response.json()
         products = data["products"]
 
@@ -143,7 +143,7 @@ class TestProductLinesEndpoint:
 
     def test_product_lines_shared_teams_structure(self):
         """Shared teams should have proper structure"""
-        response = client.get("/api/pre-tt/product-lines")
+        response = client.get("/api/baseline/product-lines")
         data = response.json()
         shared_teams = data["shared_teams"]
 
@@ -159,51 +159,51 @@ class TestProductLinesEndpoint:
 
     def test_products_config_file_exists(self):
         """Products config file should exist"""
-        config_path = Path("data/current-teams/products.json")
+        config_path = Path("data/baseline-teams/products.json")
         assert config_path.exists(), f"Config file not found: {config_path}"
 
     def test_products_config_is_valid_json(self):
         """Products config should be valid JSON"""
-        config_path = Path("data/current-teams/products.json")
+        config_path = Path("data/baseline-teams/products.json")
         with open(config_path, encoding="utf-8") as f:
             data = json.load(f)
             assert isinstance(data, dict)
             assert "products" in data
 
 
-class TestPreTTRoutesPrefixes:
-    """Tests for Pre-TT routes prefix structure"""
+class TestBaselineRoutesPrefixes:
+    """Tests for Baseline routes prefix structure"""
 
-    def test_pre_tt_teams_endpoint_exists(self):
-        """Pre-TT teams endpoint should exist at /api/pre-tt/teams"""
-        response = client.get("/api/pre-tt/teams")
+    def test_baseline_teams_endpoint_exists(self):
+        """Baseline teams endpoint should exist at /api/baseline/teams"""
+        response = client.get("/api/baseline/teams")
         assert response.status_code == 200
 
-    def test_pre_tt_organization_hierarchy_endpoint_exists(self):
-        """Pre-TT org hierarchy endpoint should exist"""
-        response = client.get("/api/pre-tt/organization-hierarchy")
+    def test_baseline_organization_hierarchy_endpoint_exists(self):
+        """Baseline org hierarchy endpoint should exist"""
+        response = client.get("/api/baseline/organization-hierarchy")
         assert response.status_code == 200
 
-    def test_pre_tt_snapshots_endpoint_exists(self):
+    def test_tt_snapshots_endpoint_exists(self):
         """TT snapshots endpoint should exist (snapshots are for TT Design)"""
         response = client.get("/api/tt/snapshots")
         assert response.status_code == 200
 
 
 class TestErrorHandling:
-    """Tests for error handling in Pre-TT routes"""
+    """Tests for error handling in Baseline routes"""
 
     def test_missing_business_streams_config_handled_gracefully(self, tmp_path, monkeypatch):
         """Should handle missing business-streams.json gracefully"""
         # This test ensures the endpoint doesn't crash if config is missing
         # In production, this should return empty data or appropriate error
-        response = client.get("/api/pre-tt/business-streams")
+        response = client.get("/api/baseline/business-streams")
         # Should not return 500 error
         assert response.status_code in [200, 404]
 
     def test_missing_products_config_handled_gracefully(self):
         """Should handle missing products.json gracefully"""
-        response = client.get("/api/pre-tt/product-lines")
+        response = client.get("/api/baseline/product-lines")
         # Should not return 500 error
         assert response.status_code in [200, 404]
 

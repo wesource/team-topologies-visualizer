@@ -162,12 +162,12 @@ export function drawTeam(ctx, team, selectedTeam, teamColorMap, wrapText, curren
 }
 
 /**
- * Draw team as default box (rounded corners in TT Design, sharp corners in Pre-TT view)
+ * Draw team as default box (rounded corners in TT Design, sharp corners in Baseline view)
  */
 function drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, showTeamTypeBadges = false, platformMetrics = null, currentView = 'current', showFlowMetrics = false) {
 
     // Rounded corners for stream-aligned and platform teams in TT Design view
-    // Sharp corners in Pre-TT view (hierarchy, product lines, value streams)
+    // Sharp corners in Baseline view (hierarchy, product lines, value streams)
     const radius = currentView === 'tt' ? 15 : 0;
     const fillColor = getTeamColor(team, teamColorMap);
     const borderColor = darkenColor(fillColor, LAYOUT.BORDER_COLOR_DARKEN_FACTOR);
