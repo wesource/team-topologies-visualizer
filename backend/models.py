@@ -36,7 +36,7 @@ class TeamData(BaseModel):
     product_line: str | None = None  # For Product Lines view (Baseline only)
     business_stream: str | None = None  # For Business Streams view (Baseline only)
     position: dict[str, float] | None = {"x": 0, "y": 0}
-    metadata: dict[str, Any] | None = {}  # Can include flow_layer: upstream | midstream | downstream for flow-aware positioning
+    metadata: dict[str, Any] | None = {}  # Can include align_hint_x ('left'/'center'/'right') and align_hint_y ('top'/'bottom') - optional positioning hints for auto-align
     # Team API fields (optional, for TT Design teams)
     team_api: TeamAPI | None = None
     purpose: str | None = None  # One-liner mission statement (for quick access)

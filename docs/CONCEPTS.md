@@ -170,6 +170,36 @@ In TT Design, stream-aligned teams can be grouped by value stream:
 - Contains teams delivering end-to-end customer value
 - Typically 3-8 teams per grouping
 
+## Auto-Align Positioning Hints
+
+The TT Design view includes an auto-align feature that positions teams based on Team Topologies patterns. Optional metadata fields let you override defaults:
+
+**Horizontal positioning (`align_hint_x`):**
+- Values: `left`, `center`, `right`
+- Controls where teams sit within their grouping
+- Default based on team_type: platform→left, stream-aligned→right
+
+**Vertical positioning (`align_hint_y`):**
+- Values: `top`, `bottom`
+- Controls where groupings appear on canvas
+- Default based on grouping type: platform_grouping→bottom, value_stream→top
+
+**Usage example:**
+```yaml
+---
+name: Mobile Platform Team
+team_id: mobile-platform
+team_type: platform
+metadata:
+  align_hint_x: left  # Position left within grouping
+value_stream: Mobile Experience
+---
+```
+
+**Philosophy**: The algorithm makes sensible guesses. Add hints only when defaults don't match your intent. For precise positioning, just drag teams manually.
+
+**Both fields are optional** - most teams don't need hints.
+
 ## Snapshots
 
 Capture immutable "state at a point in time" for your TT Design:

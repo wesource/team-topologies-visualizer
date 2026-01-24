@@ -3,12 +3,14 @@ team_id: cloud-platform-team
 name: Cloud Platform Team
 team_type: platform
 position:
-  x: 116.0
-  y: 565.0
+  x: 100.0
+  y: 600.0
 metadata:
   size: 5
   cognitive_load: medium
   established: 2026-01
+  align_hint_x: left
+  align_hint_y: bottom
 interactions:
 - team: Dispatch & Fleet Team
   mode: x-as-a-service

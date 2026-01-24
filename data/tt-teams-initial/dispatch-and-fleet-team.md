@@ -1,9 +1,9 @@
 ---
-name: Dispatch & Fleet Team
 team_id: dispatch-and-fleet-team
+name: Dispatch & Fleet Team
 team_type: stream-aligned
 position:
-  x: 204.0
+  x: 648.0
   y: 305.0
 metadata:
   size: 6

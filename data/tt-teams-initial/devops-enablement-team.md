@@ -9,6 +9,7 @@ metadata:
   size: 3
   cognitive_load: medium
   established: 2026-01
+  align_hint_x: center
 interactions:
 - team: Dispatch & Fleet Team
   mode: facilitating

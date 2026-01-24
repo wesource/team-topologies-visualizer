@@ -827,9 +827,33 @@ function drawConnection(ctx, from, to, mode, currentView = 'current', currentPer
     // Calculate angle between centers
     const angle = Math.atan2(toCenterY - fromCenterY, toCenterX - fromCenterX);
 
-    // Calculate edge intersection points instead of centers
-    const fromEdge = getBoxEdgePoint(fromCenterX, fromCenterY, fromWidth, fromHeight, angle);
-    const toEdge = getBoxEdgePoint(toCenterX, toCenterY, toWidth, toHeight, angle + Math.PI); // Opposite direction
+    // For TT view: prefer top/bottom edges for wide teams (platform, stream-aligned)
+    // Wide teams: lines START from top/bottom center, but END at side edges for better arrow placement
+    let fromEdge, toEdge;
+    if (currentView === 'tt') {
+        const isFromWide = from.team_type === 'platform' || from.team_type === 'stream-aligned';
+
+        if (isFromWide) {
+            // Wide teams: use top/bottom edge for cleaner horizontal flow
+            if (toCenterY > fromCenterY) {
+                // Target below: use bottom edge
+                fromEdge = { x: fromCenterX, y: fromCenterY + fromHeight / 2 };
+            } else {
+                // Target above or level: use top edge
+                fromEdge = { x: fromCenterX, y: fromCenterY - fromHeight / 2 };
+            }
+        } else {
+            // Narrow teams: use normal edge calculation
+            fromEdge = getBoxEdgePoint(fromCenterX, fromCenterY, fromWidth, fromHeight, angle);
+        }
+
+        // Target edge: always use normal calculation for better arrow placement
+        toEdge = getBoxEdgePoint(toCenterX, toCenterY, toWidth, toHeight, angle + Math.PI);
+    } else {
+        // Non-TT views: use standard edge calculation
+        fromEdge = getBoxEdgePoint(fromCenterX, fromCenterY, fromWidth, fromHeight, angle);
+        toEdge = getBoxEdgePoint(toCenterX, toCenterY, toWidth, toHeight, angle + Math.PI);
+    }
 
     // Debug: line centers, edges, and style
 

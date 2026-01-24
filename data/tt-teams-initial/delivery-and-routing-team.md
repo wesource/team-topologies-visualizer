@@ -1,9 +1,9 @@
 ---
-name: Delivery & Routing Team
 team_id: delivery-and-routing-team
+name: Delivery & Routing Team
 team_type: stream-aligned
 position:
-  x: 204.0
+  x: 648.0
   y: 165.0
 metadata:
   size: 6

@@ -19,19 +19,22 @@ describe('autoAlignTTDesign', () => {
             {
                 name: 'Team A',
                 team_type: 'stream-aligned',
-                metadata: { value_stream: 'E-Commerce' },
+                value_stream: 'E-Commerce',
+                metadata: {},
                 position: { x: 50, y: 50 }
             },
             {
                 name: 'Team B',
                 team_type: 'stream-aligned',
-                metadata: { value_stream: 'E-Commerce' },
+                value_stream: 'E-Commerce',
+                metadata: {},
                 position: { x: 60, y: 60 }
             },
             {
                 name: 'Team C',
                 team_type: 'platform',
-                metadata: { value_stream: 'E-Commerce' },
+                value_stream: 'E-Commerce',
+                metadata: {},
                 position: { x: 70, y: 70 }
             }
         ];
@@ -41,12 +44,14 @@ describe('autoAlignTTDesign', () => {
         // Should realign all 3 teams
         expect(realigned.length).toBe(3);
 
-        // All wide teams (stream-aligned and platform) stack vertically at same X
-        // X position: startX (100) + padding (30) + 10% margin of (700-60) = 100 + 30 + 64 = 194
-        const expectedX = 204;
-        expect(realigned[0].position.x).toBe(expectedX);
-        expect(realigned[1].position.x).toBe(expectedX);
-        expect(realigned[2].position.x).toBe(expectedX);
+        // Stream-aligned teams default to right (70% of grouping width)
+        // X position: startX (100) + padding (30) + 70% of (740) = 100 + 30 + 518 = 648
+        expect(realigned[0].position.x).toBe(648);
+        expect(realigned[1].position.x).toBe(648);
+
+        // Platform team defaults to left
+        // X position: startX (100) + padding (30) = 130
+        expect(realigned[2].position.x).toBe(130);
 
         // Y positions: stacked vertically with spacing
         // First team: startY (100) + padding (30) + label (35) = 165
@@ -87,13 +92,15 @@ describe('autoAlignTTDesign', () => {
             {
                 name: 'Platform Team A',
                 team_type: 'platform',
-                metadata: { platform_grouping: 'Data Platform' },
+                platform_grouping: 'Data Platform',
+                metadata: {},
                 position: { x: 50, y: 50 }
             },
             {
                 name: 'Platform Team B',
                 team_type: 'platform',
-                metadata: { platform_grouping: 'Data Platform' },
+                platform_grouping: 'Data Platform',
+                metadata: {},
                 position: { x: 60, y: 60 }
             }
         ];
@@ -103,8 +110,8 @@ describe('autoAlignTTDesign', () => {
         // Should realign both platform teams
         expect(realigned.length).toBe(2);
 
-        // Wide teams (platform) stack vertically at same X
-        const expectedX = 204; // startX (100) + padding (30) + 10% margin (64)
+        // Platform teams default to left
+        const expectedX = 130; // startX (100) + padding (30)
         expect(realigned[0].position.x).toBe(expectedX);
         expect(realigned[1].position.x).toBe(expectedX);
 
@@ -140,7 +147,8 @@ describe('autoAlignTTDesign', () => {
             teams.push({
                 name: `Team ${i}`,
                 team_type: 'stream-aligned',
-                metadata: { value_stream: 'E-Commerce' },
+                value_stream: 'E-Commerce',
+                metadata: {},
                 position: { x: 0, y: 0 }
             });
         }
@@ -150,8 +158,8 @@ describe('autoAlignTTDesign', () => {
         // Should realign all 7 teams
         expect(realigned.length).toBe(7);
 
-        // All teams are stream-aligned (wide), so they stack vertically at same X
-        const expectedX = 204;
+        // All teams are stream-aligned (wide), so they stack vertically at same X (right side)
+        const expectedX = 648; // Stream-aligned default to right
         realigned.forEach(team => {
             expect(team.position.x).toBe(expectedX);
         });
@@ -171,8 +179,9 @@ describe('autoAlignTTDesign', () => {
             {
                 name: 'Team A',
                 team_type: 'stream-aligned',
-                metadata: { value_stream: 'E-Commerce' },
-                position: { x: 204, y: 165 } // New correct position for wide team (updated for 800px grouping, 35px label)
+                value_stream: 'E-Commerce',
+                metadata: {},
+                position: { x: 648, y: 165 } // Correct position for stream-aligned team (right side)
             }
         ];
 
@@ -212,13 +221,15 @@ describe('autoAlignTTDesign', () => {
             {
                 name: 'Core Platform Team',
                 team_type: 'platform',
-                metadata: { value_stream: 'E-Commerce' },
+                value_stream: 'E-Commerce',
+                metadata: {},
                 position: { x: 0, y: 0 }
             },
             {
                 name: 'Stream Team',
                 team_type: 'stream-aligned',
-                metadata: { value_stream: 'E-Commerce' },
+                value_stream: 'E-Commerce',
+                metadata: {},
                 position: { x: 0, y: 0 }
             }
         ];
@@ -228,10 +239,9 @@ describe('autoAlignTTDesign', () => {
         // Should realign both teams in same grouping
         expect(realigned.length).toBe(2);
 
-        // Both teams are wide (platform + stream-aligned), so same X position
-        const expectedX = 204;
-        expect(realigned[0].position.x).toBe(expectedX);
-        expect(realigned[1].position.x).toBe(expectedX);
+        // Platform team defaults to left, stream-aligned to right
+        expect(realigned[0].position.x).toBe(130); // Platform left
+        expect(realigned[1].position.x).toBe(648); // Stream-aligned right
 
         // But stacked vertically at different Y positions
         expect(realigned[0].position.y).toBe(165);

@@ -51,7 +51,7 @@ export function autoAlignTTDesign(teams) {
 
     // Team dimensions and spacing based on Team Topologies book visualization
     const wideTeamVerticalSpacing = 60; // Vertical spacing between wide teams (stacked) - 75% of team box height
-    const narrowTeamSpacingX = 160; // Horizontal spacing between narrow teams
+    const _narrowTeamSpacingX = 160; // Horizontal spacing between narrow teams
     const narrowTeamSpacingY = 120; // Vertical spacing between rows of narrow teams
     const narrowTeamsPerRow = 3; // Max narrow teams per row
 
@@ -78,11 +78,45 @@ export function autoAlignTTDesign(teams) {
 
         let currentYPos = groupingStartY + paddingInGrouping + labelHeight;
 
-        // Position wide teams first - stacked vertically, centered horizontally
-        const wideTeamCenterX = groupingStartX + paddingInGrouping + (groupingWidth - 2 * paddingInGrouping) * 0.1; // 10% from left
+        // Calculate horizontal positions based on team type and hints
+        function getHorizontalPosition(team) {
+            const groupingContentWidth = groupingWidth - 2 * paddingInGrouping;
 
+            // Check for explicit hint first
+            const hintX = team.metadata?.align_hint_x;
+
+            if (hintX === 'left') {
+                return groupingStartX + paddingInGrouping;
+            } else if (hintX === 'center') {
+                const pos = groupingStartX + paddingInGrouping + groupingContentWidth * 0.35;
+                return pos;
+            } else if (hintX === 'right') {
+                const pos = groupingStartX + paddingInGrouping + groupingContentWidth * 0.7;
+                return pos;
+            }
+
+            // Default positioning based on team type
+            if (team.team_type === 'platform') {
+                // Platform teams default to left (provide capabilities)
+                return groupingStartX + paddingInGrouping;
+            } else if (team.team_type === 'stream-aligned') {
+                // Stream-aligned teams default to right (deliver to customers)
+                const pos = groupingStartX + paddingInGrouping + groupingContentWidth * 0.7;
+                return pos;
+            } else if (team.team_type === 'enabling') {
+                // Enabling teams default to center (facilitate)
+                const pos = groupingStartX + paddingInGrouping + groupingContentWidth * 0.35;
+                return pos;
+            } else {
+                // Complicated-subsystem and undefined default to center-left
+                const pos = groupingStartX + paddingInGrouping + groupingContentWidth * 0.2;
+                return pos;
+            }
+        }
+
+        // Position wide teams first - stacked vertically, positioned horizontally by type/hint
         wideTeams.forEach((team, _index) => {
-            const newX = wideTeamCenterX;
+            const newX = getHorizontalPosition(team);
             const newY = currentYPos;
 
             // Only update if position changed significantly
@@ -112,7 +146,7 @@ export function autoAlignTTDesign(teams) {
             // Position narrow teams (enabling, complicated-subsystem)
             narrowTeams.forEach((team, index) => {
                 const row = Math.floor(index / narrowTeamsPerRow);
-                const col = index % narrowTeamsPerRow;
+                const _col = index % narrowTeamsPerRow; // Not used when positioning by hint
 
                 // Calculate Y position by summing heights of all previous rows
                 let rowYPos = currentYPos;
@@ -127,7 +161,8 @@ export function autoAlignTTDesign(teams) {
                     rowYPos += maxHeightInRow + gapBetweenRows;
                 }
 
-                const newX = groupingStartX + paddingInGrouping + (col * narrowTeamSpacingX);
+                // Use horizontal positioning function for narrow teams too
+                const newX = getHorizontalPosition(team);
                 const newY = rowYPos;
 
                 // Only update if position changed significantly
@@ -159,7 +194,26 @@ export function autoAlignTTDesign(teams) {
     // Position value stream groupings first (excluding ungrouped)
     const actualValueStreamGroupings = valueStreamGroupings.filter(g => g.name !== '(Ungrouped)');
 
-    actualValueStreamGroupings.forEach((grouping, _index) => {
+    // Separate groupings with vertical hints
+    const topGroupings = [];
+    const bottomGroupings = [];
+
+    actualValueStreamGroupings.forEach(grouping => {
+        // Check if any team in grouping has align_hint_y
+        const hintY = grouping.teams.find(t => t.metadata?.align_hint_y)?.metadata?.align_hint_y;
+
+        if (hintY === 'top') {
+            topGroupings.push(grouping);
+        } else if (hintY === 'bottom') {
+            bottomGroupings.push(grouping);
+        } else {
+            // Value streams default to top (customer-facing)
+            topGroupings.push(grouping);
+        }
+    });
+
+    // Position top groupings first (value streams default here)
+    topGroupings.forEach((grouping, _index) => {
         const groupingHeight = positionTeamsInGrouping(grouping.teams, currentX, currentY);
         maxHeightInRow = Math.max(maxHeightInRow, groupingHeight);
 
@@ -187,6 +241,17 @@ export function autoAlignTTDesign(teams) {
 
     // Position platform groupings
     platformGroupings.forEach((grouping, _index) => {
+        // Check if any team in grouping has align_hint_y
+        const hintY = grouping.teams.find(t => t.metadata?.align_hint_y)?.metadata?.align_hint_y;
+
+        // Platform groupings can override default bottom position with hint
+        if (hintY === 'top') {
+            // Add to bottom groupings list to be positioned later
+            bottomGroupings.push(grouping);
+            return; // Skip positioning for now, will be handled below
+        }
+
+        // Default: position platform groupings at bottom (foundational)
         const groupingHeight = positionTeamsInGrouping(grouping.teams, currentX, currentY);
         maxHeightInRow = Math.max(maxHeightInRow, groupingHeight);
 
@@ -204,20 +269,94 @@ export function autoAlignTTDesign(teams) {
         }
     });
 
+    // Position bottom groupings (value streams with bottom hint)
+    if (bottomGroupings.length > 0) {
+        // Start new row if needed
+        if (groupingsInCurrentRow > 0) {
+            currentX = startX;
+            currentY += maxHeightInRow + groupingSpacingY;
+            groupingsInCurrentRow = 0;
+            maxHeightInRow = 0;
+        }
+
+        bottomGroupings.forEach((grouping, _index) => {
+            const groupingHeight = positionTeamsInGrouping(grouping.teams, currentX, currentY);
+            maxHeightInRow = Math.max(maxHeightInRow, groupingHeight);
+
+            groupingsInCurrentRow++;
+
+            if (groupingsInCurrentRow >= groupingsPerRow) {
+                // Move to next row
+                currentX = startX;
+                currentY += maxHeightInRow + groupingSpacingY;
+                groupingsInCurrentRow = 0;
+                maxHeightInRow = 0;
+            } else {
+                // Move to next column
+                currentX += groupingSpacingX;
+            }
+        });
+    }
+
     // Position ungrouped teams in a separate area (bottom right)
     if (ungroupedTeams.length > 0) {
         const ungroupedStartX = startX + (groupingsPerRow * groupingSpacingX);
-        const ungroupedStartY = startY;
 
-        // Separate wide and narrow ungrouped teams
-        const wideUngrouped = ungroupedTeams.filter(team => isWideTeamType(team.team_type));
-        const narrowUngrouped = ungroupedTeams.filter(team => !isWideTeamType(team.team_type));
+        // Helper to calculate horizontal position for ungrouped teams
+        // Similar to grouped teams but using canvas-relative positioning
+        function getUngroupedHorizontalPosition(team) {
+            const hintX = team.metadata?.align_hint_x;
 
-        let currentYPos = ungroupedStartY;
+            if (hintX === 'left') {
+                // Position on left side of canvas
+                const pos = startX;
+                return pos;
+            } else if (hintX === 'center') {
+                // Position in center of canvas (between groupings and ungrouped area)
+                const pos = startX + groupingSpacingX;
+                return pos;
+            } else if (hintX === 'right') {
+                // Position in ungrouped area (right side)
+                return ungroupedStartX;
+            }
 
-        // Position wide ungrouped teams stacked vertically
-        wideUngrouped.forEach((team, _index) => {
-            const newX = ungroupedStartX;
+            // Default positioning based on team type for ungrouped teams
+            if (team.team_type === 'platform') {
+                // Platform teams default to left (foundational)
+                return startX;
+            } else if (team.team_type === 'stream-aligned') {
+                // Stream-aligned teams default to ungrouped area (right, customer-facing)
+                return ungroupedStartX;
+            } else if (team.team_type === 'enabling') {
+                // Enabling teams default to left (supporting role)
+                return startX;
+            } else {
+                // Complicated-subsystem and undefined default to left (supporting/foundational)
+                return startX;
+            }
+        }
+
+        // Separate ungrouped teams by vertical positioning hint
+        const topUngrouped = ungroupedTeams.filter(team => {
+            const hintY = team.metadata?.align_hint_y;
+            // Default to top for ungrouped teams unless explicitly set to bottom
+            return hintY !== 'bottom';
+        });
+        const bottomUngrouped = ungroupedTeams.filter(team => {
+            const hintY = team.metadata?.align_hint_y;
+            return hintY === 'bottom';
+        });
+
+        // Position top ungrouped teams
+        let currentYPos = startY;
+
+        // Separate wide and narrow ungrouped teams in top section
+        const wideTopUngrouped = topUngrouped.filter(team => isWideTeamType(team.team_type));
+        const narrowTopUngrouped = topUngrouped.filter(team => !isWideTeamType(team.team_type));
+
+        // Position wide top ungrouped teams stacked vertically
+        wideTopUngrouped.forEach((team, _index) => {
+            const newX = getUngroupedHorizontalPosition(team);
             const newY = currentYPos;
 
             if (Math.abs(team.position.x - newX) > 5 || Math.abs(team.position.y - newY) > 5) {
@@ -229,28 +368,26 @@ export function autoAlignTTDesign(teams) {
             currentYPos += LAYOUT.TEAM_BOX_HEIGHT + wideTeamVerticalSpacing;
         });
 
-        // Position narrow ungrouped teams in grid below wide teams
-        if (narrowUngrouped.length > 0) {
-            if (wideUngrouped.length > 0) {
+        // Position narrow top ungrouped teams in grid below wide teams
+        if (narrowTopUngrouped.length > 0) {
+            if (wideTopUngrouped.length > 0) {
                 currentYPos += 20; // Spacing between wide and narrow
             }
 
-            narrowUngrouped.forEach((team, _index) => {
+            narrowTopUngrouped.forEach((team, _index) => {
                 const row = Math.floor(_index / narrowTeamsPerRow);
-                const col = _index % narrowTeamsPerRow;
-
-                // Calculate Y position by summing heights of all previous rows
+                const _col = _index % narrowTeamsPerRow;
                 let rowYPos = currentYPos;
                 for (let r = 0; r < row; r++) {
                     const rowStartIdx = r * narrowTeamsPerRow;
-                    const rowEndIdx = Math.min((r + 1) * narrowTeamsPerRow, narrowUngrouped.length);
-                    const teamsInRow = narrowUngrouped.slice(rowStartIdx, rowEndIdx);
+                    const rowEndIdx = Math.min((r + 1) * narrowTeamsPerRow, narrowTopUngrouped.length);
+                    const teamsInRow = narrowTopUngrouped.slice(rowStartIdx, rowEndIdx);
                     const maxHeightInRow = Math.max(...teamsInRow.map(t => getTeamBoxHeight(t, 'tt')));
                     const gapBetweenRows = 40;
                     rowYPos += maxHeightInRow + gapBetweenRows;
                 }
 
-                const newX = ungroupedStartX + (col * narrowTeamSpacingX);
+                const newX = getUngroupedHorizontalPosition(team);
                 const newY = rowYPos;
 
                 if (Math.abs(team.position.x - newX) > 5 || Math.abs(team.position.y - newY) > 5) {
@@ -259,6 +396,62 @@ export function autoAlignTTDesign(teams) {
                     realignedTeams.push(team);
                 }
             });
+        }
+
+        // Position bottom ungrouped teams
+        if (bottomUngrouped.length > 0) {
+            // Start bottom section lower on canvas
+            // Use currentY (which tracks the bottom of all groupings) plus some spacing
+            const bottomStartY = Math.max(currentY, 600); // Position at least at y=600 or below groupings
+            currentYPos = bottomStartY;
+
+            // Separate wide and narrow in bottom section
+            const wideBottomUngrouped = bottomUngrouped.filter(team => isWideTeamType(team.team_type));
+            const narrowBottomUngrouped = bottomUngrouped.filter(team => !isWideTeamType(team.team_type));
+
+            // Position wide bottom ungrouped teams
+            wideBottomUngrouped.forEach((team, _index) => {
+                const newX = getUngroupedHorizontalPosition(team);
+                const newY = currentYPos;
+
+                if (Math.abs(team.position.x - newX) > 5 || Math.abs(team.position.y - newY) > 5) {
+                    team.position.x = newX;
+                    team.position.y = newY;
+                    realignedTeams.push(team);
+                }
+
+                currentYPos += LAYOUT.TEAM_BOX_HEIGHT + wideTeamVerticalSpacing;
+            });
+
+            // Position narrow bottom ungrouped teams
+            if (narrowBottomUngrouped.length > 0) {
+                if (wideBottomUngrouped.length > 0) {
+                    currentYPos += 20; // Spacing between wide and narrow
+                }
+
+                narrowBottomUngrouped.forEach((team, _index) => {
+                    const row = Math.floor(_index / narrowTeamsPerRow);
+                    const _col = _index % narrowTeamsPerRow;
+                    let rowYPos = currentYPos;
+                    for (let r = 0; r < row; r++) {
+                        const rowStartIdx = r * narrowTeamsPerRow;
+                        const rowEndIdx = Math.min((r + 1) * narrowTeamsPerRow, narrowBottomUngrouped.length);
+                        const teamsInRow = narrowBottomUngrouped.slice(rowStartIdx, rowEndIdx);
+                        const maxHeightInRow = Math.max(...teamsInRow.map(t => getTeamBoxHeight(t, 'tt')));
+                        const gapBetweenRows = 40;
+                        rowYPos += maxHeightInRow + gapBetweenRows;
+                    }
+
+                    const newX = getUngroupedHorizontalPosition(team);
+                    const newY = rowYPos;
+
+                    if (Math.abs(team.position.x - newX) > 5 || Math.abs(team.position.y - newY) > 5) {
+                        team.position.x = newX;
+                        team.position.y = newY;
+                        realignedTeams.push(team);
+                    }
+                });
+            }
         }
     }
 

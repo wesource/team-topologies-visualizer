@@ -16,8 +16,14 @@ This is the public backlog for ideas, priorities, and possible improvements.
 
 Edit this list as your priorities change:
 
-
-- Data modeling: keep narrative text separate from resolvable relationship targets (Baseline dependencies + TT interaction tables)
+- **Flow-Aware Auto-Align**: Improve `autoAlignTTDesign()` to consider:
+  - Optional `align_hint_x` metadata field (values: left, center, right) for horizontal positioning within groupings
+  - Optional `align_hint_y` metadata field (values: top, bottom) for vertical positioning of groupings
+  - Both fields are optional - defaults work for most cases
+  - Defaults based on team_type: platform→left, stream-aligned→right
+  - Defaults based on grouping: platform_grouping→bottom, value_stream→top
+  - Philosophy: "algorithm makes best guesses, user provides hints only when needed"
+  - For precise positioning: users just drag teams manually on canvas- Data modeling: keep narrative text separate from resolvable relationship targets (Baseline dependencies + TT interaction tables)
 	- Ensure `dependencies` and `interaction_modes` reference real teams only (no pseudo-targets like “All platform teams”).
 	- Store narrative/context separately (e.g., `dependency_notes` already exists; consider an equivalent for interaction mode notes if needed).
 - UX/visual clarity improvements (reduce clutter, better defaults, better affordances)
@@ -60,22 +66,31 @@ Edit this list as your priorities change:
 		- Add backward-compat warnings when name-based references are detected
 
 ## Next
-- **Flow-aware auto-align in TT Design view** (PRIORITY: Foundation for flow visualization)
-	- **Problem**: Current auto-align stacks teams vertically within groupings, but doesn't respect Team Topologies "left-to-right flow of change" principle
-	- **Solution**: Arrange teams horizontally within groupings based on flow direction
+- **Improved auto-align in TT Design view** (PRIORITY: Better default positioning)
+	- **Problem**: Current auto-align doesn't consider Team Topologies visual conventions when positioning teams and groupings
+	- **Solution**: Simple, pragmatic auto-align improvements with optional user hints
 	- **Implementation**:
-		1. Add optional `flow_layer` field to team metadata (`upstream | midstream | downstream`)
-		2. Infer flow layer from team type when not specified (platform→left, stream-aligned→right)
-		3. Analyze `interaction_modes` to refine positioning (X-as-a-Service providers→left, consumers→right)
-		4. Modify auto-align algorithm to position teams left-to-right by flow within each grouping
-		5. Keep stream-aligned teams rightmost (closest to customers, per Team Shape Templates principle)
+		1. Add optional `alignment_hint` field to team metadata for positioning hints
+		2. Auto-align uses best-guess logic based on:
+		   - Grouping type (`value_stream` vs `platform_grouping`)
+		   - Team type (`platform`, `stream-aligned`, etc.)
+		   - Optional `alignment_hint` when user wants to override defaults
+		3. Keep it simple: let users express intent, algorithm does its best
+	- **Alignment hint values** (all optional):
+		- `top | bottom` - for grouping vertical positioning
+		- `left | center | right` - for team horizontal positioning within grouping
+		- Combined format: `bottom-left`, `top-right`, etc.
+		- Or just `left`, `right` if vertical doesn't matter
 	- **Benefits**: 
-		- Diagrams align with Team Topologies canonical visualization patterns
-		- Shows flow of capabilities from platforms through to stream-aligned teams
-		- Self-documenting architecture (left=provides capabilities, right=delivers to customers)
-	- **Reference**: https://github.com/TeamTopologies/Team-Shape-Templates - "There is always an implied flow of change from left to right"
-	- **Tests**: Update tt-design-alignment.test.js to verify flow-based positioning
-	- **Data migration**: `flow_layer` is optional, no migration needed (defaults work)
+		- Simple and flexible - doesn't over-prescribe "the right way"
+		- Users can override defaults when needed
+		- Algorithm learns from real usage patterns
+		- Easy to understand and document
+	- **References**: 
+		- Team Shape Templates: "left to right flow of change"
+		- Real-world examples (Docker, etc.) for default heuristics
+	- **Tests**: Update tt-design-alignment.test.js to verify improved positioning
+	- **Data migration**: `alignment_hint` is optional, no migration needed
 - Flow of change arrows in TT Design view
 	- Add optional "Flow of change" visualization as described in https://teamtopologies.com/key-concepts
 	- Implementation: checkbox option (default off) in TT Design view to show directional arrows indicating flow between teams
