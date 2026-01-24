@@ -118,6 +118,8 @@ data/current-teams/current-team-types.json
 data/tt-teams/tt-team-types.json
 ```
 
+Want to understand the team Markdown/YAML structure (or create your own starting from [templates/](templates/))? See [docs/SETUP.md](docs/SETUP.md#data-organization).
+
 ## Example Data
 
 Includes a fictitious organization (**LogiCore Systems**) to illustrate typical “before vs after” patterns during a Team Topologies adoption.

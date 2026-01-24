@@ -26,12 +26,14 @@ Edit this list as your priorities change:
 
 ## Next
 
+- Validation: warn if Baseline `product_line` / `business_stream` values don’t match config (products/business streams)
 - Refactor frontend file structure into subfolders (DX improvement)
 - Config-driven ordering/completeness in baseline perspectives (products/business streams)
 - Import/export tooling for easier onboarding (CSV/JSON helpers)
 
 ## Later / Maybe
 
+- Baseline: network-style “team coordination” view (dependencies + coordination overhead)
 - “Virtual nodes” / constraint cards (e.g., release gates, compliance constraints)
 - More platform-as-a-product indicators (maturity, adoption funnel, pain points)
 - Diff-style views for snapshots (beyond side-by-side)
