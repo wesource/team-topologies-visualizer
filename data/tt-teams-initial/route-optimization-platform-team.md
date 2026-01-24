@@ -2,19 +2,19 @@
 name: Route Optimization Platform Team
 team_type: complicated-subsystem
 position:
-  x: 801.0
-  y: 253.0
+  x: 1960.0
+  y: 260.0
 metadata:
   size: 4
   cognitive_load: high
   established: 2024-06
 interactions:
-  - team: Dispatch & Fleet Team
-    mode: x-as-a-service
-    purpose: Providing route calculation API for real-time dispatch optimization
-  - team: Delivery & Routing Team
-    mode: x-as-a-service
-    purpose: Providing route calculation API for delivery planning
+- team: Dispatch & Fleet Team
+  mode: x-as-a-service
+  purpose: Providing route calculation API for real-time dispatch optimization
+- team: Delivery & Routing Team
+  mode: x-as-a-service
+  purpose: Providing route calculation API for delivery planning
 ---
 
 # Route Optimization Platform Team

@@ -8,12 +8,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **High-DPI Canvas Support (2026-01-24)**: Implemented devicePixelRatio scaling for crisp text rendering
+  - Canvas now renders at native device resolution (2x on Retina displays)
+  - Text and graphics appear sharp on high-DPI screens
+  - Updated main canvas, comparison view canvases, and all related calculations
+  - All 106 frontend tests updated and passing
+
+- **SVG Export Enhancements (2026-01-24)**: Improved interaction arrow rendering and typography
+  - Added proper arrowheads to interaction lines (collaboration, x-as-a-service, facilitating)
+  - Arrows now terminate at team box edges instead of centers
+  - Changed font from generic sans-serif to Arial for better consistency
+  - SVG exports now match canvas visualization appearance
+
 - **Dependency Notes Field (2026-01-18)**: Separated narrative text from team references in dependencies
   - Added `dependency_notes` field to TeamData model for free-text notes about dependencies
   - Updated parsing logic to distinguish team references from narrative statements
   - Prevents rendering errors from non-resolvable dependency targets like "All Development Teams" or "Blocks all teams from releasing"
   - Improved sample data in QA & Testing Team to use clean team references + notes structure
   - Added tests for mixed teams and notes parsing scenarios
+
+### Fixed
+- **Critical: Interactions Data Loss on Drag (2026-01-24)**: Fixed bug where dragging teams deleted interaction data
+  - Root cause: `write_team_file_to_path` only preserved explicitly listed fields
+  - Added `interactions` field to TeamData Pydantic model
+  - Updated write function to preserve `interactions` array when updating team positions
+  - Prevents silent data loss when moving teams on canvas
+
+- **Snapshot Modal Padding (2026-01-24)**: Fixed missing margins in "Create Snapshot" modal
+  - Updated modal structure to use proper `modal-header` class
+  - Changed close button from `<span>` to `<button>` for consistency
+  - Modal now has consistent spacing matching other modals
 
 ### Changed
 - **Local AI context refresh (2026-01-24)**: Updated `.ai-context.md` to match current run workflow

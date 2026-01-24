@@ -339,11 +339,11 @@ def write_team_file_to_path(team: TeamData, file_path: Path) -> Path:
         yaml_data['value_stream'] = team.value_stream
     if team.platform_grouping:
         yaml_data['platform_grouping'] = team.platform_grouping
-    
+
     # CRITICAL: Preserve interactions array if present
     if team.interactions:
         yaml_data['interactions'] = team.interactions
-    
+
     if team.established:
         if 'metadata' not in yaml_data:
             yaml_data['metadata'] = {}

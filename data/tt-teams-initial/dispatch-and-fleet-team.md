@@ -2,17 +2,17 @@
 name: Dispatch & Fleet Team
 team_type: stream-aligned
 position:
-  x: 126.0
-  y: 336.0
+  x: 204.0
+  y: 305.0
 metadata:
   size: 6
   cognitive_load: medium
   established: 2026-01
 value_stream: B2B Fleet Management
 interactions:
-  - team: Delivery & Routing Team
-    mode: collaboration
-    purpose: Splitting from shared monolith - coordinating API boundaries and data migration
+- team: Delivery & Routing Team
+  mode: collaboration
+  purpose: Splitting from shared monolith - coordinating API boundaries and data migration
 ---
 
 # Dispatch & Fleet Team

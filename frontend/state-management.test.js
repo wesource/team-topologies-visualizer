@@ -327,8 +327,8 @@ describe('state-management.js', () => {
             state.scale = 1;
             state.viewOffset = { x: 0, y: 0 };
 
-            mockCanvas = { 
-                width: 1200, 
+            mockCanvas = {
+                width: 1200,
                 height: 800,
                 clientWidth: 1200,
                 clientHeight: 800
