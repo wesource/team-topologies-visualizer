@@ -29,6 +29,8 @@ Thumbs.db
 desktop.ini
 
 # Test outputs
+test-results/
+frontend/test-results/
 tests/test-results/
 tests/playwright-report/
 tests/.playwright/
