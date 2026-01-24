@@ -21,7 +21,7 @@ async def startup_event():
     tt_variant = os.getenv("TT_TEAMS_VARIANT", "tt-teams")
     tt_dir = Path("data") / tt_variant
     current_dir = Path("data/current-teams")
-    
+
     print("\n" + "=" * 80)
     print("🚀 Team Topologies Visualizer Starting Up")
     print("=" * 80)

@@ -22,24 +22,24 @@ export function exportToSVG(state, organizationHierarchy, teams, teamColorMap, c
         let minY = Math.min(...teams.map(t => t.position.y)) - padding;
         const maxX = Math.max(...teams.map(t => t.position.x + LAYOUT.TEAM_BOX_WIDTH)) + padding;
         const maxY = Math.max(...teams.map(t => t.position.y + LAYOUT.TEAM_BOX_HEIGHT)) + padding;
-        
+
         // For hierarchy view, include the organization hierarchy at the top
         if (isHierarchy) {
             minY = 0; // Start from top to include title and org hierarchy
         }
-        
+
         width = maxX - minX;
         height = maxY - minY;
         viewBox = `${minX} ${minY} ${width} ${height}`;
     }
-    
+
     // Calculate background rect position based on viewBox
     const viewBoxParts = viewBox.split(' ').map(Number);
     const bgX = viewBoxParts[0];
     const bgY = viewBoxParts[1];
     const bgWidth = viewBoxParts[2];
     const bgHeight = viewBoxParts[3];
-    
+
     let svg = `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="${viewBox}">
   <defs>
