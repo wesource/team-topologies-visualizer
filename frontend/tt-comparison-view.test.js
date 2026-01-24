@@ -59,6 +59,12 @@ describe('ComparisonView', () => {
         const beforeCanvas = document.getElementById('comparisonBeforeCanvas');
         const afterCanvas = document.getElementById('comparisonAfterCanvas');
 
+        // Mock clientWidth/clientHeight for DPR support
+        Object.defineProperty(beforeCanvas, 'clientWidth', { value: 800, configurable: true });
+        Object.defineProperty(beforeCanvas, 'clientHeight', { value: 600, configurable: true });
+        Object.defineProperty(afterCanvas, 'clientWidth', { value: 800, configurable: true });
+        Object.defineProperty(afterCanvas, 'clientHeight', { value: 600, configurable: true });
+
         beforeCanvas.getContext = vi.fn(() => new MockCanvasContext());
         afterCanvas.getContext = vi.fn(() => new MockCanvasContext());
 
@@ -360,11 +366,11 @@ describe('ComparisonView', () => {
 
         it('should calculate center-based zoom offset correctly', () => {
             const viewState = comparisonView.beforeView;
-            const canvas = { width: 800, height: 600 };
+            const canvas = { width: 800, height: 600, clientWidth: 800, clientHeight: 600 };
             const factor = 1.2;
 
-            const centerX = canvas.width / 2;  // 400
-            const centerY = canvas.height / 2;  // 300
+            const centerX = canvas.clientWidth / 2;  // 400
+            const centerY = canvas.clientHeight / 2;  // 300
 
             // Before zoom: world coordinates at center
             const worldX = (centerX - viewState.offsetX) / viewState.scale;  // 400
@@ -496,12 +502,12 @@ describe('ComparisonView', () => {
         });
 
         it('should calculate scale to fit canvas', () => {
-            const canvas = { width: 800, height: 600 };
+            const canvas = { width: 800, height: 600, clientWidth: 800, clientHeight: 600 };
             const contentWidth = 700;
             const contentHeight = 360;
 
-            const scaleX = canvas.width / contentWidth;
-            const scaleY = canvas.height / contentHeight;
+            const scaleX = canvas.clientWidth / contentWidth;
+            const scaleY = canvas.clientHeight / contentHeight;
             const scale = Math.min(scaleX, scaleY);
 
             expect(scale).toBeCloseTo(1.143, 2);

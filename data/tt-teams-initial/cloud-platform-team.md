@@ -2,13 +2,19 @@
 name: Cloud Platform Team
 team_type: platform
 position:
-  x: 121.0
-  y: 634.0
+  x: -44.0
+  y: 603.0
 metadata:
   size: 5
   cognitive_load: medium
   established: 2026-01
-value_stream: N/A (enables all stream-aligned teams)
+interactions:
+  - team: Dispatch & Fleet Team
+    mode: x-as-a-service
+    purpose: Providing self-service AWS infrastructure and CI/CD pipelines
+  - team: Delivery & Routing Team
+    mode: x-as-a-service
+    purpose: Providing self-service AWS infrastructure and CI/CD pipelines
 ---
 
 # Cloud Platform Team

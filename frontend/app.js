@@ -85,8 +85,20 @@ function resizeCanvas() {
     const minWidth = Math.min(1200, availableWidth); // Flexible minimum
     const minHeight = Math.min(800, availableHeight); // Flexible minimum
 
-    state.canvas.width = Math.max(availableWidth, minWidth);
-    state.canvas.height = Math.max(availableHeight, minHeight);
+    const displayWidth = Math.max(availableWidth, minWidth);
+    const displayHeight = Math.max(availableHeight, minHeight);
+
+    // High-DPI support: Scale canvas for sharp text on retina displays
+    const dpr = window.devicePixelRatio || 1;
+    state.canvas.width = displayWidth * dpr;
+    state.canvas.height = displayHeight * dpr;
+
+    // Set CSS size to maintain correct display size
+    state.canvas.style.width = `${displayWidth}px`;
+    state.canvas.style.height = `${displayHeight}px`;
+
+    // Scale context to match device pixel ratio
+    state.ctx.scale(dpr, dpr);
 
     // Adjust initial scale for smaller screens
     if (availableWidth < 1400 && state.scale === 1) {

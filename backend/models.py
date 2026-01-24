@@ -30,6 +30,7 @@ class TeamData(BaseModel):
     dependencies: list[str] | None = []
     dependency_notes: list[str] | None = []  # Free text notes about dependencies (separate from team references)
     interaction_modes: dict[str, str] | None = {}  # {team_name: interaction_mode}
+    interactions: list[dict[str, Any]] | None = None  # Alternative format: [{team, mode, purpose}, ...]
     line_manager: str | None = None  # For current org structure
     product_line: str | None = None  # For Product Lines view (Pre-TT only)
     business_stream: str | None = None  # For Business Streams view (Baseline only)

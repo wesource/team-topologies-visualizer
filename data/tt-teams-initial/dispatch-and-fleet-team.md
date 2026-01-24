@@ -9,6 +9,10 @@ metadata:
   cognitive_load: medium
   established: 2026-01
 value_stream: B2B Fleet Management
+interactions:
+  - team: Delivery & Routing Team
+    mode: collaboration
+    purpose: Splitting from shared monolith - coordinating API boundaries and data migration
 ---
 
 # Dispatch & Fleet Team

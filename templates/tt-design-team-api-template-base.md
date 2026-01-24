@@ -19,8 +19,11 @@ metadata:
     deployment_frequency: weekly  # daily | weekly | monthly | quarterly
     change_fail_rate: 0.10  # 0.0 to 1.0 (e.g., 0.10 = 10%)
     mttr_hours: 3  # Mean time to recovery in hours
-value_stream: [Value Stream Name]  # Optional: Grouping by value stream
-platform_grouping: [Platform Grouping Name]  # Optional: Grouping by platform or capability area
+
+# OPTIONAL - Groupings (omit if team is standalone)
+value_stream: [Value Stream Name]  # For stream-aligned teams in organized value streams
+platform_grouping: [Platform Grouping Name]  # For platform teams in shared platform groupings
+# Note: Omit grouping fields for standalone teams in early transformation stages
 ---
 
 # [Your Team Name]
@@ -147,6 +150,21 @@ platform_grouping: [Platform Grouping Name]  # Optional: Grouping by platform or
   - Documentation improvements (ongoing)
 
 ## Teams we currently interact with
+
+**Option 1: YAML Array (Recommended - cleaner, less fragile)**
+
+Add to YAML front matter:
+```yaml
+interactions:
+  - team: [Team Name]
+    mode: [collaboration | x-as-a-service | facilitating]
+    purpose: [Why you're interacting]
+  - team: [Another Team]
+    mode: [collaboration | x-as-a-service | facilitating]
+    purpose: [Why you're interacting]
+```
+
+**Option 2: Markdown Table (Alternative - visible in rendered markdown)**
 
 | Team Name | Interaction Mode | Purpose | Duration |
 |-----------|------------------|---------|----------|

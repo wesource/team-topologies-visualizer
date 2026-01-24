@@ -1,0 +1,125 @@
+{
+  "snapshot_id": "tt-design-v05---2025-06-24-20260124-174633",
+  "name": "TT Design v0.5 - 2025-06-24",
+  "description": "First step of transformation to team topologies",
+  "author": "",
+  "created_at": "2026-01-24T17:46:33.811569",
+  "teams": [
+    {
+      "name": "Cloud Platform Team",
+      "team_type": "platform",
+      "position": {
+        "x": -44.0,
+        "y": 603.0
+      },
+      "value_stream": null,
+      "platform_grouping": null,
+      "dependencies": [],
+      "dependency_notes": [],
+      "interaction_modes": {
+        "Dispatch & Fleet Team": "x-as-a-service",
+        "Delivery & Routing Team": "x-as-a-service"
+      },
+      "metadata": {
+        "size": 5,
+        "cognitive_load": "medium",
+        "established": "2026-01"
+      },
+      "team_api_summary": null
+    },
+    {
+      "name": "Delivery & Routing Team",
+      "team_type": "stream-aligned",
+      "position": {
+        "x": 134.0,
+        "y": 165.0
+      },
+      "value_stream": "B2B Fleet Management",
+      "platform_grouping": null,
+      "dependencies": [],
+      "dependency_notes": [],
+      "interaction_modes": {},
+      "metadata": {
+        "size": 6,
+        "cognitive_load": "medium",
+        "established": "2026-01"
+      },
+      "team_api_summary": null
+    },
+    {
+      "name": "DevOps Enablement Team",
+      "team_type": "enabling",
+      "position": {
+        "x": -53.0,
+        "y": 301.0
+      },
+      "value_stream": null,
+      "platform_grouping": null,
+      "dependencies": [],
+      "dependency_notes": [],
+      "interaction_modes": {
+        "Dispatch & Fleet Team": "facilitating",
+        "Delivery & Routing Team": "facilitating",
+        "Cloud Platform Team": "facilitating"
+      },
+      "metadata": {
+        "size": 3,
+        "cognitive_load": "medium",
+        "established": "2026-01"
+      },
+      "team_api_summary": null
+    },
+    {
+      "name": "Dispatch & Fleet Team",
+      "team_type": "stream-aligned",
+      "position": {
+        "x": 126.0,
+        "y": 336.0
+      },
+      "value_stream": "B2B Fleet Management",
+      "platform_grouping": null,
+      "dependencies": [],
+      "dependency_notes": [],
+      "interaction_modes": {
+        "Delivery & Routing Team": "collaboration"
+      },
+      "metadata": {
+        "size": 6,
+        "cognitive_load": "medium",
+        "established": "2026-01"
+      },
+      "team_api_summary": null
+    },
+    {
+      "name": "Route Optimization Platform Team",
+      "team_type": "complicated-subsystem",
+      "position": {
+        "x": 801.0,
+        "y": 253.0
+      },
+      "value_stream": null,
+      "platform_grouping": null,
+      "dependencies": [],
+      "dependency_notes": [],
+      "interaction_modes": {
+        "Dispatch & Fleet Team": "x-as-a-service",
+        "Delivery & Routing Team": "x-as-a-service"
+      },
+      "metadata": {
+        "size": 4,
+        "cognitive_load": "high",
+        "established": "2024-06"
+      },
+      "team_api_summary": null
+    }
+  ],
+  "statistics": {
+    "total_teams": 5,
+    "stream_aligned": 2,
+    "platform": 1,
+    "enabling": 1,
+    "complicated_subsystem": 1,
+    "value_streams": 1,
+    "platform_groupings": 0
+  }
+}

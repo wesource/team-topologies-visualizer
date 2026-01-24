@@ -170,6 +170,29 @@ def validate_all_team_files(view: str = "tt") -> dict[str, Any]:
                                                         f"Interaction mode '{mode}' references unknown team: '{team}'"
                                                     )
 
+                            # Check 9b: YAML interactions array references existing teams (TT view)
+                            if 'interactions' in data:
+                                interactions = data['interactions']
+                                if isinstance(interactions, list):
+                                    for interaction in interactions:
+                                        if isinstance(interaction, dict):
+                                            if 'team' in interaction:
+                                                team_name = interaction['team']
+                                                if team_name not in all_team_names:
+                                                    file_issues["warnings"].append(
+                                                        f"Interaction references unknown team: '{team_name}'"
+                                                    )
+                                            if 'mode' in interaction:
+                                                valid_modes = ['collaboration', 'x-as-a-service', 'facilitating']
+                                                if interaction['mode'] not in valid_modes:
+                                                    file_issues["errors"].append(
+                                                        f"Invalid interaction mode: '{interaction['mode']}' (valid: {', '.join(valid_modes)})"
+                                                    )
+                                        else:
+                                            file_issues["errors"].append(
+                                                "Interactions array must contain dict objects with 'team' and 'mode' keys"
+                                            )
+
                         # Check 7: Interaction table format (TT view only)
                         if view == "tt":
                             markdown_content = parts[2].strip()

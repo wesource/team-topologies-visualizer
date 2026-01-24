@@ -145,11 +145,22 @@ def parse_team_file(file_path: Path) -> TeamData:
                     if dependency_notes:
                         data['dependency_notes'] = dependency_notes
 
-            # Parse interaction modes from markdown (always from markdown for now)
+            # Parse interaction modes: Support YAML 'interactions' array or fallback to markdown parsing
             if 'interaction_modes' not in data:
-                _, interaction_modes = _parse_interaction_tables(markdown_content)
-                if interaction_modes:
-                    data['interaction_modes'] = interaction_modes
+                # First, check if we have interactions array in YAML
+                if 'interactions' in data and isinstance(data['interactions'], list):
+                    # Convert interactions array to interaction_modes dict
+                    interaction_modes = {}
+                    for interaction in data['interactions']:
+                        if isinstance(interaction, dict) and 'team' in interaction and 'mode' in interaction:
+                            interaction_modes[interaction['team']] = interaction['mode']
+                    if interaction_modes:
+                        data['interaction_modes'] = interaction_modes
+                else:
+                    # Fallback to markdown table parsing
+                    _, interaction_modes = _parse_interaction_tables(markdown_content)
+                    if interaction_modes:
+                        data['interaction_modes'] = interaction_modes
 
             return TeamData(**data)
 
@@ -328,6 +339,11 @@ def write_team_file_to_path(team: TeamData, file_path: Path) -> Path:
         yaml_data['value_stream'] = team.value_stream
     if team.platform_grouping:
         yaml_data['platform_grouping'] = team.platform_grouping
+    
+    # CRITICAL: Preserve interactions array if present
+    if team.interactions:
+        yaml_data['interactions'] = team.interactions
+    
     if team.established:
         if 'metadata' not in yaml_data:
             yaml_data['metadata'] = {}

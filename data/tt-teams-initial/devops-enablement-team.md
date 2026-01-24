@@ -2,13 +2,22 @@
 name: DevOps Enablement Team
 team_type: enabling
 position:
-  x: 1161.0
-  y: 633.0
+  x: -53.0
+  y: 301.0
 metadata:
   size: 3
   cognitive_load: medium
   established: 2026-01
-value_stream: N/A (enables stream-aligned teams)
+interactions:
+  - team: Dispatch & Fleet Team
+    mode: facilitating
+    purpose: Helping adopt cloud-native patterns and microservices testing (6-8 week engagement)
+  - team: Delivery & Routing Team
+    mode: facilitating
+    purpose: Helping adopt cloud-native patterns and microservices testing (6-8 week engagement)
+  - team: Cloud Platform Team
+    mode: facilitating
+    purpose: Gathering feedback from stream-aligned teams to improve platform UX
 ---
 
 # DevOps Enablement Team

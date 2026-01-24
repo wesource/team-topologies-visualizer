@@ -83,16 +83,10 @@ export function getTeamBoxWidth(team, currentView = 'current') {
         if (team.team_type === 'complicated-subsystem') {
             return 100;
         }
-        // Stream-aligned and platform teams: wide horizontal
+        // Stream-aligned and platform teams: always wide horizontal (regardless of grouping)
         if (team.team_type === 'stream-aligned' || team.team_type === 'platform') {
-            // Check if team is in a grouping - if so, make it wide
-            // Check top-level first (from YAML root), then metadata (for backwards compatibility)
-            const hasGrouping = team.value_stream || team.platform_grouping ||
-                                team.metadata?.value_stream || team.metadata?.platform_grouping;
-            if (hasGrouping) {
-                // ~80% of grouping width (700px), with 10% margins = ~560px
-                return 560;
-            }
+            // Wide box spanning the flow of change
+            return 560;
         }
     }
     // Default width for all other cases

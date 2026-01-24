@@ -142,9 +142,9 @@ class ComparisonView {
      * Zoom in/out on a canvas
      */
     zoom(viewState, canvas, factor) {
-        // Zoom towards center of canvas
-        const centerX = canvas.width / 2;
-        const centerY = canvas.height / 2;
+        // Zoom towards center of canvas (use CSS dimensions, not scaled canvas dimensions)
+        const centerX = canvas.clientWidth / 2;
+        const centerY = canvas.clientHeight / 2;
 
         // Calculate world position of center before zoom
         const worldX = (centerX - viewState.offsetX) / viewState.scale;
@@ -377,9 +377,23 @@ class ComparisonView {
         const panels = document.querySelectorAll('.comparison-panel');
         panels.forEach((panel, index) => {
             const canvas = index === 0 ? this.beforeCanvas : this.afterCanvas;
+            const ctx = index === 0 ? this.beforeCtx : this.afterCtx;
             const rect = panel.getBoundingClientRect();
-            canvas.width = rect.width - 4; // Account for border
-            canvas.height = rect.height - 50; // Account for header
+
+            const displayWidth = rect.width - 4; // Account for border
+            const displayHeight = rect.height - 50; // Account for header
+
+            // High-DPI support: Scale canvas for sharp text on retina displays
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = displayWidth * dpr;
+            canvas.height = displayHeight * dpr;
+
+            // Set CSS size to maintain correct display size
+            canvas.style.width = `${displayWidth}px`;
+            canvas.style.height = `${displayHeight}px`;
+
+            // Scale context to match device pixel ratio
+            ctx.scale(dpr, dpr);
         });
     }
 
@@ -460,18 +474,18 @@ class ComparisonView {
 
         console.log('[ComparisonView] Content dimensions:', { contentWidth, contentHeight, padding });
 
-        // Calculate scale to fit content in canvas
-        const scaleX = canvas.width / contentWidth;
-        const scaleY = canvas.height / contentHeight;
+        // Calculate scale to fit content in canvas (use CSS dimensions, not scaled canvas dimensions)
+        const scaleX = canvas.clientWidth / contentWidth;
+        const scaleY = canvas.clientHeight / contentHeight;
         const scale = Math.min(scaleX, scaleY, 1.0); // Don't scale up beyond 1.0
 
         console.log('[ComparisonView] Scale calculation:', { scaleX, scaleY, finalScale: scale });
 
-        // Calculate offset to center content
+        // Calculate offset to center content (use CSS dimensions, not scaled canvas dimensions)
         const scaledContentWidth = contentWidth * scale;
         const scaledContentHeight = contentHeight * scale;
-        const offsetX = (canvas.width - scaledContentWidth) / 2 - (minX - padding) * scale;
-        const offsetY = (canvas.height - scaledContentHeight) / 2 - (minY - padding) * scale;
+        const offsetX = (canvas.clientWidth - scaledContentWidth) / 2 - (minX - padding) * scale;
+        const offsetY = (canvas.clientHeight - scaledContentHeight) / 2 - (minY - padding) * scale;
 
         console.log('[ComparisonView] Offset calculation:', { offsetX, offsetY });
 
@@ -491,8 +505,8 @@ class ComparisonView {
      * Render a snapshot on a canvas
      */
     renderSnapshot(canvas, ctx, snapshot, viewState) {
-        // Clear canvas
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // Clear canvas (use CSS dimensions, not scaled canvas dimensions)
+        ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
 
         // Save context
         ctx.save();

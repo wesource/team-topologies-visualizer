@@ -31,8 +31,8 @@ export function exportToSVG(state, organizationHierarchy, teams, teamColorMap, c
   <defs>
     <style>
       .team-box { stroke-width: 3; }
-      .team-text { font-family: sans-serif; fill: #000; text-anchor: middle; }
-      .team-text-bold { font-family: sans-serif; font-size: 18px; font-weight: bold; text-anchor: middle; }
+      .team-text { font-family: Arial, sans-serif; fill: #000; text-anchor: middle; }
+      .team-text-bold { font-family: Arial, sans-serif; font-size: 18px; font-weight: bold; text-anchor: middle; }
       .hierarchy-line { stroke: #7f8c8d; stroke-width: 1.5; fill: none; }
       .connection-line { stroke-width: 2; fill: none; }
     </style>
@@ -80,7 +80,7 @@ function generateCurrentStateSVG(organizationHierarchy, teams, teamColorMap) {
     const boxHeight = LAYOUT.DEPT_BOX_HEIGHT;
 
     // Title
-    elements += '<text x="50" y="60" style="font-family: sans-serif; font-size: 24px; font-weight: bold; fill: #333;" text-anchor="start">Hierarchy View</text>\n';
+    elements += '<text x="50" y="60" style="font-family: Arial, sans-serif; font-size: 24px; font-weight: bold; fill: #333;" text-anchor="start">Hierarchy View</text>\n';
 
     // Draw company leadership
     const company = organizationHierarchy.company;
@@ -230,7 +230,7 @@ function generateProductLinesSVG(productLinesData, teamColorMap) {
     });
 
     // Title
-    elements += `<text x="${startX}" y="${startY - 40}" style="font-family: sans-serif; font-size: 24px; font-weight: bold; fill: #333;" text-anchor="start">Product Lines View</text>\n`;
+    elements += `<text x="${startX}" y="${startY - 40}" style="font-family: Arial, sans-serif; font-size: 24px; font-weight: bold; fill: #333;" text-anchor="start">Product Lines View</text>\n`;
 
     // Draw each product lane
     products.forEach((product, index) => {
@@ -305,8 +305,53 @@ function generateProductLinesSVG(productLinesData, teamColorMap) {
     return elements;
 }
 
+/**
+ * Calculate edge point for SVG connections (matches canvas rendering logic)
+ * Returns the center point of the appropriate edge based on angle
+ */
+function getSVGBoxEdgePoint(centerX, centerY, width, height, angle) {
+    const halfWidth = width / 2;
+    const halfHeight = height / 2;
+
+    // Determine which edge to use based on angle direction
+    if (Math.abs(Math.cos(angle)) > Math.abs(Math.sin(angle))) {
+        // More horizontal: use left or right edge center
+        if (Math.cos(angle) > 0) {
+            // Right edge center
+            return { x: centerX + halfWidth, y: centerY };
+        } else {
+            // Left edge center
+            return { x: centerX - halfWidth, y: centerY };
+        }
+    } else {
+        // More vertical: use top or bottom edge center
+        if (Math.sin(angle) > 0) {
+            // Bottom edge center
+            return { x: centerX, y: centerY + halfHeight };
+        } else {
+            // Top edge center
+            return { x: centerX, y: centerY - halfHeight };
+        }
+    }
+}
+
 function generateTTVisionSVG(teams, teamColorMap, showInteractionModes) {
     let elements = '';
+
+    // Add arrow marker definitions at the beginning
+    elements += `
+  <defs>
+    <marker id="arrow-collaboration" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#7a5fa6" />
+    </marker>
+    <marker id="arrow-x-as-a-service" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#222222" />
+    </marker>
+    <marker id="arrow-facilitating" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#6fa98c" />
+    </marker>
+  </defs>
+`;
 
     // Draw value stream groupings first (as background)
     const valueStreamGroupings = getValueStreamGroupings(teams);
@@ -350,16 +395,28 @@ function generateTTVisionSVG(teams, teamColorMap, showInteractionModes) {
                         const color = getInteractionColorForSVG(mode);
                         const dashArray = getInteractionDashForSVG(mode);
                         const strokeWidth = getInteractionWidthForSVG(mode);
-                        // Use dynamic team width and height for center calculation
+                        const markerId = `arrow-${mode}`;
+
+                        // Use dynamic team width and height
                         const fromWidth = getTeamBoxWidth(team, 'tt');
                         const fromHeight = getTeamBoxHeight(team, 'tt');
                         const toWidth = getTeamBoxWidth(targetTeam, 'tt');
                         const toHeight = getTeamBoxHeight(targetTeam, 'tt');
-                        const fromX = team.position.x + fromWidth / 2;
-                        const fromY = team.position.y + fromHeight / 2;
-                        const toX = targetTeam.position.x + toWidth / 2;
-                        const toY = targetTeam.position.y + toHeight / 2;
-                        elements += `<line x1="${fromX}" y1="${fromY}" x2="${toX}" y2="${toY}" class="connection-line" stroke="${color}" stroke-dasharray="${dashArray}" stroke-width="${strokeWidth}"/>`;
+
+                        // Calculate center points
+                        const fromCenterX = team.position.x + fromWidth / 2;
+                        const fromCenterY = team.position.y + fromHeight / 2;
+                        const toCenterX = targetTeam.position.x + toWidth / 2;
+                        const toCenterY = targetTeam.position.y + toHeight / 2;
+
+                        // Calculate angle between centers
+                        const angle = Math.atan2(toCenterY - fromCenterY, toCenterX - fromCenterX);
+
+                        // Calculate edge points (not centers)
+                        const fromEdge = getSVGBoxEdgePoint(fromCenterX, fromCenterY, fromWidth, fromHeight, angle);
+                        const toEdge = getSVGBoxEdgePoint(toCenterX, toCenterY, toWidth, toHeight, angle + Math.PI);
+
+                        elements += `<line x1="${fromEdge.x}" y1="${fromEdge.y}" x2="${toEdge.x}" y2="${toEdge.y}" class="connection-line" stroke="${color}" stroke-dasharray="${dashArray}" stroke-width="${strokeWidth}" marker-end="url(#${markerId})"/>`;
                     }
                 });
             }
@@ -385,7 +442,7 @@ function drawSVGGrouping(label, x, y, width, height, fillColor, borderColor) {
   <rect x="${x}" y="${y}" width="${width}" height="${height}" 
         fill="${fillColor}" stroke="${borderColor}" stroke-width="2" rx="${rx}" ry="${rx}"/>
   <text x="${x + width / 2}" y="${labelY}" 
-        font-family="sans-serif" font-size="16" font-weight="bold" 
+        font-family="Arial, sans-serif" font-size="16" font-weight="bold" 
         fill="${borderColor}" text-anchor="middle" dominant-baseline="middle">${label}</text>
 `;
 }
@@ -678,7 +735,7 @@ function generateBusinessStreamsSVG(businessStreamsData, teamColorMap) {
     const teamPositions = new Map();
 
     // Title
-    elements += `<text x="${startX}" y="${currentY - 40}" style="font-family: sans-serif; font-size: 24px; font-weight: bold; fill: #333;" text-anchor="start">Business Streams View</text>\n`;
+    elements += `<text x="${startX}" y="${currentY - 40}" style="font-family: Arial, sans-serif; font-size: 24px; font-weight: bold; fill: #333;" text-anchor="start">Business Streams View</text>\n`;
 
     // Calculate right column X position
     const rightColumnX = startX + VS_WIDTH + VS_SPACING;
@@ -696,8 +753,8 @@ function generateBusinessStreamsSVG(businessStreamsData, teamColorMap) {
         // Header
         elements += `<rect x="${startX}" y="${currentY}" width="${VS_WIDTH}" height="${VS_HEADER_HEIGHT}" fill="${vsColor}40" rx="0" ry="0"/>\n`;
         const teamCount = Object.values(bsData.products).reduce((sum, teams) => sum + teams.length, 0);
-        elements += `<text x="${startX + 20}" y="${currentY + 30}" style="font-family: sans-serif; font-size: 18px; font-weight: bold; fill: #1a1a1a;" text-anchor="start">${escapeXml(bsData.name)}</text>\n`;
-        elements += `<text x="${startX + VS_WIDTH - 100}" y="${currentY + 30}" style="font-family: sans-serif; font-size: 13px; fill: #666;" text-anchor="start">${teamCount} team${teamCount !== 1 ? 's' : ''}</text>\n`;
+        elements += `<text x="${startX + 20}" y="${currentY + 30}" style="font-family: Arial, sans-serif; font-size: 18px; font-weight: bold; fill: #1a1a1a;" text-anchor="start">${escapeXml(bsData.name)}</text>\n`;
+        elements += `<text x="${startX + VS_WIDTH - 100}" y="${currentY + 30}" style="font-family: Arial, sans-serif; font-size: 13px; fill: #666;" text-anchor="start">${teamCount} team${teamCount !== 1 ? 's' : ''}</text>\n`;
 
         // Draw product sections
         let productY = currentY + VS_HEADER_HEIGHT + VS_PADDING;
@@ -708,7 +765,7 @@ function generateBusinessStreamsSVG(businessStreamsData, teamColorMap) {
             elements += `<rect x="${startX + VS_PADDING}" y="${productY}" width="${VS_WIDTH - (VS_PADDING * 2)}" height="${PRODUCT_SECTION_HEIGHT}" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1" rx="0" ry="0"/>\n`;
 
             // Product header
-            elements += `<text x="${startX + VS_PADDING + 10}" y="${productY + 22}" style="font-family: sans-serif; font-size: 14px; font-weight: bold; fill: #495057;" text-anchor="start">${escapeXml(productName)}</text>\n`;
+            elements += `<text x="${startX + VS_PADDING + 10}" y="${productY + 22}" style="font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; fill: #495057;" text-anchor="start">${escapeXml(productName)}</text>\n`;
 
             // Teams in product
             let teamX = startX + VS_PADDING + 10;
@@ -759,7 +816,7 @@ function generateBusinessStreamsSVG(businessStreamsData, teamColorMap) {
         elements += `<rect x="${rightColumnX}" y="${rightColumnY}" width="${VS_WIDTH}" height="${ungroupedProductsHeight}" fill="#fff3cd20" stroke="#ffc107" stroke-width="2" stroke-dasharray="5,5" rx="0" ry="0"/>\n`;
 
         // Header
-        elements += `<text x="${rightColumnX + 20}" y="${rightColumnY + 30}" style="font-family: sans-serif; font-size: 16px; font-weight: bold; fill: #856404;" text-anchor="start">⚠ Products not assigned to a business stream</text>\n`;
+        elements += `<text x="${rightColumnX + 20}" y="${rightColumnY + 30}" style="font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; fill: #856404;" text-anchor="start">⚠ Products not assigned to a business stream</text>\n`;
 
         let productY = rightColumnY + 70;
         Object.entries(businessStreamsData.products_without_business_stream).forEach(([productName, teams]) => {
@@ -767,7 +824,7 @@ function generateBusinessStreamsSVG(businessStreamsData, teamColorMap) {
 
             // Product section
             elements += `<rect x="${rightColumnX + VS_PADDING}" y="${productY}" width="${VS_WIDTH - (VS_PADDING * 2)}" height="${productHeight}" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1" rx="0" ry="0"/>\n`;
-            elements += `<text x="${rightColumnX + VS_PADDING + 10}" y="${productY + 22}" style="font-family: sans-serif; font-size: 14px; font-weight: bold; fill: #495057;" text-anchor="start">${escapeXml(productName)}</text>\n`;
+            elements += `<text x="${rightColumnX + VS_PADDING + 10}" y="${productY + 22}" style="font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; fill: #495057;" text-anchor="start">${escapeXml(productName)}</text>\n`;
 
             // Teams
             let teamX = rightColumnX + VS_PADDING + 10;
@@ -812,7 +869,7 @@ function generateBusinessStreamsSVG(businessStreamsData, teamColorMap) {
 
     // Draw ungrouped teams (right column, below ungrouped products)
     if (businessStreamsData.ungrouped_teams && businessStreamsData.ungrouped_teams.length > 0) {
-        elements += `<text x="${rightColumnX}" y="${rightColumnY + 20}" style="font-family: sans-serif; font-size: 14px; font-weight: bold; fill: #6c757d;" text-anchor="start">⚠ Teams Without Product or Business Stream</text>\n`;
+        elements += `<text x="${rightColumnX}" y="${rightColumnY + 20}" style="font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; fill: #6c757d;" text-anchor="start">⚠ Teams Without Product or Business Stream</text>\n`;
 
         let teamX = rightColumnX;
         let teamY = rightColumnY + 40;

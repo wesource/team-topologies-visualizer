@@ -16,7 +16,8 @@ export function draw(state) {
     if (!state.ctx || !state.canvas)
         return;
 
-    state.ctx.clearRect(0, 0, state.canvas.width, state.canvas.height);
+    // Use CSS dimensions for clearRect since canvas is scaled by DPR
+    state.ctx.clearRect(0, 0, state.canvas.clientWidth, state.canvas.clientHeight);
     state.ctx.save();
     state.ctx.translate(state.viewOffset.x, state.viewOffset.y);
     state.ctx.scale(state.scale, state.scale);

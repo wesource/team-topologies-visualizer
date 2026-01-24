@@ -154,18 +154,19 @@ export function fitToView(canvas, teams, drawCallback) {
     // Get sidebar width to adjust canvas visible area
     const sidebar = document.querySelector('.sidebar');
     const sidebarWidth = sidebar ? sidebar.offsetWidth : 250;
-    const visibleCanvasWidth = canvas.width - sidebarWidth;
+    // Use CSS dimensions instead of scaled canvas dimensions
+    const visibleCanvasWidth = canvas.clientWidth - sidebarWidth;
 
     // Calculate scale to fit content in visible canvas area
     const scaleX = (visibleCanvasWidth - padding * 2) / contentWidth;
-    const scaleY = (canvas.height - padding * 2) / contentHeight;
+    const scaleY = (canvas.clientHeight - padding * 2) / contentHeight;
     state.scale = Math.min(scaleX, scaleY, 1.5); // Cap at 150% zoom
 
     // Center the content in visible canvas area
     const centerX = (minX + maxX) / 2;
     const centerY = (minY + maxY) / 2;
     state.viewOffset.x = sidebarWidth + visibleCanvasWidth / 2 - centerX * state.scale;
-    state.viewOffset.y = canvas.height / 2 - centerY * state.scale;
+    state.viewOffset.y = canvas.clientHeight / 2 - centerY * state.scale;
 
     updateZoomDisplay();
     if (drawCallback) drawCallback();

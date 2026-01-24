@@ -132,6 +132,42 @@ To replace with your own data:
 
 See [SETUP.md](SETUP.md#data-organization) for detailed data structure documentation.
 
+### Interaction Formats
+
+The tool supports **two formats** for documenting team interactions:
+
+**YAML Array (Recommended)**:
+```yaml
+---
+name: My Team
+interactions:
+  - team: Platform Team
+    mode: x-as-a-service
+    purpose: Using CI/CD pipeline
+  - team: Partner Team
+    mode: collaboration
+    purpose: Building shared feature
+---
+```
+
+**Advantages**: Cleaner, structured, less parsing errors, easier to edit  
+**Used in**: tt-teams-initial example dataset
+
+**Markdown Table (Alternative)**:
+```markdown
+## Teams we currently interact with
+
+| Team Name | Interaction Mode | Purpose | Duration |
+|-----------|------------------|---------|----------|
+| Platform Team | X-as-a-Service | Using CI/CD pipeline | Ongoing |
+| Partner Team | Collaboration | Building shared feature | 3 months |
+```
+
+**Advantages**: Visible in rendered markdown, familiar table format  
+**Used in**: tt-teams (mid-stage) example dataset
+
+Both formats are validated and render identically in the visualization.
+
 ## References
 
 - Team Topologies book: https://teamtopologies.com/
