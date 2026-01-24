@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from backend.routes_baseline import router as baseline_router
+from backend.routes_schemas import router as schemas_router
 from backend.routes_tt import router as tt_router
 
 app = FastAPI(
@@ -44,6 +45,7 @@ app.add_middleware(
 # Include API routes with prefixes
 app.include_router(baseline_router)  # /api/baseline/*
 app.include_router(tt_router)        # /api/tt/*
+app.include_router(schemas_router)   # /api/schemas/*
 
 # Serve static frontend files
 app.mount("/static", StaticFiles(directory="frontend"), name="static")

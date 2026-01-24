@@ -1,10 +1,18 @@
 """Team file validation utilities"""
 import json
 import re
+from pathlib import Path
 from typing import Any
 
 import yaml
+from pydantic import ValidationError
 
+from backend.schemas import (
+    BaselineTeamTypesConfig,
+    BusinessStreamsConfig,
+    OrganizationHierarchyConfig,
+    ProductsConfig,
+)
 from backend.services import get_data_dir, team_name_to_slug
 
 
@@ -240,5 +248,84 @@ def validate_all_team_files(view: str = "tt") -> dict[str, Any]:
                 report["files_with_warnings"] += 1
         else:
             report["valid_files"] += 1
+
+    return report
+
+
+def validate_config_file(file_path: Path, schema_class) -> dict[str, Any]:
+    """Validate a JSON config file against its Pydantic schema.
+
+    Args:
+        file_path: Path to the JSON config file
+        schema_class: Pydantic model class to validate against
+
+    Returns:
+        Dictionary with validation result:
+        - valid: Boolean indicating if file is valid
+        - errors: List of validation error messages
+        - data: Parsed data if valid, None otherwise
+    """
+    result = {
+        "file": file_path.name,
+        "valid": False,
+        "errors": [],
+        "data": None
+    }
+
+    try:
+        with open(file_path, encoding='utf-8') as f:
+            data = json.load(f)
+
+        # Validate against Pydantic schema
+        validated_data = schema_class(**data)
+        result["valid"] = True
+        result["data"] = validated_data.model_dump()
+
+    except json.JSONDecodeError as e:
+        result["errors"].append(f"Invalid JSON: {str(e)}")
+    except ValidationError as e:
+        for error in e.errors():
+            field_path = " → ".join(str(x) for x in error["loc"])
+            result["errors"].append(f"{field_path}: {error['msg']}")
+    except FileNotFoundError:
+        result["errors"].append(f"File not found: {file_path}")
+    except Exception as e:
+        result["errors"].append(f"Unexpected error: {str(e)}")
+
+    return result
+
+
+def validate_all_config_files(view: str = "baseline") -> dict[str, Any]:
+    """Validate all JSON config files for a view.
+
+    Args:
+        view: The view to validate ('baseline' only for now)
+
+    Returns:
+        Dictionary containing validation results for all config files
+    """
+    data_dir = get_data_dir(view)
+
+    report = {
+        "view": view,
+        "config_files": {},
+        "total_errors": 0
+    }
+
+    # Define config files to validate (only for baseline view)
+    if view == "baseline":
+        config_validations = {
+            "baseline-team-types.json": BaselineTeamTypesConfig,
+            "products.json": ProductsConfig,
+            "business-streams.json": BusinessStreamsConfig,
+            "organization-hierarchy.json": OrganizationHierarchyConfig,
+        }
+
+        for filename, schema_class in config_validations.items():
+            file_path = data_dir / filename
+            validation_result = validate_config_file(file_path, schema_class)
+            report["config_files"][filename] = validation_result
+            if not validation_result["valid"]:
+                report["total_errors"] += len(validation_result["errors"])
 
     return report

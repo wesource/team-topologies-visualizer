@@ -666,11 +666,15 @@ export async function showValidationReport(view) {
     try {
         const prefix = view === 'current' ? '/baseline' : '/tt';
         const response = await fetch(`/api${prefix}/validate`);
-        const report = await response.json();
+        const data = await response.json();
+
+        // Handle new response structure (teams + config_files)
+        const report = data.teams || data; // Fallback for TT view
+        const configReport = data.config_files;
 
         // Build report HTML
         let html = '<div class="validation-summary">';
-        html += '<h3>Summary</h3>';
+        html += '<h3>Team Files Summary</h3>';
         html += '<div class="summary-grid">';
         html += `<div class="summary-item"><strong>Total Files:</strong> ${report.total_files}</div>`;
         html += `<div class="summary-item valid"><strong>✓ Valid:</strong> ${report.valid_files}</div>`;
@@ -678,40 +682,81 @@ export async function showValidationReport(view) {
         html += `<div class="summary-item error"><strong>✗ Errors:</strong> ${report.files_with_errors}</div>`;
         html += '</div></div>';
 
-        if (report.issues.length === 0) {
+        // Add config validation summary if available
+        if (configReport) {
+            const configErrors = configReport.total_errors || 0;
+            const configFilesCount = Object.keys(configReport.config_files || {}).length;
+            const validConfigFiles = Object.values(configReport.config_files || {}).filter(f => f.valid).length;
+
+            html += '<div class="validation-summary">';
+            html += '<h3>Configuration Files Summary</h3>';
+            html += '<div class="summary-grid">';
+            html += `<div class="summary-item"><strong>Total Files:</strong> ${configFilesCount}</div>`;
+            html += `<div class="summary-item valid"><strong>✓ Valid:</strong> ${validConfigFiles}</div>`;
+            html += `<div class="summary-item error"><strong>✗ Errors:</strong> ${configErrors}</div>`;
+            html += '</div>';
+            html += '<div style="margin-top: 10px; font-size: 0.9em;">';
+            html += '<a href="#" onclick="showValidationSchemas(); return false;" style="color: #4CAF50;">📋 View field requirements and constraints</a>';
+            html += '</div></div>';
+        }
+
+        if (report.issues.length === 0 && (!configReport || configReport.total_errors === 0)) {
             html += '<div class="validation-success">🎉 All files are valid! No issues found.</div>';
         } else {
-            html += '<h3>Issues Found</h3>';
-            html += '<div class="validation-issues">';
+            // Show config file issues first
+            if (configReport && configReport.total_errors > 0) {
+                html += '<h3>Configuration File Issues</h3>';
+                html += '<div class="validation-issues">';
 
-            report.issues.forEach(file => {
-                html += '<div class="file-issue">';
-                html += `<h4 class="file-path">${file.file}</h4>`;
-
-                if (file.errors.length > 0) {
-                    html += '<div class="issues-section errors">';
-                    html += '<strong>Errors:</strong>';
-                    html += '<ul>';
-                    file.errors.forEach(error => {
-                        html += `<li class="error-item">✗ ${error}</li>`;
-                    });
-                    html += '</ul></div>';
+                for (const [filename, fileResult] of Object.entries(configReport.config_files)) {
+                    if (!fileResult.valid) {
+                        html += '<div class="file-issue">';
+                        html += `<h4 class="file-path">${filename}</h4>`;
+                        html += '<div class="issues-section errors">';
+                        html += '<ul>';
+                        fileResult.errors.forEach(error => {
+                            html += `<li class="error-item">✗ ${error}</li>`;
+                        });
+                        html += '</ul></div></div>';
+                    }
                 }
+                html += '</div>';
+            }
 
-                if (file.warnings.length > 0) {
-                    html += '<div class="issues-section warnings">';
-                    html += '<strong>Warnings:</strong>';
-                    html += '<ul>';
-                    file.warnings.forEach(warning => {
-                        html += `<li class="warning-item">⚠ ${warning}</li>`;
-                    });
-                    html += '</ul></div>';
-                }
+            // Show team file issues
+            if (report.issues.length > 0) {
+                html += '<h3>Team File Issues</h3>';
+                html += '<div class="validation-issues">';
+
+                report.issues.forEach(file => {
+                    html += '<div class="file-issue">';
+                    html += `<h4 class="file-path">${file.file}</h4>`;
+
+                    if (file.errors.length > 0) {
+                        html += '<div class="issues-section errors">';
+                        html += '<strong>Errors:</strong>';
+                        html += '<ul>';
+                        file.errors.forEach(error => {
+                            html += `<li class="error-item">✗ ${error}</li>`;
+                        });
+                        html += '</ul></div>';
+                    }
+
+                    if (file.warnings.length > 0) {
+                        html += '<div class="issues-section warnings">';
+                        html += '<strong>Warnings:</strong>';
+                        html += '<ul>';
+                        file.warnings.forEach(warning => {
+                            html += `<li class="warning-item">⚠ ${warning}</li>`;
+                        });
+                        html += '</ul></div>';
+                    }
+
+                    html += '</div>';
+                });
 
                 html += '</div>';
-            });
-
-            html += '</div>';
+            }
         }
 
         reportDiv.innerHTML = html;
@@ -779,8 +824,156 @@ window.addEventListener('click', (event) => {
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
         closeValidationModal();
+        closeSchemaModal();
     }
 });
+
+/**
+ * Show validation schemas modal with field requirements
+ */
+async function showValidationSchemas() {
+    const modal = document.getElementById('schemaModal');
+    const content = document.getElementById('schemaContent');
+
+    if (!modal || !content) {
+        // Create modal if it doesn't exist
+        const modalHTML = `
+            <div id="schemaModal" class="modal">
+                <div class="modal-content large">
+                    <span class="close" onclick="closeSchemaModal()">&times;</span>
+                    <h2>Configuration File Requirements</h2>
+                    <div id="schemaContent" class="schema-content"></div>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+    }
+
+    const schemaModal = document.getElementById('schemaModal');
+    const schemaContent = document.getElementById('schemaContent');
+
+    schemaContent.innerHTML = '<div class="loading">Loading schemas...</div>';
+    schemaModal.style.display = 'block';
+
+    try {
+        const response = await fetch('/api/schemas');
+        const schemas = await response.json();
+
+        let html = '<div class="schemas-list">';
+        html += '<p style="margin-bottom: 20px; color: #666;">This shows the required and optional fields for each configuration file, along with validation rules.</p>';
+
+        for (const [_schemaName, schemaData] of Object.entries(schemas)) {
+            html += '<div class="schema-section">';
+            html += `<h3>${schemaData.title}</h3>`;
+            if (schemaData.description) {
+                html += `<p class="schema-description">${schemaData.description.trim()}</p>`;
+            }
+
+            // Extract field information from JSON schema
+            const schema = schemaData.schema;
+            if (schema.properties) {
+                html += '<h4>Fields:</h4>';
+                html += '<table class="schema-table">';
+                html += '<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>';
+                html += '<tbody>';
+
+                const resolveRef = (ref) => {
+                    // Resolve $ref like "#/$defs/TeamTypeConfig"
+                    const parts = ref.split('/');
+                    let current = schema;
+                    for (const part of parts) {
+                        if (part === '#') continue;
+                        current = current[part];
+                    }
+                    return current;
+                };
+                
+                const renderFields = (properties, required = [], prefix = '') => {
+                    for (const [fieldName, fieldDef] of Object.entries(properties)) {
+                        const isRequired = required.includes(fieldName);
+                        const fieldPath = prefix ? `${prefix}.${fieldName}` : fieldName;
+                        
+                        let fieldType = fieldDef.type || 'object';
+                        let constraints = [];
+                        
+                        // Handle array types
+                        if (fieldDef.type === 'array' && fieldDef.items) {
+                            if (fieldDef.items.$ref) {
+                                // Resolve the $ref to get the type name
+                                const refParts = fieldDef.items.$ref.split('/');
+                                const typeName = refParts[refParts.length - 1];
+                                fieldType = `array of ${typeName}`;
+                                
+                                // Recursively render fields from the referenced type
+                                const refDef = resolveRef(fieldDef.items.$ref);
+                                if (refDef && refDef.properties) {
+                                    renderFields(refDef.properties, refDef.required || [], `${fieldPath}[]`);
+                                }
+                            } else {
+                                fieldType = `array of ${fieldDef.items.type || 'object'}`;
+                            }
+                            if (fieldDef.minItems) {
+                                constraints.push(`min: ${fieldDef.minItems}`);
+                            }
+                        }
+                        
+                        // Add constraints
+                        if (fieldDef.pattern) {
+                            constraints.push(`pattern: ${fieldDef.pattern}`);
+                        }
+                        if (fieldDef.minLength !== undefined) {
+                            constraints.push(`min length: ${fieldDef.minLength}`);
+                        }
+                        if (fieldDef.maxLength !== undefined) {
+                            constraints.push(`max length: ${fieldDef.maxLength}`);
+                        }
+                        if (fieldDef.minimum !== undefined) {
+                            constraints.push(`min: ${fieldDef.minimum}`);
+                        }
+                        if (fieldDef.maximum !== undefined) {
+                            constraints.push(`max: ${fieldDef.maximum}`);
+                        }
+                        
+                        if (constraints.length > 0) {
+                            fieldType += ` <span style="color: #666; font-size: 0.9em;">(${constraints.join(', ')})</span>`;
+                        }
+                        
+                        html += '<tr>';
+                        html += `<td><code>${fieldPath}</code></td>`;
+                        html += `<td>${fieldType}</td>`;
+                        html += `<td>${isRequired ? '<span class="required">✓ Required</span>' : '<span class="optional">Optional</span>'}</td>`;
+                        html += `<td>${fieldDef.description || ''}</td>`;
+                        html += '</tr>';
+                    }
+                };
+                
+                renderFields(schema.properties, schema.required || []);
+                
+                html += '</tbody></table>';
+            }
+            
+            // Show example if available
+            if (schemaData.schema.example) {
+                html += '<h4>Example:</h4>';
+                html += `<pre class="schema-example">${JSON.stringify(schemaData.schema.example, null, 2)}</pre>`;
+    } catch (error) {
+        schemaContent.innerHTML = `<div class="error">Error loading schemas: ${error.message}</div>`;
+    }
+}
+
+/**
+ * Close the schema modal
+ */
+function closeSchemaModal() {
+    const modal = document.getElementById('schemaModal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// Make functions globally available
+window.showValidationSchemas = showValidationSchemas;
+window.closeSchemaModal = closeSchemaModal;
 
 /**
  * Calculate team age from established date (YYYY-MM format)

@@ -1930,3 +1930,124 @@ header h1 {
         margin: 2% auto;
     }
 }
+
+/* Schema Modal Styles */
+.modal-content.large {
+    max-width: 900px;
+    width: 95%;
+}
+
+.schema-content {
+    padding: 1.5rem 2rem 2rem;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.schemas-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+
+.schema-section {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 1.5rem;
+    background: #f9f9f9;
+}
+
+.schema-section h3 {
+    margin: 0 0 0.75rem 0;
+    color: #2c3e50;
+    font-size: 1.25rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #4A90E2;
+}
+
+.schema-section h4 {
+    margin: 1.5rem 0 0.75rem 0;
+    color: #555;
+    font-size: 1rem;
+}
+
+.schema-description {
+    color: #666;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.schema-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.schema-table thead {
+    background: #f1f3f5;
+}
+
+.schema-table th {
+    padding: 0.75rem;
+    text-align: left;
+    font-weight: 600;
+    color: #495057;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.schema-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #dee2e6;
+    color: #333;
+}
+
+.schema-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.schema-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.schema-table code {
+    background: #e9ecef;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    color: #c7254e;
+}
+
+.schema-table .required {
+    color: #28a745;
+    font-weight: 600;
+}
+
+.schema-table .optional {
+    color: #6c757d;
+}
+
+.schema-example {
+    background: #2c3e50;
+    color: #ecf0f1;
+    padding: 1rem;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin-top: 0.5rem;
+}
+
+.schema-content .loading,
+.schema-content .error {
+    padding: 2rem;
+    text-align: center;
+    color: #666;
+}
+
+.schema-content .error {
+    color: #dc3545;
+}

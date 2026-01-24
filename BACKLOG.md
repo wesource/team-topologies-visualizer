@@ -16,10 +16,7 @@ This is the public backlog for ideas, priorities, and possible improvements.
 
 Edit this list as your priorities change:
 
-- (Soon) UI-driven validation rule visibility: Make Python code own the complete validation spec and expose it via API
-	- Goal: When users click "Validate", show not just errors but also what *should* be valid (field constraints, allowed values, relationship rules)
-	- Implementation: Define validation schema in Python (e.g., Pydantic or custom spec), expose via `/api/validation-schema` endpoint, render in UI modal
-	- Benefit: Self-documenting data format, reduces documentation drift, helps users fix errors faster
+
 - Data modeling: keep narrative text separate from resolvable relationship targets (Baseline dependencies + TT interaction tables)
 	- Ensure `dependencies` and `interaction_modes` reference real teams only (no pseudo-targets like “All platform teams”).
 	- Store narrative/context separately (e.g., `dependency_notes` already exists; consider an equivalent for interaction mode notes if needed).
@@ -32,6 +29,14 @@ Edit this list as your priorities change:
 
 ## Completed
 
+- ✅ **DONE (2026-01-25)** UI-driven validation rule visibility using Pydantic schemas
+	- ✅ Created Pydantic models for all 4 config file types (baseline-team-types, products, business-streams, organization-hierarchy)
+	- ✅ Added `/api/schemas` endpoint exposing full JSON Schema with field constraints and descriptions
+	- ✅ Updated validation to use Pydantic for config file validation (returns structured field-level errors)
+	- ✅ Enhanced validation modal to display config errors separately with field paths
+	- ✅ Created schema viewer modal showing field requirements, types, constraints, and examples
+	- ✅ Added 6 backend tests for schema validation (all passing)
+	- **Benefit**: Self-documenting data format - users can now see exactly what fields are required/optional and what constraints apply
 - ✅ **DONE (2026-01-24)** Terminology unification: Renamed all "Pre-TT/current-teams" references to "Baseline/baseline-teams"
 	- ✅ Backend: renamed `routes_pre_tt.py` → `routes_baseline.py`, updated API paths `/api/pre-tt/*` → `/api/baseline/*`
 	- ✅ Data: renamed `data/current-teams/` → `data/baseline-teams/`, config file `current-team-types.json` → `baseline-team-types.json`

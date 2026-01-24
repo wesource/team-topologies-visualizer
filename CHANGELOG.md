@@ -8,6 +8,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Pydantic Schema Validation & UI Visibility (2026-01-25)**: Implemented UI-driven validation with field requirement display
+  - Created comprehensive Pydantic models for all 4 config file types:
+    * `BaselineTeamTypesConfig`: Team type definitions with id, name, description, color (validation: id 1-50 chars, color hex pattern)
+    * `ProductsConfig`: Product definitions for product lines view (similar structure to team types)
+    * `BusinessStreamsConfig`: Business stream definitions with products list
+    * `OrganizationHierarchyConfig`: Nested company → department → line manager hierarchy
+  - Added new `/api/schemas` endpoint exposing JSON Schema with constraints:
+    * `GET /api/schemas`: Returns all available schemas with full JSON Schema
+    * `GET /api/schemas/{schema_name}`: Returns specific schema (e.g., "baseline-team-types")
+  - Enhanced backend validation using Pydantic:
+    * Created `validate_config_file()` function: validates single JSON against Pydantic model
+    * Created `validate_all_config_files()` function: validates all baseline config files
+    * Updated `/api/baseline/validate` to return both `teams` and `config_files` validation results
+    * Pydantic provides detailed field-level errors with paths (e.g., "team_types.0.color: invalid hex format")
+  - Enhanced frontend validation modal:
+    * Updated `showValidationReport()` to display separate summaries for team files and config files
+    * Shows config file errors with field paths: "field → path: error message"
+    * Added link: "📋 View field requirements and constraints" to open schema viewer
+  - Created schema viewer modal (`showValidationSchemas()`):
+    * Displays all config file schemas with field tables
+    * Shows: field name, type (with constraints), required/optional, description
+    * Resolves JSON Schema `$ref` references to show nested object fields
+    * Displays validation constraints: min/max length, patterns, min/max values, min items
+    * Includes example JSON for each schema
+    * Styled with responsive table layout and color-coded required/optional indicators
+  - Added CSS styles for schema modal:
+    * `.modal-content.large`: 900px width for schema viewer
+    * `.schema-table`: Professional table with hover effects and syntax highlighting
+    * `.schema-example`: Code block with dark theme for JSON examples
+  - Added 6 comprehensive backend tests for schema endpoints and validation
+  - **Design Decision**: Used Pydantic v2 Field() for rich constraint definitions
+  - **Design Decision**: JSON Schema `$ref` + `$defs` structure for type reusability
+  - **Benefit**: Self-documenting data format - users see validation rules without checking docs
+  - **Note**: Pydantic deprecation warnings about class-based Config (can upgrade to ConfigDict in future)
+
 - **Stable Team IDs (2026-01-25) [BREAKING]**: Introduced mandatory `team_id` field for all teams
   - Added `team_id: str` as required field in TeamData model (first field after YAML marker)
   - team_id must be slug-safe: lowercase alphanumeric with dashes only (e.g., "api-gateway-team")

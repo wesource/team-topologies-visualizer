@@ -183,8 +183,13 @@ class TestValidationEndpoint:
         assert response.status_code == 200
         data = response.json()
 
-        # Should have validation result structure
-        assert "total_files" in data or "issues" in data or "files_with_errors" in data
+        # Should have new structure with teams and config_files
+        assert "teams" in data
+        assert "config_files" in data
+        
+        # Teams validation should have expected structure
+        teams_data = data["teams"]
+        assert "total_files" in teams_data or "issues" in teams_data or "files_with_errors" in teams_data
 
     def test_validate_detects_file_issues(self):
         """Validation should detect and report file issues"""

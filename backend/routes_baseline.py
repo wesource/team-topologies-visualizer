@@ -15,7 +15,7 @@ from backend.services import (
     find_team_by_id,
     write_team_file_to_path,
 )
-from backend.validation import validate_all_team_files
+from backend.validation import validate_all_config_files, validate_all_team_files
 
 router = APIRouter(prefix="/api/baseline", tags=["baseline"])
 
@@ -209,6 +209,11 @@ async def update_team_position(team_id: str, position: PositionUpdate):
 
 @router.get("/validate")
 async def validate_files() -> dict[str, Any]:
-    """Validate all Baseline team files for common issues"""
-    validation_report = validate_all_team_files("current")
-    return validation_report
+    """Validate all Baseline team files and config files for common issues"""
+    team_validation = validate_all_team_files("current")
+    config_validation = validate_all_config_files("baseline")
+
+    return {
+        "teams": team_validation,
+        "config_files": config_validation
+    }
