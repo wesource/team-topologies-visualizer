@@ -61,7 +61,7 @@ test.describe('Pre-TT Business Streams View', () => {
 
         // Take screenshot for visual verification
         await page.screenshot({
-            path: 'tests/screenshots/pre-tt-business-streams-view.png',
+            path: 'screenshots/pre-tt-business-streams-view.png',
             fullPage: false
         });
 

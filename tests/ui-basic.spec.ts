@@ -92,7 +92,7 @@ test.describe('UI Basic Features', () => {
     await currentStateRadio.click();
     await page.waitForTimeout(1000);
     
-    await page.screenshot({ path: 'tests/screenshots/pre-tt-view.png', fullPage: true });
+    await page.screenshot({ path: 'screenshots/pre-tt-view.png', fullPage: true });
   });
 
   test('should render TT Design view for visual verification', async ({ page }) => {
@@ -105,7 +105,7 @@ test.describe('UI Basic Features', () => {
     );
     
     await page.waitForTimeout(1000);
-    await page.screenshot({ path: 'tests/screenshots/tt-design-view.png', fullPage: true });
+    await page.screenshot({ path: 'screenshots/tt-design-view.png', fullPage: true });
   });
 
   test('should handle refresh button', async ({ page }) => {

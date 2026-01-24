@@ -151,7 +151,7 @@ test.describe('Team Topologies Visualizer', () => {
     
     // Take screenshot
     await page.screenshot({ 
-      path: 'tests/screenshots/current-state-view.png', 
+      path: 'screenshots/current-state-view.png', 
       fullPage: false // Only visible area for speed
     });
   });
@@ -172,7 +172,7 @@ test.describe('Team Topologies Visualizer', () => {
     
     // Take high-quality screenshot
     await page.screenshot({ 
-      path: 'tests/screenshots/tt-vision-view.png', 
+      path: 'screenshots/tt-vision-view.png', 
       fullPage: true, // Capture entire page including scrollable areas
       scale: 'device' // Use device pixel ratio for higher quality
     });
@@ -297,7 +297,7 @@ test.describe('Team Topologies Visualizer', () => {
     
       // Take screenshot for visual verification
       await page.screenshot({ 
-        path: 'tests/screenshots/team-detail-markdown-rendering.png',
+        path: 'screenshots/team-detail-markdown-rendering.png',
         fullPage: true
       });
     

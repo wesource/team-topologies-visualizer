@@ -60,7 +60,7 @@ test.describe('Pre-TT Product Lines View', () => {
 
         // Take screenshot for visual verification
         await page.screenshot({
-            path: 'tests/screenshots/pre-tt-product-lines-view.png',
+            path: 'screenshots/pre-tt-product-lines-view.png',
             fullPage: false
         });
 
