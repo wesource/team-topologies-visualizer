@@ -22,10 +22,13 @@ async def get_all_schemas() -> dict[str, Any]:
     """
     schemas = {}
     for schema_name, schema_class in SCHEMA_REGISTRY.items():
+        json_schema = schema_class.model_json_schema()
+        # Use description from json_schema_extra if available, otherwise use class docstring
+        description = json_schema.get("description", schema_class.__doc__)
         schemas[schema_name] = {
-            "title": schema_class.__name__,
-            "description": schema_class.__doc__,
-            "schema": schema_class.model_json_schema()
+            "title": json_schema.get("title", schema_class.__name__),
+            "description": description,
+            "schema": json_schema
         }
     return schemas
 

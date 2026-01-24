@@ -293,13 +293,187 @@ class OrganizationHierarchyConfig(BaseModel):
 
 
 # ============================================================================
+# Team File YAML Frontmatter Schemas
+# ============================================================================
+
+class PositionConfig(BaseModel):
+    """Position configuration for team placement on canvas."""
+    x: float = Field(..., description="X coordinate on canvas")
+    y: float = Field(..., description="Y coordinate on canvas")
+
+
+class BaselineTeamMetadata(BaseModel):
+    """Metadata for baseline team files."""
+    size: int = Field(
+        ...,
+        description="Number of people in the team",
+        ge=1,
+        le=50
+    )
+    department: str | None = Field(
+        None,
+        description="Department the team belongs to (optional)"
+    )
+    line_manager: str | None = Field(
+        None,
+        description="Name of the team's line manager (optional)"
+    )
+    established: str | None = Field(
+        None,
+        description="When the team was established (YYYY-MM format)",
+        pattern=r'^\d{4}-\d{2}$'
+    )
+    cognitive_load: str | None = Field(
+        None,
+        description="Cognitive load level: low, medium, or high",
+        pattern=r'^(low|medium|high)$'
+    )
+
+
+class BaselineTeamFrontmatter(BaseModel):
+    """YAML frontmatter schema for baseline team markdown files."""
+    name: str = Field(
+        ...,
+        description="Team name",
+        min_length=1,
+        max_length=100
+    )
+    team_id: str = Field(
+        ...,
+        description="Unique team identifier (lowercase with hyphens)",
+        min_length=1,
+        max_length=100,
+        pattern=r'^[a-z0-9-]+$'
+    )
+    team_type: str = Field(
+        ...,
+        description="Team type from baseline-team-types.json (e.g., 'feature-team', 'platform-team')",
+        min_length=1
+    )
+    position: PositionConfig = Field(
+        ...,
+        description="Team position on canvas"
+    )
+    metadata: BaselineTeamMetadata = Field(
+        ...,
+        description="Team metadata (size, department, etc.)"
+    )
+    product_line: str | None = Field(
+        None,
+        description="Product line the team belongs to (optional)"
+    )
+    business_stream: str | None = Field(
+        None,
+        description="Business stream the team belongs to (optional)"
+    )
+
+    class Config:
+        json_schema_extra = {
+            "title": "Baseline Team File",
+            "description": """YAML frontmatter for baseline team markdown files.
+            
+            📝 Markdown Section Requirements:
+            After the YAML frontmatter (---), the markdown content should include a 'Dependencies' section with a table listing team dependencies:
+            
+            ## Dependencies
+            | Team Name | Type | Purpose |
+            |-----------|------|----------|
+            | Team A    | API  | Consumes user authentication API |
+            | Team B    | Data | Shares customer database |
+            
+            Columns: Team Name (string), Type (string), Purpose (string describing the dependency)"""
+        }
+
+
+class TTTeamMetadata(BaseModel):
+    """Metadata for TT Design team files."""
+    size: int = Field(
+        ...,
+        description="Number of people in the team",
+        ge=1,
+        le=50
+    )
+    cognitive_load: str | None = Field(
+        None,
+        description="Cognitive load level: low, medium, or high",
+        pattern=r'^(low|medium|high)$'
+    )
+    established: str | None = Field(
+        None,
+        description="When the team was established (YYYY-MM format)",
+        pattern=r'^\d{4}-\d{2}$'
+    )
+
+
+class TTTeamFrontmatter(BaseModel):
+    """YAML frontmatter schema for TT Design team markdown files."""
+    name: str = Field(
+        ...,
+        description="Team name",
+        min_length=1,
+        max_length=100
+    )
+    team_id: str = Field(
+        ...,
+        description="Unique team identifier (lowercase with hyphens)",
+        min_length=1,
+        max_length=100,
+        pattern=r'^[a-z0-9-]+$'
+    )
+    team_type: str = Field(
+        ...,
+        description="Team type: stream-aligned, enabling, complicated-subsystem, or platform",
+        pattern=r'^(stream-aligned|enabling|complicated-subsystem|platform)$'
+    )
+    position: PositionConfig = Field(
+        ...,
+        description="Team position on canvas"
+    )
+    metadata: TTTeamMetadata = Field(
+        ...,
+        description="Team metadata (size, cognitive load, etc.)"
+    )
+    platform_grouping: str | None = Field(
+        None,
+        description="Platform grouping the team belongs to (optional)"
+    )
+    value_stream: str | None = Field(
+        None,
+        description="Value stream the team belongs to (optional)"
+    )
+
+    class Config:
+        json_schema_extra = {
+            "title": "TT Design Team File",
+            "description": """YAML frontmatter for TT Design team markdown files.
+            
+            📝 Markdown Section Requirements:
+            After the YAML frontmatter (---), the markdown content should include a 'Teams we currently interact with' section with a table listing interactions with other teams:
+            
+            ## Teams we currently interact with
+            | Team Name | Interaction Mode | Purpose |
+            |-----------|------------------|---------|
+            | E-commerce Checkout | X-as-a-Service | Provide authentication for checkout flow |
+            | Mobile App Team | Collaboration | Build mobile-specific auth features |
+            | DevOps Enablement | Facilitating | Learn Kubernetes deployment patterns |
+            
+            Columns: Team Name (string), Interaction Mode (Collaboration|X-as-a-Service|Facilitating), Purpose (string describing the interaction)
+            
+            ℹ️ This section is included in both base and extended Team API templates and is important for documenting team interactions."""
+        }
+
+
+# ============================================================================
 # Schema Registry
 # ============================================================================
 
 # Map config file types to their Pydantic schemas
 SCHEMA_REGISTRY = {
     "baseline-team-types": BaselineTeamTypesConfig,
+    "tt-team-types": BaselineTeamTypesConfig,  # Same schema as baseline
     "products": ProductsConfig,
     "business-streams": BusinessStreamsConfig,
     "organization-hierarchy": OrganizationHierarchyConfig,
+    "baseline-team-file": BaselineTeamFrontmatter,
+    "tt-team-file": TTTeamFrontmatter,
 }

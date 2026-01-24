@@ -20,7 +20,7 @@ from backend.services import (
     write_team_file_to_path,
 )
 from backend.snapshot_services import create_snapshot, list_snapshots, load_snapshot
-from backend.validation import validate_all_team_files
+from backend.validation import validate_all_config_files, validate_all_team_files
 
 router = APIRouter(prefix="/api/tt", tags=["tt-design"])
 
@@ -81,9 +81,14 @@ async def update_team_position(team_id: str, position: PositionUpdate):
 
 @router.get("/validate")
 async def validate_files() -> dict[str, Any]:
-    """Validate all TT-Design team files for common issues"""
-    validation_report = validate_all_team_files("tt")
-    return validation_report
+    """Validate all TT-Design team files and config files"""
+    team_validation = validate_all_team_files("tt")
+    config_validation = validate_all_config_files("tt")
+    return {
+        "teams": team_validation,
+        "config_files": config_validation,
+        "team_schema": "tt-team-file"
+    }
 
 
 # Snapshot endpoints (TT Design evolution tracking)

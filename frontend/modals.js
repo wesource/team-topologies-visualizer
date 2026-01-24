@@ -668,9 +668,10 @@ export async function showValidationReport(view) {
         const response = await fetch(`/api${prefix}/validate`);
         const data = await response.json();
 
-        // Handle new response structure (teams + config_files)
+        // Handle new response structure (teams + config_files + team_schema)
         const report = data.teams || data; // Fallback for TT view
         const configReport = data.config_files;
+        const teamSchema = data.team_schema;
 
         // Build report HTML
         let html = '<div class="validation-summary">';
@@ -680,7 +681,15 @@ export async function showValidationReport(view) {
         html += `<div class="summary-item valid"><strong>✓ Valid:</strong> ${report.valid_files}</div>`;
         html += `<div class="summary-item warning"><strong>⚠ Warnings:</strong> ${report.files_with_warnings}</div>`;
         html += `<div class="summary-item error"><strong>✗ Errors:</strong> ${report.files_with_errors}</div>`;
-        html += '</div></div>';
+        html += '</div>';
+
+        // Add team schema viewer link if available
+        if (teamSchema) {
+            html += '<div style="margin-top: 15px; font-size: 1.1em; font-weight: 600;">';
+            html += `<a href="#" onclick="showValidationSchemas('${teamSchema}'); return false;" style="color: #4CAF50; text-decoration: none;">📋 View team file field requirements</a>`;
+            html += '</div>';
+        }
+        html += '</div>';
 
         // Add config validation summary if available
         if (configReport) {
@@ -695,8 +704,8 @@ export async function showValidationReport(view) {
             html += `<div class="summary-item valid"><strong>✓ Valid:</strong> ${validConfigFiles}</div>`;
             html += `<div class="summary-item error"><strong>✗ Errors:</strong> ${configErrors}</div>`;
             html += '</div>';
-            html += '<div style="margin-top: 10px; font-size: 0.9em;">';
-            html += '<a href="#" onclick="showValidationSchemas(); return false;" style="color: #4CAF50;">📋 View field requirements and constraints</a>';
+            html += '<div style="margin-top: 15px; font-size: 1.1em; font-weight: 600;">';
+            html += '<a href="#" onclick="showValidationSchemas(); return false;" style="color: #4CAF50; text-decoration: none;">📋 View field requirements and constraints</a>';
             html += '</div></div>';
         }
 
@@ -831,7 +840,7 @@ document.addEventListener('keydown', (e) => {
 /**
  * Show validation schemas modal with field requirements
  */
-async function showValidationSchemas() {
+async function showValidationSchemas(specificSchemaName = null) {
     const modal = document.getElementById('schemaModal');
     const content = document.getElementById('schemaContent');
 
@@ -841,7 +850,7 @@ async function showValidationSchemas() {
             <div id="schemaModal" class="modal">
                 <div class="modal-content large">
                     <span class="close" onclick="closeSchemaModal()">&times;</span>
-                    <h2>Configuration File Requirements</h2>
+                    <h2 id="schemaModalTitle">Configuration File Requirements</h2>
                     <div id="schemaContent" class="schema-content"></div>
                 </div>
             </div>
@@ -851,6 +860,7 @@ async function showValidationSchemas() {
 
     const schemaModal = document.getElementById('schemaModal');
     const schemaContent = document.getElementById('schemaContent');
+    const schemaTitle = document.getElementById('schemaModalTitle');
 
     schemaContent.innerHTML = '<div class="loading">Loading schemas...</div>';
     schemaModal.style.display = 'block';
@@ -860,19 +870,39 @@ async function showValidationSchemas() {
         const schemas = await response.json();
 
         let html = '<div class="schemas-list">';
-        html += '<p style="margin-bottom: 20px; color: #666;">This shows the required and optional fields for each configuration file, along with validation rules.</p>';
 
-        for (const [_schemaName, schemaData] of Object.entries(schemas)) {
+        // If specific schema requested, show only that one
+        // Otherwise, filter out team-file schemas (those should only be shown via team file link)
+        let schemasToShow;
+        if (specificSchemaName) {
+            schemasToShow = { [specificSchemaName]: schemas[specificSchemaName] };
+        } else {
+            // Filter out team-file schemas when showing config file requirements
+            schemasToShow = Object.fromEntries(
+                Object.entries(schemas).filter(([name, _data]) => !name.includes('team-file'))
+            );
+        }
+
+        // Update modal title based on context
+        if (specificSchemaName) {
+            if (specificSchemaName.includes('team-file')) {
+                schemaTitle.textContent = 'Team File Field Requirements';
+            } else {
+                schemaTitle.textContent = 'Configuration File Requirements';
+            }
+        } else {
+            schemaTitle.textContent = 'Configuration File Requirements';
+            html += '<p style="margin-bottom: 20px; color: #666;">This shows the required and optional fields for each configuration file, along with validation rules.</p>';
+        }
+
+        for (const [_schemaName, schemaData] of Object.entries(schemasToShow)) {
             html += '<div class="schema-section">';
             html += `<h3>${schemaData.title}</h3>`;
-            if (schemaData.description) {
-                html += `<p class="schema-description">${schemaData.description.trim()}</p>`;
-            }
 
             // Extract field information from JSON schema
             const schema = schemaData.schema;
             if (schema.properties) {
-                html += '<h4>Fields:</h4>';
+                html += '<h4>YAML Frontmatter Fields:</h4>';
                 html += '<table class="schema-table">';
                 html += '<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>';
                 html += '<tbody>';
@@ -950,6 +980,82 @@ async function showValidationSchemas() {
                 renderFields(schema.properties, schema.required || []);
 
                 html += '</tbody></table>';
+            }
+
+            // Show description AFTER fields table and format it nicely
+            if (schemaData.description) {
+                const description = schemaData.description.trim();
+
+                // Check if this is a team file schema with markdown requirements
+                if (description.includes('📝 Markdown Section Requirements')) {
+                    html += '<div style="margin-top: 2rem; padding: 1.5rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; color: white;">';
+                    html += '<h4 style="margin: 0 0 1rem 0; color: white; font-size: 1.1rem;">📝 Markdown Content Requirements</h4>';
+
+                    // Extract the main instruction and table
+                    const lines = description.split('\n');
+                    let instructionText = '';
+                    let tableMarkdown = '';
+                    let inTable = false;
+                    let sectionHeader = '';
+                    let columnsText = '';
+                    let warningText = '';
+
+                    for (const line of lines) {
+                        const trimmedLine = line.trim();
+                        if (trimmedLine.includes('##')) {
+                            // Section header
+                            sectionHeader = trimmedLine.replace('##', '').trim();
+                        } else if (trimmedLine.startsWith('|')) {
+                            // Table line
+                            inTable = true;
+                            tableMarkdown += trimmedLine + '\n';
+                        } else if (inTable && !trimmedLine.startsWith('|')) {
+                            // End of table
+                            inTable = false;
+                            if (trimmedLine.includes('Columns:')) {
+                                columnsText = trimmedLine;
+                            } else if (trimmedLine.includes('⚠️')) {
+                                warningText = trimmedLine;
+                            } else if (trimmedLine) {
+                                instructionText += trimmedLine + ' ';
+                            }
+                        } else if (trimmedLine && !trimmedLine.includes('YAML frontmatter') && !trimmedLine.includes('📝')) {
+                            instructionText += trimmedLine + ' ';
+                        }
+                    }
+
+                    // Display instruction text
+                    if (instructionText.trim()) {
+                        html += `<p style="margin: 0 0 1rem 0; font-size: 0.95rem; line-height: 1.5;">${instructionText.trim()}</p>`;
+                    }
+
+                    // Display section header
+                    if (sectionHeader) {
+                        html += '<div style="background: rgba(255,255,255,0.15); padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 1rem;">';
+                        html += `<strong style="font-size: 1rem;">Recommended Section: ${sectionHeader}</strong>`;
+                        html += '</div>';
+                    }
+
+                    // Display table markdown as code block
+                    if (tableMarkdown) {
+                        html += `<pre style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 6px; margin: 1rem 0; overflow-x: auto; font-family: 'Courier New', monospace; font-size: 0.9rem; line-height: 1.4;"><code style="color: #fff;">${tableMarkdown.trim()}</code></pre>`;
+                    }
+
+                    // Display column description
+                    if (columnsText) {
+                        html += `<div style="background: rgba(255,255,255,0.15); padding: 0.75rem 1rem; border-radius: 6px; margin-top: 1rem; font-size: 0.9rem;">${columnsText}</div>`;
+                    }
+
+                    // Display warning
+                    if (warningText) {
+                        html += `<div style="background: rgba(255,193,7,0.2); padding: 0.75rem 1rem; border-radius: 6px; margin-top: 1rem; border-left: 4px solid #ffc107;">${warningText}</div>`;
+                    }
+
+                    html += '</div>';
+                } else {
+                    // Regular description without special formatting
+                    html += `<div style="margin-top: 1.5rem; padding: 1rem; background: #f5f5f5; border-left: 3px solid #4CAF50; border-radius: 4px;"><p style="margin: 0; color: #666; line-height: 1.5;">${description}</p></div>`;
+                }
             }
 
             // Show example if available

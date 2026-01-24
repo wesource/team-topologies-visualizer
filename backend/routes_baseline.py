@@ -215,5 +215,6 @@ async def validate_files() -> dict[str, Any]:
 
     return {
         "teams": team_validation,
-        "config_files": config_validation
+        "config_files": config_validation,
+        "team_schema": "baseline-team-file"
     }

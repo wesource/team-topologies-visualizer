@@ -299,7 +299,7 @@ def validate_all_config_files(view: str = "baseline") -> dict[str, Any]:
     """Validate all JSON config files for a view.
 
     Args:
-        view: The view to validate ('baseline' only for now)
+        view: The view to validate ('baseline' or 'tt')
 
     Returns:
         Dictionary containing validation results for all config files
@@ -312,7 +312,9 @@ def validate_all_config_files(view: str = "baseline") -> dict[str, Any]:
         "total_errors": 0
     }
 
-    # Define config files to validate (only for baseline view)
+    # Define config files to validate
+    config_validations = {}
+
     if view == "baseline":
         config_validations = {
             "baseline-team-types.json": BaselineTeamTypesConfig,
@@ -320,12 +322,16 @@ def validate_all_config_files(view: str = "baseline") -> dict[str, Any]:
             "business-streams.json": BusinessStreamsConfig,
             "organization-hierarchy.json": OrganizationHierarchyConfig,
         }
+    elif view == "tt":
+        config_validations = {
+            "tt-team-types.json": BaselineTeamTypesConfig,  # Same schema as baseline
+        }
 
-        for filename, schema_class in config_validations.items():
-            file_path = data_dir / filename
-            validation_result = validate_config_file(file_path, schema_class)
-            report["config_files"][filename] = validation_result
-            if not validation_result["valid"]:
-                report["total_errors"] += len(validation_result["errors"])
+    for filename, schema_class in config_validations.items():
+        file_path = data_dir / filename
+        validation_result = validate_config_file(file_path, schema_class)
+        report["config_files"][filename] = validation_result
+        if not validation_result["valid"]:
+            report["total_errors"] += len(validation_result["errors"])
 
     return report

@@ -1974,6 +1974,12 @@ header h1 {
     color: #666;
     margin-bottom: 1rem;
     line-height: 1.5;
+    white-space: pre-wrap;
+    font-family: monospace;
+    background: #f5f5f5;
+    padding: 1rem;
+    border-radius: 4px;
+    border-left: 3px solid #4CAF50;
 }
 
 .schema-table {
