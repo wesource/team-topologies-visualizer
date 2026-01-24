@@ -18,14 +18,20 @@ export function exportToSVG(state, organizationHierarchy, teams, teamColorMap, c
     // For TT vision or hierarchy view, calculate bounding box to fit all teams
     if ((currentView === 'tt' || isHierarchy) && teams.length > 0) {
         const padding = 100;
-        const minX = Math.min(...teams.map(t => t.position.x)) - padding;
+        let minX = Math.min(...teams.map(t => t.position.x)) - padding;
         let minY = Math.min(...teams.map(t => t.position.y)) - padding;
-        const maxX = Math.max(...teams.map(t => t.position.x + LAYOUT.TEAM_BOX_WIDTH)) + padding;
-        const maxY = Math.max(...teams.map(t => t.position.y + LAYOUT.TEAM_BOX_HEIGHT)) + padding;
+        let maxX = Math.max(...teams.map(t => t.position.x + getTeamBoxWidth(t, currentView))) + padding;
+        const maxY = Math.max(...teams.map(t => t.position.y + getTeamBoxHeight(t, currentView))) + padding;
 
         // For hierarchy view, include the organization hierarchy at the top
         if (isHierarchy) {
             minY = 0; // Start from top to include title and org hierarchy
+            // Extend width to account for organization hierarchy elements
+            // Company box: startX(500) + 400 + boxWidth(200) + 100 = ~1200
+            // Departments can extend further based on count (DEPT_SPACING=250 per dept)
+            // Ensure we capture the full width of org chart elements
+            minX = Math.min(minX, 0);
+            maxX = Math.max(maxX, 1500); // Generous width to include company and multiple departments
         }
 
         width = maxX - minX;
