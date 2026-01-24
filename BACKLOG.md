@@ -44,6 +44,22 @@ Edit this list as your priorities change:
 	- Bump version to `1.0.0` (wherever the canonical version lives) and create a git tag/release.
 	- Sanity-check demo mode end-to-end (read-only behavior + banners + snapshot compare) against the current example dataset.
 
+## Completed
+
+- ✅ **DONE (2026-01-25)** Stable team IDs: introduced mandatory `team_id` in YAML everywhere (replaced name-based references in API)
+	- ✅ Data model: added `team_id` to TeamData model; enforced uniqueness and slug-safe format
+	- ✅ Validation: fail if `team_id` is missing/duplicate/invalid format; parse_team_file validates on every load
+	- ✅ Templates + examples: updated all 3 templates; migrated all 41 team files
+	- ✅ Migration helper: created `scripts/migrate_add_team_ids.py` with dry-run mode
+	- ✅ API routes: updated to use `team_id` parameter instead of name (BREAKING CHANGE)
+	- ✅ Frontend: updated to use team_id for all API calls and position updates
+	- ✅ Tests: added 16 new team_id tests; fixed all 212 backend + 346 frontend tests
+	- **Cleanup opportunities** (optional future work):
+		- Consider deprecating `find_team_by_name_or_slug()` and `find_team_by_name()` (no longer used)
+		- Consider updating `write_team_file()` to use team_id for filename instead of slug (currently unused)
+		- Update `dependencies` and `interaction_modes` arrays to use `team_id` instead of names
+		- Add backward-compat warnings when name-based references are detected
+
 ## Next
 - Flow of change arrows in TT Design view
 	- Add optional "Flow of change" visualization as described in https://teamtopologies.com/key-concepts
