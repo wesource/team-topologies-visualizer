@@ -132,7 +132,7 @@ More context and details: [docs/CONCEPTS.md](docs/CONCEPTS.md#example-data-logic
 ## Testing
 
 ```bash
-.\run-all-tests.ps1               # Run all tests
+.\scripts\run-all-tests.ps1               # Run all tests
 .\venv\Scripts\python.exe -m pytest tests_backend/ -v   # Backend only
 cd frontend; npm test             # Frontend only
 cd tests; npx playwright test     # E2E only

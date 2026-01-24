@@ -83,7 +83,7 @@
     - Ensure snapshots tell a coherent transformation story
 
 ## Testing
-- [x] Run full test suite after fixes: `.\run-all-tests.ps1`
+- [x] Run full test suite after fixes: `.\scripts\run-all-tests.ps1`
   - ✅ Backend tests: All passing (55 tests)
   - ✅ Frontend tests: All passing (346 tests)
   - ✅ E2E tests: 83/88 passing (3 focus mode E2E tests have browser state access issues, but unit tests pass)

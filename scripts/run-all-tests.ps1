@@ -1,6 +1,9 @@
 # Run All Tests Script
 # This script runs backend, frontend, and E2E tests in sequence
 
+$RepoRoot = Resolve-Path (Join-Path $PSScriptRoot '..')
+Push-Location $RepoRoot
+
 Write-Host "`n========================================" -ForegroundColor Cyan
 Write-Host "Running Team Topologies Visualizer Tests" -ForegroundColor Cyan
 Write-Host "========================================`n" -ForegroundColor Cyan
@@ -73,8 +76,10 @@ Write-Host "========================================" -ForegroundColor Cyan
 
 if ($ErrorCount -eq 0) {
     Write-Host "`n✓ All test suites passed!" -ForegroundColor Green
+    Pop-Location
     exit 0
 } else {
     Write-Host "`n✗ $ErrorCount test suite(s) failed!" -ForegroundColor Red
+    Pop-Location
     exit 1
 }

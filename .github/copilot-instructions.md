@@ -58,7 +58,7 @@ npx playwright test
 
 ### Run All Tests
 ```powershell
-.\run-all-tests.ps1
+.\scripts\run-all-tests.ps1
 ```
 
 **Test Coverage**: 332 total tests (55 backend + 195 frontend + 82 E2E)
@@ -94,7 +94,7 @@ A webapp for visualizing Team Topologies concepts using HTML5 Canvas and Python 
 ### Testing
 - **Test-driven development**: Write failing test first, then implement
 - **Always add tests** for new features (unit + E2E for user-facing features)
-- Run full test suite before committing: `.\run-all-tests.ps1`
+- Run full test suite before committing: `.\scripts\run-all-tests.ps1`
 
 ### Data & API Design
 - Keep markdown files simple and follow Team API template structure

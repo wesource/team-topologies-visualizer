@@ -95,10 +95,10 @@ For public demonstrations or workshops where you want users to explore without s
 
 ```bash
 # Windows
-.\start-demo.ps1
+.\scripts\start-demo.ps1
 
 # Linux/Mac
-./start-demo.sh
+./scripts/start-demo.sh
 ```
 
 **Docker:**
@@ -213,7 +213,7 @@ npx playwright test --debug
 
 ```powershell
 # From project root
-.\run-all-tests.ps1
+.\scripts\run-all-tests.ps1
 ```
 
 This script runs backend → frontend → E2E tests in sequence and shows summary.

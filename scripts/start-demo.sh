@@ -1,6 +1,10 @@
 #!/bin/bash
 # Convenience script to start the application in demo mode (read-only)
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+cd "$REPO_ROOT"
+
 echo -e "\033[36mStarting Team Topologies Visualizer in DEMO MODE...\033[0m"
 echo -e "\033[33mChanges will not be saved to disk.\033[0m"
 echo ""

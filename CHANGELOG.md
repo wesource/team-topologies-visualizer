@@ -152,7 +152,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Frontend**: Purple gradient banner when in demo mode
     - Animated slideDown entrance with pulsing icon
     - Clear messaging: "Feel free to explore. Changes won't be saved"
-  - **Convenience scripts**: `start-demo.ps1` (Windows) and `start-demo.sh` (Linux/Mac)
+  - **Convenience scripts**: `scripts/start-demo.ps1` (Windows) and `scripts/start-demo.sh` (Linux/Mac)
   - **Docker support**: `-e READ_ONLY_MODE=true` flag
   - **Tests**: 5 backend tests + 1 E2E test for demo mode functionality
   - **Rationale**: Enable safe public hosting where users can interact without persisting changes or corrupting shared data

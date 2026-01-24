@@ -295,7 +295,7 @@ npm run test:serial
 **Test Execution via PowerShell Script**:
 ```powershell
 # Run all tests in sequence (Windows)
-.\run-all-tests.ps1
+.\scripts\run-all-tests.ps1
 ```
 
 ## Development Workflow

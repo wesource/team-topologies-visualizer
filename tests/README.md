@@ -51,7 +51,7 @@ From the project root, use the helper script:
 
 ```powershell
 # Windows PowerShell
-.\run-all-tests.ps1
+.\scripts\run-all-tests.ps1
 ```
 
 This runs backend tests → frontend tests → E2E tests in sequence.
