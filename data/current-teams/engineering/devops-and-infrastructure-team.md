@@ -1,5 +1,6 @@
 ---
 name: DevOps & Infrastructure Team
+team_id: devops-and-infrastructure-team
 team_type: platform-team
 position:
   x: 960.0

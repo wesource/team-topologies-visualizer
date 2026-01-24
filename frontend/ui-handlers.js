@@ -210,7 +210,7 @@ export async function handlePerspectiveChange(e, draw) {
 
 export function handleExportSVG() {
     const teamsToExport = getFilteredTeams();
-    exportToSVG(state, state.organizationHierarchy, teamsToExport, state.teamColorMap, state.currentView, state.showInteractionModes);
+    exportToSVG(state, state.organizationHierarchy, teamsToExport, state.teamColorMap, state.currentView, state.showInteractionModes, state.showConnections);
 }
 
 export async function handleAutoAlign(draw) {

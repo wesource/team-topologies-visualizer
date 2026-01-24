@@ -1,5 +1,6 @@
 ---
 name: European Retail Solutions Team
+team_id: european-retail-solutions-team
 team_type: feature-team
 product_line: Customer Solutions
 position:

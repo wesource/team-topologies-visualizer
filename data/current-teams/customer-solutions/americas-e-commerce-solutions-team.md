@@ -1,5 +1,6 @@
 ---
 name: Americas E-commerce Solutions Team
+team_id: americas-e-commerce-solutions-team
 team_type: feature-team
 product_line: Customer Solutions
 position:

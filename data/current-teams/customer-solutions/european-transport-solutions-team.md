@@ -1,5 +1,6 @@
 ---
 name: European Transport Solutions Team
+team_id: european-transport-solutions-team
 team_type: feature-team
 product_line: Customer Solutions
 position:

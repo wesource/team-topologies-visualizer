@@ -5,7 +5,7 @@ import { getPlatformGroupings } from './tt-platform-grouping.js';
 
 // SVG Export Module - Separated from runtime rendering
 // Converts current visualization state to downloadable SVG
-export function exportToSVG(state, organizationHierarchy, teams, teamColorMap, currentView, showInteractionModes = true) {
+export function exportToSVG(state, organizationHierarchy, teams, teamColorMap, currentView, showInteractionModes = true, showConnections = false) {
     // Handle product-lines and business-streams perspectives
     const isBaselineView = currentView === 'current';
     const isProductLines = isBaselineView && state.currentPerspective === 'product-lines';
@@ -40,9 +40,9 @@ export function exportToSVG(state, organizationHierarchy, teams, teamColorMap, c
   <rect x="${currentView === 'tt' && teams.length > 0 ? Math.min(...teams.map(t => t.position.x)) - 100 : 0}" y="${currentView === 'tt' && teams.length > 0 ? Math.min(...teams.map(t => t.position.y)) - 100 : 0}" width="${width}" height="${height}" fill="white"/>
 `;
     if (currentView === 'current' && isProductLines && state.productLinesData) {
-        svg += generateProductLinesSVG(state.productLinesData, teamColorMap);
+        svg += generateProductLinesSVG(state.productLinesData, teamColorMap, showConnections);
     } else if (currentView === 'current' && isBusinessStreams && state.businessStreamsData) {
-        svg += generateBusinessStreamsSVG(state.businessStreamsData, teamColorMap);
+        svg += generateBusinessStreamsSVG(state.businessStreamsData, teamColorMap, showConnections);
     } else if (currentView === 'current' && organizationHierarchy) {
         svg += generateCurrentStateSVG(organizationHierarchy, teams, teamColorMap);
     } else {
@@ -177,7 +177,7 @@ function generateCurrentStateSVG(organizationHierarchy, teams, teamColorMap) {
     return elements;
 }
 
-function generateProductLinesSVG(productLinesData, teamColorMap) {
+function generateProductLinesSVG(productLinesData, teamColorMap, showConnections = false) {
     let elements = '';
     if (!productLinesData || !productLinesData.products) return elements;
 
@@ -258,22 +258,24 @@ function generateProductLinesSVG(productLinesData, teamColorMap) {
     elements += `<rect x="${startX}" y="${sharedRowY + headerHeight}" width="${totalWidth}" height="${SHARED_ROW_HEIGHT}" fill="#f8f9fa" rx="0" ry="0"/>`;
     elements += `<rect x="${startX}" y="${sharedRowY}" width="${totalWidth}" height="${headerHeight + SHARED_ROW_HEIGHT}" fill="none" stroke="#7f8c8d" stroke-width="2" rx="0" ry="0"/>`;
 
-    // Draw communication lines (above product/shared boxes, below teams)
-    const allTeams = [...products.flatMap(p => p.teams), ...sharedTeams];
-    allTeams.forEach(team => {
-        if (team.dependencies && team.dependencies.length > 0) {
-            const fromPos = teamPositions.get(team.name);
-            if (!fromPos) return;
+    // Draw communication lines (above product/shared boxes, below teams) - only if enabled
+    if (showConnections) {
+        const allTeams = [...products.flatMap(p => p.teams), ...sharedTeams];
+        allTeams.forEach(team => {
+            if (team.dependencies && team.dependencies.length > 0) {
+                const fromPos = teamPositions.get(team.name);
+                if (!fromPos) return;
 
-            team.dependencies.forEach(targetName => {
-                const toPos = teamPositions.get(targetName);
-                if (!toPos) return;
+                team.dependencies.forEach(targetName => {
+                    const toPos = teamPositions.get(targetName);
+                    if (!toPos) return;
 
-                // Draw line
-                elements += `<line x1="${fromPos.x}" y1="${fromPos.y}" x2="${toPos.x}" y2="${toPos.y}" stroke="#95a5a6" stroke-width="2" opacity="0.6"/>`;
-            });
-        }
-    });
+                    // Draw line
+                    elements += `<line x1="${fromPos.x}" y1="${fromPos.y}" x2="${toPos.x}" y2="${toPos.y}" stroke="#95a5a6" stroke-width="2" opacity="0.6"/>`;
+                });
+            }
+        });
+    }
 
     // Now draw teams on top of everything
     products.forEach((product, index) => {
@@ -713,7 +715,7 @@ function wrapTextForSVG(text, maxWidth, fontSize = 11) {
     return lines;
 }
 
-function generateBusinessStreamsSVG(businessStreamsData, teamColorMap) {
+function generateBusinessStreamsSVG(businessStreamsData, teamColorMap, showConnections = false) {
     let elements = [];
     if (!businessStreamsData || !businessStreamsData.business_streams) return elements;
 
@@ -906,30 +908,32 @@ function generateBusinessStreamsSVG(businessStreamsData, teamColorMap) {
         });
     }
 
-    // Draw connection lines between teams (based on dependencies)
-    const connectionLines = [];
-    teamPositions.forEach(({ team, x: fromX, y: fromY, width, height }) => {
-        if (team.dependencies && Array.isArray(team.dependencies)) {
-            team.dependencies.forEach(depName => {
-                const toPos = teamPositions.get(depName);
-                if (toPos) {
-                    // Calculate center points
-                    const fromCenterX = fromX + width / 2;
-                    const fromCenterY = fromY + height / 2;
-                    const toCenterX = toPos.x + toPos.width / 2;
-                    const toCenterY = toPos.y + toPos.height / 2;
+    // Draw connection lines between teams (based on dependencies) - only if enabled
+    if (showConnections) {
+        const connectionLines = [];
+        teamPositions.forEach(({ team, x: fromX, y: fromY, width, height }) => {
+            if (team.dependencies && Array.isArray(team.dependencies)) {
+                team.dependencies.forEach(depName => {
+                    const toPos = teamPositions.get(depName);
+                    if (toPos) {
+                        // Calculate center points
+                        const fromCenterX = fromX + width / 2;
+                        const fromCenterY = fromY + height / 2;
+                        const toCenterX = toPos.x + toPos.width / 2;
+                        const toCenterY = toPos.y + toPos.height / 2;
 
-                    // Draw line with arrow
-                    connectionLines.push(`<line x1="${fromCenterX}" y1="${fromCenterY}" x2="${toCenterX}" y2="${toCenterY}" stroke="#666666" stroke-width="2" opacity="0.5" marker-end="url(#arrowhead)"/>\n`);
-                }
-            });
+                        // Draw line with arrow
+                        connectionLines.push(`<line x1="${fromCenterX}" y1="${fromCenterY}" x2="${toCenterX}" y2="${toCenterY}" stroke="#666666" stroke-width="2" opacity="0.5" marker-end="url(#arrowhead)"/>\n`);
+                    }
+                });
+            }
+        });
+
+        // Add arrow marker definition if we have connections
+        if (connectionLines.length > 0) {
+            elements = '<defs><marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><polygon points="0 0, 10 3, 0 6" fill="#666666" /></marker></defs>\n' + elements;
+            elements += connectionLines.join('');
         }
-    });
-
-    // Add arrow marker definition if we have connections
-    if (connectionLines.length > 0) {
-        elements = '<defs><marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><polygon points="0 0, 10 3, 0 6" fill="#666666" /></marker></defs>\n' + elements;
-        elements += connectionLines.join('');
     }
 
     return elements;

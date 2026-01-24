@@ -1,5 +1,6 @@
 ---
 name: Architecture & Standards Team
+team_id: architecture-and-standards-team
 team_type: support-team
 position:
   x: 740.0

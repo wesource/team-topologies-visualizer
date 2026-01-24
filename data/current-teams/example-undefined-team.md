@@ -1,10 +1,10 @@
 ---
-name: Example Undefined Team
 team_id: example-undefined-team
+name: Example Undefined Team
 team_type: undefined
 position:
-  x: 518.6160418019548
-  y: 530.7696240933955
+  x: 559.6160418019548
+  y: 610.7696240933955
 metadata:
   size: 7
 ---

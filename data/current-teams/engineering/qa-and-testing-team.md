@@ -1,5 +1,6 @@
 ---
 name: QA & Testing Team
+team_id: qa-and-testing-team
 team_type: support-team
 dependencies:
   - Backend Services Team

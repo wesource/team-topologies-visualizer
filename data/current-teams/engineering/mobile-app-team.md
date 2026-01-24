@@ -1,5 +1,6 @@
 ---
 name: Mobile App Team
+team_id: mobile-app-team
 team_type: feature-team
 position:
   x: 300.0

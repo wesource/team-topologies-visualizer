@@ -1,5 +1,6 @@
 ---
 name: API Framework Team
+team_id: api-framework-team
 team_type: platform-team
 position:
   x: 1180.0

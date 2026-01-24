@@ -1,5 +1,6 @@
 ---
 name: Americas Supply Chain Solutions Team
+team_id: americas-supply-chain-solutions-team
 team_type: feature-team
 product_line: Customer Solutions
 position:

@@ -1,5 +1,6 @@
 ---
 name: Web Frontend Team
+team_id: web-frontend-team
 team_type: feature-team
 position:
   x: 300.0

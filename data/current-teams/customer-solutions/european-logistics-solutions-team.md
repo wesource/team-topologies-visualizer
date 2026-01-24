@@ -1,5 +1,6 @@
 ---
 name: European Logistics Solutions Team
+team_id: european-logistics-solutions-team
 team_type: feature-team
 product_line: Customer Solutions
 position:
