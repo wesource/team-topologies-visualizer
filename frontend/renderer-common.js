@@ -108,7 +108,11 @@ export function getTeamBoxHeight(team, currentView = 'current') {
     if (currentView === 'tt' && team.team_type === 'complicated-subsystem') {
         return 100;
     }
-    // Default height
+    // Stream-aligned teams: shorter to distinguish from platform teams
+    if (currentView === 'tt' && team.team_type === 'stream-aligned') {
+        return 64; // 20% reduction from default 80px
+    }
+    // Default height (platform teams and all baseline view teams)
     return LAYOUT.TEAM_BOX_HEIGHT;
 }
 

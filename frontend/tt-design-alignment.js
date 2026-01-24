@@ -51,7 +51,6 @@ export function autoAlignTTDesign(teams) {
 
     // Team dimensions and spacing based on Team Topologies book visualization
     const wideTeamVerticalSpacing = 60; // Vertical spacing between wide teams (stacked) - 75% of team box height
-    const _narrowTeamSpacingX = 160; // Horizontal spacing between narrow teams
     const narrowTeamSpacingY = 120; // Vertical spacing between rows of narrow teams
     const narrowTeamsPerRow = 3; // Max narrow teams per row
 
@@ -146,7 +145,6 @@ export function autoAlignTTDesign(teams) {
             // Position narrow teams (enabling, complicated-subsystem)
             narrowTeams.forEach((team, index) => {
                 const row = Math.floor(index / narrowTeamsPerRow);
-                const _col = index % narrowTeamsPerRow; // Not used when positioning by hint
 
                 // Calculate Y position by summing heights of all previous rows
                 let rowYPos = currentYPos;
@@ -376,7 +374,6 @@ export function autoAlignTTDesign(teams) {
 
             narrowTopUngrouped.forEach((team, _index) => {
                 const row = Math.floor(_index / narrowTeamsPerRow);
-                const _col = _index % narrowTeamsPerRow;
                 let rowYPos = currentYPos;
                 for (let r = 0; r < row; r++) {
                     const rowStartIdx = r * narrowTeamsPerRow;
@@ -431,7 +428,6 @@ export function autoAlignTTDesign(teams) {
 
                 narrowBottomUngrouped.forEach((team, _index) => {
                     const row = Math.floor(_index / narrowTeamsPerRow);
-                    const _col = _index % narrowTeamsPerRow;
                     let rowYPos = currentYPos;
                     for (let r = 0; r < row; r++) {
                         const rowStartIdx = r * narrowTeamsPerRow;
