@@ -59,8 +59,8 @@ async def get_product_lines():
     with open(products_file, encoding='utf-8') as f:
         products_config = json.load(f)
 
-    # Get all teams from current view
-    all_teams = find_all_teams("current")
+    # Get all teams from baseline view
+    all_teams = find_all_teams("baseline")
 
     # Group teams by product_line
     products_with_teams = {}
@@ -107,8 +107,8 @@ async def get_business_streams():
     with open(business_streams_file, encoding='utf-8') as f:
         business_streams_config = json.load(f)
 
-    # Get all teams from current view
-    all_teams = find_all_teams("current")
+    # Get all teams from baseline view
+    all_teams = find_all_teams("baseline")
 
     # Build nested structure: business_stream -> product -> teams
     business_streams_with_teams = {}
@@ -170,13 +170,13 @@ async def get_business_streams():
 @router.get("/teams", response_model=list[TeamData])
 async def get_teams():
     """Get all Baseline teams"""
-    return find_all_teams("current")
+    return find_all_teams("baseline")
 
 
 @router.get("/teams/{team_id}", response_model=TeamData)
 async def get_current_team(team_id: str):
     """Get a specific current/baseline team by team_id (stable identifier)"""
-    result = find_team_by_id(team_id, "current")
+    result = find_team_by_id(team_id, "baseline")
 
     if result is None:
         raise HTTPException(status_code=404, detail=f"Team not found: {team_id}")
@@ -191,7 +191,7 @@ async def update_team_position(team_id: str, position: PositionUpdate):
     if os.getenv("READ_ONLY_MODE") == "true":
         raise HTTPException(status_code=403, detail="Modifications not allowed in demo mode")
 
-    result = find_team_by_id(team_id, "current")
+    result = find_team_by_id(team_id, "baseline")
 
     if result is None:
         raise HTTPException(status_code=404, detail="Team not found")
@@ -210,7 +210,7 @@ async def update_team_position(team_id: str, position: PositionUpdate):
 @router.get("/validate")
 async def validate_files() -> dict[str, Any]:
     """Validate all Baseline team files and config files for common issues"""
-    team_validation = validate_all_team_files("current")
+    team_validation = validate_all_team_files("baseline")
     config_validation = validate_all_config_files("baseline")
 
     return {

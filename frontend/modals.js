@@ -887,15 +887,15 @@ async function showValidationSchemas() {
                     }
                     return current;
                 };
-                
+
                 const renderFields = (properties, required = [], prefix = '') => {
                     for (const [fieldName, fieldDef] of Object.entries(properties)) {
                         const isRequired = required.includes(fieldName);
                         const fieldPath = prefix ? `${prefix}.${fieldName}` : fieldName;
-                        
+
                         let fieldType = fieldDef.type || 'object';
                         let constraints = [];
-                        
+
                         // Handle array types
                         if (fieldDef.type === 'array' && fieldDef.items) {
                             if (fieldDef.items.$ref) {
@@ -903,7 +903,7 @@ async function showValidationSchemas() {
                                 const refParts = fieldDef.items.$ref.split('/');
                                 const typeName = refParts[refParts.length - 1];
                                 fieldType = `array of ${typeName}`;
-                                
+
                                 // Recursively render fields from the referenced type
                                 const refDef = resolveRef(fieldDef.items.$ref);
                                 if (refDef && refDef.properties) {
@@ -916,7 +916,7 @@ async function showValidationSchemas() {
                                 constraints.push(`min: ${fieldDef.minItems}`);
                             }
                         }
-                        
+
                         // Add constraints
                         if (fieldDef.pattern) {
                             constraints.push(`pattern: ${fieldDef.pattern}`);
@@ -933,11 +933,11 @@ async function showValidationSchemas() {
                         if (fieldDef.maximum !== undefined) {
                             constraints.push(`max: ${fieldDef.maximum}`);
                         }
-                        
+
                         if (constraints.length > 0) {
                             fieldType += ` <span style="color: #666; font-size: 0.9em;">(${constraints.join(', ')})</span>`;
                         }
-                        
+
                         html += '<tr>';
                         html += `<td><code>${fieldPath}</code></td>`;
                         html += `<td>${fieldType}</td>`;
@@ -946,16 +946,24 @@ async function showValidationSchemas() {
                         html += '</tr>';
                     }
                 };
-                
+
                 renderFields(schema.properties, schema.required || []);
-                
+
                 html += '</tbody></table>';
             }
-            
+
             // Show example if available
             if (schemaData.schema.example) {
                 html += '<h4>Example:</h4>';
                 html += `<pre class="schema-example">${JSON.stringify(schemaData.schema.example, null, 2)}</pre>`;
+            }
+
+            html += '</div>';
+        }
+
+        html += '</div>';
+        schemaContent.innerHTML = html;
+
     } catch (error) {
         schemaContent.innerHTML = `<div class="error">Error loading schemas: ${error.message}</div>`;
     }
