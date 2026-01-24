@@ -54,10 +54,15 @@ We follow a pragmatic approach:
 ## Frontend (JavaScript)
 
 ### Core Libraries
-- **None (Vanilla JavaScript)**
+- **Vanilla JavaScript (no framework)**
   - Why: Project is simple enough, no framework needed
-  - Benefits: Fast, no build step (besides tests), no framework lock-in
+  - Benefits: Fast, no build step (besides tests/lint), no framework lock-in
   - HTML5 Canvas API used directly for visualization
+
+- **marked** (Markdown rendering)
+  - Why: Render team and concept markdown inside modals (GitHub-flavored-ish Markdown)
+  - How it’s used at runtime: imported as an ES module from a pinned CDN URL in `frontend/modals.js`.
+  - Why it may not “feel” like a dependency: the app has no frontend build step, so browser runtime dependencies are loaded directly (CDN), while `frontend/package.json` exists mainly for tests/lint tooling.
 
 ### Testing (Development Only)
 - **Vitest** (`vitest@3.0.5`)
@@ -100,15 +105,17 @@ httpx==0.28.1            # HTTP client (tests only)
 
 ```json
 {
+  "dependencies": {
+    "marked": "^14.1.3"
+  },
   "devDependencies": {
-    "vitest": "^3.0.5",
-    "@vitest/ui": "^3.0.5",
-    "jsdom": "^26.0.0"
+    "eslint": "...",
+    "vitest": "..."
   }
 }
 ```
 
-**Total: 3 packages** (all dev-only)
+For the authoritative, up-to-date list (including exact versions), see `frontend/package.json`.
 
 ### E2E Test Dependencies (tests/package.json)
 

@@ -134,13 +134,22 @@ More context and details: [docs/CONCEPTS.md](docs/CONCEPTS.md#example-data-logic
 ## Testing
 
 ```bash
-.\scripts\run-all-tests.ps1               # Run all tests
-.\venv\Scripts\python.exe -m pytest tests_backend/ -v   # Backend only
-cd frontend; npm test             # Frontend only
-cd tests; npx playwright test     # E2E only
+# Run all tests (requires PowerShell)
+pwsh ./scripts/run-all-tests.ps1
+
+# Backend only
+python -m pytest tests_backend/ -v
+
+# Frontend only
+cd frontend && npm test
+
+# E2E only
+cd tests && npx playwright test
 ```
 
 The test suite is split across backend (pytest), frontend (Vitest), and E2E (Playwright). To avoid docs drift, exact test counts are not listed here.
+
+For OS-specific notes (especially Windows venv/PowerShell details), see [DEVELOPMENT.md](DEVELOPMENT.md).
 
 ## Linting
 
@@ -149,16 +158,17 @@ The test suite is split across backend (pytest), frontend (Vitest), and E2E (Pla
 python -m ruff check backend/ tests_backend/ main.py --fix
 
 # JavaScript (ESLint)
-cd frontend
-npm run lint -- --fix
+cd frontend && npm run lint -- --fix
 ```
 
 ## Technologies
 
-- **Backend**: Python 3.8+, FastAPI, PyYAML, Markdown
+- **Backend**: Python 3.10+, FastAPI, PyYAML, Markdown
 - **Frontend**: HTML5 Canvas, Vanilla JavaScript (no build step)
 - **Testing**: pytest, Vitest, Playwright
 - **Data Format**: Markdown with YAML front matter
+
+Python: Requires 3.10+; CI runs 3.11 (see [.github/workflows/ci.yml](.github/workflows/ci.yml)).
 
 More details: [docs/SETUP.md](docs/SETUP.md), [DEVELOPMENT.md](DEVELOPMENT.md), and [DEPENDENCIES.md](DEPENDENCIES.md)
 

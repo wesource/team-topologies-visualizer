@@ -133,6 +133,8 @@ Shows color-coded health indicators and detailed dashboard.
 
 In TT Design, platform teams can be grouped together to show related foundational capabilities.
 
+**Modeling note**: A platform grouping can include platform teams, enabling teams, and (sometimes) stream-aligned teams that deliver an internal product (e.g., a Developer Portal). The `team_type` should reflect the team’s primary Team Topologies type, not the name of the grouping it sits in.
+
 **Purpose**: Organize related platform teams that provide cohesive infrastructure or services.
 
 **Visual representation**:

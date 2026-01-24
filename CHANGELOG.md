@@ -25,6 +25,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Shortened README intro and moved view-naming rationale into CONCEPTS
   - Linked DEVELOPMENT tech stack notes to DEPENDENCIES and trimmed long-term/perf sections
 
+- **Repo Cleanup (2026-01-24)**: Removed obsolete root test coverage planning docs
+  - Deleted `TEST_COVERAGE_ANALYSIS.md` and `TEST_COVERAGE_GAPS.md` (historical notes; not referenced by tooling)
+  - Deleted `tests/test-run-output.txt` (generated Playwright run output)
+  - Deleted `lastfixes_before_1_0.md` (legacy internal planning checklist)
+  - Deleted `docs/REVIEW_AND_DATA_CLEANUP_SUGGESTIONS.md` (review checklist; remaining items captured elsewhere)
+
+- **Python Version Policy (2026-01-24)**: Set minimum supported Python to 3.10+
+  - Updated docs and developer tooling configuration (`ruff.toml`) to match
+
 - **Documentation Simplification (2026-01-18)**: Shortened README and CONCEPTS for a cleaner first-read
   - Added a short AI disclaimer near the top of README
   - Removed the "Fractal Organizational Patterns" section from CONCEPTS

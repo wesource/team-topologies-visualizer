@@ -32,6 +32,7 @@ desktop.ini
 test-results/
 frontend/test-results/
 tests/test-results/
+tests/test-run-output.txt
 tests/playwright-report/
 tests/.playwright/
 

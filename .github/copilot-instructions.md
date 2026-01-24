@@ -72,7 +72,7 @@ A webapp for visualizing Team Topologies concepts using HTML5 Canvas and Python 
 - **Comparison**: Side-by-side comparison of snapshots
 
 ## Technology Stack
-- **Backend**: Python 3.8+ with FastAPI
+- **Backend**: Python 3.10+ with FastAPI
 - **Frontend**: HTML5 Canvas with vanilla JavaScript (no build step)
 - **Testing**: pytest (backend), Vitest (frontend), Playwright (E2E)
 - **Linting**: Ruff (Python), ESLint (JavaScript)

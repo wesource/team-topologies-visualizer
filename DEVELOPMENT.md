@@ -15,7 +15,7 @@ For a detailed list of third-party libraries (and why they’re used), see [DEPE
 ### Technology Stack
 
 **Backend**:
-- **Python 3.8+** - Core language
+- **Python 3.10+** - Core language
 - **FastAPI** - Modern async web framework
 - **Pydantic** - Data validation with type hints
 - **uvicorn** - ASGI server
@@ -25,7 +25,7 @@ For a detailed list of third-party libraries (and why they’re used), see [DEPE
 - **HTML5 Canvas** - Interactive visualization
 - **marked.js** - Markdown rendering with GitHub Flavored Markdown (GFM) support
   - Replaces custom regex parsing for security and robustness
-  - XSS protection and comprehensive markdown feature support
+   - Note: `marked` parses Markdown to HTML but does **not** sanitize HTML by default; if you expect untrusted content, sanitize the rendered output before injecting into the DOM.
    - CDN import is defined in the frontend code
 
 **Testing**:
@@ -80,6 +80,8 @@ Modular architecture with clear separation of concerns:
 ## Testing
 
 The project uses three layers of tests to ensure quality during development.
+
+**Gotcha (demo mode)**: If you started the server via demo mode (which sets `READ_ONLY_MODE=true`) in the same shell/session, unset it before running tests that expect write endpoints to work.
 
 ### Test Architecture Overview
 

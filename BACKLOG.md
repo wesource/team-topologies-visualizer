@@ -18,23 +18,58 @@ This is the public backlog for ideas, priorities, and possible improvements.
 
 Edit this list as your priorities change:
 
-- Flow metrics: Phase 3 value stream aggregation (show aggregated metrics on groupings)
-- Model robustness: reduce brittle name-based references (IDs, validation, clearer errors)
-- Data modeling: keep narrative text separate from resolvable dependency targets
+- (Soon) Stable team IDs: introduce mandatory `team_id` in YAML and use it everywhere (replace name-based references)
+	- Data model: add `team_id` to every team markdown file; keep `name` for display; enforce uniqueness and slug-safe format.
+	- References: update `dependencies` and `interaction_modes` (and any other cross-team links) to use `team_id` as the canonical reference.
+	- Backward-compat approach (minimal + practical): support resolving legacy name-based references during a transition, but normalize to IDs and surface clear warnings; once templates + sample data + docs are updated, make it a hard validation error.
+	- Validation: fail if `team_id` is missing/duplicate; fail if references can’t be resolved to an existing `team_id`; detect ambiguous team names to prevent silent mis-links.
+	- Templates + examples: update `templates/` and ALL markdown examples/snippets (including code blocks in docs) to include `team_id` and to reference teams by ID.
+	- Migration helper: add a small script/command to (a) add `team_id` (default derived from filename), and (b) rewrite references from names → IDs; support a dry-run mode.
+	- Tests: add unit tests covering parsing, normalization, migration behavior, and validation errors/warnings.
+- Data modeling: keep narrative text separate from resolvable relationship targets (Baseline dependencies + TT interaction tables)
+	- Ensure `dependencies` and `interaction_modes` reference real teams only (no pseudo-targets like “All platform teams”).
+	- Store narrative/context separately (e.g., `dependency_notes` already exists; consider an equivalent for interaction mode notes if needed).
 - UX/visual clarity improvements (reduce clutter, better defaults, better affordances)
 - Documentation: keep setup + modeling guides short and drift-resistant
 
+- Release readiness: 1.0 housekeeping
+	- Bump version to `1.0.0` (wherever the canonical version lives) and create a git tag/release.
+	- Sanity-check demo mode end-to-end (read-only behavior + banners + snapshot compare) against the current example dataset.
+
 ## Next
 
-- Validation: warn if Baseline `product_line` / `business_stream` values don’t match config (products/business streams)
+- Validation: Baseline config mismatch warnings (product lines + business streams)
+	- What it means: if a Baseline team’s `product_line` is not present in `data/current-teams/products.json`, or its `business_stream` is not present in `data/current-teams/business-streams.json`, flag it as a validation warning.
+	- Why: prevents “silent” typos that create missing lanes / mis-grouped teams in the Baseline views.
+	- Acceptance criteria: warning appears in the validation report (and ideally the UI warnings modal) with file + field + bad value; matching should be case/whitespace-normalized.
 - Refactor frontend file structure into subfolders (DX improvement)
 - Config-driven ordering/completeness in baseline perspectives (products/business streams)
-- Import/export tooling for easier onboarding (CSV/JSON helpers)
 
 ## Later / Maybe
 
 - Baseline: network-style “team coordination” view (dependencies + coordination overhead)
+- Flow metrics: aggregated metrics at grouping level (TT Design)
+	- Show rollups for value stream groupings and platform groupings (e.g., average/median lead time, deployment frequency distribution, combined flow health indicators).
+	- Goal: make it easy to compare groupings at a glance without clicking into each individual team.
 - “Virtual nodes” / constraint cards (e.g., release gates, compliance constraints)
+- Model quality: “Health Check” / anti-pattern detection report
+	- Add a one-click report that flags common Team Topologies smells (too many dependencies, bottleneck platforms, orphaned teams, long-running collaboration, undersized/oversized teams).
+	- Output could live in the existing validation modal (errors/warnings/info), plus optional on-canvas highlighting for teams with issues.
+- Interaction mode evolution history (optional)
+	- Allow documenting and visualizing how interactions changed over time (e.g., collaboration → X-as-a-Service), including maturity markers and “stale collaboration” warnings.
+- Data entry helpers (keep git-first)
+	- Add a “Team wizard” that generates YAML + markdown (copy-to-clipboard) and/or a simple questionnaire to help set cognitive load consistently.
+- Security hardening: sanitize Markdown-rendered HTML in modals
+	- Add HTML sanitization (e.g., DOMPurify) on the output of `marked.parse()` before injecting into the DOM.
+	- Consider disallowing raw HTML in markdown (or stripping it) and add tests for basic XSS payloads.
+	- Optionally self-host pinned frontend runtime deps (or add CSP) to reduce supply-chain and CDN risks.
+- Import/export tooling (onboarding helpers)
+	- Provide a simple way to generate starter team files and configs from CSV/JSON (and optionally export the current dataset back out).
+	- Goal: help new users bootstrap data quickly without hand-writing dozens of markdown files.
+- Demo mode polish (guided tour + better story)
+	- Add lightweight in-app guidance (tooltips/info boxes) to help first-time users understand what they’re seeing.
+	- Improve the built-in demo narrative with stronger before/after snapshot examples (clear “why this is better” story).
+	- Optional: allow switching between multiple demo datasets/stages (e.g., initial vs mid-transformation).
 - More platform-as-a-product indicators (maturity, adoption funnel, pain points)
 - Diff-style views for snapshots (beyond side-by-side)
 

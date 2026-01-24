@@ -302,7 +302,7 @@ def _parse_dependency_bullets(markdown_content: str) -> tuple[list[str], list[st
 
 def write_team_file(team: TeamData, data_dir: Path) -> Path:
     """Write team data to markdown file with YAML front matter"""
-    file_path = data_dir / f"{team.name.lower().replace(' ', '-')}.md"
+    file_path = data_dir / f"{team_name_to_slug(team.name)}.md"
     return write_team_file_to_path(team, file_path)
 
 
