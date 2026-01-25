@@ -3,7 +3,7 @@ team_id: americas-e-commerce-solutions-team
 name: Americas E-commerce Solutions Team
 team_type: feature-team
 position:
-  x: 1870.0
+  x: 1745.0
   y: 530.0
 metadata:
   size: 5

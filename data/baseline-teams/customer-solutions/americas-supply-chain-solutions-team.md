@@ -3,7 +3,7 @@ team_id: americas-supply-chain-solutions-team
 name: Americas Supply Chain Solutions Team
 team_type: feature-team
 position:
-  x: 1870.0
+  x: 1745.0
   y: 410.0
 metadata:
   size: 7

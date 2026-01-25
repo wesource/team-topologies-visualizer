@@ -3,7 +3,7 @@ team_id: route-optimization-team
 name: Route Optimization Team
 team_type: feature-team
 position:
-  x: 230.0
+  x: -245.0
   y: 530.0
 metadata:
   size: 5

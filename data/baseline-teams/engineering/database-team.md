@@ -3,7 +3,7 @@ team_id: database-team
 name: Database Team
 team_type: platform-team
 position:
-  x: 870.0
+  x: 595.0
   y: 530.0
 metadata:
   size: 3

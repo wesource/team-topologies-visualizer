@@ -3,7 +3,7 @@ team_id: backend-services-team
 name: Backend Services Team
 team_type: feature-team
 position:
-  x: 230.0
+  x: -245.0
   y: 410.0
 metadata:
   size: 8

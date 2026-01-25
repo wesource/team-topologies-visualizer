@@ -18,10 +18,10 @@ export const LAYOUT = {
 
     // Department/Line Manager spacing
     DEPT_SPACING: 230,              // Horizontal spacing between departments (balanced for compact layout)
-    LINE_MANAGER_SPACING: 180,      // Horizontal spacing between line managers (balanced for compact layout)
+    LINE_MANAGER_SPACING: 210,      // Horizontal spacing between line managers (210 = 200px box + 10px gap)
 
     // Base positions
-    DEPT_START_X: 550,              // Starting X position for departments (500 + 50 margin)
+    DEPT_START_X: 200,              // Starting X position for departments (150 + 50 margin)
 
     // Border styling
     BORDER_WIDTH_NORMAL: 3,         // Normal border width

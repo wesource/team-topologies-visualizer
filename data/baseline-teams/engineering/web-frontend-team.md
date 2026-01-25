@@ -3,7 +3,7 @@ team_id: web-frontend-team
 name: Web Frontend Team
 team_type: feature-team
 position:
-  x: 390.0
+  x: -35.0
   y: 410.0
 metadata:
   size: 6

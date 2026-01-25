@@ -3,7 +3,7 @@ team_id: european-logistics-solutions-team
 name: European Logistics Solutions Team
 team_type: feature-team
 position:
-  x: 1710.0
+  x: 1535.0
   y: 410.0
 metadata:
   size: 6

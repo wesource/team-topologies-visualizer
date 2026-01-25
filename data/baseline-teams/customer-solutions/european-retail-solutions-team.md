@@ -3,7 +3,7 @@ team_id: european-retail-solutions-team
 name: European Retail Solutions Team
 team_type: feature-team
 position:
-  x: 1710.0
+  x: 1535.0
   y: 530.0
 metadata:
   size: 5

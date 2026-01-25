@@ -3,7 +3,7 @@ team_id: api-framework-team
 name: API Framework Team
 team_type: platform-team
 position:
-  x: 1030.0
+  x: 805.0
   y: 410.0
 metadata:
   size: 4

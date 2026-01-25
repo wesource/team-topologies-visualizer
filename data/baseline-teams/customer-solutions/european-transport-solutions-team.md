@@ -3,7 +3,7 @@ team_id: european-transport-solutions-team
 name: European Transport Solutions Team
 team_type: feature-team
 position:
-  x: 1710.0
+  x: 1535.0
   y: 650.0
 metadata:
   size: 4

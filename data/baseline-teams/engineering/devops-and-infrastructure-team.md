@@ -3,7 +3,7 @@ team_id: devops-and-infrastructure-team
 name: DevOps & Infrastructure Team
 team_type: platform-team
 position:
-  x: 870.0
+  x: 595.0
   y: 410.0
 metadata:
   size: 4

@@ -4,7 +4,7 @@ import { darkenColor } from './renderer-common.js';
 export function drawCurrentStateView(ctx, organizationHierarchy, teams, wrapText) {
     if (!organizationHierarchy)
         return;
-    const startX = 500;
+    const startX = 150; // Minimal left margin to maximize canvas usage
     const startY = LAYOUT.COMPANY_Y;
     const levelHeight = LAYOUT.LEVEL_HEIGHT;
     const boxWidth = LAYOUT.DEPT_BOX_WIDTH;

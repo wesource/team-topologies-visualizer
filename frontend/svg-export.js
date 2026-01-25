@@ -17,21 +17,54 @@ export function exportToSVG(state, organizationHierarchy, teams, teamColorMap, c
     let viewBox = `0 0 ${width} ${height}`;
     // For TT vision or hierarchy view, calculate bounding box to fit all teams
     if ((currentView === 'tt' || isHierarchy) && teams.length > 0) {
-        const padding = 100;
+        const padding = 50;
         let minX = Math.min(...teams.map(t => t.position.x)) - padding;
         let minY = Math.min(...teams.map(t => t.position.y)) - padding;
         let maxX = Math.max(...teams.map(t => t.position.x + getTeamBoxWidth(t, currentView))) + padding;
-        const maxY = Math.max(...teams.map(t => t.position.y + getTeamBoxHeight(t, currentView))) + padding;
+        let maxY = Math.max(...teams.map(t => t.position.y + getTeamBoxHeight(t, currentView))) + padding;
 
-        // For hierarchy view, include the organization hierarchy at the top
-        if (isHierarchy) {
-            minY = 0; // Start from top to include title and org hierarchy
-            // Extend width to account for organization hierarchy elements
-            // Company box: startX(500) + 400 + boxWidth(200) + 100 = ~1200
-            // Departments can extend further based on count (DEPT_SPACING=250 per dept)
-            // Ensure we capture the full width of org chart elements
-            minX = Math.min(minX, 0);
-            maxX = Math.max(maxX, 1500); // Generous width to include company and multiple departments
+        // For hierarchy view, calculate actual bounds from organizational structure
+        if (isHierarchy && organizationHierarchy) {
+            const startX = 150; // Match renderer-current.js
+            const boxWidth = LAYOUT.DEPT_BOX_WIDTH;
+
+            // Include title at top
+            minY = 0;
+            minX = startX; // Left margin
+
+            // Company box
+            const companyX = startX + 400;
+            maxX = Math.max(maxX, companyX + boxWidth + 100 + padding);
+
+            // Calculate department spread
+            const deptCount = organizationHierarchy.company?.children?.length || 0;
+            if (deptCount > 0) {
+                const deptStartX = LAYOUT.DEPT_START_X;
+                const deptSpacing = LAYOUT.DEPT_SPACING;
+                const rightmostDeptX = deptStartX + (deptCount - 1) * deptSpacing + boxWidth;
+                maxX = Math.max(maxX, rightmostDeptX + padding);
+
+                // Calculate leftmost line manager/region position
+                let leftmostLMX = Infinity;
+                organizationHierarchy.company.children.forEach(dept => {
+                    const deptIndex = organizationHierarchy.company.children.indexOf(dept);
+                    const deptX = deptStartX + deptIndex * deptSpacing;
+
+                    if (dept.line_managers && dept.line_managers.length > 0) {
+                        const lmCount = dept.line_managers.length;
+                        const lmStartX = deptX - ((lmCount - 1) * LAYOUT.LINE_MANAGER_SPACING) / 2;
+                        leftmostLMX = Math.min(leftmostLMX, lmStartX);
+                    }
+                    if (dept.regions && dept.regions.length > 0) {
+                        const regionCount = dept.regions.length;
+                        const regionStartX = deptX - ((regionCount - 1) * LAYOUT.LINE_MANAGER_SPACING) / 2;
+                        leftmostLMX = Math.min(leftmostLMX, regionStartX);
+                    }
+                });
+                if (leftmostLMX !== Infinity) {
+                    minX = Math.min(minX, leftmostLMX - padding);
+                }
+            }
         }
 
         width = maxX - minX;
@@ -93,21 +126,21 @@ export function exportToSVG(state, organizationHierarchy, teams, teamColorMap, c
 }
 function generateCurrentStateSVG(organizationHierarchy, teams, teamColorMap) {
     let elements = '';
-    const startX = 500;
+    const startX = 150; // Match renderer-current.js
     const startY = LAYOUT.COMPANY_Y;
     const levelHeight = LAYOUT.LEVEL_HEIGHT;
     const boxWidth = LAYOUT.DEPT_BOX_WIDTH;
     const boxHeight = LAYOUT.DEPT_BOX_HEIGHT;
 
     // Title
-    elements += '<text x="50" y="30" style="font-family: Arial, sans-serif; font-size: 24px; font-weight: bold; fill: #333;" text-anchor="start">Hierarchy View</text>\n';
+    elements += '<text x="200" y="30" style="font-family: Arial, sans-serif; font-size: 24px; font-weight: bold; fill: #333;" text-anchor="start">Hierarchy View</text>\n';
 
     // Draw company leadership
     const company = organizationHierarchy.company;
     elements += drawSVGBox(company.name, startX + 400, startY, boxWidth + 100, boxHeight, '#5D6D7E', 'white', true);
     // Draw departments
     const deptSpacing = LAYOUT.DEPT_SPACING;
-    const deptStartX = startX + 50;
+    const deptStartX = LAYOUT.DEPT_START_X; // Use constant to match renderer
     if (!company.children)
         return elements;
     company.children.forEach((dept, index) => {

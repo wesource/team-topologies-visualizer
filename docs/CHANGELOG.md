@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- **Fit to View & SVG Export Improvements (2026-01-25)**: Comprehensive fixes for optimal canvas usage
+  - **Fit to View algorithm**:
+    * Fixed sidebar overlay understanding - sidebar overlays canvas (doesn't reduce available width)
+    * Changed from centering to left-alignment with minimal margins (10px left, 30px right, 10px top/bottom)
+    * Calculate scale using full canvas width instead of subtracting sidebar width
+    * Position content at canvas x=0 - sidebar naturally overlays empty left space without hiding teams
+  - **Hierarchy view bounds calculation**:
+    * Include view title in bounds (at y=10) so "Hierarchy View" heading is visible after Fit to View
+    * Calculate actual organizational structure bounds (company box, departments, line managers, regions)
+    * Handle line managers centered under departments - calculate leftmost position including spread
+    * Use LAYOUT constants (DEPT_SPACING, LINE_MANAGER_SPACING, DEPT_START_X) for accurate bounds
+  - **Product-lines view bounds**:
+    * Include view title (at y=60) and product lane headers in bounds calculation
+    * Use custom team positions from productLinesTeamPositions Map
+  - **Business-streams view bounds**:
+    * Include view title (at y=20) and business stream container names in bounds
+    * Use custom team positions from businessStreamsTeamPositions Map
+  - **SVG export fixes**:
+    * Match hierarchy renderer positioning - changed startX from 500 to 150
+    * Use LAYOUT.DEPT_START_X constant instead of hardcoded values
+    * Calculate actual organizational bounds including line manager spread
+    * Ensure exported SVG includes all content visible on canvas (no cut-off regions)
+  - **Hierarchy layout adjustments**:
+    * Changed startX from 500 → 150 to minimize left margin
+    * Adjusted LINE_MANAGER_SPACING to 210px (prevents 200px box overlap)
+  - **Impact**: All views (hierarchy, product-lines, business-streams, TT design) now use full canvas with optimal zoom levels and visible titles. SVG exports match canvas display exactly.
+
 ### Added
 - **Config-Driven Display Order (2026-01-25)**: Added optional `display-order` field to products and business streams
   - Added optional `display-order` field to `ProductConfig` and `BusinessStreamConfig` Pydantic schemas
