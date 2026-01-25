@@ -22,14 +22,7 @@ Edit this list as your priorities change:
   - Filter by Facilitating (show only temporary enabling relationships)
   - Toggle individual or combinations of modes
   - Reduce visual clutter when analyzing specific interaction patterns
-- **Flow-Aware Auto-Align**: Improve `autoAlignTTDesign()` to consider:
-  - Optional `align_hint_x` metadata field (values: left, center, right) for horizontal positioning within groupings
-  - Optional `align_hint_y` metadata field (values: top, bottom) for vertical positioning of groupings
-  - Both fields are optional - defaults work for most cases
-  - Defaults based on team_type: platform→left, stream-aligned→right
-  - Defaults based on grouping: platform_grouping→bottom, value_stream→top
-  - Philosophy: "algorithm makes best guesses, user provides hints only when needed"
-  - For precise positioning: users just drag teams manually on canvas- Data modeling: keep narrative text separate from resolvable relationship targets (Baseline dependencies + TT interaction tables)
+- Data modeling: keep narrative text separate from resolvable relationship targets (Baseline dependencies + TT interaction tables)
 	- Ensure `dependencies` and `interaction_modes` reference real teams only (no pseudo-targets like “All platform teams”).
 	- Store narrative/context separately (e.g., `dependency_notes` already exists; consider an equivalent for interaction mode notes if needed).
 - UX/visual clarity improvements (reduce clutter, better defaults, better affordances)
@@ -41,6 +34,27 @@ Edit this list as your priorities change:
 
 ## Completed
 
+- ✅ **DONE (2026-01-25)** Flow-Aware Auto-Align with optional alignment hints
+	- ✅ Implemented 3×2 grid layout (700/1550/2400 x-coords, top/bottom rows)
+	- ✅ Added optional `align_hint_x` (left/center/right) and `align_hint_y` (top/bottom) metadata fields
+	- ✅ Smart defaults based on team_type (platform→left, stream-aligned→right)
+	- ✅ Smart defaults based on grouping (platform_grouping→bottom, value_stream→top)
+	- ✅ First team (alphabetically by filename) determines grouping X position
+	- ✅ Created [docs/AUTO-ALIGN.md](AUTO-ALIGN.md) with comprehensive documentation
+	- ✅ Added 16 unit tests covering all alignment scenarios
+	- **Philosophy**: Algorithm makes best guesses, users provide hints only when needed
+- ✅ **DONE (2026-01-25)** Documentation organization and README improvements
+	- ✅ Moved 4 core documentation files to docs/ folder (BACKLOG, CHANGELOG, DEPENDENCIES, DEVELOPMENT)
+	- ✅ Updated all cross-references across 7 files
+	- ✅ Consolidated README sections into organized documentation table
+	- ✅ Restructured Key Features into 4 clear subsections
+	- ✅ Added auto-align and comparison view features prominently
+	- **Result**: Clean root directory with professional project structure
+- ✅ **DONE (2026-01-25)** Terminology unification: "Pre-TT" → "Baseline" across all documentation
+	- ✅ Updated 6 documentation files (README, SETUP, CONCEPTS, EXAMPLE_DATA, tests/README)
+	- ✅ Renamed template: pre-tt-team-template.md → baseline-team-template.md
+	- ✅ Preserved CHANGELOG.md history (kept "Pre-TT" in historical entries)
+	- **Result**: Consistent "Baseline" terminology across all user-facing documentation
 - ✅ **DONE (2026-01-25)** UI-driven validation rule visibility using Pydantic schemas
 	- ✅ Created Pydantic models for all 4 config file types (baseline-team-types, products, business-streams, organization-hierarchy)
 	- ✅ Added `/api/schemas` endpoint exposing full JSON Schema with field constraints and descriptions
@@ -72,31 +86,6 @@ Edit this list as your priorities change:
 		- Add backward-compat warnings when name-based references are detected
 
 ## Next
-- **Improved auto-align in TT Design view** (PRIORITY: Better default positioning)
-	- **Problem**: Current auto-align doesn't consider Team Topologies visual conventions when positioning teams and groupings
-	- **Solution**: Simple, pragmatic auto-align improvements with optional user hints
-	- **Implementation**:
-		1. Add optional `alignment_hint` field to team metadata for positioning hints
-		2. Auto-align uses best-guess logic based on:
-		   - Grouping type (`value_stream` vs `platform_grouping`)
-		   - Team type (`platform`, `stream-aligned`, etc.)
-		   - Optional `alignment_hint` when user wants to override defaults
-		3. Keep it simple: let users express intent, algorithm does its best
-	- **Alignment hint values** (all optional):
-		- `top | bottom` - for grouping vertical positioning
-		- `left | center | right` - for team horizontal positioning within grouping
-		- Combined format: `bottom-left`, `top-right`, etc.
-		- Or just `left`, `right` if vertical doesn't matter
-	- **Benefits**: 
-		- Simple and flexible - doesn't over-prescribe "the right way"
-		- Users can override defaults when needed
-		- Algorithm learns from real usage patterns
-		- Easy to understand and document
-	- **References**: 
-		- Team Shape Templates: "left to right flow of change"
-		- Real-world examples (Docker, etc.) for default heuristics
-	- **Tests**: Update tt-design-alignment.test.js to verify improved positioning
-	- **Data migration**: `alignment_hint` is optional, no migration needed
 - Flow of change arrows in TT Design view
 	- Add optional "Flow of change" visualization as described in https://teamtopologies.com/key-concepts
 	- Implementation: checkbox option (default off) in TT Design view to show directional arrows indicating flow between teams
@@ -149,4 +138,5 @@ Edit this list as your priorities change:
 	- Optional: allow switching between multiple demo datasets/stages (e.g., initial vs mid-transformation).
 - More platform-as-a-product indicators (maturity, adoption funnel, pain points)
 - Diff-style views for snapshots (beyond side-by-side)
+
 
