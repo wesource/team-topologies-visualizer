@@ -138,15 +138,38 @@ export function zoomOut(drawCallback) {
  * @description Calculates bounding box of all teams and adjusts zoom/pan to fit them in view with padding
  */
 export function fitToView(canvas, teams, drawCallback) {
+    console.log('[FitToView] Starting fit to view...');
+    console.log('[FitToView] Total teams:', teams?.length);
+    console.log('[FitToView] Current view:', state.currentView, 'Perspective:', state.currentPerspective);
+
     if (!teams || teams.length === 0) return;
 
     // Get filtered teams (respect current filters)
     const visibleTeams = getFilteredTeams(teams);
+    console.log('[FitToView] Visible teams after filtering:', visibleTeams.length);
     if (visibleTeams.length === 0) return;
 
     // Calculate bounding box using actual team dimensions
     let minX = Infinity, minY = Infinity;
     let maxX = -Infinity, maxY = -Infinity;
+
+    // For hierarchy view in baseline, account for organizational structure (company, depts, line managers)
+    if (state.currentView === 'current' && state.currentPerspective === 'hierarchy' && state.organizationHierarchy) {
+        // Company box: starts at x=500+400=900, y=50 (COMPANY_Y), width=300, height=80
+        minX = Math.min(minX, 500); // Account for left margin before first department
+        minY = Math.min(minY, 50); // COMPANY_Y
+        maxX = Math.max(maxX, 900 + 300); // Company box right edge
+        maxY = Math.max(maxY, 50 + 80); // Company box bottom
+
+        // Departments and line managers will extend the bounds
+        const deptCount = state.organizationHierarchy.company?.children?.length || 0;
+        if (deptCount > 0) {
+            const deptStartX = 550; // startX + 50
+            const deptSpacing = 250; // DEPT_SPACING
+            const rightmostDeptX = deptStartX + (deptCount - 1) * deptSpacing + 200; // +200 for box width
+            maxX = Math.max(maxX, rightmostDeptX);
+        }
+    }
 
     visibleTeams.forEach(team => {
         const x = team.position?.x || 0;
@@ -162,16 +185,22 @@ export function fitToView(canvas, teams, drawCallback) {
         maxY = Math.max(maxY, y + height);
     });
 
+    console.log('[FitToView] Bounds from team positions:', { minX, minY, maxX, maxY });
+
     // Handle custom team positions for product-lines and business-streams views
     if (state.currentView === 'current' && state.currentPerspective === 'product-lines' && state.productLinesTeamPositions) {
-        state.productLinesTeamPositions.forEach((bounds, _teamName) => {
+        console.log('[FitToView] Including product-lines custom positions:', state.productLinesTeamPositions.size);
+        state.productLinesTeamPositions.forEach((bounds, teamName) => {
+            console.log(`[FitToView]   ${teamName}:`, bounds);
             minX = Math.min(minX, bounds.x);
             minY = Math.min(minY, bounds.y);
             maxX = Math.max(maxX, bounds.x + bounds.width);
             maxY = Math.max(maxY, bounds.y + bounds.height);
         });
     } else if (state.currentView === 'current' && state.currentPerspective === 'business-streams' && state.businessStreamsTeamPositions) {
-        state.businessStreamsTeamPositions.forEach((bounds, _teamName) => {
+        console.log('[FitToView] Including business-streams custom positions:', state.businessStreamsTeamPositions.size);
+        state.businessStreamsTeamPositions.forEach((bounds, teamName) => {
+            console.log(`[FitToView]   ${teamName}:`, bounds);
             minX = Math.min(minX, bounds.x);
             minY = Math.min(minY, bounds.y);
             maxX = Math.max(maxX, bounds.x + bounds.width);
@@ -183,22 +212,35 @@ export function fitToView(canvas, teams, drawCallback) {
     const contentHeight = maxY - minY;
     const padding = 50;
 
+    console.log('[FitToView] Final bounds:', { minX, minY, maxX, maxY, contentWidth, contentHeight });
+
     // Get sidebar width to adjust canvas visible area
     const sidebar = document.querySelector('.sidebar');
     const sidebarWidth = sidebar ? sidebar.offsetWidth : 250;
     // Use CSS dimensions instead of scaled canvas dimensions
     const visibleCanvasWidth = canvas.clientWidth - sidebarWidth;
 
+    console.log('[FitToView] Canvas dimensions:', {
+        canvasClientWidth: canvas.clientWidth,
+        canvasClientHeight: canvas.clientHeight,
+        sidebarWidth,
+        visibleCanvasWidth
+    });
+
     // Calculate scale to fit content in visible canvas area
     const scaleX = (visibleCanvasWidth - padding * 2) / contentWidth;
     const scaleY = (canvas.clientHeight - padding * 2) / contentHeight;
     state.scale = Math.min(scaleX, scaleY, 1.5); // Cap at 150% zoom
+
+    console.log('[FitToView] Scale calculation:', { scaleX, scaleY, finalScale: state.scale });
 
     // Center the content in visible canvas area
     const centerX = (minX + maxX) / 2;
     const centerY = (minY + maxY) / 2;
     state.viewOffset.x = sidebarWidth + visibleCanvasWidth / 2 - centerX * state.scale;
     state.viewOffset.y = canvas.clientHeight / 2 - centerY * state.scale;
+
+    console.log('[FitToView] View offset:', state.viewOffset, 'Center:', { centerX, centerY });
 
     updateZoomDisplay();
     if (drawCallback) drawCallback();
