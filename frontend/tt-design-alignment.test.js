@@ -44,14 +44,11 @@ describe('autoAlignTTDesign', () => {
         // Should realign all 3 teams
         expect(realigned.length).toBe(3);
 
-        // Stream-aligned teams default to right (70% of grouping width)
-        // X position: startX (100) + padding (30) + 70% of (740) = 100 + 30 + 518 = 648
-        expect(realigned[0].position.x).toBe(648);
-        expect(realigned[1].position.x).toBe(648);
-
-        // Platform team defaults to left
-        // X position: startX (100) + padding (30) = 130
-        expect(realigned[2].position.x).toBe(130);
+        // Value streams without hints go to top center column
+        // First team is stream-aligned, so all wide teams get left-aligned at 1580
+        expect(realigned[0].position.x).toBe(1580);
+        expect(realigned[1].position.x).toBe(1580);
+        expect(realigned[2].position.x).toBe(1580); // Platform also at 1580 since first team is stream
 
         // Y positions: stacked vertically with spacing
         // First team: startY (100) + padding (30) + label (35) = 165
@@ -110,8 +107,8 @@ describe('autoAlignTTDesign', () => {
         // Should realign both platform teams
         expect(realigned.length).toBe(2);
 
-        // Platform teams default to left
-        const expectedX = 130; // startX (100) + padding (30)
+        // Platform groupings without hints go to bottom center, teams centered within grouping
+        const expectedX = 1670; // centerColumnX (1550) + padding (30) + center offset (90)
         expect(realigned[0].position.x).toBe(expectedX);
         expect(realigned[1].position.x).toBe(expectedX);
 
@@ -134,9 +131,9 @@ describe('autoAlignTTDesign', () => {
         // Should realign the ungrouped team
         expect(realigned.length).toBe(1);
 
-        // Ungrouped team should be positioned in separate area
-        // startX (100) + (groupingsPerRow (2) * groupingSpacingX (750)) = 1600
-        expect(realigned[0].position.x).toBe(1800);
+        // Ungrouped stream-aligned team positioned in left area
+        // ungroupedStartX (100) + offset for stream-aligned (400) = 500
+        expect(realigned[0].position.x).toBe(500);
         expect(realigned[0].position.y).toBe(100);
     });
 
@@ -158,8 +155,8 @@ describe('autoAlignTTDesign', () => {
         // Should realign all 7 teams
         expect(realigned.length).toBe(7);
 
-        // All teams are stream-aligned (wide), so they stack vertically at same X (right side)
-        const expectedX = 648; // Stream-aligned default to right
+        // All teams are stream-aligned (wide), so they stack vertically at same X
+        const expectedX = 1580; // Value stream in center column, left-aligned within grouping
         realigned.forEach(team => {
             expect(team.position.x).toBe(expectedX);
         });
@@ -181,7 +178,7 @@ describe('autoAlignTTDesign', () => {
                 team_type: 'stream-aligned',
                 value_stream: 'E-Commerce',
                 metadata: {},
-                position: { x: 648, y: 165 } // Correct position for stream-aligned team (right side)
+                position: { x: 1580, y: 165 } // Correct position in center column
             }
         ];
 
@@ -239,13 +236,19 @@ describe('autoAlignTTDesign', () => {
         // Should realign both teams in same grouping
         expect(realigned.length).toBe(2);
 
-        // Platform team defaults to left, stream-aligned to right
-        expect(realigned[0].position.x).toBe(130); // Platform left
-        expect(realigned[1].position.x).toBe(648); // Stream-aligned right
+        // Find teams by name to avoid index assumptions
+        const platformTeam = realigned.find(t => t.name === 'Core Platform Team');
+        const streamTeam = realigned.find(t => t.name === 'Stream Team');
+
+        // Both in value stream grouping (center column)
+        // First team is platform, so ALL wide teams get centered at 1670
+        expect(platformTeam.position.x).toBe(1670);
+        expect(streamTeam.position.x).toBe(1670); // Same X as platform since it's in same grouping
 
         // But stacked vertically at different Y positions
-        expect(realigned[0].position.y).toBe(165);
-        expect(realigned[1].position.y).toBe(305); // 165 + 80 + 60
+        // First: platform (165), second: stream-aligned (165 + 80 + 60 = 305)
+        expect(platformTeam.position.y).toBe(165);
+        expect(streamTeam.position.y).toBe(305);
     });
 
     it('should ensure grouping boxes contain narrow teams with adequate padding', () => {

@@ -1,14 +1,16 @@
 ---
-name: Mobile Platform Team
 team_id: mobile-platform-team
+name: Mobile Platform Team
 team_type: platform
 position:
-  x: 1054.0
+  x: 2520.0
   y: 1110.0
 metadata:
   size: 6
   cognitive_load: medium
   established: 2023-10
+  align_hint_x: right
+  align_hint_y: bottom
   flow_metrics:
     lead_time_days: 10
     deployment_frequency: daily

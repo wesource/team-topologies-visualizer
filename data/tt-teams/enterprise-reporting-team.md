@@ -1,10 +1,10 @@
 ---
-name: Enterprise Reporting Team
 team_id: enterprise-reporting-team
+name: Enterprise Reporting Team
 team_type: stream-aligned
 position:
-  x: 204.0
-  y: 1250.0
+  x: 730.0
+  y: 445.0
 metadata:
   size: 5
   cognitive_load: medium
@@ -68,7 +68,5 @@ N/A - This is a stream-aligned team that delivers customer-facing reporting feat
 |-----------|------------------|---------|----------|
 | Enterprise Fleet Portal Team | Collaboration | Embedded analytics integration | Ongoing |
 | DevOps Enablement Team | Facilitating | Containerization, Kubernetes deployment | 8 weeks (ending Mar 2026) |
-| Data Storage Platform Team | X-as-a-Service | Analytics data storage | Ongoing |
-| Data Pipeline Platform Team | X-as-a-Service | ETL pipelines | Ongoing |
-| Data Storage Platform Team | x-as-a-service | Query performance optimization |
-| Data Pipeline Platform Team | x-as-a-service | Real-time data updates |
+| Data Pipeline Platform Team | X-as-a-Service | ETL pipelines and real-time data | Ongoing |
+| Observability Platform Team | X-as-a-Service | Dashboard and query performance monitoring | Ongoing |

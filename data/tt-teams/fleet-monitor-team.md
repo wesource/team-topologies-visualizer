@@ -1,10 +1,10 @@
 ---
-name: Fleet Monitor Team
 team_id: fleet-monitor-team
+name: Fleet Monitor Team
 team_type: stream-aligned
 position:
-  x: 204.0
-  y: 1390.0
+  x: 730.0
+  y: 585.0
 metadata:
   size: 6
   cognitive_load: medium

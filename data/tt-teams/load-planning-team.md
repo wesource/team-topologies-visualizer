@@ -1,10 +1,10 @@
 ---
-name: Load Planning Team
 team_id: load-planning-team
+name: Load Planning Team
 team_type: stream-aligned
 position:
-  x: 204.0
-  y: 1670.0
+  x: 730.0
+  y: 865.0
 metadata:
   size: 7
   cognitive_load: medium

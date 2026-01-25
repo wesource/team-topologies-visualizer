@@ -1,9 +1,9 @@
 ---
-name: Delivery Notifications Team
 team_id: delivery-notifications-team
+name: Delivery Notifications Team
 team_type: stream-aligned
 position:
-  x: 1054.0
+  x: 2430.0
   y: 305.0
 metadata:
   size: 5
@@ -77,5 +77,5 @@ N/A - This is a stream-aligned team that delivers customer-facing notification f
 | Customer Delivery Tracking Team | Collaboration | In-app notification integration | Ongoing |
 | Driver Experience Team | Collaboration | Driver status triggers notifications | Ongoing |
 | Mobile Platform Team | X-as-a-Service | Push infrastructure (FCM, APNs) | Ongoing |
-| Data Storage Platform Team | X-as-a-Service | Notification history and preferences | Ongoing |
 | Route Optimization Platform Team | X-as-a-Service | ETA updates for notifications | Ongoing |
+| Feature Management Platform Team | X-as-a-Service | Progressive rollout of notification types | Ongoing |

@@ -1,15 +1,14 @@
 ---
-name: Machine Learning & AI Specialists Team
 team_id: machine-learning-and-ai-specialists-team
+name: Machine Learning & AI Specialists Team
 team_type: complicated-subsystem
 position:
-  x: 2120.0
-  y: 100.0
+  x: 100.0
+  y: 400.0
 metadata:
   size: 6
   cognitive_load: high
   established: 2023-11
-value_stream: null
 ---
 
 # Machine Learning & AI Specialists Team

@@ -1,9 +1,9 @@
 ---
-name: Customer Delivery Tracking Team
 team_id: customer-delivery-tracking-team
+name: Customer Delivery Tracking Team
 team_type: stream-aligned
 position:
-  x: 1054.0
+  x: 2430.0
   y: 165.0
 metadata:
   size: 7
@@ -79,4 +79,4 @@ N/A - This is a stream-aligned team delivering customer-facing features.
 | Delivery Notifications Team | Collaboration | Push notifications for delivery updates | Ongoing |
 | Mobile Platform Team | X-as-a-Service | CI/CD, analytics, crash reporting | Ongoing |
 | Route Optimization Platform Team | X-as-a-Service | ETA predictions | Ongoing |
-| Data Storage Platform Team | X-as-a-Service | Delivery data persistence | Ongoing |
+| Feature Management Platform Team | X-as-a-Service | Gradual rollout of map features | Ongoing |

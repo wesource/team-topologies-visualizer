@@ -1,10 +1,10 @@
 ---
-name: Enterprise Fleet Portal Team
 team_id: enterprise-fleet-portal-team
+name: Enterprise Fleet Portal Team
 team_type: stream-aligned
 position:
-  x: 204.0
-  y: 1110.0
+  x: 730.0
+  y: 305.0
 metadata:
   size: 6
   cognitive_load: medium

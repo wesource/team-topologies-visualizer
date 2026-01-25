@@ -3,8 +3,8 @@ team_id: api-gateway-platform-team
 name: API Gateway Platform Team
 team_type: stream-aligned
 position:
-  x: 204.0
-  y: 2095.0
+  x: 1580.0
+  y: 970.0
 metadata:
   size: 6
   cognitive_load: medium

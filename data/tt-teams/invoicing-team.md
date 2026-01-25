@@ -1,9 +1,9 @@
 ---
-name: Invoicing Team
 team_id: invoicing-team
+name: Invoicing Team
 team_type: stream-aligned
 position:
-  x: 204.0
+  x: 1580.0
   y: 445.0
 metadata:
   size: 5

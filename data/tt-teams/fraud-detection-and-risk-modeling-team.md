@@ -1,9 +1,9 @@
 ---
-name: Fraud Detection and Risk Modeling Team
 team_id: fraud-detection-and-risk-modeling-team
+name: Fraud Detection and Risk Modeling Team
 team_type: complicated-subsystem
 position:
-  x: 130.0
+  x: 1580.0
   y: 685.0
 metadata:
   size: 5

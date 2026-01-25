@@ -1,10 +1,10 @@
 ---
-name: Security Engineering Enablement Team
 team_id: security-engineering-enablement-team
+name: Security Engineering Enablement Team
 team_type: enabling
 position:
-  x: 1960.0
-  y: 280.0
+  x: 100.0
+  y: 720.0
 metadata:
   size: 4
   cognitive_load: medium

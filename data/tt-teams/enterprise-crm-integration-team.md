@@ -1,14 +1,16 @@
 ---
-name: Enterprise CRM Integration Team
 team_id: enterprise-crm-integration-team
+name: Enterprise CRM Integration Team
 team_type: stream-aligned
 position:
-  x: 204.0
-  y: 970.0
+  x: 730.0
+  y: 165.0
 metadata:
   size: 6
   cognitive_load: high
   established: 2024-02
+  align_hint_x: left
+  align_hint_y: top
   flow_metrics:
     lead_time_days: 35
     deployment_frequency: monthly
@@ -73,6 +75,6 @@ N/A - This is a stream-aligned team that delivers customer-facing integration fe
 |-----------|------------------|---------|----------|
 | Enterprise Fleet Portal Team | Collaboration | Shared enterprise customer context | Ongoing |
 | DevOps Enablement Team | Facilitating | Infrastructure-as-code, GitOps workflows | 10 weeks (ending Mar 2026) |
-| Data Storage Platform Team | X-as-a-Service | Data persistence | Ongoing |
 | API Gateway Platform Team | x-as-a-service | API routing and authentication |
 | Data Pipeline Platform Team | x-as-a-service | Data synchronization |
+| Observability Platform Team | X-as-a-Service | Monitor CRM sync jobs | Ongoing |

@@ -1,10 +1,10 @@
 ---
-name: CI/CD Platform Team
 team_id: ci-cd-platform-team
+name: CI/CD Platform Team
 team_type: platform
 position:
-  x: 204.0
-  y: 2375.0
+  x: 1580.0
+  y: 1250.0
 metadata:
   size: 7
   cognitive_load: medium

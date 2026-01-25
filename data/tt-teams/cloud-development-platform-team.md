@@ -1,10 +1,10 @@
 ---
-name: Cloud Development Platform Team
 team_id: cloud-development-platform-team
+name: Cloud Development Platform Team
 team_type: platform
 position:
-  x: 204.0
-  y: 2515.0
+  x: 1580.0
+  y: 1390.0
 metadata:
   size: 8
   cognitive_load: medium

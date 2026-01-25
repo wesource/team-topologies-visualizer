@@ -1,10 +1,10 @@
 ---
-name: Feature Management Platform Team
 team_id: feature-management-platform-team
+name: Feature Management Platform Team
 team_type: platform
 position:
-  x: 204.0
-  y: 3075.0
+  x: 1580.0
+  y: 1950.0
 metadata:
   size: 5
   cognitive_load: medium

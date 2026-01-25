@@ -1,9 +1,9 @@
 ---
-name: Financial Reporting Team
 team_id: financial-reporting-team
+name: Financial Reporting Team
 team_type: stream-aligned
 position:
-  x: 204.0
+  x: 1580.0
   y: 305.0
 metadata:
   size: 6
@@ -69,4 +69,5 @@ Yes - Financial Services
 | Team Name | Interaction Mode | Purpose | Duration |
 |-----------|------------------|---------|----------|
 | Billing Team | X-as-a-Service | Consume billing data | Ongoing |
-| Data Storage Platform Team | X-as-a-Service | Store financial data | Ongoing |
+| Data Pipeline Platform Team | X-as-a-Service | Financial data processing and storage | Ongoing |
+| Observability Platform Team | X-as-a-Service | Report generation monitoring | Ongoing |

@@ -1,9 +1,9 @@
 ---
-name: Mobile Inner Platform Team
 team_id: mobile-inner-platform-team
+name: Mobile Inner Platform Team
 team_type: platform
 position:
-  x: 1054.0
+  x: 2520.0
   y: 970.0
 metadata:
   size: 6

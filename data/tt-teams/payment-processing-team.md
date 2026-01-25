@@ -1,9 +1,9 @@
 ---
-name: Payment Processing Team
 team_id: payment-processing-team
+name: Payment Processing Team
 team_type: stream-aligned
 position:
-  x: 204.0
+  x: 1580.0
   y: 585.0
 metadata:
   size: 7

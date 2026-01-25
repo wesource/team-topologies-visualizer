@@ -1,15 +1,14 @@
 ---
-name: Data Engineering Enablement Team
 team_id: data-engineering-enablement-team
+name: Data Engineering Enablement Team
 team_type: enabling
 position:
-  x: 1800.0
+  x: 100.0
   y: 100.0
 metadata:
   size: 4
   cognitive_load: medium
   established: 2023-09
-value_stream: null
 ---
 
 # Data Engineering Enablement Team

@@ -16,6 +16,12 @@ This is the public backlog for ideas, priorities, and possible improvements.
 
 Edit this list as your priorities change:
 
+- **Interaction Mode Filtering**: Add UI filters to show/hide specific interaction modes:
+  - Filter by X-as-a-Service (show only platform consumption)
+  - Filter by Collaboration (show only collaborative relationships)
+  - Filter by Facilitating (show only temporary enabling relationships)
+  - Toggle individual or combinations of modes
+  - Reduce visual clutter when analyzing specific interaction patterns
 - **Flow-Aware Auto-Align**: Improve `autoAlignTTDesign()` to consider:
   - Optional `align_hint_x` metadata field (values: left, center, right) for horizontal positioning within groupings
   - Optional `align_hint_y` metadata field (values: top, bottom) for vertical positioning of groupings

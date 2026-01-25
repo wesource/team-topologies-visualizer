@@ -1,10 +1,10 @@
 ---
-name: Fleet Operations Team
 team_id: fleet-operations-team
+name: Fleet Operations Team
 team_type: stream-aligned
 position:
-  x: 204.0
-  y: 1530.0
+  x: 730.0
+  y: 725.0
 metadata:
   size: 6
   cognitive_load: medium

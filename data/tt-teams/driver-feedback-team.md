@@ -1,9 +1,9 @@
 ---
-name: Driver Feedback Team
 team_id: driver-feedback-team
+name: Driver Feedback Team
 team_type: stream-aligned
 position:
-  x: 1054.0
+  x: 2430.0
   y: 585.0
 metadata:
   size: 5
@@ -77,4 +77,5 @@ N/A - This is a stream-aligned team that delivers customer-facing feedback featu
 | Customer Delivery Tracking Team | Collaboration | Feedback integrated into delivery experience | Ongoing |
 | Driver Experience Team | Collaboration | Driver feedback visibility in driver app | Ongoing |
 | Delivery Analytics Team | X-as-a-Service | Sentiment analysis models | Ongoing |
-| Data Storage Platform Team | X-as-a-Service | Feedback data persistence | Ongoing |
+| Mobile Inner Platform Team | X-as-a-Service | Mobile CI/CD, push notifications | Ongoing |
+| Feature Management Platform Team | X-as-a-Service | A/B test feedback collection methods | Ongoing |
