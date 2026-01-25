@@ -1,9 +1,9 @@
 ---
-name: Mobile App Team
 team_id: mobile-app-team
+name: Mobile App Team
 team_type: feature-team
 position:
-  x: 300.0
+  x: 390.0
   y: 530.0
 metadata:
   size: 8

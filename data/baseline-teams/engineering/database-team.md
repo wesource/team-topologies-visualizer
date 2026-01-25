@@ -1,9 +1,9 @@
 ---
-name: Database Team
 team_id: database-team
+name: Database Team
 team_type: platform-team
 position:
-  x: 960.0
+  x: 870.0
   y: 530.0
 metadata:
   size: 3

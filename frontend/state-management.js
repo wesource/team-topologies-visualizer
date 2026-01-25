@@ -3,6 +3,7 @@
  * Centralized state for the Team Topologies Visualizer
  */
 import { getTeamBoxWidth, getTeamBoxHeight } from './renderer-common.js';
+import { LAYOUT } from './constants.js';
 
 // Application state object
 export const state = {
@@ -164,9 +165,9 @@ export function fitToView(canvas, teams, drawCallback) {
         // Departments and line managers will extend the bounds
         const deptCount = state.organizationHierarchy.company?.children?.length || 0;
         if (deptCount > 0) {
-            const deptStartX = 550; // startX + 50
-            const deptSpacing = 250; // DEPT_SPACING
-            const rightmostDeptX = deptStartX + (deptCount - 1) * deptSpacing + 200; // +200 for box width
+            const deptStartX = LAYOUT.DEPT_START_X; // Use constant
+            const deptSpacing = LAYOUT.DEPT_SPACING; // Use constant
+            const rightmostDeptX = deptStartX + (deptCount - 1) * deptSpacing + LAYOUT.DEPT_BOX_WIDTH;
             maxX = Math.max(maxX, rightmostDeptX);
         }
     }

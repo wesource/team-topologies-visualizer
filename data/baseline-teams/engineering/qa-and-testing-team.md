@@ -1,18 +1,9 @@
 ---
-name: QA & Testing Team
 team_id: qa-and-testing-team
+name: QA & Testing Team
 team_type: support-team
-dependencies:
-  - Backend Services Team
-  - Web Frontend Team
-  - Mobile App Team
-  - Route Optimization Team
-  - DevOps and Infrastructure Team
-dependency_notes:
-  - Depends on all development teams' code for testing
-  - Blocks all teams from releasing (must wait for QA approval)
 position:
-  x: 520.0
+  x: 550.0
   y: 410.0
 metadata:
   size: 5

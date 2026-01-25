@@ -1,16 +1,16 @@
 ---
-name: European Transport Solutions Team
 team_id: european-transport-solutions-team
+name: European Transport Solutions Team
 team_type: feature-team
-product_line: Customer Solutions
 position:
-  x: 1990.0
+  x: 1710.0
   y: 650.0
 metadata:
   size: 4
   department: Customer Solutions
   line_manager: Marco Rossi
   established: 2021-09
+product_line: Customer Solutions
 ---
 
 # European Transport Solutions Team

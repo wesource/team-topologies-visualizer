@@ -1,16 +1,16 @@
 ---
-name: Americas E-commerce Solutions Team
 team_id: americas-e-commerce-solutions-team
+name: Americas E-commerce Solutions Team
 team_type: feature-team
-product_line: Customer Solutions
 position:
-  x: 2210.0
+  x: 1870.0
   y: 530.0
 metadata:
   size: 5
   department: Customer Solutions
   line_manager: Jennifer Kim
   established: 2020-02
+product_line: Customer Solutions
 ---
 
 # Americas E-commerce Solutions Team

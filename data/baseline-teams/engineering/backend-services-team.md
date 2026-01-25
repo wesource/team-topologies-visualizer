@@ -1,10 +1,9 @@
 ---
-name: Backend Services Team
 team_id: backend-services-team
+name: Backend Services Team
 team_type: feature-team
-product_line: DispatchHub
 position:
-  x: 80.0
+  x: 230.0
   y: 410.0
 metadata:
   size: 8
@@ -12,6 +11,7 @@ metadata:
   line_manager: Rachel Martinez
   established: 2018-06
   cognitive_load: very-high
+product_line: DispatchHub
 business_stream: B2B Fleet Management
 ---
 

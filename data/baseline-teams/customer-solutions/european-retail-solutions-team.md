@@ -1,16 +1,16 @@
 ---
-name: European Retail Solutions Team
 team_id: european-retail-solutions-team
+name: European Retail Solutions Team
 team_type: feature-team
-product_line: Customer Solutions
 position:
-  x: 1990.0
+  x: 1710.0
   y: 530.0
 metadata:
   size: 5
   department: Customer Solutions
   line_manager: Sophie Dubois
   established: 2020-06
+product_line: Customer Solutions
 ---
 
 # European Retail Solutions Team

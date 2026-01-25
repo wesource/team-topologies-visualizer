@@ -1,9 +1,9 @@
 ---
-name: Architecture & Standards Team
 team_id: architecture-and-standards-team
+name: Architecture & Standards Team
 team_type: support-team
 position:
-  x: 740.0
+  x: 710.0
   y: 410.0
 metadata:
   size: 3

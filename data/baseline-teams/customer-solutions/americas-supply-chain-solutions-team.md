@@ -1,16 +1,16 @@
 ---
-name: Americas Supply Chain Solutions Team
 team_id: americas-supply-chain-solutions-team
+name: Americas Supply Chain Solutions Team
 team_type: feature-team
-product_line: Customer Solutions
 position:
-  x: 2210.0
+  x: 1870.0
   y: 410.0
 metadata:
   size: 7
   department: Customer Solutions
   line_manager: Carlos Martinez
   established: 2018-11
+product_line: Customer Solutions
 ---
 
 # Americas Supply Chain Solutions Team
