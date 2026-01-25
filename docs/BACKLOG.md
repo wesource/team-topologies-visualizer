@@ -3,7 +3,7 @@
 This is the public backlog for ideas, priorities, and possible improvements.
 
 **Status**: Pre-release v1.0 development  
-**Last updated**: 2026-01-24
+**Last updated**: 2026-01-25
 
 ## How to use this backlog
 
@@ -34,57 +34,6 @@ Edit this list as your priorities change:
 
 ## Completed
 
-- ✅ **DONE (2026-01-25)** Flow-Aware Auto-Align with optional alignment hints
-	- ✅ Implemented 3×2 grid layout (700/1550/2400 x-coords, top/bottom rows)
-	- ✅ Added optional `align_hint_x` (left/center/right) and `align_hint_y` (top/bottom) metadata fields
-	- ✅ Smart defaults based on team_type (platform→left, stream-aligned→right)
-	- ✅ Smart defaults based on grouping (platform_grouping→bottom, value_stream→top)
-	- ✅ First team (alphabetically by filename) determines grouping X position
-	- ✅ Created [docs/AUTO-ALIGN.md](AUTO-ALIGN.md) with comprehensive documentation
-	- ✅ Added 16 unit tests covering all alignment scenarios
-	- **Philosophy**: Algorithm makes best guesses, users provide hints only when needed
-- ✅ **DONE (2026-01-25)** Documentation organization and README improvements
-	- ✅ Moved 4 core documentation files to docs/ folder (BACKLOG, CHANGELOG, DEPENDENCIES, DEVELOPMENT)
-	- ✅ Updated all cross-references across 7 files
-	- ✅ Consolidated README sections into organized documentation table
-	- ✅ Restructured Key Features into 4 clear subsections
-	- ✅ Added auto-align and comparison view features prominently
-	- **Result**: Clean root directory with professional project structure
-- ✅ **DONE (2026-01-25)** Terminology unification: "Pre-TT" → "Baseline" across all documentation
-	- ✅ Updated 6 documentation files (README, SETUP, CONCEPTS, EXAMPLE_DATA, tests/README)
-	- ✅ Renamed template: pre-tt-team-template.md → baseline-team-template.md
-	- ✅ Preserved CHANGELOG.md history (kept "Pre-TT" in historical entries)
-	- **Result**: Consistent "Baseline" terminology across all user-facing documentation
-- ✅ **DONE (2026-01-25)** UI-driven validation rule visibility using Pydantic schemas
-	- ✅ Created Pydantic models for all 4 config file types (baseline-team-types, products, business-streams, organization-hierarchy)
-	- ✅ Added `/api/schemas` endpoint exposing full JSON Schema with field constraints and descriptions
-	- ✅ Updated validation to use Pydantic for config file validation (returns structured field-level errors)
-	- ✅ Enhanced validation modal to display config errors separately with field paths
-	- ✅ Created schema viewer modal showing field requirements, types, constraints, and examples
-	- ✅ Added 6 backend tests for schema validation (all passing)
-	- **Benefit**: Self-documenting data format - users can now see exactly what fields are required/optional and what constraints apply
-- ✅ **DONE (2026-01-24)** Terminology unification: Renamed all "Pre-TT/current-teams" references to "Baseline/baseline-teams"
-	- ✅ Backend: renamed `routes_pre_tt.py` → `routes_baseline.py`, updated API paths `/api/pre-tt/*` → `/api/baseline/*`
-	- ✅ Data: renamed `data/current-teams/` → `data/baseline-teams/`, config file `current-team-types.json` → `baseline-team-types.json`
-	- ✅ Frontend: updated all API calls, comments, and variable names to use "baseline" terminology
-	- ✅ Tests: renamed E2E test files, updated all endpoint paths and test descriptions (82 E2E tests)
-	- ✅ Screenshots: renamed all test screenshots from `pre-tt-*` to `baseline-*`
-	- ✅ Comments: updated all Python docstrings and comments to use "Baseline" instead of "Pre-TT"
-	- **Result**: Eliminated confusion - now using "Baseline" consistently everywhere in code, docs, and UI
-- ✅ **DONE (2026-01-25)** Stable team IDs: introduced mandatory `team_id` in YAML everywhere (replaced name-based references in API)
-	- ✅ Data model: added `team_id` to TeamData model; enforced uniqueness and slug-safe format
-	- ✅ Validation: fail if `team_id` is missing/duplicate/invalid format; parse_team_file validates on every load
-	- ✅ Templates + examples: updated all 3 templates; migrated all 41 team files
-	- ✅ Migration helper: created `scripts/migrate_add_team_ids.py` with dry-run mode
-	- ✅ API routes: updated to use `team_id` parameter instead of name (BREAKING CHANGE)
-	- ✅ Frontend: updated to use team_id for all API calls and position updates
-	- ✅ Tests: added 16 new team_id tests; fixed all 212 backend + 346 frontend tests
-	- **Cleanup opportunities** (optional future work):
-		- Consider deprecating `find_team_by_name_or_slug()` and `find_team_by_name()` (no longer used)
-		- Consider updating `write_team_file()` to use team_id for filename instead of slug (currently unused)
-		- Update `dependencies` and `interaction_modes` arrays to use `team_id` instead of names
-		- Add backward-compat warnings when name-based references are detected
-
 ## Next
 - Flow of change arrows in TT Design view
 	- Add optional "Flow of change" visualization as described in https://teamtopologies.com/key-concepts
@@ -105,7 +54,6 @@ Edit this list as your priorities change:
 	- Why: prevents “silent” typos that create missing lanes / mis-grouped teams in the Baseline views.
 	- Acceptance criteria: warning appears in the validation report (and ideally the UI warnings modal) with file + field + bad value; matching should be case/whitespace-normalized.
 - Refactor frontend file structure into subfolders (DX improvement)
-- Config-driven ordering/completeness in baseline perspectives (products/business streams)
 
 ## Later / Maybe
 - TT Design Overview document (per dataset)

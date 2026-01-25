@@ -628,3 +628,52 @@ The tool is designed to help facilitate conversations about:
 - How can we reduce dependencies?
 - What team types do we need?
 - How should teams interact?
+
+### Customizing Product and Business Stream Ordering
+
+Control the order products and business streams appear in Baseline views using the optional `display-order` field:
+
+**Products** (`data/baseline-teams/products.json`):
+```json
+{
+  "products": [
+    {
+      "id": "mobile-apps",
+      "name": "Mobile Apps",
+      "description": "iOS and Android apps",
+      "color": "#e74c3c",
+      "display-order": 1
+    },
+    {
+      "id": "backend-platform",
+      "name": "Backend Platform",
+      "description": "API and services",
+      "color": "#3498db",
+      "display-order": 2
+    }
+  ]
+}
+```
+
+**Business Streams** (`data/baseline-teams/business-streams.json`):
+```json
+{
+  "business_streams": [
+    {
+      "id": "customer-facing",
+      "name": "Customer Facing",
+      "description": "Direct customer interactions",
+      "products": ["Mobile Apps", "Web Portal"],
+      "color": "#3498db",
+      "display-order": 1
+    }
+  ]
+}
+```
+
+**Rules:**
+- `display-order` is an integer ≥ 0 (lower numbers appear first)
+- Field is optional - if omitted, items appear in array order
+- Backward compatible with existing configurations without display-order
+
+This gives you explicit control over lane ordering instead of relying on filesystem order or alphabetical sorting.

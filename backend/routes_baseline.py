@@ -59,6 +59,10 @@ async def get_product_lines():
     with open(products_file, encoding='utf-8') as f:
         products_config = json.load(f)
 
+    # Sort products by display-order if present (lower numbers first)
+    products_list = products_config["products"]
+    products_list.sort(key=lambda p: p.get("display-order", p.get("display_order", float('inf'))))
+
     # Get all teams from baseline view
     all_teams = find_all_teams("baseline")
 
@@ -83,7 +87,7 @@ async def get_product_lines():
         "shared_teams": shared_teams
     }
 
-    for product_config in products_config["products"]:
+    for product_config in products_list:
         product_name = product_config["name"]
         result["products"].append({
             "id": product_config["id"],
@@ -144,6 +148,12 @@ async def get_business_streams():
             # Completely ungrouped teams
             ungrouped_teams.append(team_dict)
 
+    # Sort business streams by display-order if present (lower numbers first)
+    sorted_bs_configs = sorted(
+        business_streams_config["business_streams"],
+        key=lambda bs: bs.get("display-order", bs.get("display_order", float('inf')))
+    )
+
     # Build response with business stream metadata
     result = {
         "perspective": "business-streams",
@@ -153,7 +163,7 @@ async def get_business_streams():
         "teams": [team.model_dump() for team in all_teams]
     }
 
-    for bs_config in business_streams_config["business_streams"]:
+    for bs_config in sorted_bs_configs:
         bs_name = bs_config["name"]
 
         result["business_streams"][bs_name] = {

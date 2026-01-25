@@ -5,14 +5,16 @@
       "name": "B2B Fleet Management",
       "description": "Enterprise fleet management solutions for fleet operators and logistics companies",
       "products": ["DispatchHub", "FleetMonitor", "RouteOptix", "Analytics Dashboard", "Enterprise Integration APIs"],
-      "color": "#3498db"
+      "color": "#3498db",
+      "display-order": 1
     },
     {
       "id": "b2c-driver-experience",
       "name": "B2C Driver Experience",
       "description": "Consumer-facing applications for drivers and end-customers",
       "products": ["Driver Mobile Apps", "Customer Delivery Tracking", "Proof of Delivery", "Driver Communications"],
-      "color": "#e74c3c"
+      "color": "#e74c3c",
+      "display-order": 2
     }
   ]
 }

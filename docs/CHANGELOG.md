@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Config-Driven Display Order (2026-01-25)**: Added optional `display-order` field to products and business streams
+  - Added optional `display-order` field to `ProductConfig` and `BusinessStreamConfig` Pydantic schemas
+  - Field is integer ≥ 0, defaults to array order if omitted (backward compatible)
+  - Backend automatically sorts products/business streams by `display-order` before rendering
+  - Updated example data files: products.json and business-streams.json with sequential display-order values
+  - Frontend renderer sorts products/streams by display-order (handles both kebab-case and snake_case)
+  - **Benefit**: Explicit control over lane ordering in Baseline views instead of random/filesystem order
+  - **Use case**: Users can prioritize important products/streams at the top, reorder by changing numbers
+
 - **Pydantic Schema Validation & UI Visibility (2026-01-25)**: Implemented UI-driven validation with field requirement display
   - Created comprehensive Pydantic models for all 4 config file types:
     * `BaselineTeamTypesConfig`: Team type definitions with id, name, description, color (validation: id 1-50 chars, color hex pattern)

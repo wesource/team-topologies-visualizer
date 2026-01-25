@@ -90,6 +90,11 @@ class ProductConfig(BaseModel):
         description="Hex color code for the product lane in visualizations",
         pattern=r'^#[0-9A-Fa-f]{6}$'
     )
+    display_order: int | None = Field(
+        None,
+        description="Optional display order for product lanes (lower numbers appear first). If omitted, products appear in array order.",
+        ge=0
+    )
 
 
 class ProductsConfig(BaseModel):
@@ -146,6 +151,11 @@ class BusinessStreamConfig(BaseModel):
         ...,
         description="Hex color code for the business stream in visualizations",
         pattern=r'^#[0-9A-Fa-f]{6}$'
+    )
+    display_order: int | None = Field(
+        None,
+        description="Optional display order for business stream lanes (lower numbers appear first). If omitted, streams appear in array order.",
+        ge=0
     )
 
 

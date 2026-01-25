@@ -39,6 +39,13 @@ export function drawProductLinesView(ctx, productLinesData, teams, teamColorMap,
     const products = productLinesData.products;
     const sharedTeams = productLinesData.shared_teams || [];
 
+    // Sort products by display-order if present (lower numbers first)
+    const sortedProducts = [...products].sort((a, b) => {
+        const orderA = a['display-order'] ?? a.display_order ?? Number.MAX_SAFE_INTEGER;
+        const orderB = b['display-order'] ?? b.display_order ?? Number.MAX_SAFE_INTEGER;
+        return orderA - orderB;
+    });
+
     // Calculate layout
     const startX = 50;
     const startY = 100;
@@ -53,14 +60,14 @@ export function drawProductLinesView(ctx, productLinesData, teams, teamColorMap,
     ctx.fillText('Product Lines View', startX, startY - 40);
 
     // Draw vertical product lanes
-    products.forEach((product, index) => {
+    sortedProducts.forEach((product, index) => {
         const laneX = startX + index * (PRODUCT_LANE_WIDTH + PRODUCT_LANE_PADDING);
         drawProductLane(ctx, product, laneX, startY, teamColorMap, wrapText, showCognitiveLoad, teamPositions, showTeamTypeBadges, selectedTeam, focusedTeam, focusedConnections);
     });
 
     // Calculate shared row position (below longest product lane)
     const maxProductHeight = Math.max(
-        ...products.map(p => PRODUCT_HEADER_HEIGHT + (p.teams.length * (TEAM_CARD_HEIGHT + TEAM_CARD_SPACING)) + 40),
+        ...sortedProducts.map(p => PRODUCT_HEADER_HEIGHT + (p.teams.length * (TEAM_CARD_HEIGHT + TEAM_CARD_SPACING)) + 40),
         200
     );
     const sharedRowY = startY + maxProductHeight + 60;
