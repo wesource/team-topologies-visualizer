@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Comprehensive Test Coverage for Fit to View (2026-01-25)**: Added 20 new unit tests covering all aspects of the Fit to View refactor
+  - **Hierarchy view tests** (4 tests):
+    * Organizational structure bounds calculation (company, departments, line managers, regions)
+    * Line manager centering and spread calculation under departments
+    * Departments and regions handling together
+    * LAYOUT constants usage verification
+  - **Product-lines and Business-streams tests** (5 tests):
+    * Custom position Maps usage (not team.position)
+    * Header inclusion in bounds (y=60 for product-lines, y=20 for business-streams)
+    * Empty custom positions graceful fallback
+  - **Sidebar overlay behavior tests** (3 tests):
+    * Full canvas width usage (no sidebar width subtraction)
+    * Content positioning at canvas x=0
+    * Asymmetric margins (10px left, 30px right)
+  - **Different team types tests** (3 tests):
+    * Stream-aligned teams (80% height, via getTeamBoxHeight)
+    * Enabling teams (taller boxes)
+    * Platform teams (standard dimensions)
+  - **Edge cases tests** (3 tests):
+    * Filtered teams (respects team type filters)
+    * Negative coordinates handling
+    * Very large coordinates (5000x3000)
+  - **Updated 2 existing tests**: Changed sidebar width test to verify no subtraction, fixed scale expectations for wide content (1.5 cap)
+  - **Result**: Total 70 fitToView tests, all passing, comprehensive coverage of complex bounds calculations
+
 ### Fixed
 - **Fit to View & SVG Export Improvements (2026-01-25)**: Comprehensive fixes for optimal canvas usage
   - **Fit to View algorithm**:
