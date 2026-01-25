@@ -33,6 +33,12 @@ export const state = {
         platformGroupings: [], // Array of selected platform grouping names
         showUngrouped: false // Show only ungrouped teams (teams without value_stream or platform_grouping)
     },
+    // Interaction mode filters (TT Design view only)
+    interactionModeFilters: {
+        showXasService: true, // Show X-as-a-Service interactions
+        showCollaboration: true, // Show Collaboration interactions
+        showFacilitating: true // Show Facilitating interactions
+    },
     // Snapshot state
     isViewingSnapshot: false,
     currentSnapshot: null,

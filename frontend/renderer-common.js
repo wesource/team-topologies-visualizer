@@ -728,7 +728,7 @@ export function getBoxEdgePoint(centerX, centerY, width, height, angle) {
  * @description In 'current' view, shows simple dependency connections.
  * In 'tt' view, shows styled lines representing interaction modes (collaboration, x-as-a-service, facilitating)
  */
-export function drawConnections(ctx, teams, currentView = 'current', showInteractionModes = true, currentPerspective = 'hierarchy', customTeamPositions = null, focusedTeam = null, focusedConnections = null) {
+export function drawConnections(ctx, teams, currentView = 'current', showInteractionModes = true, currentPerspective = 'hierarchy', customTeamPositions = null, focusedTeam = null, focusedConnections = null, interactionModeFilters = null) {
     // Debug: drawConnections called
 
     if (currentView === 'current') {
@@ -759,6 +759,13 @@ export function drawConnections(ctx, teams, currentView = 'current', showInterac
         teams.forEach(team => {
             if (team.interaction_modes) {
                 Object.entries(team.interaction_modes).forEach(([targetName, mode]) => {
+                    // Filter based on interaction mode filters (if provided)
+                    if (interactionModeFilters) {
+                        if (mode === 'x-as-a-service' && !interactionModeFilters.showXasService) return;
+                        if (mode === 'collaboration' && !interactionModeFilters.showCollaboration) return;
+                        if (mode === 'facilitating' && !interactionModeFilters.showFacilitating) return;
+                    }
+
                     const target = teams.find(t => t.name === targetName);
                     if (target) {
                         drawConnection(ctx, team, target, mode, currentView, currentPerspective, customTeamPositions, focusedTeam, focusedConnections);

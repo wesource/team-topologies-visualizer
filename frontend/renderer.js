@@ -69,7 +69,7 @@ export function draw(state) {
             const positionMap = state.currentPerspective === 'business-streams'
                 ? state.businessStreamsTeamPositions
                 : state.productLinesTeamPositions;
-            drawConnections(state.ctx, teamsToRender, state.currentView, state.showInteractionModes, state.currentPerspective, positionMap, state.focusedTeam, state.focusedConnections);
+            drawConnections(state.ctx, teamsToRender, state.currentView, state.showInteractionModes, state.currentPerspective, positionMap, state.focusedTeam, state.focusedConnections, state.interactionModeFilters);
         }
         // Product lines and business streams views handle team rendering - skip standard team drawing
     } else {
@@ -77,7 +77,7 @@ export function draw(state) {
         if (!(state.currentView === 'current' && !state.showConnections)) {
             // Use null for hierarchy view (teams use standard positions)
             const customPositions = state.currentPerspective === 'hierarchy' ? null : state.productLinesTeamPositions;
-            drawConnections(state.ctx, teamsToRender, state.currentView, state.showInteractionModes, state.currentPerspective, customPositions, state.focusedTeam, state.focusedConnections);
+            drawConnections(state.ctx, teamsToRender, state.currentView, state.showInteractionModes, state.currentPerspective, customPositions, state.focusedTeam, state.focusedConnections, state.interactionModeFilters);
         }
 
         // Draw teams

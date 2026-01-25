@@ -206,6 +206,46 @@ header h1 {
     color: #4A90E2;
 }
 
+/* Interaction Mode Filters Panel */
+.interaction-mode-panel {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 1rem;
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.interaction-mode-panel .panel-label {
+    font-weight: 500;
+    color: #555;
+    margin-right: 0.25rem;
+}
+
+.interaction-mode-panel .inline-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.interaction-mode-panel .inline-checkbox input[type="checkbox"] {
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+}
+
+.interaction-mode-panel .inline-checkbox span {
+    color: #333;
+}
+
+.interaction-mode-panel .inline-checkbox input[type="checkbox"]:checked + span {
+    font-weight: 600;
+}
+
 #valueStreamFilterContainer {
     display: flex;
     align-items: center;

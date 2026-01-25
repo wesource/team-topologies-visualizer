@@ -145,6 +145,16 @@ export function handleViewChange(e, loadAllTeams, _draw) {
         }
     }
 
+    // Show/hide interaction mode filters (TT Design view only)
+    const interactionModeFilters = document.getElementById('interactionModeFilters');
+    if (interactionModeFilters) {
+        if (state.currentView === 'tt') {
+            interactionModeFilters.style.display = 'flex';
+        } else {
+            interactionModeFilters.style.display = 'none';
+        }
+    }
+
     loadAllTeams();
 }
 
@@ -474,6 +484,31 @@ export function setupUIEventListeners(loadAllTeams, draw, openAddTeamModal, clos
         });
     }
 
+    // Interaction mode filter checkboxes (TT Design view only)
+    const showXasServiceCheckbox = document.getElementById('showXasService');
+    if (showXasServiceCheckbox) {
+        showXasServiceCheckbox.addEventListener('change', (e) => {
+            state.interactionModeFilters.showXasService = e.target.checked;
+            draw();
+        });
+    }
+
+    const showCollaborationCheckbox = document.getElementById('showCollaboration');
+    if (showCollaborationCheckbox) {
+        showCollaborationCheckbox.addEventListener('change', (e) => {
+            state.interactionModeFilters.showCollaboration = e.target.checked;
+            draw();
+        });
+    }
+
+    const showFacilitatingCheckbox = document.getElementById('showFacilitating');
+    if (showFacilitatingCheckbox) {
+        showFacilitatingCheckbox.addEventListener('change', (e) => {
+            state.interactionModeFilters.showFacilitating = e.target.checked;
+            draw();
+        });
+    }
+
     // Filter toggle and interactions
     const filterToggleBtn = document.getElementById('filterToggleBtn');
     const filterDropdown = document.getElementById('filterDropdown');
@@ -655,6 +690,12 @@ export function setupUIEventListeners(loadAllTeams, draw, openAddTeamModal, clos
     const groupingFilterContainerInit = document.getElementById('groupingFilterContainer');
     if (groupingFilterContainerInit) {
         groupingFilterContainerInit.style.display = 'flex'; // Shown in TT view
+    }
+
+    // Initialize interaction mode filters visibility (TT view only)
+    const interactionModeFiltersInit = document.getElementById('interactionModeFilters');
+    if (interactionModeFiltersInit) {
+        interactionModeFiltersInit.style.display = 'flex'; // Shown in TT view
     }
 
     // Initialize undo button visibility and state
