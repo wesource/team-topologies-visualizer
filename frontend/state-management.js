@@ -210,7 +210,7 @@ export function fitToView(canvas, teams, drawCallback) {
 
     const contentWidth = maxX - minX;
     const contentHeight = maxY - minY;
-    const padding = 50;
+    const padding = 30; // Reduced from 50 for more compact fit
 
     console.log('[FitToView] Final bounds:', { minX, minY, maxX, maxY, contentWidth, contentHeight });
 

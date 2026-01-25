@@ -17,8 +17,8 @@ export const LAYOUT = {
     ORG_CHART_TEAM_X_OFFSET: 2/5,          // Team X position (2/5 from left of manager box)
 
     // Department/Line Manager spacing
-    DEPT_SPACING: 250,              // Horizontal spacing between departments
-    LINE_MANAGER_SPACING: 220,      // Horizontal spacing between line managers
+    DEPT_SPACING: 200,              // Horizontal spacing between departments (reduced for compact layout)
+    LINE_MANAGER_SPACING: 160,      // Horizontal spacing between line managers (reduced for compact layout)
 
     // Base positions
     DEPT_START_X: 550,              // Starting X position for departments (500 + 50 margin)

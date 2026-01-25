@@ -43,7 +43,7 @@ export function autoAlignTTDesign(teams) {
     const groupingsStartX = 400; // Groupings start position (closer to ungrouped teams for compact layout)
     const startY = 100;
     const groupingWidth = 800; // Standard grouping width (increased for wide teams)
-    const groupingSpacingX = 850; // Horizontal space between groupings (grouping width + margin)
+    const groupingSpacingX = 650; // Horizontal space between groupings (reduced for compact layout)
     const groupingSpacingY = 50; // Vertical space between rows of groupings (reduced since teams stack vertically)
     const groupingsPerRow = 2; // Max groupings per row
     const paddingInGrouping = 30; // Padding inside grouping rectangles
