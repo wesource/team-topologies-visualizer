@@ -4,7 +4,7 @@ name: DevOps Enablement Team
 team_type: enabling
 position:
   x: 970.0
-  y: 965.0
+  y: 869.0
 metadata:
   size: 4
   cognitive_load: medium

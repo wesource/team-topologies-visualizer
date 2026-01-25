@@ -4,7 +4,7 @@ name: Data Storage Platform Team
 team_type: platform
 position:
   x: 1580.0
-  y: 1670.0
+  y: 1574.0
 metadata:
   size: 6
   cognitive_load: medium

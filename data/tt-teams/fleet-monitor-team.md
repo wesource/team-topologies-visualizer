@@ -4,7 +4,7 @@ name: Fleet Monitor Team
 team_type: stream-aligned
 position:
   x: 730.0
-  y: 585.0
+  y: 537.0
 metadata:
   size: 6
   cognitive_load: medium

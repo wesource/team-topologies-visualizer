@@ -4,7 +4,7 @@ name: Mobile Platform Team
 team_type: platform
 position:
   x: 2520.0
-  y: 1110.0
+  y: 1046.0
 metadata:
   size: 6
   cognitive_load: medium

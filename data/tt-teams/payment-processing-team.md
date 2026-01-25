@@ -4,7 +4,7 @@ name: Payment Processing Team
 team_type: stream-aligned
 position:
   x: 1580.0
-  y: 585.0
+  y: 537.0
 metadata:
   size: 7
   cognitive_load: high

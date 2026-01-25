@@ -187,6 +187,16 @@ export class CanvasInteractionHandler {
         if (this.draggedTeam && !this.hasDragged) {
             const clickedTeam = this.draggedTeam;
 
+            // Check if focus mode makes sense in current view state
+            const canUseFocusMode = this.canUseFocusMode();
+            if (!canUseFocusMode) {
+                // Don't activate focus mode - show notification explaining why
+                this.showFocusModeNotification('⚠️ Focus mode requires visible connections. Enable interaction modes (TT view) or communication lines (Baseline view).');
+                this.draggedTeam = null;
+                this.dragStartPosition = null;
+                return;
+            }
+
             // Toggle focus mode
             if (this.state.focusedTeam === clickedTeam) {
                 // Exit focus mode (clicked same team)
@@ -229,6 +239,22 @@ export class CanvasInteractionHandler {
         this.draggedTeam = null;
         this.dragStartPosition = null;
         this.hasDragged = false;
+    }
+
+    /**
+     * Check if focus mode can be used in current view state
+     * Focus mode requires visible connections to be meaningful
+     * @returns {boolean} True if focus mode can be activated
+     */
+    canUseFocusMode() {
+        if (this.state.currentView === 'tt') {
+            // TT Design view: Check if at least one interaction mode filter is enabled
+            const filters = this.state.interactionModeFilters;
+            return filters && (filters.showXasService || filters.showCollaboration || filters.showFacilitating);
+        } else {
+            // Baseline view: Check if communication lines are enabled
+            return this.state.showConnections === true;
+        }
     }
 
     /**

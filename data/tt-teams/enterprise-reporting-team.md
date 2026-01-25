@@ -4,7 +4,7 @@ name: Enterprise Reporting Team
 team_type: stream-aligned
 position:
   x: 730.0
-  y: 445.0
+  y: 413.0
 metadata:
   size: 5
   cognitive_load: medium

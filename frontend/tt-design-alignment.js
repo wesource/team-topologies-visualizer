@@ -40,7 +40,7 @@ export function autoAlignTTDesign(teams) {
 
     // Layout configuration
     const ungroupedStartX = 100; // Ungrouped teams on the left
-    const groupingsStartX = 700; // Groupings start more to the right to avoid overlap
+    const groupingsStartX = 400; // Groupings start position (closer to ungrouped teams for compact layout)
     const startY = 100;
     const groupingWidth = 800; // Standard grouping width (increased for wide teams)
     const groupingSpacingX = 850; // Horizontal space between groupings (grouping width + margin)

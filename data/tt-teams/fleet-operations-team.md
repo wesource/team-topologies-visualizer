@@ -4,7 +4,7 @@ name: Fleet Operations Team
 team_type: stream-aligned
 position:
   x: 730.0
-  y: 725.0
+  y: 661.0
 metadata:
   size: 6
   cognitive_load: medium

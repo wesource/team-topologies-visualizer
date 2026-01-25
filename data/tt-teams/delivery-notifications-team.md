@@ -4,7 +4,7 @@ name: Delivery Notifications Team
 team_type: stream-aligned
 position:
   x: 2430.0
-  y: 305.0
+  y: 289.0
 metadata:
   size: 5
   cognitive_load: medium
