@@ -7,7 +7,7 @@ used in the Team Topologies Visualizer. These schemas serve dual purposes:
 """
 
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 # ============================================================================
 # Baseline Team Types Configuration
@@ -47,19 +47,20 @@ class BaselineTeamTypesConfig(BaseModel):
         min_length=1
     )
 
-    class Config:
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "team_types": [
                     {
                         "id": "feature-team",
                         "name": "Feature Team",
                         "description": "Small, cross-functional teams that own complete features",
-                        "color": "#6FA8DC"
+                        "color": "#6FA8DC",
                     }
                 ]
             }
         }
+    )
 
 
 # ============================================================================
@@ -105,19 +106,20 @@ class ProductsConfig(BaseModel):
         min_length=1
     )
 
-    class Config:
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "products": [
                     {
                         "id": "dispatchhub",
                         "name": "DispatchHub",
                         "description": "Fleet dispatch and operations management platform",
-                        "color": "#3498db"
+                        "color": "#3498db",
                     }
                 ]
             }
         }
+    )
 
 
 # ============================================================================
@@ -167,8 +169,8 @@ class BusinessStreamsConfig(BaseModel):
         min_length=1
     )
 
-    class Config:
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "business_streams": [
                     {
@@ -176,11 +178,12 @@ class BusinessStreamsConfig(BaseModel):
                         "name": "B2B Fleet Management",
                         "description": "Enterprise solutions for fleet operators",
                         "products": ["DispatchHub", "RouteOptix"],
-                        "color": "#3498db"
+                        "color": "#3498db",
                     }
                 ]
             }
         }
+    )
 
 
 # ============================================================================
@@ -279,8 +282,8 @@ class OrganizationHierarchyConfig(BaseModel):
         description="Top-level company/leadership configuration with nested departments"
     )
 
-    class Config:
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "company": {
                     "id": "company-leadership",
@@ -294,12 +297,13 @@ class OrganizationHierarchyConfig(BaseModel):
                             "type": "department",
                             "level": 1,
                             "manager": "VP of Engineering",
-                            "line_managers": []
+                            "line_managers": [],
                         }
-                    ]
+                    ],
                 }
             }
         }
+    )
 
 
 # ============================================================================
@@ -377,8 +381,8 @@ class BaselineTeamFrontmatter(BaseModel):
         description="Business stream the team belongs to (optional)"
     )
 
-    class Config:
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "title": "Baseline Team File",
             "description": """YAML frontmatter for baseline team markdown files.
 
@@ -391,8 +395,9 @@ class BaselineTeamFrontmatter(BaseModel):
             | Team A    | API  | Consumes user authentication API |
             | Team B    | Data | Shares customer database |
 
-            Columns: Team Name (string), Type (string), Purpose (string describing the dependency)"""
+            Columns: Team Name (string), Type (string), Purpose (string describing the dependency)""",
         }
+    )
 
 
 class TTTeamMetadata(BaseModel):
@@ -452,8 +457,8 @@ class TTTeamFrontmatter(BaseModel):
         description="Value stream the team belongs to (optional)"
     )
 
-    class Config:
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "title": "TT Design Team File",
             "description": """YAML frontmatter for TT Design team markdown files.
 
@@ -469,8 +474,9 @@ class TTTeamFrontmatter(BaseModel):
 
             Columns: Team Name (string), Interaction Mode (Collaboration|X-as-a-Service|Facilitating), Purpose (string describing the interaction)
 
-            ℹ️ This section is included in both base and extended Team API templates and is important for documenting team interactions."""
+            ℹ️ This section is included in both base and extended Team API templates and is important for documenting team interactions.""",
         }
+    )
 
 
 # ============================================================================

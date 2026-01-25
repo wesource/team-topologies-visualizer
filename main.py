@@ -1,5 +1,6 @@
 """FastAPI application setup and configuration"""
 import os
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI
@@ -10,15 +11,10 @@ from backend.routes_baseline import router as baseline_router
 from backend.routes_schemas import router as schemas_router
 from backend.routes_tt import router as tt_router
 
-app = FastAPI(
-    title="Team Topologies API",
-    description="API for visualizing and managing team topologies",
-    version="1.0.0"
-)
 
-# Log which data directories are being used at startup
-@app.on_event("startup")
-async def startup_event():
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    """Application lifespan handler (replaces deprecated startup/shutdown events)."""
     tt_variant = os.getenv("TT_TEAMS_VARIANT", "tt-teams")
     tt_dir = Path("data") / tt_variant
     baseline_dir = Path("data/baseline-teams")
@@ -30,8 +26,21 @@ async def startup_event():
     print(f"   Files found: {len(list(tt_dir.glob('*.md')))}")
     print(f"📂 Baseline Teams Directory: {baseline_dir.absolute()}")
     print(f"   Files found: {len(list(baseline_dir.rglob('*.md')))}")
-    print(f"🔧 Environment: TT_TEAMS_VARIANT={os.getenv('TT_TEAMS_VARIANT', 'NOT SET (using default: tt-teams)')}")
+    print(
+        "🔧 Environment: TT_TEAMS_VARIANT="
+        f"{os.getenv('TT_TEAMS_VARIANT', 'NOT SET (using default: tt-teams)')}"
+    )
     print("=" * 80 + "\n")
+
+    yield
+
+
+app = FastAPI(
+    title="Team Topologies API",
+    description="API for visualizing and managing team topologies",
+    version="1.0.0",
+    lifespan=lifespan,
+)
 
 # CORS middleware to allow frontend to call API
 app.add_middleware(
