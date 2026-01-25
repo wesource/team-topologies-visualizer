@@ -99,13 +99,22 @@ Open http://localhost:8000/static/index.html
 **Root folder** = quick reference (README, CONTRIBUTING)  
 **docs/ folder** = in-depth guides and documentation:
 
-- **[docs/SETUP.md](docs/SETUP.md)**: Installation, configuration, demo mode, TT design variants
-- **[docs/CONCEPTS.md](docs/CONCEPTS.md)**: Team Topologies concepts and how they map to the tool
-- **[docs/EXAMPLE_DATA.md](docs/EXAMPLE_DATA.md)**: Example organization, transformation story, dataset variants
-- **[docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)**: Developer workflow and testing
-- **[docs/BACKLOG.md](docs/BACKLOG.md)**: Feature ideas and priorities
-- **[docs/CHANGELOG.md](docs/CHANGELOG.md)**: Design decisions and implementation notes
-- **[docs/DEPENDENCIES.md](docs/DEPENDENCIES.md)**: Full dependency list and rationale
+| Document | Description |
+|----------|-------------|
+| **Getting Started** | |
+| [docs/SETUP.md](docs/SETUP.md) | Installation, configuration, Docker/Podman, demo mode, TT variants |
+| [docs/CONCEPTS.md](docs/CONCEPTS.md) | Team Topologies concepts and how they map to the tool |
+| [docs/EXAMPLE_DATA.md](docs/EXAMPLE_DATA.md) | Example organization, transformation story, dataset variants |
+| **Features & Usage** | |
+| [docs/AUTO-ALIGN.md](docs/AUTO-ALIGN.md) | Auto-align feature, alignment hints, 3×2 grid layout |
+| **Development** | |
+| [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) | Developer workflow, testing, linting |
+| [docs/TESTING.md](docs/TESTING.md) | Comprehensive testing guide (pytest, Vitest, Playwright) |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Technical architecture, design decisions, code structure |
+| [docs/DEPENDENCIES.md](docs/DEPENDENCIES.md) | Full dependency list and rationale |
+| **Planning & History** | |
+| [docs/BACKLOG.md](docs/BACKLOG.md) | Feature ideas and priorities |
+| [docs/CHANGELOG.md](docs/CHANGELOG.md) | Design decisions and implementation notes |
 
 ## Quick Customization
 
