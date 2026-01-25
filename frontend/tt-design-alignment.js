@@ -40,7 +40,8 @@ export function autoAlignTTDesign(teams) {
     const ungroupedTeams = teams.filter(team => !groupedTeamNames.has(team.name));
 
     // Layout configuration
-    const startX = 100;
+    const ungroupedStartX = 100; // Ungrouped teams on the left
+    const groupingsStartX = 700; // Groupings start more to the right to avoid overlap
     const startY = 100;
     const groupingWidth = 800; // Standard grouping width (increased for wide teams)
     const groupingSpacingX = 850; // Horizontal space between groupings (grouping width + margin)
@@ -54,10 +55,7 @@ export function autoAlignTTDesign(teams) {
     const narrowTeamSpacingY = 120; // Vertical spacing between rows of narrow teams
     const narrowTeamsPerRow = 3; // Max narrow teams per row
 
-    let currentX = startX;
     let currentY = startY;
-    let groupingsInCurrentRow = 0;
-    let maxHeightInRow = 0;
 
     /**
      * Check if team type should be rendered wide (horizontal flow)
@@ -77,45 +75,33 @@ export function autoAlignTTDesign(teams) {
 
         let currentYPos = groupingStartY + paddingInGrouping + labelHeight;
 
-        // Calculate horizontal positions based on team type and hints
-        function getHorizontalPosition(team) {
-            const groupingContentWidth = groupingWidth - 2 * paddingInGrouping;
+        // All teams within a grouping should have the same X position
+        // Use the first team's alignment hint if available, otherwise center the grouping
+        const groupingContentWidth = groupingWidth - 2 * paddingInGrouping;
+        const firstTeamHintX = groupingTeams[0]?.metadata?.align_hint_x;
 
-            // Check for explicit hint first
-            const hintX = team.metadata?.align_hint_x;
-
-            if (hintX === 'left') {
-                return groupingStartX + paddingInGrouping;
-            } else if (hintX === 'center') {
-                const pos = groupingStartX + paddingInGrouping + groupingContentWidth * 0.35;
-                return pos;
-            } else if (hintX === 'right') {
-                const pos = groupingStartX + paddingInGrouping + groupingContentWidth * 0.7;
-                return pos;
-            }
-
-            // Default positioning based on team type
-            if (team.team_type === 'platform') {
-                // Platform teams default to left (provide capabilities)
-                return groupingStartX + paddingInGrouping;
-            } else if (team.team_type === 'stream-aligned') {
-                // Stream-aligned teams default to right (deliver to customers)
-                const pos = groupingStartX + paddingInGrouping + groupingContentWidth * 0.7;
-                return pos;
-            } else if (team.team_type === 'enabling') {
-                // Enabling teams default to center (facilitate)
-                const pos = groupingStartX + paddingInGrouping + groupingContentWidth * 0.35;
-                return pos;
+        let groupingX;
+        if (firstTeamHintX === 'left') {
+            groupingX = groupingStartX + paddingInGrouping;
+        } else if (firstTeamHintX === 'right') {
+            // Position towards the right side of the grouping
+            groupingX = groupingStartX + paddingInGrouping + groupingContentWidth - 560; // 560px = wide team width
+        } else if (firstTeamHintX === 'center') {
+            // Center within the grouping
+            groupingX = groupingStartX + paddingInGrouping + (groupingContentWidth - 560) / 2;
+        } else {
+            // Default to center for platform teams, left for others
+            const firstTeamType = groupingTeams[0]?.team_type;
+            if (firstTeamType === 'platform') {
+                groupingX = groupingStartX + paddingInGrouping + (groupingContentWidth - 560) / 2;
             } else {
-                // Complicated-subsystem and undefined default to center-left
-                const pos = groupingStartX + paddingInGrouping + groupingContentWidth * 0.2;
-                return pos;
+                groupingX = groupingStartX + paddingInGrouping;
             }
         }
 
-        // Position wide teams first - stacked vertically, positioned horizontally by type/hint
+        // Position wide teams first - stacked vertically at the same X position
         wideTeams.forEach((team, _index) => {
-            const newX = getHorizontalPosition(team);
+            const newX = groupingX;
             const newY = currentYPos;
 
             // Only update if position changed significantly
@@ -145,6 +131,7 @@ export function autoAlignTTDesign(teams) {
             // Position narrow teams (enabling, complicated-subsystem)
             narrowTeams.forEach((team, index) => {
                 const row = Math.floor(index / narrowTeamsPerRow);
+                const col = index % narrowTeamsPerRow;
 
                 // Calculate Y position by summing heights of all previous rows
                 let rowYPos = currentYPos;
@@ -159,8 +146,10 @@ export function autoAlignTTDesign(teams) {
                     rowYPos += maxHeightInRow + gapBetweenRows;
                 }
 
-                // Use horizontal positioning function for narrow teams too
-                const newX = getHorizontalPosition(team);
+                // Position narrow teams horizontally side by side
+                const narrowTeamWidth = 200;
+                const narrowTeamHorizontalSpacing = 40;
+                const newX = groupingX + col * (narrowTeamWidth + narrowTeamHorizontalSpacing);
                 const newY = rowYPos;
 
                 // Only update if position changed significantly
@@ -192,145 +181,180 @@ export function autoAlignTTDesign(teams) {
     // Position value stream groupings first (excluding ungrouped)
     const actualValueStreamGroupings = valueStreamGroupings.filter(g => g.name !== '(Ungrouped)');
 
-    // Separate groupings with vertical hints
-    const topGroupings = [];
-    const bottomGroupings = [];
+    // Separate groupings with vertical and horizontal hints
+    const topLeftGroupings = [];
+    const topCenterGroupings = [];
+    const topRightGroupings = [];
+    const bottomLeftGroupings = [];
+    const bottomCenterGroupings = [];
+    const bottomRightGroupings = [];
 
     actualValueStreamGroupings.forEach(grouping => {
-        // Check if any team in grouping has align_hint_y
+        // Check if any team in grouping has align_hint_y and align_hint_x
         const hintY = grouping.teams.find(t => t.metadata?.align_hint_y)?.metadata?.align_hint_y;
+        const hintX = grouping.teams.find(t => t.metadata?.align_hint_x)?.metadata?.align_hint_x;
 
-        if (hintY === 'top') {
-            topGroupings.push(grouping);
-        } else if (hintY === 'bottom') {
-            bottomGroupings.push(grouping);
+        // Determine vertical position (value streams default to top)
+        const isTop = !hintY || hintY === 'top';
+
+        // Determine horizontal position (default to center/left)
+        if (hintX === 'left') {
+            if (isTop) topLeftGroupings.push(grouping);
+            else bottomLeftGroupings.push(grouping);
+        } else if (hintX === 'right') {
+            if (isTop) topRightGroupings.push(grouping);
+            else bottomRightGroupings.push(grouping);
         } else {
-            // Value streams default to top (customer-facing)
-            topGroupings.push(grouping);
+            // Default: center
+            if (isTop) topCenterGroupings.push(grouping);
+            else bottomCenterGroupings.push(grouping);
         }
     });
 
-    // Position top groupings first (value streams default here)
-    topGroupings.forEach((grouping, _index) => {
-        const groupingHeight = positionTeamsInGrouping(grouping.teams, currentX, currentY);
-        maxHeightInRow = Math.max(maxHeightInRow, groupingHeight);
+    // Helper function to position a list of groupings
+    function positionGroupingsList(groupingsList, startX) {
+        let localX = startX;
+        let localY = currentY;
+        let localGroupingsInRow = 0;
+        let localMaxHeight = 0;
 
-        groupingsInCurrentRow++;
+        groupingsList.forEach((grouping, _index) => {
+            const groupingHeight = positionTeamsInGrouping(grouping.teams, localX, localY);
+            localMaxHeight = Math.max(localMaxHeight, groupingHeight);
 
-        if (groupingsInCurrentRow >= groupingsPerRow) {
-            // Move to next row
-            currentX = startX;
-            currentY += maxHeightInRow + groupingSpacingY;
-            groupingsInCurrentRow = 0;
-            maxHeightInRow = 0;
-        } else {
-            // Move to next column
-            currentX += groupingSpacingX;
-        }
-    });
+            localGroupingsInRow++;
 
-    // Start new row for platform groupings if needed
-    if (groupingsInCurrentRow > 0) {
-        currentX = startX;
-        currentY += maxHeightInRow + groupingSpacingY;
-        groupingsInCurrentRow = 0;
-        maxHeightInRow = 0;
-    }
-
-    // Position platform groupings
-    platformGroupings.forEach((grouping, _index) => {
-        // Check if any team in grouping has align_hint_y
-        const hintY = grouping.teams.find(t => t.metadata?.align_hint_y)?.metadata?.align_hint_y;
-
-        // Platform groupings can override default bottom position with hint
-        if (hintY === 'top') {
-            // Add to bottom groupings list to be positioned later
-            bottomGroupings.push(grouping);
-            return; // Skip positioning for now, will be handled below
-        }
-
-        // Default: position platform groupings at bottom (foundational)
-        const groupingHeight = positionTeamsInGrouping(grouping.teams, currentX, currentY);
-        maxHeightInRow = Math.max(maxHeightInRow, groupingHeight);
-
-        groupingsInCurrentRow++;
-
-        if (groupingsInCurrentRow >= groupingsPerRow) {
-            // Move to next row
-            currentX = startX;
-            currentY += maxHeightInRow + groupingSpacingY;
-            groupingsInCurrentRow = 0;
-            maxHeightInRow = 0;
-        } else {
-            // Move to next column
-            currentX += groupingSpacingX;
-        }
-    });
-
-    // Position bottom groupings (value streams with bottom hint)
-    if (bottomGroupings.length > 0) {
-        // Start new row if needed
-        if (groupingsInCurrentRow > 0) {
-            currentX = startX;
-            currentY += maxHeightInRow + groupingSpacingY;
-            groupingsInCurrentRow = 0;
-            maxHeightInRow = 0;
-        }
-
-        bottomGroupings.forEach((grouping, _index) => {
-            const groupingHeight = positionTeamsInGrouping(grouping.teams, currentX, currentY);
-            maxHeightInRow = Math.max(maxHeightInRow, groupingHeight);
-
-            groupingsInCurrentRow++;
-
-            if (groupingsInCurrentRow >= groupingsPerRow) {
+            if (localGroupingsInRow >= groupingsPerRow) {
                 // Move to next row
-                currentX = startX;
-                currentY += maxHeightInRow + groupingSpacingY;
-                groupingsInCurrentRow = 0;
-                maxHeightInRow = 0;
+                localX = startX;
+                localY += localMaxHeight + groupingSpacingY;
+                localGroupingsInRow = 0;
+                localMaxHeight = 0;
             } else {
                 // Move to next column
-                currentX += groupingSpacingX;
+                localX += groupingSpacingX;
             }
         });
+
+        // Update global current position for next section
+        if (localGroupingsInRow > 0) {
+            currentY = localY + localMaxHeight + groupingSpacingY;
+        } else {
+            currentY = localY;
+        }
     }
 
-    // Position ungrouped teams in a separate area (bottom right)
-    if (ungroupedTeams.length > 0) {
-        const ungroupedStartX = startX + (groupingsPerRow * groupingSpacingX);
+    // Position top row: left, center, right
+    const topRowStartY = currentY;
 
+    // Top-left groupings
+    if (topLeftGroupings.length > 0) {
+        currentY = topRowStartY;
+        positionGroupingsList(topLeftGroupings, groupingsStartX);
+    }
+
+    // Top-center groupings
+    if (topCenterGroupings.length > 0) {
+        currentY = topRowStartY;
+        positionGroupingsList(topCenterGroupings, groupingsStartX + groupingSpacingX);
+    }
+
+    // Top-right groupings
+    if (topRightGroupings.length > 0) {
+        currentY = topRowStartY;
+        positionGroupingsList(topRightGroupings, groupingsStartX + groupingSpacingX * 2);
+    }
+
+    // Find the maximum Y after top row
+    currentY = Math.max(
+        topLeftGroupings.length > 0 ? currentY : topRowStartY,
+        topCenterGroupings.length > 0 ? currentY : topRowStartY,
+        topRightGroupings.length > 0 ? currentY : topRowStartY
+    );
+
+    // Start new row for platform groupings if needed
+    const bottomRowStartY = currentY;
+
+    // Separate platform groupings by horizontal hints and add to appropriate arrays
+    platformGroupings.forEach(grouping => {
+        const hintX = grouping.teams.find(t => t.metadata?.align_hint_x)?.metadata?.align_hint_x;
+        const hintY = grouping.teams.find(t => t.metadata?.align_hint_y)?.metadata?.align_hint_y;
+
+        // Platform groupings default to bottom (foundational), but can be overridden
+        const isBottom = !hintY || hintY === 'bottom';
+
+        if (!isBottom) {
+            // If platform wants to be at top, add to top groupings instead
+            if (hintX === 'left') {
+                topLeftGroupings.push(grouping);
+            } else if (hintX === 'right') {
+                topRightGroupings.push(grouping);
+            } else {
+                topCenterGroupings.push(grouping);
+            }
+            return;
+        }
+
+        // Position at bottom based on horizontal hint
+        if (hintX === 'left') {
+            bottomLeftGroupings.push(grouping);
+        } else if (hintX === 'right') {
+            bottomRightGroupings.push(grouping);
+        } else {
+            // Platform groupings default to center
+            bottomCenterGroupings.push(grouping);
+        }
+    });
+
+    // Position bottom row: left, center, right
+    // Bottom-left groupings
+    if (bottomLeftGroupings.length > 0) {
+        currentY = bottomRowStartY;
+        positionGroupingsList(bottomLeftGroupings, groupingsStartX);
+    }
+
+    // Bottom-center groupings
+    if (bottomCenterGroupings.length > 0) {
+        currentY = bottomRowStartY;
+        positionGroupingsList(bottomCenterGroupings, groupingsStartX + groupingSpacingX);
+    }
+
+    // Bottom-right groupings
+    if (bottomRightGroupings.length > 0) {
+        currentY = bottomRowStartY;
+        positionGroupingsList(bottomRightGroupings, groupingsStartX + groupingSpacingX * 2);
+    }
+
+    // Position ungrouped teams on the left side of canvas
+    if (ungroupedTeams.length > 0) {
         // Helper to calculate horizontal position for ungrouped teams
-        // Similar to grouped teams but using canvas-relative positioning
         function getUngroupedHorizontalPosition(team) {
             const hintX = team.metadata?.align_hint_x;
 
             if (hintX === 'left') {
                 // Position on left side of canvas
-                const pos = startX;
-                return pos;
-            } else if (hintX === 'center') {
-                // Position in center of canvas (between groupings and ungrouped area)
-                const pos = startX + groupingSpacingX;
-                return pos;
-            } else if (hintX === 'right') {
-                // Position in ungrouped area (right side)
                 return ungroupedStartX;
+            } else if (hintX === 'center') {
+                // Position in center area
+                return ungroupedStartX + 200;
+            } else if (hintX === 'right') {
+                // Position further right
+                return ungroupedStartX + 400;
             }
 
             // Default positioning based on team type for ungrouped teams
             if (team.team_type === 'platform') {
                 // Platform teams default to left (foundational)
-                return startX;
-            } else if (team.team_type === 'stream-aligned') {
-                // Stream-aligned teams default to ungrouped area (right, customer-facing)
                 return ungroupedStartX;
+            } else if (team.team_type === 'stream-aligned') {
+                // Stream-aligned teams default to right (customer-facing)
+                return ungroupedStartX + 400;
             } else if (team.team_type === 'enabling') {
                 // Enabling teams default to left (supporting role)
-                return startX;
+                return ungroupedStartX;
             } else {
                 // Complicated-subsystem and undefined default to left (supporting/foundational)
-                return startX;
+                return ungroupedStartX;
             }
         }
 
@@ -348,12 +372,8 @@ export function autoAlignTTDesign(teams) {
         // Position top ungrouped teams
         let currentYPos = startY;
 
-        // Separate wide and narrow ungrouped teams in top section
-        const wideTopUngrouped = topUngrouped.filter(team => isWideTeamType(team.team_type));
-        const narrowTopUngrouped = topUngrouped.filter(team => !isWideTeamType(team.team_type));
-
-        // Position wide top ungrouped teams stacked vertically
-        wideTopUngrouped.forEach((team, _index) => {
+        // Position all top ungrouped teams stacked vertically (simple stack)
+        topUngrouped.forEach((team) => {
             const newX = getUngroupedHorizontalPosition(team);
             const newY = currentYPos;
 
@@ -363,37 +383,11 @@ export function autoAlignTTDesign(teams) {
                 realignedTeams.push(team);
             }
 
-            currentYPos += LAYOUT.TEAM_BOX_HEIGHT + wideTeamVerticalSpacing;
+            // Use actual team height for proper spacing
+            const teamHeight = getTeamBoxHeight(team, 'tt');
+            const verticalSpacing = 40;
+            currentYPos += teamHeight + verticalSpacing;
         });
-
-        // Position narrow top ungrouped teams in grid below wide teams
-        if (narrowTopUngrouped.length > 0) {
-            if (wideTopUngrouped.length > 0) {
-                currentYPos += 20; // Spacing between wide and narrow
-            }
-
-            narrowTopUngrouped.forEach((team, _index) => {
-                const row = Math.floor(_index / narrowTeamsPerRow);
-                let rowYPos = currentYPos;
-                for (let r = 0; r < row; r++) {
-                    const rowStartIdx = r * narrowTeamsPerRow;
-                    const rowEndIdx = Math.min((r + 1) * narrowTeamsPerRow, narrowTopUngrouped.length);
-                    const teamsInRow = narrowTopUngrouped.slice(rowStartIdx, rowEndIdx);
-                    const maxHeightInRow = Math.max(...teamsInRow.map(t => getTeamBoxHeight(t, 'tt')));
-                    const gapBetweenRows = 40;
-                    rowYPos += maxHeightInRow + gapBetweenRows;
-                }
-
-                const newX = getUngroupedHorizontalPosition(team);
-                const newY = rowYPos;
-
-                if (Math.abs(team.position.x - newX) > 5 || Math.abs(team.position.y - newY) > 5) {
-                    team.position.x = newX;
-                    team.position.y = newY;
-                    realignedTeams.push(team);
-                }
-            });
-        }
 
         // Position bottom ungrouped teams
         if (bottomUngrouped.length > 0) {
@@ -402,12 +396,8 @@ export function autoAlignTTDesign(teams) {
             const bottomStartY = Math.max(currentY, 600); // Position at least at y=600 or below groupings
             currentYPos = bottomStartY;
 
-            // Separate wide and narrow in bottom section
-            const wideBottomUngrouped = bottomUngrouped.filter(team => isWideTeamType(team.team_type));
-            const narrowBottomUngrouped = bottomUngrouped.filter(team => !isWideTeamType(team.team_type));
-
-            // Position wide bottom ungrouped teams
-            wideBottomUngrouped.forEach((team, _index) => {
+            // Position all bottom ungrouped teams stacked vertically (simple stack)
+            bottomUngrouped.forEach((team) => {
                 const newX = getUngroupedHorizontalPosition(team);
                 const newY = currentYPos;
 
@@ -417,37 +407,11 @@ export function autoAlignTTDesign(teams) {
                     realignedTeams.push(team);
                 }
 
-                currentYPos += LAYOUT.TEAM_BOX_HEIGHT + wideTeamVerticalSpacing;
+                // Use actual team height for proper spacing
+                const teamHeight = getTeamBoxHeight(team, 'tt');
+                const verticalSpacing = 40;
+                currentYPos += teamHeight + verticalSpacing;
             });
-
-            // Position narrow bottom ungrouped teams
-            if (narrowBottomUngrouped.length > 0) {
-                if (wideBottomUngrouped.length > 0) {
-                    currentYPos += 20; // Spacing between wide and narrow
-                }
-
-                narrowBottomUngrouped.forEach((team, _index) => {
-                    const row = Math.floor(_index / narrowTeamsPerRow);
-                    let rowYPos = currentYPos;
-                    for (let r = 0; r < row; r++) {
-                        const rowStartIdx = r * narrowTeamsPerRow;
-                        const rowEndIdx = Math.min((r + 1) * narrowTeamsPerRow, narrowBottomUngrouped.length);
-                        const teamsInRow = narrowBottomUngrouped.slice(rowStartIdx, rowEndIdx);
-                        const maxHeightInRow = Math.max(...teamsInRow.map(t => getTeamBoxHeight(t, 'tt')));
-                        const gapBetweenRows = 40;
-                        rowYPos += maxHeightInRow + gapBetweenRows;
-                    }
-
-                    const newX = getUngroupedHorizontalPosition(team);
-                    const newY = rowYPos;
-
-                    if (Math.abs(team.position.x - newX) > 5 || Math.abs(team.position.y - newY) > 5) {
-                        team.position.x = newX;
-                        team.position.y = newY;
-                        realignedTeams.push(team);
-                    }
-                });
-            }
         }
     }
 
