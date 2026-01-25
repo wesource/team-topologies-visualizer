@@ -2,7 +2,7 @@
 
 Contributions are welcome! This tool is designed to be extended and customized.
 
-If you're looking for ideas, see [BACKLOG.md](BACKLOG.md). It's a curated, changeable list of priorities and future ideas (not a promise).
+If you're looking for ideas, see [BACKLOG.md](docs/BACKLOG.md). It's a curated, changeable list of priorities and future ideas (not a promise).
 
 A good way to start is to pick something from **Now** or **Next**, or propose a small, well-scoped improvement from **Later / Maybe**.
 

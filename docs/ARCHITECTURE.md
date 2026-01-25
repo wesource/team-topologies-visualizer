@@ -4,7 +4,7 @@ Technical design and implementation details for the Team Topologies Visualizer.
 
 ## Technology Stack
 
-See [DEPENDENCIES.md](../DEPENDENCIES.md) for full list of dependencies and rationale.
+See [DEPENDENCIES.md](DEPENDENCIES.md) for full list of dependencies and rationale.
 
 **Key Technologies**:
 - Python 3.10+ with FastAPI (backend)

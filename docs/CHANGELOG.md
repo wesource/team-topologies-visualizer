@@ -330,7 +330,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Enables visualization of interaction lines in Pre-TT view
   - Shows Pre-TT dysfunction: handoffs, bottlenecks, coordination overhead
   - Current approach: YAML frontmatter storage (vs TT-Design markdown tables)
-  - Future enhancement: May migrate to markdown table format for consistency (see BACKLOG.md)
+  - Future enhancement: May migrate to markdown table format for consistency (see [BACKLOG.md](BACKLOG.md))
 - **Product Lines View Foundation (2026-01-06)**: Phase 1 COMPLETE ✅ - Multi-perspective Pre-TT visualization
   - **Data Model**: Added `product_line` field to 9 Pre-TT teams:
     - **DispatchHub** (2 teams): Backend Services, Web Frontend

@@ -12,13 +12,6 @@ This tool is inspired by **Team Topologies** by Matthew Skelton and Manuel Pais 
 
 > **Note**: This project was built with extensive AI assistance (GitHub Copilot + Claude). As a non-native Python and JavaScript developer, this AI-driven co-creation approach enabled me to use tools and techniques — including FastAPI, Canvas rendering, and comprehensive test automation — in ways that would have taken much longer solo.
 
-## Documentation Organization
-
-**Root folder** = quick reference (README, CONTRIBUTING, DEVELOPMENT)  
-**docs/ folder** = in-depth guides (SETUP, CONCEPTS, ARCHITECTURE, TESTING)
-
-This keeps the root clean while providing detailed documentation for those who need it.
-
 ## Why This Tool?
 
 What I wanted from a tool like this was something that helps when adopting Team Topologies:
@@ -75,28 +68,44 @@ Open http://localhost:8000/static/index.html
 
 ## Key Features
 
-- **Two views**: Baseline (pre-transformation) and TT design
-- **Baseline views** (pre-TT):
-  - **Hierarchy**: classic org chart (reporting lines)
-  - **Product lines**: product lanes + shared teams
-  - **Business streams**: swimlanes grouped by business value streams (e.g., SAFe “trains”)
-- **TT model**: team types (Stream-aligned, Platform, Enabling, Complicated Subsystem) + interaction modes (Collaboration, X-as-a-Service, Facilitating)
-- **Interactive canvas**: drag-and-drop teams; zoom, pan, fit-to-view
+### Two Complementary Views
+- **Baseline**: Visualize your current organization structure from three perspectives:
+  - **Hierarchy**: classic org chart with reporting lines
+  - **Product lines**: product lanes with shared teams
+  - **Business streams**: swimlanes grouped by business value streams (e.g., SAFe "trains")
+- **TT Design**: Model your target Team Topologies structure with:
+  - Four team types (Stream-aligned, Platform, Enabling, Complicated Subsystem)
+  - Three interaction modes (Collaboration, X-as-a-Service, Facilitating)
+  - Value stream groupings and platform groupings (TT 2nd ed.)
+
+### Visualization & Interaction
+- **Interactive canvas**: drag-and-drop teams, zoom, pan, fit-to-view
+- **Auto-align**: intelligent positioning based on flow of change with optional alignment hints
 - **Team details**: open full team information with rendered Markdown
-- **Groupings (TT 2nd ed.)**: value stream groupings and platform groupings
-- **Customizable**: adapt team types/colors and org structures to your context
+- **SVG export**: export views for documentation and presentations
+
+### Team Topologies Evolution
+- **Snapshots**: save versions of your TT design to track progress over time
+- **Comparison view**: side-by-side comparison of snapshots showing changes
 - **Team API compatible**: Markdown + YAML front matter, aligned to the [Team API template](https://github.com/TeamTopologies/Team-API-template)
-- **Snapshots**: save versions of your TT design to track progress over time, compare points in time, and share the journey from “before” to “after”
-- **Export**: export to SVG for docs/presentations
-- **Quality checks**: validation for YAML errors and basic consistency
-- **Optional indicators**: cognitive load and DORA-style flow metrics
+
+### Customization & Quality
+- **Flexible configuration**: adapt team types, colors, and org structures to your context
+- **Validation**: YAML error checking and basic consistency checks
+- **Optional metrics**: cognitive load indicators and DORA-style flow metrics
 
 ## Documentation
+
+**Root folder** = quick reference (README, CONTRIBUTING)  
+**docs/ folder** = in-depth guides and documentation:
 
 - **[docs/SETUP.md](docs/SETUP.md)**: Installation, configuration, demo mode, TT design variants
 - **[docs/CONCEPTS.md](docs/CONCEPTS.md)**: Team Topologies concepts and how they map to the tool
 - **[docs/EXAMPLE_DATA.md](docs/EXAMPLE_DATA.md)**: Example organization, transformation story, dataset variants
-- **[DEVELOPMENT.md](DEVELOPMENT.md)**: Developer workflow and testing
+- **[docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)**: Developer workflow and testing
+- **[docs/BACKLOG.md](docs/BACKLOG.md)**: Feature ideas and priorities
+- **[docs/CHANGELOG.md](docs/CHANGELOG.md)**: Design decisions and implementation notes
+- **[docs/DEPENDENCIES.md](docs/DEPENDENCIES.md)**: Full dependency list and rationale
 
 ## Quick Customization
 
@@ -133,7 +142,7 @@ pwsh ./scripts/run-all-tests.ps1
 
 The test suite includes backend (pytest), frontend (Vitest), and E2E (Playwright) tests.
 
-**Detailed test instructions**: See [DEVELOPMENT.md](DEVELOPMENT.md#testing) for individual test commands, coverage options, and Windows-specific notes.
+**Detailed test instructions**: See [DEVELOPMENT.md](docs/DEVELOPMENT.md#testing) for individual test commands, coverage options, and Windows-specific notes.
 
 ## Linting
 
@@ -152,7 +161,7 @@ cd frontend && npm run lint -- --fix
 - **Testing**: pytest, Vitest, Playwright
 - **Data**: Markdown with YAML front matter
 
-**Full dependency list and rationale**: See [DEPENDENCIES.md](DEPENDENCIES.md)
+**Full dependency list and rationale**: See [DEPENDENCIES.md](docs/DEPENDENCIES.md)
 
 ## Contributing
 

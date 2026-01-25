@@ -6,7 +6,7 @@
 ## Development Workflow
 - **Local development preferred**: For frontend changes, just start Python backend (`python -m uvicorn main:app --reload`) and refresh browser - no Docker/Podman build needed
 - **Use containers sparingly**: Only for final validation, not regular iteration
-- **Update CHANGELOG.md**: Document design decisions, approaches tried, and why certain implementations were chosen during development
+- **Update docs/CHANGELOG.md**: Document design decisions, approaches tried, and why certain implementations were chosen during development
 - **Test-driven development preferred**: Write failing test first, then implement feature
 - **Always add tests when implementing new features** - unit tests (Vitest/pytest) and consider E2E tests (Playwright) for user-facing features
 

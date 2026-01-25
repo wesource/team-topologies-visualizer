@@ -432,7 +432,7 @@ git commit -m "docs: Update CONCEPTS.md with references"
 ### Release Process
 
 1. Run all tests: backend, frontend, E2E
-2. Update CHANGELOG.md with changes
+2. Update [CHANGELOG.md](CHANGELOG.md) with changes
 3. Update version in relevant files
 4. Create git tag: `git tag -a v1.0.0 -m "Release 1.0.0"`
 5. Push with tags: `git push --follow-tags`
