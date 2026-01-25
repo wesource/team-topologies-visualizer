@@ -10,7 +10,7 @@ This is the public backlog for ideas, priorities, and possible improvements.
 - **Now**: what I personally want to prioritize next (short list)
 - **Next**: good candidates after the Now list
 - **Later / Maybe**: longer-term ideas and experiments
-- For contribution ideas, look for items that are small, well-scoped, and testable.
+- For contributions, look for items that are small, well-scoped, and testable.
 
 ## Now (top priorities)
 
@@ -31,8 +31,6 @@ Edit this list as your priorities change:
 - Release readiness: 1.0 housekeeping
 	- Bump version to `1.0.0` (wherever the canonical version lives) and create a git tag/release.
 	- Sanity-check demo mode end-to-end (read-only behavior + banners + snapshot compare) against the current example dataset.
-
-## Completed
 
 ## Next
 - Flow of change arrows in TT Design view

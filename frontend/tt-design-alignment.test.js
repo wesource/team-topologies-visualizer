@@ -45,18 +45,18 @@ describe('autoAlignTTDesign', () => {
         expect(realigned.length).toBe(3);
 
         // Value streams without hints go to top center column
-        // First team is stream-aligned, so all wide teams get left-aligned at 1580
-        expect(realigned[0].position.x).toBe(1580);
-        expect(realigned[1].position.x).toBe(1580);
-        expect(realigned[2].position.x).toBe(1580); // Platform also at 1580 since first team is stream
+        // First team is stream-aligned, so all wide teams get left-aligned at 1080
+        expect(realigned[0].position.x).toBe(1080);
+        expect(realigned[1].position.x).toBe(1080);
+        expect(realigned[2].position.x).toBe(1080); // Platform also at 1080 since first team is stream
 
         // Y positions: stacked vertically with spacing
-        // First team: startY (100) + padding (30) + label (35) = 165
+        // First team (stream-aligned): startY (100) + padding (30) + label (35) = 165
         expect(realigned[0].position.y).toBe(165);
-        // Second team: 165 + boxHeight (80) + verticalSpacing (60) = 305
-        expect(realigned[1].position.y).toBe(305);
-        // Third team: 305 + 80 + 60 = 445
-        expect(realigned[2].position.y).toBe(445);
+        // Second team (stream-aligned): 165 + height (64) + spacing (60) = 289
+        expect(realigned[1].position.y).toBe(289);
+        // Third team (platform): 289 + height (64) + spacing (60) = 413
+        expect(realigned[2].position.y).toBe(413);
     });
 
     it('should handle multiple value stream groupings', () => {
@@ -108,7 +108,7 @@ describe('autoAlignTTDesign', () => {
         expect(realigned.length).toBe(2);
 
         // Platform groupings without hints go to bottom center, teams centered within grouping
-        const expectedX = 1670; // centerColumnX (1550) + padding (30) + center offset (90)
+        const expectedX = 1170; // centerColumnX (1050) + padding (30) + center offset (90)
         expect(realigned[0].position.x).toBe(expectedX);
         expect(realigned[1].position.x).toBe(expectedX);
 
@@ -156,19 +156,19 @@ describe('autoAlignTTDesign', () => {
         expect(realigned.length).toBe(7);
 
         // All teams are stream-aligned (wide), so they stack vertically at same X
-        const expectedX = 1580; // Value stream in center column, left-aligned within grouping
+        const expectedX = 1080; // Value stream in center column, left-aligned within grouping
         realigned.forEach(team => {
             expect(team.position.x).toBe(expectedX);
         });
 
         // Y positions: stacked vertically with spacing (60px between teams)
         expect(realigned[0].position.y).toBe(165);
-        expect(realigned[1].position.y).toBe(305);  // 165 + 80 + 60
-        expect(realigned[2].position.y).toBe(445);  // 305 + 80 + 60
-        expect(realigned[3].position.y).toBe(585);  // and so on...
-        expect(realigned[4].position.y).toBe(725);
-        expect(realigned[5].position.y).toBe(865);
-        expect(realigned[6].position.y).toBe(1005); // 865 + 80 + 60
+        expect(realigned[1].position.y).toBe(289);  // 165 + 64 + 60 (stream-aligned height)
+        expect(realigned[2].position.y).toBe(413);  // 289 + 64 + 60
+        expect(realigned[3].position.y).toBe(537);  // 413 + 64 + 60
+        expect(realigned[4].position.y).toBe(661);  // 537 + 64 + 60
+        expect(realigned[5].position.y).toBe(785);  // 661 + 64 + 60
+        expect(realigned[6].position.y).toBe(909);  // 785 + 64 + 60
     });
 
     it('should not realign teams that are already in correct position', () => {
@@ -178,7 +178,7 @@ describe('autoAlignTTDesign', () => {
                 team_type: 'stream-aligned',
                 value_stream: 'E-Commerce',
                 metadata: {},
-                position: { x: 1580, y: 165 } // Correct position in center column
+                position: { x: 1080, y: 165 } // Correct position in center column
             }
         ];
 
@@ -241,9 +241,9 @@ describe('autoAlignTTDesign', () => {
         const streamTeam = realigned.find(t => t.name === 'Stream Team');
 
         // Both in value stream grouping (center column)
-        // First team is platform, so ALL wide teams get centered at 1670
-        expect(platformTeam.position.x).toBe(1670);
-        expect(streamTeam.position.x).toBe(1670); // Same X as platform since it's in same grouping
+        // First team is platform, so ALL wide teams get centered at 1170
+        expect(platformTeam.position.x).toBe(1170);
+        expect(streamTeam.position.x).toBe(1170); // Same X as platform since it's in same grouping
 
         // But stacked vertically at different Y positions
         // First: platform (165), second: stream-aligned (165 + 80 + 60 = 305)

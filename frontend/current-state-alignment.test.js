@@ -1,6 +1,7 @@
 // Tests for team alignment functionality
 import { describe, it, expect } from 'vitest';
 import { autoAlignTeamsByManager } from './current-state-alignment.js';
+import { LAYOUT } from './constants.js';
 
 describe('autoAlignTeamsByManager', () => {
     it('should align teams vertically under the same line manager', () => {
@@ -155,16 +156,14 @@ describe('autoAlignTeamsByManager', () => {
         };
 
         // Calculate expected alignment positions (2/5 offset for org-chart style)
-        const deptStartX = 500 + 50;
-        const deptX = deptStartX; // engineering is first department
-        const boxWidth = 200;
-        const alignedX = deptX + (boxWidth * 2 / 5); // Changed to 2/5 offset
-        const baseY = 50 + 120 * 3;
+        const deptX = LAYOUT.DEPT_START_X; // engineering is first department (index 0)
+        const alignedX = deptX + (LAYOUT.DEPT_BOX_WIDTH * LAYOUT.ORG_CHART_TEAM_X_OFFSET);
+        const baseY = LAYOUT.COMPANY_Y + LAYOUT.LEVEL_HEIGHT * 3;
 
         // Teams are already properly aligned
         const teams = [
             { name: 'Team A', team_type: 'stream-aligned', position: { x: alignedX, y: baseY }, dependencies: [] },
-            { name: 'Team B', team_type: 'platform', position: { x: alignedX, y: baseY + 120 }, dependencies: [] }
+            { name: 'Team B', team_type: 'platform', position: { x: alignedX, y: baseY + LAYOUT.VERTICAL_SPACING }, dependencies: [] }
         ];
 
         const realigned = autoAlignTeamsByManager(teams, organizationHierarchy);

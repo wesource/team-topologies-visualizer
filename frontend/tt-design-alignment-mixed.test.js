@@ -54,25 +54,25 @@ describe('autoAlignTTDesign - Mixed Team Types', () => {
         expect(realigned.length).toBe(6);
 
         // Value stream grouping in center column
-        // First team is stream-aligned, so all wide teams left-aligned at 1580
-        expect(realigned[0].position.x).toBe(1580);
-        expect(realigned[1].position.x).toBe(1580);
-        expect(realigned[2].position.x).toBe(1580); // Platform also at 1580
+        // First team is stream-aligned, so all wide teams left-aligned at 1080
+        expect(realigned[0].position.x).toBe(1080);
+        expect(realigned[1].position.x).toBe(1080);
+        expect(realigned[2].position.x).toBe(1080); // Platform also at 1080
 
         // Wide teams Y positions: stacked vertically
         // Actual positioning may vary based on internal team ordering
-        expect(realigned[0].position.y).toBe(165);  // First wide team
-        expect(realigned[1].position.y).toBe(305);  // Second (calculated by actual implementation)
-        expect(realigned[2].position.y).toBe(445);  // Third (305 + 80 + 60)
+        expect(realigned[0].position.y).toBe(165);  // First wide team (stream-aligned)
+        expect(realigned[1].position.y).toBe(289);  // Second (165 + 64 + 60)
+        expect(realigned[2].position.y).toBe(413);  // Third (289 + 64 + 60)
 
         // Narrow teams positioned horizontally side by side
-        // Starting at x=1580, spacing 40px apart (200 width + 40 gap)
-        expect(realigned[3].position.x).toBe(1580);  // First enabling
-        expect(realigned[4].position.x).toBe(1820);  // Second enabling (1580 + 200 + 40)
-        expect(realigned[5].position.x).toBe(2060);  // Complicated-subsystem (1820 + 200 + 40)
+        // Starting at x=1080, spacing 40px apart (200 width + 40 gap)
+        expect(realigned[3].position.x).toBe(1080);  // First enabling
+        expect(realigned[4].position.x).toBe(1320);  // Second enabling (1080 + 200 + 40)
+        expect(realigned[5].position.x).toBe(1560);  // Complicated-subsystem (1320 + 200 + 40)
 
         // All narrow teams on same row below wide teams
-        const narrowStartY = 545; // 445 (third wide team) + 80 (platform height) + 20 (spacing)
+        const narrowStartY = 513; // 413 (third wide team) + 80 (platform height) + 20 (spacing)
         expect(realigned[3].position.y).toBe(narrowStartY);
         expect(realigned[4].position.y).toBe(narrowStartY);
         expect(realigned[5].position.y).toBe(narrowStartY);
@@ -120,17 +120,17 @@ describe('autoAlignTTDesign - Mixed Team Types', () => {
         // All teams realigned
         expect(realigned.length).toBe(4);
 
-        // First team is stream-aligned, so all wide teams left-aligned at 1580
-        expect(realigned[0].position.x).toBe(1580);
-        expect(realigned[1].position.x).toBe(1580);
-        expect(realigned[2].position.x).toBe(1580); // Platform also at 1580
+        // First team is stream-aligned, so all wide teams left-aligned at 1080
+        expect(realigned[0].position.x).toBe(1080);
+        expect(realigned[1].position.x).toBe(1080);
+        expect(realigned[2].position.x).toBe(1080); // Platform also at 1080
 
         // They stack vertically showing the flow from top to bottom
         expect(realigned[0].position.y).toBeLessThan(realigned[1].position.y);
         expect(realigned[1].position.y).toBeLessThan(realigned[2].position.y);
 
         // Enabling team (narrow) is positioned horizontally and below the flow
-        expect(realigned[3].position.x).toBe(1580); // Left-aligned like wide teams
+        expect(realigned[3].position.x).toBe(1080); // Left-aligned like wide teams
         expect(realigned[3].position.y).toBeGreaterThan(realigned[2].position.y);
     });
 });
