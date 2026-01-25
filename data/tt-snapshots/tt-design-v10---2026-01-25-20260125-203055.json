@@ -1,0 +1,934 @@
+{
+  "snapshot_id": "tt-design-v10---2026-01-25-20260125-203055",
+  "name": "TT Design v10 - 2026-01-25",
+  "description": "",
+  "author": "",
+  "created_at": "2026-01-25T20:30:55",
+  "teams": [
+    {
+      "name": "API Gateway Platform Team",
+      "team_type": "stream-aligned",
+      "position": {
+        "x": 1280.0,
+        "y": 906.0
+      },
+      "value_stream": null,
+      "platform_grouping": "Cloud Infrastructure Platform Grouping",
+      "dependencies": [
+        "Security Compliance Team",
+        "Developer Portal Team"
+      ],
+      "dependency_notes": [],
+      "interaction_modes": {
+        "Security Compliance Team": "collaboration",
+        "Developer Portal Team": "x-as-a-service"
+      },
+      "metadata": {
+        "size": 6,
+        "cognitive_load": "medium",
+        "established": "2023-11"
+      },
+      "team_api_summary": null
+    },
+    {
+      "name": "API Gateway Team",
+      "team_type": "stream-aligned",
+      "position": {
+        "x": 1280.0,
+        "y": 1030.0
+      },
+      "value_stream": null,
+      "platform_grouping": "Cloud Infrastructure Platform Grouping",
+      "dependencies": [
+        "Security Compliance Team",
+        "Developer Portal Team"
+      ],
+      "dependency_notes": [],
+      "interaction_modes": {
+        "Security Compliance Team": "collaboration",
+        "Developer Portal Team": "x-as-a-service"
+      },
+      "metadata": {
+        "size": 6,
+        "cognitive_load": "medium",
+        "established": "2023-11"
+      },
+      "team_api_summary": null
+    },
+    {
+      "name": "Billing Team",
+      "team_type": "stream-aligned",
+      "position": {
+        "x": 1280.0,
+        "y": 165.0
+      },
+      "value_stream": "Financial Services",
+      "platform_grouping": null,
+      "dependencies": [
+        "Payment Processing Team"
+      ],
+      "dependency_notes": [],
+      "interaction_modes": {
+        "Payment Processing Team": "collaboration"
+      },
+      "metadata": {
+        "size": 6,
+        "cognitive_load": "medium",
+        "established": null
+      },
+      "team_api_summary": null
+    },
+    {
+      "name": "CI/CD Platform Team",
+      "team_type": "platform",
+      "position": {
+        "x": 1280.0,
+        "y": 1154.0
+      },
+      "value_stream": null,
+      "platform_grouping": "Cloud Infrastructure Platform Grouping",
+      "dependencies": [
+        "Cloud Development Platform Team",
+        "Observability Platform Team",
+        "Developer Portal Team",
+        "API Gateway Platform Team"
+      ],
+      "dependency_notes": [],
+      "interaction_modes": {
+        "Cloud Development Platform Team": "x-as-a-service",
+        "Observability Platform Team": "x-as-a-service",
+        "Developer Portal Team": "x-as-a-service",
+        "API Gateway Platform Team": "x-as-a-service"
+      },
+      "metadata": {
+        "size": 7,
+        "cognitive_load": "medium",
+        "established": "2024-05"
+      },
+      "team_api_summary": null
+    },
+    {
+      "name": "Cloud Development Platform Team",
+      "team_type": "platform",
+      "position": {
+        "x": 1280.0,
+        "y": 1294.0
+      },
+      "value_stream": null,
+      "platform_grouping": "Cloud Infrastructure Platform Grouping",
+      "dependencies": [
+        "Observability Platform Team",
+        "API Gateway Platform Team",
+        "CI/CD Platform Team",
+        "Developer Portal Team",
+        "Security Compliance Team"
+      ],
+      "dependency_notes": [],
+      "interaction_modes": {
+        "Observability Platform Team": "x-as-a-service",
+        "API Gateway Platform Team": "x-as-a-service",
+        "CI/CD Platform Team": "x-as-a-service",
+        "Developer Portal Team": "x-as-a-service",
+        "Security Compliance Team": "x-as-a-service"
+      },
+      "metadata": {
+        "size": 8,
+        "cognitive_load": "medium",
+        "established": "2024-03"
+      },
+      "team_api_summary": null
+    },
+    {
+      "name": "Customer Delivery Tracking Team",
+      "team_type": "stream-aligned",
+      "position": {
+        "x": 2130.0,
+        "y": 165.0
+      },
+      "value_stream": "B2C Services",
+      "platform_grouping": null,
+      "dependencies": [
+        "Driver Experience Team",
+        "Delivery Notifications Team",
+        "Mobile Platform Team",
+        "Route Optimization Platform Team",
+        "Feature Management Platform Team"
+      ],
+      "dependency_notes": [],
+      "interaction_modes": {
+        "Driver Experience Team": "collaboration",
+        "Delivery Notifications Team": "collaboration",
+        "Mobile Platform Team": "x-as-a-service",
+        "Route Optimization Platform Team": "x-as-a-service",
+        "Feature Management Platform Team": "x-as-a-service"
+      },
+      "metadata": {
+        "size": 7,
+        "cognitive_load": "medium",
+        "established": "2023-11"
+      },
+      "team_api_summary": null
+    },
+    {
+      "name": "Data Engineering Enablement Team",
+      "team_type": "enabling",
+      "position": {
+        "x": 100.0,
+        "y": 100.0
+      },
+      "value_stream": null,
+      "platform_grouping": null,
+      "dependencies": [
+        "Financial Reporting Team",
+        "Driver Feedback Team"
+      ],
+      "dependency_notes": [],
+      "interaction_modes": {
+        "Financial Reporting Team": "facilitating",
+        "Driver Feedback Team": "facilitating"
+      },
+      "metadata": {
+        "size": 4,
+        "cognitive_load": "medium",
+        "established": "2023-09"
+      },
+      "team_api_summary": null
+    },
+    {
+      "name": "Data Pipeline Platform Team",
+      "team_type": "platform",
+      "position": {
+        "x": 1280.0,
+        "y": 1434.0
+      },
+      "value_stream": null,
+      "platform_grouping": "Cloud Infrastructure Platform Grouping",
+      "dependencies": [
+        "Data Engineering Enablement Team",
+        "Delivery Analytics Team",
+        "Financial Reporting Team"
+      ],
+      "dependency_notes": [],
+      "interaction_modes": {
+        "Data Engineering Enablement Team": "facilitating",
+        "Delivery Analytics Team": "x-as-a-service",
+        "Financial Reporting Team": "x-as-a-service"
+      },
+      "metadata": {
+        "size": 7,
+        "cognitive_load": "medium",
+        "established": "2023-09"
+      },
+      "team_api_summary": null
+    },
+    {
+      "name": "Data Storage Platform Team",
+      "team_type": "platform",
+      "position": {
+        "x": 1280.0,
+        "y": 1574.0
+      },
+      "value_stream": null,
+      "platform_grouping": "Cloud Infrastructure Platform Grouping",
+      "dependencies": [
+        "Data Engineering Enablement Team",
+        "Delivery Analytics Team",
+        "Billing Team",
+        "Financial Reporting Team"
+      ],
+      "dependency_notes": [],
+      "interaction_modes": {
+        "Data Engineering Enablement Team": "facilitating",
+        "Delivery Analytics Team": "x-as-a-service",
+        "Billing Team": "x-as-a-service",
+        "Financial Reporting Team": "x-as-a-service"
+      },
+      "metadata": {
+        "size": 6,
+        "cognitive_load": "medium",
+        "established": "2023-09"
+      },
+      "team_api_summary": null
+    },
+    {
+      "name": "Delivery Analytics Team",
+      "team_type": "complicated-subsystem",
+      "position": {
+        "x": 430.0,
+        "y": 869.0
+      },
+      "value_stream": "B2B Services",
+      "platform_grouping": null,
+      "dependencies": [
+        "Route Optimization Platform Team",
+        "Fleet Monitor Team",
+        "Data Storage Platform Team",
+        "Observability Platform Team"
+      ],
+      "dependency_notes": [],
+      "interaction_modes": {
+        "Route Optimization Platform Team": "collaboration",
+        "Fleet Monitor Team": "x-as-a-service",
+        "Data Storage Platform Team": "x-as-a-service",
+        "Observability Platform Team": "x-as-a-service"
+      },
+      "metadata": {
+        "size": 5,
+        "cognitive_load": "high",
+        "established": "2025-01"
+      },
+      "team_api_summary": null
+    },
+    {
+      "name": "Delivery Notifications Team",
+      "team_type": "stream-aligned",
+      "position": {
+        "x": 2130.0,
+        "y": 289.0
+      },
+      "value_stream": "B2C Services",
+      "platform_grouping": null,
+      "dependencies": [
+        "Customer Delivery Tracking Team",
+        "Driver Experience Team",
+        "Mobile Platform Team",
+        "Route Optimization Platform Team",
+        "Feature Management Platform Team"
+      ],
+      "dependency_notes": [],
+      "interaction_modes": {
+        "Customer Delivery Tracking Team": "collaboration",
+        "Driver Experience Team": "collaboration",
+        "Mobile Platform Team": "x-as-a-service",
+        "Route Optimization Platform Team": "x-as-a-service",
+        "Feature Management Platform Team": "x-as-a-service"
+      },
+      "metadata": {
+        "size": 5,
+        "cognitive_load": "medium",
+        "established": "2024-05"
+      },
+      "team_api_summary": null
+    },
+    {
+      "name": "Developer Portal Team",
+      "team_type": "stream-aligned",
+      "position": {
+        "x": 1280.0,
+        "y": 1714.0
+      },
+      "value_stream": null,
+      "platform_grouping": "Cloud Infrastructure Platform Grouping",
+      "dependencies": [
+        "Cloud Development Platform Team",
+        "Observability Platform Team",
+        "CI/CD Platform Team",
+        "API Gateway Platform Team"
+      ],
+      "dependency_notes": [],
+      "interaction_modes": {
+        "Cloud Development Platform Team": "x-as-a-service",
+        "Observability Platform Team": "x-as-a-service",
+        "CI/CD Platform Team": "x-as-a-service",
+        "API Gateway Platform Team": "x-as-a-service"
+      },
+      "metadata": {
+        "size": 6,
+        "cognitive_load": "medium",
+        "established": "2023-09"
+      },
+      "team_api_summary": null
+    },
+    {
+      "name": "DevOps Enablement Team",
+      "team_type": "enabling",
+      "position": {
+        "x": 670.0,
+        "y": 869.0
+      },
+      "value_stream": "B2B Services",
+      "platform_grouping": null,
+      "dependencies": [
+        "Enterprise Fleet Portal Team",
+        "Enterprise CRM Integration Team",
+        "Enterprise Reporting Team"
+      ],
+      "dependency_notes": [],
+      "interaction_modes": {
+        "Enterprise Fleet Portal Team": "facilitating",
+        "Enterprise CRM Integration Team": "facilitating",
+        "Enterprise Reporting Team": "facilitating"
+      },
+      "metadata": {
+        "size": 4,
+        "cognitive_load": "medium",
+        "established": "2024-02"
+      },
+      "team_api_summary": null
+    },
+    {
+      "name": "Driver Experience Team",
+      "team_type": "stream-aligned",
+      "position": {
+        "x": 2130.0,
+        "y": 413.0
+      },
+      "value_stream": "B2C Services",
+      "platform_grouping": null,
+      "dependencies": [
+        "Mobile Platform Team",
+        "Fleet Operations Team",
+        "Route Optimization Platform Team",
+        "Driver Feedback Team",
+        "Observability Platform Team"
+      ],
+      "dependency_notes": [],
+      "interaction_modes": {
+        "Mobile Platform Team": "x-as-a-service",
+        "Fleet Operations Team": "collaboration",
+        "Route Optimization Platform Team": "x-as-a-service",
+        "Driver Feedback Team": "collaboration",
+        "Observability Platform Team": "x-as-a-service"
+      },
+      "metadata": {
+        "size": 8,
+        "cognitive_load": "medium",
+        "established": "2023-11"
+      },
+      "team_api_summary": null
+    },
+    {
+      "name": "Driver Feedback Team",
+      "team_type": "stream-aligned",
+      "position": {
+        "x": 2130.0,
+        "y": 537.0
+      },
+      "value_stream": "B2C Services",
+      "platform_grouping": null,
+      "dependencies": [
+        "Customer Delivery Tracking Team",
+        "Driver Experience Team",
+        "Delivery Analytics Team",
+        "Mobile Inner Platform Team",
+        "Feature Management Platform Team"
+      ],
+      "dependency_notes": [],
+      "interaction_modes": {
+        "Customer Delivery Tracking Team": "collaboration",
+        "Driver Experience Team": "collaboration",
+        "Delivery Analytics Team": "x-as-a-service",
+        "Mobile Inner Platform Team": "x-as-a-service",
+        "Feature Management Platform Team": "x-as-a-service"
+      },
+      "metadata": {
+        "size": 5,
+        "cognitive_load": "low",
+        "established": "2025-01"
+      },
+      "team_api_summary": null
+    },
+    {
+      "name": "Enterprise CRM Integration Team",
+      "team_type": "stream-aligned",
+      "position": {
+        "x": 430.0,
+        "y": 165.0
+      },
+      "value_stream": "B2B Services",
+      "platform_grouping": null,
+      "dependencies": [
+        "Enterprise Fleet Portal Team",
+        "DevOps Enablement Team",
+        "API Gateway Platform Team",
+        "Data Pipeline Platform Team",
+        "Observability Platform Team"
+      ],
+      "dependency_notes": [],
+      "interaction_modes": {
+        "Enterprise Fleet Portal Team": "collaboration",
+        "DevOps Enablement Team": "facilitating",
+        "API Gateway Platform Team": "x-as-a-service",
+        "Data Pipeline Platform Team": "x-as-a-service",
+        "Observability Platform Team": "x-as-a-service"
+      },
+      "metadata": {
+        "size": 6,
+        "cognitive_load": "high",
+        "established": "2024-02"
+      },
+      "team_api_summary": null
+    },
+    {
+      "name": "Enterprise Fleet Portal Team",
+      "team_type": "stream-aligned",
+      "position": {
+        "x": 430.0,
+        "y": 289.0
+      },
+      "value_stream": "B2B Services",
+      "platform_grouping": null,
+      "dependencies": [
+        "DevOps Enablement Team",
+        "Data Storage Platform Team",
+        "CI/CD Platform Team"
+      ],
+      "dependency_notes": [],
+      "interaction_modes": {
+        "DevOps Enablement Team": "facilitating",
+        "Data Storage Platform Team": "x-as-a-service",
+        "CI/CD Platform Team": "x-as-a-service"
+      },
+      "metadata": {
+        "size": 6,
+        "cognitive_load": "medium",
+        "established": "2023-11"
+      },
+      "team_api_summary": null
+    },
+    {
+      "name": "Enterprise Reporting Team",
+      "team_type": "stream-aligned",
+      "position": {
+        "x": 430.0,
+        "y": 413.0
+      },
+      "value_stream": "B2B Services",
+      "platform_grouping": null,
+      "dependencies": [
+        "Enterprise Fleet Portal Team",
+        "DevOps Enablement Team",
+        "Data Pipeline Platform Team",
+        "Observability Platform Team"
+      ],
+      "dependency_notes": [],
+      "interaction_modes": {
+        "Enterprise Fleet Portal Team": "collaboration",
+        "DevOps Enablement Team": "facilitating",
+        "Data Pipeline Platform Team": "x-as-a-service",
+        "Observability Platform Team": "x-as-a-service"
+      },
+      "metadata": {
+        "size": 5,
+        "cognitive_load": "medium",
+        "established": "2024-09"
+      },
+      "team_api_summary": null
+    },
+    {
+      "name": "Example Undefined Team",
+      "team_type": "undefined",
+      "position": {
+        "x": 100.0,
+        "y": 280.0
+      },
+      "value_stream": null,
+      "platform_grouping": null,
+      "dependencies": [],
+      "dependency_notes": [],
+      "interaction_modes": {},
+      "metadata": {
+        "size": 0,
+        "cognitive_load": "undefined",
+        "established": "2023-01"
+      },
+      "team_api_summary": null
+    },
+    {
+      "name": "Feature Management Platform Team",
+      "team_type": "platform",
+      "position": {
+        "x": 1280.0,
+        "y": 1838.0
+      },
+      "value_stream": null,
+      "platform_grouping": "Cloud Infrastructure Platform Grouping",
+      "dependencies": [],
+      "dependency_notes": [],
+      "interaction_modes": {},
+      "metadata": {
+        "size": 5,
+        "cognitive_load": "medium",
+        "established": "2024-08"
+      },
+      "team_api_summary": null
+    },
+    {
+      "name": "Financial Reporting Team",
+      "team_type": "stream-aligned",
+      "position": {
+        "x": 1280.0,
+        "y": 289.0
+      },
+      "value_stream": "Financial Services",
+      "platform_grouping": null,
+      "dependencies": [
+        "Billing Team",
+        "Data Pipeline Platform Team",
+        "Observability Platform Team"
+      ],
+      "dependency_notes": [],
+      "interaction_modes": {
+        "Billing Team": "x-as-a-service",
+        "Data Pipeline Platform Team": "x-as-a-service",
+        "Observability Platform Team": "x-as-a-service"
+      },
+      "metadata": {
+        "size": 6,
+        "cognitive_load": "medium",
+        "established": null
+      },
+      "team_api_summary": null
+    },
+    {
+      "name": "Fleet Monitor Team",
+      "team_type": "stream-aligned",
+      "position": {
+        "x": 430.0,
+        "y": 537.0
+      },
+      "value_stream": "B2B Services",
+      "platform_grouping": null,
+      "dependencies": [
+        "Fleet Operations Team",
+        "Driver Experience Team",
+        "Data Storage Platform Team",
+        "Observability Platform Team"
+      ],
+      "dependency_notes": [],
+      "interaction_modes": {
+        "Fleet Operations Team": "collaboration",
+        "Driver Experience Team": "x-as-a-service",
+        "Data Storage Platform Team": "x-as-a-service",
+        "Observability Platform Team": "x-as-a-service"
+      },
+      "metadata": {
+        "size": 6,
+        "cognitive_load": "medium",
+        "established": "2023-09"
+      },
+      "team_api_summary": null
+    },
+    {
+      "name": "Fleet Operations Team",
+      "team_type": "stream-aligned",
+      "position": {
+        "x": 430.0,
+        "y": 661.0
+      },
+      "value_stream": "B2B Services",
+      "platform_grouping": null,
+      "dependencies": [
+        "Route Optimization Platform Team",
+        "Driver Experience Team",
+        "Data Storage Platform Team"
+      ],
+      "dependency_notes": [],
+      "interaction_modes": {
+        "Route Optimization Platform Team": "x-as-a-service",
+        "Driver Experience Team": "collaboration",
+        "Data Storage Platform Team": "x-as-a-service"
+      },
+      "metadata": {
+        "size": 6,
+        "cognitive_load": "medium",
+        "established": "2024-03"
+      },
+      "team_api_summary": null
+    },
+    {
+      "name": "Fraud Detection and Risk Modeling Team",
+      "team_type": "complicated-subsystem",
+      "position": {
+        "x": 1280.0,
+        "y": 621.0
+      },
+      "value_stream": "Financial Services",
+      "platform_grouping": null,
+      "dependencies": [],
+      "dependency_notes": [],
+      "interaction_modes": {},
+      "metadata": {
+        "size": 5,
+        "cognitive_load": "high",
+        "established": "2025-01"
+      },
+      "team_api_summary": null
+    },
+    {
+      "name": "Invoicing Team",
+      "team_type": "stream-aligned",
+      "position": {
+        "x": 1280.0,
+        "y": 413.0
+      },
+      "value_stream": "Financial Services",
+      "platform_grouping": null,
+      "dependencies": [
+        "Billing Team"
+      ],
+      "dependency_notes": [],
+      "interaction_modes": {
+        "Billing Team": "collaboration"
+      },
+      "metadata": {
+        "size": 5,
+        "cognitive_load": "medium",
+        "established": null
+      },
+      "team_api_summary": null
+    },
+    {
+      "name": "Load Planning Team",
+      "team_type": "stream-aligned",
+      "position": {
+        "x": 430.0,
+        "y": 785.0
+      },
+      "value_stream": "B2B Services",
+      "platform_grouping": null,
+      "dependencies": [
+        "Route Optimization Platform Team",
+        "Fleet Operations Team",
+        "Data Storage Platform Team",
+        "Observability Platform Team"
+      ],
+      "dependency_notes": [],
+      "interaction_modes": {
+        "Route Optimization Platform Team": "x-as-a-service",
+        "Fleet Operations Team": "collaboration",
+        "Data Storage Platform Team": "x-as-a-service",
+        "Observability Platform Team": "x-as-a-service"
+      },
+      "metadata": {
+        "size": 7,
+        "cognitive_load": "medium",
+        "established": "2023-11"
+      },
+      "team_api_summary": null
+    },
+    {
+      "name": "Machine Learning & AI Specialists Team",
+      "team_type": "complicated-subsystem",
+      "position": {
+        "x": 100.0,
+        "y": 400.0
+      },
+      "value_stream": null,
+      "platform_grouping": null,
+      "dependencies": [
+        "Data Engineering Enablement Team",
+        "Data Pipeline Platform Team",
+        "Fleet Monitor Team"
+      ],
+      "dependency_notes": [],
+      "interaction_modes": {
+        "Data Engineering Enablement Team": "collaboration",
+        "Data Pipeline Platform Team": "x-as-a-service",
+        "Fleet Monitor Team": "collaboration"
+      },
+      "metadata": {
+        "size": 6,
+        "cognitive_load": "high",
+        "established": "2023-11"
+      },
+      "team_api_summary": null
+    },
+    {
+      "name": "Mobile Inner Platform Team",
+      "team_type": "platform",
+      "position": {
+        "x": 2220.0,
+        "y": 906.0
+      },
+      "value_stream": "Mobile Experience",
+      "platform_grouping": null,
+      "dependencies": [
+        "Driver Experience Team",
+        "Driver Feedback Team",
+        "Delivery Notifications Team",
+        "Cloud Development Platform Team"
+      ],
+      "dependency_notes": [],
+      "interaction_modes": {
+        "Driver Experience Team": "x-as-a-service",
+        "Driver Feedback Team": "x-as-a-service",
+        "Delivery Notifications Team": "x-as-a-service",
+        "Cloud Development Platform Team": "x-as-a-service"
+      },
+      "metadata": {
+        "size": 6,
+        "cognitive_load": "medium",
+        "established": "2023-10"
+      },
+      "team_api_summary": null
+    },
+    {
+      "name": "Mobile Platform Team",
+      "team_type": "platform",
+      "position": {
+        "x": 2220.0,
+        "y": 1046.0
+      },
+      "value_stream": "Mobile Experience",
+      "platform_grouping": null,
+      "dependencies": [
+        "Driver Experience Team",
+        "Driver Feedback Team",
+        "Delivery Notifications Team",
+        "Cloud Development Platform Team"
+      ],
+      "dependency_notes": [],
+      "interaction_modes": {
+        "Driver Experience Team": "x-as-a-service",
+        "Driver Feedback Team": "x-as-a-service",
+        "Delivery Notifications Team": "x-as-a-service",
+        "Cloud Development Platform Team": "x-as-a-service"
+      },
+      "metadata": {
+        "size": 6,
+        "cognitive_load": "medium",
+        "established": "2023-10"
+      },
+      "team_api_summary": null
+    },
+    {
+      "name": "Observability Platform Team",
+      "team_type": "platform",
+      "position": {
+        "x": 1280.0,
+        "y": 1978.0
+      },
+      "value_stream": null,
+      "platform_grouping": "Cloud Infrastructure Platform Grouping",
+      "dependencies": [
+        "Cloud Development Platform Team",
+        "API Gateway Platform Team",
+        "CI/CD Platform Team"
+      ],
+      "dependency_notes": [],
+      "interaction_modes": {
+        "Cloud Development Platform Team": "x-as-a-service",
+        "API Gateway Platform Team": "x-as-a-service",
+        "CI/CD Platform Team": "x-as-a-service"
+      },
+      "metadata": {
+        "size": 5,
+        "cognitive_load": "medium",
+        "established": "2023-09"
+      },
+      "team_api_summary": null
+    },
+    {
+      "name": "Payment Processing Team",
+      "team_type": "stream-aligned",
+      "position": {
+        "x": 1280.0,
+        "y": 537.0
+      },
+      "value_stream": "Financial Services",
+      "platform_grouping": null,
+      "dependencies": [
+        "Billing Team",
+        "Driver Experience Team",
+        "Security Compliance Team"
+      ],
+      "dependency_notes": [],
+      "interaction_modes": {
+        "Billing Team": "x-as-a-service",
+        "Driver Experience Team": "x-as-a-service",
+        "Security Compliance Team": "facilitating"
+      },
+      "metadata": {
+        "size": 7,
+        "cognitive_load": "high",
+        "established": "2024-08"
+      },
+      "team_api_summary": null
+    },
+    {
+      "name": "Route Optimization Platform Team",
+      "team_type": "complicated-subsystem",
+      "position": {
+        "x": 910.0,
+        "y": 869.0
+      },
+      "value_stream": "B2B Services",
+      "platform_grouping": null,
+      "dependencies": [
+        "Fleet Operations Team",
+        "Load Planning Team",
+        "Driver Experience Team",
+        "Data Storage Platform Team",
+        "Observability Platform Team"
+      ],
+      "dependency_notes": [],
+      "interaction_modes": {
+        "Fleet Operations Team": "x-as-a-service",
+        "Load Planning Team": "x-as-a-service",
+        "Driver Experience Team": "x-as-a-service",
+        "Data Storage Platform Team": "x-as-a-service",
+        "Observability Platform Team": "x-as-a-service"
+      },
+      "metadata": {
+        "size": 6,
+        "cognitive_load": "very-high",
+        "established": "2023-11"
+      },
+      "team_api_summary": null
+    },
+    {
+      "name": "Security Compliance Team",
+      "team_type": "enabling",
+      "position": {
+        "x": 100.0,
+        "y": 540.0
+      },
+      "value_stream": null,
+      "platform_grouping": null,
+      "dependencies": [],
+      "dependency_notes": [],
+      "interaction_modes": {},
+      "metadata": {
+        "size": 4,
+        "cognitive_load": "medium",
+        "established": "2024-07"
+      },
+      "team_api_summary": null
+    },
+    {
+      "name": "Security Engineering Enablement Team",
+      "team_type": "enabling",
+      "position": {
+        "x": 100.0,
+        "y": 720.0
+      },
+      "value_stream": null,
+      "platform_grouping": null,
+      "dependencies": [
+        "Driver Experience Team",
+        "API Gateway Platform Team"
+      ],
+      "dependency_notes": [],
+      "interaction_modes": {
+        "Driver Experience Team": "facilitating",
+        "API Gateway Platform Team": "facilitating"
+      },
+      "metadata": {
+        "size": 4,
+        "cognitive_load": "medium",
+        "established": "2024-01"
+      },
+      "team_api_summary": null
+    }
+  ],
+  "statistics": {
+    "total_teams": 34,
+    "stream_aligned": 17,
+    "platform": 8,
+    "enabling": 4,
+    "complicated_subsystem": 4,
+    "value_streams": 4,
+    "platform_groupings": 1
+  }
+}

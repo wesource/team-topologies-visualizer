@@ -22,7 +22,7 @@
                     </div>
                     <button id="exportSVGBtn" class="btn">📥 Export SVG</button>
                     <button id="validateBtn" class="btn">✓ Validate</button>
-                    <button id="keyboardShortcutsBtn" class="btn" title="Keyboard Shortcuts">?</button>
+                    <button id="keyboardShortcutsBtn" class="btn btn-icon" title="Keyboard Shortcuts" aria-label="Keyboard Shortcuts">?</button>
                     <button id="refreshBtn" class="btn">🔄 Refresh</button>
                 </div>
             </div>
@@ -61,22 +61,22 @@
                             <span>Communication Lines</span>
                         </label>
                         <span class="inline-divider" id="connectionsCognitiveLoadDivider" style="display: none;"></span>
-                        <label class="radio-label">
+                        <label class="radio-label has-tooltip" title="Toggle cognitive load indicators on team cards.">
                             <input type="checkbox" id="showCognitiveLoad">
                             <span>Cognitive Load</span>
                         </label>
                         <span class="inline-divider" id="cognitiveLoadConsumersDivider" style="display: none;"></span>
-                        <label class="radio-label" id="showPlatformConsumersLabel" style="display: none;">
+                        <label class="radio-label has-tooltip" id="showPlatformConsumersLabel" style="display: none;" title="Toggle platform consumer indicators (who consumes which platform teams).">
                             <input type="checkbox" id="showPlatformConsumers">
                             <span>Platform Consumers</span>
                         </label>
                         <span class="inline-divider" id="consumersMetricsDivider" style="display: none;"></span>
-                        <label class="radio-label" id="showFlowMetricsLabel" style="display: none;">
+                        <label class="radio-label has-tooltip" id="showFlowMetricsLabel" style="display: none;" title="Toggle flow metrics indicators (where available in the data).">
                             <input type="checkbox" id="showFlowMetrics">
                             <span>Flow Metrics</span>
                         </label>
                         <span class="inline-divider" id="metricsBadgesDivider" style="display: none;"></span>
-                        <label class="radio-label" id="teamTypeBadgesLabel" style="display: none;">
+                        <label class="radio-label has-tooltip" id="teamTypeBadgesLabel" style="display: none;" title="Toggle compact team-type badges on team cards.">
                             <input type="checkbox" id="showTeamTypeBadges">
                             <span>Type Badges</span>
                         </label>
@@ -93,10 +93,10 @@
                             <span>Collaboration</span>
                         </label>
                         <span class="pipe-separator">|</span>
-                        <label class="inline-checkbox">
-                            <input type="checkbox" id="showFacilitating" checked>
-                            <span>Facilitating</span>
-                        </label>
+                            <label class="inline-checkbox">
+                                <input type="checkbox" id="showFacilitating" checked>
+                                <span>Facilitating</span>
+                            </label>
                     </div>
                     <div id="groupingFilterContainer" class="filter-panel" style="display: none;">
                         <button id="filterToggleBtn" class="btn filter-toggle-btn">

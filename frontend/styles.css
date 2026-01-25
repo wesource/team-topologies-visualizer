@@ -8,6 +8,28 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: #f5f5f5;
     color: #333;
+
+    /* Form control sizing (keep checkboxes consistent across panels) */
+    --checkbox-size: 16px;
+
+    /* UI control tokens */
+    --control-accent: #4A90E2;
+    --control-hover-bg: rgba(74, 144, 226, 0.08);
+    --control-focus-ring: 0 0 0 3px rgba(74, 144, 226, 0.22);
+    --control-hit-padding-y: 0.15rem;
+    --control-hit-padding-x: 0.25rem;
+    --control-hit-radius: 6px;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+    accent-color: var(--control-accent);
+}
+
+input[type="checkbox"]:focus-visible,
+input[type="radio"]:focus-visible {
+    outline: 2px solid rgba(74, 144, 226, 0.65);
+    outline-offset: 2px;
 }
 
 /* Demo Mode Banner */
@@ -145,7 +167,7 @@ header h1 {
 
 .inline-divider {
     width: 1px;
-    height: 20px;
+    height: 24px;
     background: #ddd;
     margin: 0 0.5rem;
 }
@@ -158,6 +180,10 @@ header h1 {
     border: 1px solid #ddd;
     background: white;
     border-radius: 4px;
+}
+
+.view-selector .radio-label span {
+    white-space: nowrap;
 }
 
 .perspective-selector {
@@ -185,10 +211,55 @@ header h1 {
     gap: 0.4rem;
 }
 
+.radio-label.has-tooltip::after {
+    content: "ⓘ";
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.1em;
+    height: 1.1em;
+    border: 1px solid #cfd4da;
+    border-radius: 999px;
+    background: white;
+    color: #6c757d;
+    font-size: 0.85rem;
+    line-height: 1;
+    flex: 0 0 auto;
+}
+
+.radio-label.has-tooltip:hover::after {
+    border-color: var(--control-accent);
+    color: var(--control-accent);
+    background: var(--control-hover-bg);
+}
+
+/* Larger hit-area + clearer focus on the header controls bar */
+header .controls-row .radio-label,
+header .controls-row .interaction-mode-panel .inline-checkbox {
+    padding: var(--control-hit-padding-y) var(--control-hit-padding-x);
+    border-radius: var(--control-hit-radius);
+}
+
+header .controls-row .radio-label:hover,
+header .controls-row .interaction-mode-panel .inline-checkbox:hover {
+    background: var(--control-hover-bg);
+}
+
+header .controls-row .radio-label:focus-within,
+header .controls-row .interaction-mode-panel .inline-checkbox:focus-within {
+    box-shadow: var(--control-focus-ring);
+}
+
 .radio-label input[type="radio"] {
     cursor: pointer;
     width: 16px;
     height: 16px;
+}
+
+.radio-label input[type="checkbox"] {
+    cursor: pointer;
+    width: var(--checkbox-size);
+    height: var(--checkbox-size);
 }
 
 .radio-label span {
@@ -234,12 +305,13 @@ header h1 {
 
 .interaction-mode-panel .inline-checkbox input[type="checkbox"] {
     cursor: pointer;
-    width: 16px;
-    height: 16px;
+    width: var(--checkbox-size);
+    height: var(--checkbox-size);
 }
 
 .interaction-mode-panel .inline-checkbox span {
     color: #333;
+    white-space: nowrap;
 }
 
 .interaction-mode-panel .inline-checkbox input[type="checkbox"]:checked + span {
@@ -379,8 +451,8 @@ header h1 {
 .filter-checkbox-label input[type="checkbox"] {
     margin-right: 0.6rem;
     cursor: pointer;
-    width: 16px;
-    height: 16px;
+    width: var(--checkbox-size);
+    height: var(--checkbox-size);
 }
 
 .filter-empty {
@@ -427,6 +499,11 @@ header h1 {
 
 .btn:hover {
     background: #f0f0f0;
+}
+
+.btn:focus-visible {
+    outline: none;
+    box-shadow: var(--control-focus-ring);
 }
 
 .btn-primary {
@@ -1561,8 +1638,8 @@ header h1 {
 
 .comparison-control-label input[type="checkbox"] {
     cursor: pointer;
-    width: 18px;
-    height: 18px;
+    width: var(--checkbox-size);
+    height: var(--checkbox-size);
 }
 
 /* Side-by-Side Comparison View Modal */
