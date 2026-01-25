@@ -3,7 +3,7 @@ team_id: enterprise-crm-integration-team
 name: Enterprise CRM Integration Team
 team_type: stream-aligned
 position:
-  x: 730.0
+  x: 430.0
   y: 165.0
 metadata:
   size: 6

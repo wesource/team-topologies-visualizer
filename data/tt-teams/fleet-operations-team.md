@@ -3,7 +3,7 @@ team_id: fleet-operations-team
 name: Fleet Operations Team
 team_type: stream-aligned
 position:
-  x: 730.0
+  x: 430.0
   y: 661.0
 metadata:
   size: 6

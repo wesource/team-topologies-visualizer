@@ -3,7 +3,7 @@ team_id: billing-team
 name: Billing Team
 team_type: stream-aligned
 position:
-  x: 1580.0
+  x: 1280.0
   y: 165.0
 metadata:
   size: 6

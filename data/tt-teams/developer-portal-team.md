@@ -3,7 +3,7 @@ team_id: developer-portal-team
 name: Developer Portal Team
 team_type: stream-aligned
 position:
-  x: 1580.0
+  x: 1280.0
   y: 1714.0
 metadata:
   size: 6

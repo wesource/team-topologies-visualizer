@@ -3,7 +3,7 @@ team_id: delivery-analytics-team
 name: Delivery Analytics Team
 team_type: complicated-subsystem
 position:
-  x: 730.0
+  x: 430.0
   y: 869.0
 metadata:
   size: 5

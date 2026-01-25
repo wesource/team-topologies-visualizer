@@ -2,6 +2,7 @@
  * Application State Management
  * Centralized state for the Team Topologies Visualizer
  */
+import { getTeamBoxWidth, getTeamBoxHeight } from './renderer-common.js';
 
 // Application state object
 export const state = {
@@ -139,18 +140,44 @@ export function zoomOut(drawCallback) {
 export function fitToView(canvas, teams, drawCallback) {
     if (!teams || teams.length === 0) return;
 
-    // Calculate bounding box of all teams
+    // Get filtered teams (respect current filters)
+    const visibleTeams = getFilteredTeams(teams);
+    if (visibleTeams.length === 0) return;
+
+    // Calculate bounding box using actual team dimensions
     let minX = Infinity, minY = Infinity;
     let maxX = -Infinity, maxY = -Infinity;
 
-    teams.forEach(team => {
+    visibleTeams.forEach(team => {
         const x = team.position?.x || 0;
         const y = team.position?.y || 0;
+
+        // Use actual team dimensions based on current view
+        const width = getTeamBoxWidth(team, state.currentView);
+        const height = getTeamBoxHeight(team, state.currentView);
+
         minX = Math.min(minX, x);
         minY = Math.min(minY, y);
-        maxX = Math.max(maxX, x + 200); // Team width
-        maxY = Math.max(maxY, y + 80);  // Team height
+        maxX = Math.max(maxX, x + width);
+        maxY = Math.max(maxY, y + height);
     });
+
+    // Handle custom team positions for product-lines and business-streams views
+    if (state.currentView === 'current' && state.currentPerspective === 'product-lines' && state.productLinesTeamPositions) {
+        state.productLinesTeamPositions.forEach((bounds, _teamName) => {
+            minX = Math.min(minX, bounds.x);
+            minY = Math.min(minY, bounds.y);
+            maxX = Math.max(maxX, bounds.x + bounds.width);
+            maxY = Math.max(maxY, bounds.y + bounds.height);
+        });
+    } else if (state.currentView === 'current' && state.currentPerspective === 'business-streams' && state.businessStreamsTeamPositions) {
+        state.businessStreamsTeamPositions.forEach((bounds, _teamName) => {
+            minX = Math.min(minX, bounds.x);
+            minY = Math.min(minY, bounds.y);
+            maxX = Math.max(maxX, bounds.x + bounds.width);
+            maxY = Math.max(maxY, bounds.y + bounds.height);
+        });
+    }
 
     const contentWidth = maxX - minX;
     const contentHeight = maxY - minY;

@@ -3,7 +3,7 @@ team_id: observability-platform-team
 name: Observability Platform Team
 team_type: platform
 position:
-  x: 1580.0
+  x: 1280.0
   y: 1978.0
 metadata:
   size: 5

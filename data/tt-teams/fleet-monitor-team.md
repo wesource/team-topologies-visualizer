@@ -3,7 +3,7 @@ team_id: fleet-monitor-team
 name: Fleet Monitor Team
 team_type: stream-aligned
 position:
-  x: 730.0
+  x: 430.0
   y: 537.0
 metadata:
   size: 6

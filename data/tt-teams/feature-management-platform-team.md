@@ -3,7 +3,7 @@ team_id: feature-management-platform-team
 name: Feature Management Platform Team
 team_type: platform
 position:
-  x: 1580.0
+  x: 1280.0
   y: 1838.0
 metadata:
   size: 5

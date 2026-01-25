@@ -3,7 +3,7 @@ team_id: customer-delivery-tracking-team
 name: Customer Delivery Tracking Team
 team_type: stream-aligned
 position:
-  x: 2430.0
+  x: 2130.0
   y: 165.0
 metadata:
   size: 7
