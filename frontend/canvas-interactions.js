@@ -1,7 +1,7 @@
 // Canvas mouse and interaction handling
 import { getTeamAtPosition } from './renderer-common.js';
 import { updateTeamPosition } from './api.js';
-import { pushPositionSnapshot } from './state-management.js';
+import { pushPositionSnapshot, updateZoomDisplay } from './state-management.js';
 import { updateUndoButtonState } from './ui-handlers.js';
 
 /**
@@ -324,6 +324,7 @@ export class CanvasInteractionHandler {
         const delta = e.deltaY > 0 ? 0.9 : 1.1;
         this.state.scale *= delta;
         this.state.scale = Math.max(0.1, Math.min(3, this.state.scale));
+        updateZoomDisplay();
         this.drawCallback();
     }
 

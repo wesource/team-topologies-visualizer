@@ -1,4 +1,3 @@
-import { LAYOUT } from './constants.js';
 import { getValueStreamGroupings } from './tt-value-stream-grouping.js';
 import { getPlatformGroupings } from './tt-platform-grouping.js';
 import { getTeamBoxHeight } from './renderer-common.js';
@@ -111,8 +110,9 @@ export function autoAlignTTDesign(teams) {
                 realignedTeams.push(team);
             }
 
-            // Move to next team position (but we'll adjust after the loop if this is the last team)
-            currentYPos += LAYOUT.TEAM_BOX_HEIGHT + wideTeamVerticalSpacing;
+            // Move to next team position (use actual team height for proper spacing)
+            const teamHeight = getTeamBoxHeight(team, 'tt');
+            currentYPos += teamHeight + wideTeamVerticalSpacing;
         });
 
         // After wide teams, currentYPos is spacing pixels below the last team

@@ -821,11 +821,11 @@ function drawConnection(ctx, from, to, mode, currentView = 'current', currentPer
             return;
         }
     } else {
-        // Calculate center points dynamically based on team box width
+        // Calculate center points dynamically based on team box width and height
         fromWidth = getTeamBoxWidth(from, currentView);
         toWidth = getTeamBoxWidth(to, currentView);
-        fromHeight = LAYOUT.TEAM_BOX_HEIGHT;
-        toHeight = LAYOUT.TEAM_BOX_HEIGHT;
+        fromHeight = getTeamBoxHeight(from, currentView);
+        toHeight = getTeamBoxHeight(to, currentView);
         fromCenterX = from.position.x + fromWidth / 2;
         fromCenterY = from.position.y + fromHeight / 2;
         toCenterX = to.position.x + toWidth / 2;
