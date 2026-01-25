@@ -55,24 +55,6 @@ export function handleViewChange(e, loadAllTeams, _draw) {
         }
     }
 
-    const showInteractionModesLabel = document.getElementById('showInteractionModesLabel');
-    const modesCognitiveLoadDivider = document.getElementById('modesCognitiveLoadDivider');
-    if (showInteractionModesLabel) {
-        if (state.currentView === 'tt') {
-            showInteractionModesLabel.style.display = 'flex';
-            // Show divider when interaction modes is visible
-            if (modesCognitiveLoadDivider) {
-                modesCognitiveLoadDivider.style.display = 'block';
-            }
-        } else {
-            showInteractionModesLabel.style.display = 'none';
-            // Hide divider when interaction modes is hidden
-            if (modesCognitiveLoadDivider) {
-                modesCognitiveLoadDivider.style.display = 'none';
-            }
-        }
-    }
-
     // Show/hide Platform Consumers checkbox (TT Design view only)
     const showPlatformConsumersLabel = document.getElementById('showPlatformConsumersLabel');
     const cognitiveLoadConsumersDivider = document.getElementById('cognitiveLoadConsumersDivider');
@@ -660,11 +642,6 @@ export function setupUIEventListeners(loadAllTeams, draw, openAddTeamModal, clos
     const showConnectionsLabel = document.getElementById('showConnectionsLabel');
     if (showConnectionsLabel) {
         showConnectionsLabel.style.display = 'none'; // Hidden in TT view
-    }
-
-    const showInteractionModesLabelInit = document.getElementById('showInteractionModesLabel');
-    if (showInteractionModesLabelInit) {
-        showInteractionModesLabelInit.style.display = 'flex'; // Shown in TT view
     }
 
     const showPlatformConsumersLabelInit = document.getElementById('showPlatformConsumersLabel');

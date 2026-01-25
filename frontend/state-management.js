@@ -22,7 +22,6 @@ export const state = {
     teamColorMap: {},
     onTeamDoubleClick: null,
     showConnections: false,
-    showInteractionModes: true, // Interaction mode lines enabled by default
     showCognitiveLoad: false, // Cognitive load indicators disabled by default
     showPlatformConsumers: false, // Platform consumer dashboard disabled by default (TT Design view only)
     showFlowMetrics: false, // Flow metrics overlay disabled by default (optional canvas visualization)
