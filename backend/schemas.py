@@ -466,13 +466,13 @@ class TTTeamFrontmatter(BaseModel):
             After the YAML frontmatter (---), the markdown content should include a 'Teams we currently interact with' section with a table listing interactions with other teams:
 
             ## Teams we currently interact with
-            | Team Name | Interaction Mode | Purpose |
-            |-----------|------------------|---------|
-            | E-commerce Checkout | X-as-a-Service | Provide authentication for checkout flow |
-            | Mobile App Team | Collaboration | Build mobile-specific auth features |
-            | DevOps Enablement | Facilitating | Learn Kubernetes deployment patterns |
+            | Team Name | Interaction Mode | Purpose | Duration |
+            |-----------|------------------|---------|----------|
+            | E-commerce Checkout | X-as-a-Service | Provide authentication for checkout flow | Ongoing |
+            | Mobile App Team | Collaboration | Build mobile-specific auth features | 3 months |
+            | DevOps Enablement | Facilitating | Learn Kubernetes deployment patterns | 2 months |
 
-            Columns: Team Name (string), Interaction Mode (Collaboration|X-as-a-Service|Facilitating), Purpose (string describing the interaction)
+            Columns: Team Name (string), Interaction Mode (Collaboration|X-as-a-Service|Facilitating), Purpose (string describing the interaction), Duration (optional; currently ignored by the app)
 
             ℹ️ This section is included in both base and extended Team API templates and is important for documenting team interactions.""",
         }
