@@ -16,11 +16,16 @@ See [DEPENDENCIES.md](DEPENDENCIES.md) for full list of dependencies and rationa
 
 Modular architecture with clear separation of concerns:
 
-- **main.py** (42 lines) - Application setup, CORS middleware, router inclusion, static file serving
-- **backend/models.py** - Pydantic data models (TeamData, PositionUpdate) for type validation
-- **backend/services.py** - File operations and business logic (parse_team_file, write_team_file, find_all_teams, etc.)
-- **backend/routes_pre_tt.py** - Pre-TT (Baseline) API endpoints
-- **backend/routes_tt.py** - TT Design API endpoints
+- **main.py** - FastAPI app setup, static file serving, router inclusion
+- **backend/models.py** - Pydantic models for request/response validation
+- **backend/schemas.py** - Schema and domain helpers used by the API and parsers
+- **backend/services.py** - File operations and core business logic (team parsing, CRUD)
+- **backend/snapshot_services.py** - Snapshot read/write helpers
+- **backend/validation.py** - Data validation helpers and endpoints
+- **backend/routes_baseline.py** - Baseline (Pre-TT) API routes
+- **backend/routes_tt.py** - TT Design API routes
+- **backend/routes_schemas.py** - Schema/config routes used by the frontend
+- **backend/comparison.py** - Snapshot comparison helpers
 
 ## Frontend (Vanilla JavaScript ES6 Modules)
 
@@ -34,10 +39,16 @@ Modular architecture with clear separation of concerns:
 - **api.js** - API client layer for backend communication
 - **app.js** - Main application orchestration and initialization
 - **canvas-interactions.js** - Canvas event handling (drag, zoom, pan, click)
+- **state-management.js** - App state + view actions (e.g. fit-to-view)
 - **renderer-common.js** - Shared rendering utilities (drawTeam, wrapText, darkenColor)
+- **renderer.js** - Main render loop and view orchestration
 - **renderer-current.js** - Current State org-chart view rendering
+- **baseline-hierarchy-alignment.js** - Baseline view auto-alignment
+- **tt-design-alignment.js** - TT Design auto-alignment
 - **svg-export.js** - SVG export functionality
-- **team-alignment.js** - Auto-align teams functionality
+- **ui-handlers.js** - UI wiring and event handlers
+
+Additional renderers (e.g. product lines, value streams) live under `frontend/renderer-*.js`.
 
 **Why Vanilla JavaScript?**
 - No build step required - simplicity for straightforward visualization app
@@ -50,59 +61,6 @@ Modular architecture with clear separation of concerns:
 - **Markdown files with YAML front matter** - Human-readable, git-friendly team data
 - **JSON configuration files** - Team type definitions with colors and descriptions
 - **No database** - Keeps the solution simple and version-control friendly
-
-## Key Technical Decisions
-
-### Backend Modularization
-
-**Why**: Original main.py was 229 lines - too large and hard to maintain
-
-**Solution**: Split into focused modules:
-- models.py: Data validation with Pydantic
-- services.py: Business logic and file operations
-- routes_pre_tt.py / routes_tt.py: API endpoint definitions
-- main.py: Application setup (now 42 lines)
-
-**Benefits**: 
-- Easier to test individual functions
-- Clear separation of concerns
-- Simpler imports and dependencies
-
-### Frontend Utility Modules
-
-**Why**: Duplicate code (3 darkenColor functions) and magic numbers throughout codebase
-
-**Solution**: Created shared utility modules:
-- constants.js: All layout dimensions centralized
-- config.js: API configuration in one place
-- notifications.js: Consistent user feedback
-- layout-utils.js: Shared position calculations
-
-**Benefits**:
-- DRY principle (Don't Repeat Yourself)
-- Consistent spacing and positioning
-- Easy to adjust layout globally
-- Better maintainability
-
-### Team Box Dimensions
-
-**Decision**: 144px × 80px with 3px borders
-
-**Rationale**:
-- 144px width provides good text wrapping for team names
-- 80px height fits name + metadata without crowding
-- 3px borders (increased from 2px) improve visibility
-- Consistent sizing across all views
-
-### Communication Lines Toggle
-
-**Decision**: Hidden by default in Current State view
-
-**Rationale**:
-- Org-chart view focuses on reporting structure
-- Too many dependency lines create visual clutter
-- Users can toggle on when needed
-- TT Vision view has lines enabled by default (shows interaction patterns)
 
 ## Performance Considerations
 

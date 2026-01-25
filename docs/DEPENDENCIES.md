@@ -96,7 +96,7 @@ pytest-cov==7.0.0        # Test coverage
 httpx==0.28.1            # HTTP client (tests only)
 ```
 
-**Total: 6 packages** (5 core + 1 test-only)
+This project intentionally keeps Python dependencies small; see `requirements.txt` for the authoritative list.
 
 ---
 

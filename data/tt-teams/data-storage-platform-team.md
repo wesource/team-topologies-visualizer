@@ -78,4 +78,3 @@ Yes – Cloud Infrastructure Platform Grouping
 | Delivery Analytics Team | X-as-a-Service | Provide data storage | Ongoing |
 | Billing Team | X-as-a-Service | Store order data | Ongoing |
 | Financial Reporting Team | X-as-a-Service | Store financial data | Ongoing |
-| All stream-aligned teams | X-as-a-Service | Consume data storage platform | Ongoing |

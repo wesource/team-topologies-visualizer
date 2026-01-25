@@ -99,7 +99,6 @@ Yes – Cloud Infrastructure Platform Grouping
 | Observability Platform Team | X-as-a-Service | Send pipeline metrics to Prometheus, deployment events to Grafana | Ongoing |
 | Developer Portal Team | X-as-a-Service | CI/CD status displayed in portal | Ongoing |
 | API Gateway Platform Team | X-as-a-Service | Automated deployment to API Gateway routes | Ongoing |
-| All stream-aligned teams | X-as-a-Service | Consume CI/CD pipelines for deployments | Ongoing |
 
 ## Teams we expect to interact with soon
 

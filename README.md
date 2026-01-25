@@ -106,8 +106,8 @@ Open http://localhost:8000/static/index.html
 | [docs/EXAMPLE_DATA.md](docs/EXAMPLE_DATA.md) | Example organization, transformation story, dataset variants |
 | [docs/AUTO-ALIGN.md](docs/AUTO-ALIGN.md) | Auto-align feature, alignment hints, 3×2 grid layout |
 | [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) | Developer workflow, testing, linting |
-| [docs/TESTING.md](docs/TESTING.md) | Comprehensive testing guide (pytest, Vitest, Playwright) |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Technical architecture, design decisions, code structure |
+| [docs/TESTING.md](docs/TESTING.md) | Testing guide (pytest, Vitest, Playwright) |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Technical architecture and code structure |
 | [docs/DEPENDENCIES.md](docs/DEPENDENCIES.md) | Full dependency list and rationale |
 | [docs/BACKLOG.md](docs/BACKLOG.md) | Feature ideas and priorities |
 | [docs/CHANGELOG.md](docs/CHANGELOG.md) | Design decisions and implementation notes |
@@ -116,11 +116,11 @@ Open http://localhost:8000/static/index.html
 
 ```bash
 # Edit team files
-data/current-teams/**/*.md    # Baseline teams
+data/baseline-teams/**/*.md   # Baseline teams
 data/tt-teams/**/*.md         # TT design teams (or tt-teams-initial/)
 
 # Configure team types and colors
-data/current-teams/current-team-types.json
+data/baseline-teams/baseline-team-types.json
 data/tt-teams/tt-team-types.json
 ```
 

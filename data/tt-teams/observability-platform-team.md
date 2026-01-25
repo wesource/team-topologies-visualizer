@@ -119,7 +119,6 @@ Yes - Cloud Infrastructure Platform Grouping (works alongside Cloud Development,
 |-----------|------------------|---------|----------|
 | Cloud Development Platform Team | X-as-a-Service | Run on their AWS/Kubernetes infrastructure | Ongoing |
 | API Gateway Platform Team | X-as-a-Service | Monitor API Gateway metrics and traces | Ongoing |
-| All stream-aligned teams | X-as-a-Service | Consume observability platform for monitoring their services | Ongoing |
 | CI/CD Platform Team | X-as-a-Service | Monitor build/deploy pipelines, track deployment frequency | Ongoing |
 
 ## Teams we expect to interact with soon

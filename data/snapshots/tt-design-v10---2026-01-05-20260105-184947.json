@@ -16,13 +16,11 @@
       "platform_grouping": "Cloud Infrastructure Platform Grouping",
       "dependencies": [
         "Security & Compliance Team",
-        "Developer Portal Team",
-        "All platform teams"
+        "Developer Portal Team"
       ],
       "interaction_modes": {
         "Security & Compliance Team": "collaboration",
-        "Developer Portal Team": "x-as-a-service",
-        "All platform teams": "collaboration"
+        "Developer Portal Team": "x-as-a-service"
       },
       "metadata": {
         "size": 6,
@@ -42,13 +40,11 @@
       "platform_grouping": "Cloud Infrastructure Platform Grouping",
       "dependencies": [
         "Security & Compliance Team",
-        "Developer Portal Team",
-        "All platform teams"
+        "Developer Portal Team"
       ],
       "interaction_modes": {
         "Security & Compliance Team": "collaboration",
-        "Developer Portal Team": "x-as-a-service",
-        "All platform teams": "collaboration"
+        "Developer Portal Team": "x-as-a-service"
       },
       "metadata": {
         "size": 6,
@@ -92,15 +88,13 @@
         "Cloud Development Platform Team",
         "Observability Platform Team",
         "Developer Portal Team",
-        "API Gateway Platform Team",
-        "All stream-aligned teams"
+        "API Gateway Platform Team"
       ],
       "interaction_modes": {
         "Cloud Development Platform Team": "x-as-a-service",
         "Observability Platform Team": "x-as-a-service",
         "Developer Portal Team": "x-as-a-service",
-        "API Gateway Platform Team": "x-as-a-service",
-        "All stream-aligned teams": "x-as-a-service"
+        "API Gateway Platform Team": "x-as-a-service"
       },
       "metadata": {
         "size": 7,
@@ -123,16 +117,14 @@
         "API Gateway Platform Team",
         "CI/CD Platform Team",
         "Developer Portal Team",
-        "Security & Compliance Team",
-        "All stream-aligned teams"
+        "Security & Compliance Team"
       ],
       "interaction_modes": {
         "Observability Platform Team": "x-as-a-service",
         "API Gateway Platform Team": "x-as-a-service",
         "CI/CD Platform Team": "x-as-a-service",
         "Developer Portal Team": "x-as-a-service",
-        "Security & Compliance Team": "x-as-a-service",
-        "All stream-aligned teams": "x-as-a-service"
+        "Security & Compliance Team": "x-as-a-service"
       },
       "metadata": {
         "size": 8,
@@ -177,14 +169,12 @@
       "dependencies": [
         "Data Engineering Team",
         "E-Commerce Recommendations Team",
-        "Financial Reporting Team",
-        "All stream-aligned teams"
+        "Financial Reporting Team"
       ],
       "interaction_modes": {
         "Data Engineering Team": "facilitating",
         "E-Commerce Recommendations Team": "x-as-a-service",
-        "Financial Reporting Team": "x-as-a-service",
-        "All stream-aligned teams": "x-as-a-service"
+        "Financial Reporting Team": "x-as-a-service"
       },
       "metadata": {
         "size": 7,
@@ -206,15 +196,13 @@
         "Data Engineering Team",
         "E-Commerce Recommendations Team",
         "E-Commerce Checkout Team",
-        "Financial Reporting Team",
-        "All stream-aligned teams"
+        "Financial Reporting Team"
       ],
       "interaction_modes": {
         "Data Engineering Team": "facilitating",
         "E-Commerce Recommendations Team": "x-as-a-service",
         "E-Commerce Checkout Team": "x-as-a-service",
-        "Financial Reporting Team": "x-as-a-service",
-        "All stream-aligned teams": "x-as-a-service"
+        "Financial Reporting Team": "x-as-a-service"
       },
       "metadata": {
         "size": 6,
@@ -236,15 +224,13 @@
         "Cloud Development Platform Team",
         "Observability Platform Team",
         "CI/CD Platform Team",
-        "API Gateway Platform Team",
-        "All stream-aligned teams"
+        "API Gateway Platform Team"
       ],
       "interaction_modes": {
         "Cloud Development Platform Team": "x-as-a-service",
         "Observability Platform Team": "x-as-a-service",
         "CI/CD Platform Team": "x-as-a-service",
-        "API Gateway Platform Team": "x-as-a-service",
-        "All stream-aligned teams": "x-as-a-service"
+        "API Gateway Platform Team": "x-as-a-service"
       },
       "metadata": {
         "size": 6,
@@ -792,13 +778,11 @@
       "dependencies": [
         "Cloud Development Platform Team",
         "API Gateway Platform Team",
-        "All stream-aligned teams",
         "CI/CD Platform Team"
       ],
       "interaction_modes": {
         "Cloud Development Platform Team": "x-as-a-service",
         "API Gateway Platform Team": "x-as-a-service",
-        "All stream-aligned teams": "x-as-a-service",
         "CI/CD Platform Team": "x-as-a-service"
       },
       "metadata": {

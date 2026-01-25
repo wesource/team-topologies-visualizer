@@ -16,17 +16,7 @@ This is the public backlog for ideas, priorities, and possible improvements.
 
 Edit this list as your priorities change:
 
-- **Interaction Mode Filtering**: Add UI filters to show/hide specific interaction modes:
-  - Filter by X-as-a-Service (show only platform consumption)
-  - Filter by Collaboration (show only collaborative relationships)
-  - Filter by Facilitating (show only temporary enabling relationships)
-  - Toggle individual or combinations of modes
-  - Reduce visual clutter when analyzing specific interaction patterns
-- Data modeling: keep narrative text separate from resolvable relationship targets (Baseline dependencies + TT interaction tables)
-	- Ensure `dependencies` and `interaction_modes` reference real teams only (no pseudo-targets like “All platform teams”).
-	- Store narrative/context separately (e.g., `dependency_notes` already exists; consider an equivalent for interaction mode notes if needed).
 - UX/visual clarity improvements (reduce clutter, better defaults, better affordances)
-- Documentation: keep setup + modeling guides short and drift-resistant
 
 - Release readiness: 1.0 housekeeping
 	- Bump version to `1.0.0` (wherever the canonical version lives) and create a git tag/release.
@@ -48,7 +38,7 @@ Edit this list as your priorities change:
 	- Implementation: add option to toggle between current style (two white bars) and triangle style; default could follow Team Shape Templates convention
 	- Note: Team Shape Templates uses grey triangle pointing toward customer instead of the two-bar connector shown in the book
 - Validation: Baseline config mismatch warnings (product lines + business streams)
-	- What it means: if a Baseline team’s `product_line` is not present in `data/current-teams/products.json`, or its `business_stream` is not present in `data/current-teams/business-streams.json`, flag it as a validation warning.
+	- What it means: if a Baseline team’s `product_line` is not present in `data/baseline-teams/products.json`, or its `business_stream` is not present in `data/baseline-teams/business-streams.json`, flag it as a validation warning.
 	- Why: prevents “silent” typos that create missing lanes / mis-grouped teams in the Baseline views.
 	- Acceptance criteria: warning appears in the validation report (and ideally the UI warnings modal) with file + field + bad value; matching should be case/whitespace-normalized.
 - Refactor frontend file structure into subfolders (DX improvement)

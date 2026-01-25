@@ -1,6 +1,6 @@
 // Tests for team alignment functionality
 import { describe, it, expect } from 'vitest';
-import { autoAlignTeamsByManager } from './current-state-alignment.js';
+import { autoAlignTeamsByManager } from './baseline-hierarchy-alignment.js';
 import { LAYOUT } from './constants.js';
 
 describe('autoAlignTeamsByManager', () => {

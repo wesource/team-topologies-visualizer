@@ -61,7 +61,7 @@ npx playwright test
 .\scripts\run-all-tests.ps1
 ```
 
-**Test Coverage**: 332 total tests (55 backend + 195 frontend + 82 E2E)
+**Test Coverage**: Broad coverage across backend, frontend, and E2E tests (counts change over time)
 
 ## Project Overview
 A webapp for visualizing Team Topologies concepts using HTML5 Canvas and Python FastAPI backend.

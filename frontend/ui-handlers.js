@@ -1,7 +1,7 @@
 // UI event handlers - manages button clicks and control interactions
 import { state, zoomIn, zoomOut, fitToView, getFilteredTeams, pushPositionSnapshot, popPositionSnapshot, canUndo, clearPositionHistory } from './state-management.js';
 import { updateTeamPosition } from './api.js';
-import { autoAlignTeamsByManager } from './current-state-alignment.js';
+import { autoAlignTeamsByManager } from './baseline-hierarchy-alignment.js';
 import { autoAlignTTDesign } from './tt-design-alignment.js';
 import { exportToSVG } from './svg-export.js';
 import { showWarning, showInfo, showSuccess, showError } from './notifications.js';

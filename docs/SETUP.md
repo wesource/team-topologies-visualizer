@@ -285,7 +285,7 @@ Before committing code:
 
 The `data/` directory has two subdirectories for different visualization purposes:
 
-### Baseline Data (`data/current-teams/`)
+### Baseline Data (`data/baseline-teams/`)
 
 **Purpose**: Document your **current organizational reality** BEFORE Team Topologies transformation.
 
@@ -299,7 +299,7 @@ The `data/` directory has two subdirectories for different visualization purpose
 - Current pain points and cognitive load issues
 
 **Configuration files:**
-- `current-team-types.json` - Your organization's current team classifications (e.g., "feature-team", "platform-team", "support-team")
+- `baseline-team-types.json` - Your organization's baseline team classifications (e.g., "feature-team", "platform-team", "support-team")
 
 **Team file fields:**
 ```yaml
@@ -505,7 +505,7 @@ Teams are stored as markdown files with YAML front matter. Team types, colors, a
 
 ### Team Type Configuration
 
-**Files**: `data/current-teams/current-team-types.json` or `data/tt-teams/tt-team-types.json`
+**Files**: `data/baseline-teams/baseline-team-types.json` or `data/tt-teams/tt-team-types.json`
 
 ```json
 {
@@ -528,11 +528,11 @@ Teams are stored as markdown files with YAML front matter. Team types, colors, a
 
 ### Team Markdown Files
 
-**Current State teams** (`data/current-teams/`) include:
+**Baseline teams** (`data/baseline-teams/`) include:
 ```yaml
 ---
 name: Core Product Team
-team_type: feature-team            # Must match an id from current-team-types.json or tt-team-types.json
+team_type: feature-team            # Must match an id from baseline-team-types.json or tt-team-types.json
 line_manager: Marcus Thompson      # Reports to (org hierarchy)
 dependencies:
   - Database Platform Team
@@ -578,18 +578,18 @@ The API provides **read-only endpoints** for visualization purposes:
 - `GET /api/team-types?view=current` - Get team type configuration with colors and descriptions
 - `PATCH /api/teams/{name}/position?view=current` - Update team position on canvas (drag-and-drop)
 
-**Note**: Create, update, and delete operations for team data are intentionally not implemented via API. Teams should be managed by editing the markdown files directly in `data/current-teams/` and `data/tt-teams/` folders. The PATCH position endpoint is the only write operation and only updates the x/y coordinates for canvas positioning.
+**Note**: Create, update, and delete operations for team data are intentionally not implemented via API. Teams should be managed by editing the markdown files directly in `data/baseline-teams/` and `data/tt-teams/` folders. The PATCH position endpoint is the only write operation and only updates the x/y coordinates for canvas positioning.
 
 ## Customizing for Your Organization
 
 This is a **generic example** suitable for learning and demonstration. To use this for your own organization:
 
 1. **Fork/clone this repository**
-2. **Customize team type classifications**: Edit `data/current-teams/current-team-types.json` to match your organization's team categories
+2. **Customize team type classifications**: Edit `data/baseline-teams/baseline-team-types.json` to match your organization's team categories
    - Define your own team type IDs (e.g., "feature-team", "platform-team", "support-team")
    - Set colors that make sense for your context
    - Write descriptions that reflect your organizational language
-3. **Document current state**: Replace team markdown files in `data/current-teams/`
+3. **Document baseline**: Replace team markdown files in `data/baseline-teams/`
    - Use your actual team names and structures
    - Document reporting lines (line_manager field)
    - Capture real dependencies
@@ -602,7 +602,7 @@ This is a **generic example** suitable for learning and demonstration. To use th
 
 Both views support customizable team type definitions via JSON configuration:
 
-**File**: `data/current-teams/current-team-types.json` or `data/tt-teams/tt-team-types.json`
+**File**: `data/baseline-teams/baseline-team-types.json` or `data/tt-teams/tt-team-types.json`
 
 ```json
 {

@@ -8,30 +8,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- **Comprehensive Test Coverage for Fit to View (2026-01-25)**: Added 20 new unit tests covering all aspects of the Fit to View refactor
-  - **Hierarchy view tests** (4 tests):
+- **Comprehensive Test Coverage for Fit to View (2026-01-25)**: Added broad unit test coverage for the Fit to View refactor
+  - **Hierarchy view tests**:
     * Organizational structure bounds calculation (company, departments, line managers, regions)
     * Line manager centering and spread calculation under departments
     * Departments and regions handling together
     * LAYOUT constants usage verification
-  - **Product-lines and Business-streams tests** (5 tests):
+  - **Product-lines and Business-streams tests**:
     * Custom position Maps usage (not team.position)
     * Header inclusion in bounds (y=60 for product-lines, y=20 for business-streams)
     * Empty custom positions graceful fallback
-  - **Sidebar overlay behavior tests** (3 tests):
+  - **Sidebar overlay behavior tests**:
     * Full canvas width usage (no sidebar width subtraction)
     * Content positioning at canvas x=0
     * Asymmetric margins (10px left, 30px right)
-  - **Different team types tests** (3 tests):
+  - **Different team types tests**:
     * Stream-aligned teams (80% height, via getTeamBoxHeight)
     * Enabling teams (taller boxes)
     * Platform teams (standard dimensions)
-  - **Edge cases tests** (3 tests):
+  - **Edge cases tests**:
     * Filtered teams (respects team type filters)
     * Negative coordinates handling
     * Very large coordinates (5000x3000)
-  - **Updated 2 existing tests**: Changed sidebar width test to verify no subtraction, fixed scale expectations for wide content (1.5 cap)
-  - **Result**: Total 70 fitToView tests, all passing, comprehensive coverage of complex bounds calculations
+  - **Updated existing tests**: Adjusted expectations for sidebar overlay behavior and the scale cap
 
 ### Fixed
 - **Fit to View & SVG Export Improvements (2026-01-25)**: Comprehensive fixes for optimal canvas usage
@@ -314,18 +313,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - Clear messaging: "Feel free to explore. Changes won't be saved"
   - **Convenience scripts**: `scripts/start-demo.ps1` (Windows) and `scripts/start-demo.sh` (Linux/Mac)
   - **Docker support**: `-e READ_ONLY_MODE=true` flag
-  - **Tests**: 5 backend tests + 1 E2E test for demo mode functionality
+  - **Tests**: Added backend + E2E coverage for demo mode functionality
   - **Rationale**: Enable safe public hosting where users can interact without persisting changes or corrupting shared data
 
 ### Removed
 - **Dead code cleanup (2026-01-08)**: Removed `backend/routes.py` (286 lines) - file was not imported anywhere in codebase after routing architecture split into `routes_tt.py` and `routes_pre_tt.py`
 
 ### Added
-- **Test coverage improvements (2026-01-08)**: Added 27 new tests for previously untested features
-  - `test_dependency_parsing.py`: 12 tests for Pre-TT dependency parsing from markdown bullet lists
-  - `test_routes_tt.py`: 15 tests for TT Design API endpoints (team-types, teams, position updates, validation)
-  - `renderer-common.test.js`: 12 tests for line thickness and corner radius rendering
-  - **Total test count**: 544 tests (133 backend, 329 frontend, 82 E2E)
+- **Test coverage improvements (2026-01-08)**: Expanded test coverage for previously untested features
+  - Added tests for dependency parsing, TT routes, and shared rendering helpers
 - **Toolbar UI Improvements (2026-01-06)**: Enhanced visual separation and clarity of view selectors
   - Added pipe separators (`|`) between all radio button options:
     - Between "Pre-TT" and "TT Design" view selector
@@ -361,12 +357,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - Pre-TT uses only `dependencies` (simple team dependencies, not TT patterns)
     - TT-Design keeps `interaction_modes` (collaboration, x-as-a-service, facilitating)
     - **Rationale**: Interaction modes are Team Topologies design patterns, not organic dependencies
-  - **Files**: `renderer-product-lines.js`, `svg-export.js`, 12 current-teams markdown files updated
+  - **Files**: `renderer-product-lines.js`, `svg-export.js`, baseline-teams markdown files updated
 
 ### Changed
 - **🏗️ Backend Refactoring (2026-01-06)**: Split routes by concern (Pre-TT vs TT-Design)
   - **New API Structure**: Clear separation between Pre-TT and TT-Design endpoints
-    - `/api/pre-tt/*` - Pre-TT (current-teams) endpoints: teams, product-lines, organization-hierarchy, snapshots
+    - `/api/pre-tt/*` - Pre-TT (baseline-teams) endpoints: teams, product-lines, organization-hierarchy, snapshots
     - `/api/tt/*` - TT-Design (tt-teams) endpoints: teams, team-types, validate
   - **Files Changed**:
     - Split `backend/routes.py` → `backend/routes_pre_tt.py` + `backend/routes_tt.py`
@@ -376,7 +372,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Rationale**: Self-documenting API structure, clearer separation of concerns, enables independent evolution
   - **models.py remains shared**: `TeamData` works for both views with optional fields
 - **🔧 Naming Convention Consistency (2026-01-06)**: Unified all config files to use `snake_case`
-  - Fixed `current-team-types.json`: Changed `teamTypes` → `team_types` (matches TT config)
+  - Fixed `baseline-team-types.json`: Changed `teamTypes` → `team_types` (matches TT config)
   - Fixed structure: Changed from object `{"team_types": {key: {...}}}` to array `{"team_types": [{id: "...", ...}]}`
   - **Rationale**: Array structure matches `tt-team-types.json` format, enables consistent frontend parsing
   - Fixed `backend/validation.py`: Updated to parse array format with `id` field
@@ -640,8 +636,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - Interaction table format (TT view only)
   - Color-coded results: errors (red) vs warnings (yellow)
   - Summary statistics: total files, valid files, files with warnings/errors
-  - Successfully validated 31 files in TT view with detailed issue reporting
-  - Fixed 5 files with duplicate YAML front matter errors found by validation
+  - Validated TT team files with detailed issue reporting
+  - Fixed duplicate YAML front matter errors found by validation
   - Added check to skip hidden directories (`.pytest_cache`, `.git`, etc.) in team parsing
   - Reduced `services.py` from 433 to 291 lines (-33%) through validation extraction
 - **Team API Backend Support (Step 1 of 5)**: Enhanced backend to support full Team API structure
@@ -650,8 +646,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Implemented automatic interaction table parsing from Team API markdown content
   - New `_parse_interaction_tables()` function extracts dependencies and interaction modes from "Teams we currently interact with" tables
   - Dependencies and interaction modes now automatically populated from Team API markdown (not stored in YAML)
-  - Added 8 comprehensive tests for interaction table parsing (all passing)
-  - Backend tests: 25/25 passing (up from 17)
+  - Added tests for interaction table parsing
+  - Backend tests passing
 
 - **Team API UI Display (Step 2 of 5)**: Enhanced modal to display Team API content with rich formatting
   - Upgraded `renderMarkdown()` function with proper table, list, link, and code rendering
@@ -663,7 +659,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - `.team-api-table` styles for interaction tables with hover effects
     - Slack link styling with Team Topologies purple color
     - Improved readability for long descriptions
-  - Added 8 tests for markdown rendering concepts (frontend tests: 92/93 passing, up from 84/85)
+  - Added tests for markdown rendering concepts
   - Team detail modal now displays Team API sections with proper formatting:
     - Services provided with bullet lists
     - SLA expectations in formatted text
@@ -713,7 +709,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - Alignment markers (`:---`, `:---:`, `---:`)
     - Multiple tables in same text
     - Empty cells
-  - All 99 frontend tests passing (up from 92)
+  - Frontend tests passing
   - Exported `renderMarkdownTables()` function for testability
 
 ### Fixed
@@ -722,17 +718,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - These fields were being added to files every time a team position was updated
   - The write function now only persists template-compliant fields: `name`, `team_type`, `position`, `metadata`, and optional fields like `platform_grouping`, `established`, `cognitive_load`
   - Fields still exist in backend model for runtime use (rendering connections) but are never persisted to files
-- **Team Markdown Files**: Comprehensive cleanup and validation of all 23 team files in `data/tt-teams`
-  - Fixed 3 files with duplicate YAML front matter blocks (api-gateway, ci-cd, cloud-development platform teams)
-  - Fixed 5 files with malformed YAML outside front matter (mobile-app, mobile-platform, observability, payment, security-compliance teams)
-  - Removed duplicate content sections in 4 files (data-storage, feature-management, mobile-app-experience, search platform teams)
+- **Team Markdown Files**: Comprehensive cleanup and validation of TT team files in `data/tt-teams`
+  - Fixed duplicate YAML front matter blocks and malformed YAML
+  - Removed duplicate content sections
   - Fixed machine-learning-and-ai-specialists-team.md: changed team_type from `stream-aligned` to `complicated-subsystem` (correct classification), added proper metadata and Team API sections
   - Removed invalid YAML fields from all files (only machine-learning file actually had them in previous commit)
   - All files now strictly conform to Team API base or extended template structure
-  - Backend validation tests pass (17/17)
+  - Backend validation tests pass
 - **E2E Tests**: Updated default view expectations to match "TT Design" as default
-  - 4 E2E tests updated to expect TT Design view as default instead of Pre-TT view
-  - All 23 E2E tests now passing
+  - Updated E2E expectations to reflect TT Design as the default view
+  - E2E tests now passing
   - Test expectations aligned with default view change made previously
 
 ### Changed
@@ -781,7 +776,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - Darker gray border (`#333333`) when selected (no red - maintains neutral appearance)
   - Works in both canvas and SVG export
   - Auto-align treats undefined teams as narrow/ungrouped teams (like enabling and complicated-subsystem)
-  - Example teams: `data/current-teams/example-undefined-team.md` and `data/tt-teams/example-undefined-team.md`
+  - Example teams: `data/baseline-teams/example-undefined-team.md` and `data/tt-teams/example-undefined-team.md`
   - Use cases: Initial TT assessment, gradual classification during transformation, progress tracking
 
 - �📐 **Book-Accurate Team Shapes in Canvas & SVG Export** (TT Design view):
@@ -1004,14 +999,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Legend updated**: Shows grouping rectangle indicators with explanations in TT Design view
   - **Implementation**: 
     - `frontend/value-stream-grouping.js` with helper functions (getValueStreamNames, filterTeamsByValueStream)
-    - 17 unit tests total (grouping calculation + filtering)
-    - `frontend/renderer-value-stream.test.js` with 6 rendering tests
+    - Unit tests for grouping calculation + filtering
+    - Rendering tests for value stream view
   - Automatic bounding box calculation with 20px padding around team positions
   - Only visible in "TT Design" view, not in "Current State" view
   - **Definition of Done achieved**: ✅ Visual grouping, ✅ Filter by value stream, ✅ Clear visual distinction
 - ⚡ **Auto-align Teams** feature: One-click automatic positioning of teams under line managers in org-chart layout (Current State view only)
 - **Org-chart style visual hierarchy**: Vertical lines from line managers connect to horizontally-aligned teams
-- **current-state-alignment.js** module with comprehensive test coverage (7 tests)
+- **baseline-hierarchy-alignment.js** module with test coverage
 - **Show Communication Lines** checkbox to toggle dependency lines (hidden by default for cleaner org charts)
 - **Refresh button** documentation clarification
 - Lighter department box colors for better visual hierarchy (#5D6D7E for company, #566573 for departments)
@@ -1047,10 +1042,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Build & Integration Team position corrected to align properly under Robert Miller
 - Duplicate variable declarations in auto-align button initialization
-- Duplicate darkenColor() functions consolidated (3 instances → 1 shared)
+- Duplicate darkenColor() functions consolidated into a shared implementation
 - Team box width inconsistency corrected (180px references → 144px everywhere)
 - **Code quality improvements**:
-  - Removed duplicate `darkenColor()` functions (was in 3 files, now shared from renderer-common.js)
+  - Removed duplicate `darkenColor()` functions (now shared from renderer-common.js)
   - Extracted magic numbers to shared constants file (no more hardcoded 180px, 120px, etc.)
   - Fixed team box width inconsistency in alignment logic (now uses correct 144px)
   - All layout calculations now use LAYOUT constants for maintainability
@@ -1063,12 +1058,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - HTML5 Canvas-based interactive visualization with drag-and-drop
 - FastAPI backend with REST API endpoints
 - Markdown file-based storage with YAML frontmatter
-- Configurable team types via JSON (current-team-types.json, tt-team-types.json)
+- Configurable team types via JSON (baseline-team-types.json, tt-team-types.json)
 - Organization hierarchy visualization with departments, line managers, and regional structure
-- Comprehensive test suite (56 tests total):
-  - Backend unit tests (pytest, 10 tests)
-  - Frontend unit tests (Vitest, 23 tests)
-  - End-to-end tests (Playwright, 23 tests)
+- Comprehensive test suite across backend, frontend, and E2E
 - ESLint configuration for JavaScript code quality
 - Docker/Podman containerization support
 - Example data for fictitious company (LogiCore Systems)

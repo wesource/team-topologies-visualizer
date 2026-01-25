@@ -64,7 +64,6 @@ N/A - This is a stream-aligned team delivering API gateway as a product experien
 |-----------|------------------|---------|----------|
 | Security Compliance Team | Collaboration | Define compliance policies | Ongoing |
 | Developer Portal Team | X-as-a-Service | Expose API metrics | Ongoing |
-| All platform teams | Collaboration | Service mesh integration | Ongoing |
 ## Teams we expect to interact with soon
 | Team Name | Interaction Mode | Purpose | Expected Duration |
 |-----------|------------------|---------|-------------------|

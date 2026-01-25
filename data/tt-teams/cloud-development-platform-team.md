@@ -192,7 +192,6 @@ See "Roadmap & Current Priorities" above for Q1 2026 focus areas.
 | CI/CD Platform Team | X-as-a-Service | Pipelines deploy to our AWS infrastructure | Ongoing |
 | Developer Portal Team | X-as-a-Service | Portal runs on our ECS clusters, integrates our cost APIs | Ongoing |
 | Security Compliance Team | X-as-a-Service | AWS guardrails and compliance automation | Ongoing |
-| All stream-aligned teams | X-as-a-Service | Consume our platform for AWS infrastructure | Ongoing |
 
 ## Teams we expect to interact with soon
 

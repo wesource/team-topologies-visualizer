@@ -11,8 +11,8 @@ position:  # Canvas coordinates (auto-updated when dragging teams)
   y: 100
 
 # RECOMMENDED (enables all visualization perspectives)
-product_line: [Product Name]  # For Product Lines view - must match data/current-teams/products.json
-business_stream: [Business Stream Name]  # For Business Streams view - must match data/current-teams/business-streams.json
+product_line: [Product Name]  # For Product Lines view - must match data/baseline-teams/products.json
+business_stream: [Business Stream Name]  # For Business Streams view - must match data/baseline-teams/business-streams.json
 dependencies: []  # List of team names this team coordinates with (e.g., [Database Team, API Framework Team])
 metadata:
   size: 7  # Number of team members - used for display and validation warnings

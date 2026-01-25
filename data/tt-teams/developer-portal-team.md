@@ -119,7 +119,6 @@ Yes – Cloud Infrastructure Platform Grouping (stream-aligned team delivering i
 | Observability Platform Team | X-as-a-Service | Display Grafana dashboards and PagerDuty on-call schedules in portal | Ongoing |
 | CI/CD Platform Team | X-as-a-Service | Show deployment status from GitHub Actions + ArgoCD | Ongoing |
 | API Gateway Platform Team | X-as-a-Service | Display API Gateway metrics and service mesh topology | Ongoing |
-| All stream-aligned teams | X-as-a-Service | Consume portal for service catalog, docs, deployment status | Ongoing |
 
 ## Teams we expect to interact with soon
 

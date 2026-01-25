@@ -92,7 +92,7 @@ To switch back to mid-stage, unset the variable or set it to `tt-teams`.
 
 ## Baseline View
 
-**Location**: `data/current-teams/`
+**Location**: `data/baseline-teams/`
 
 The baseline shows LogiCore's structure **before** Team Topologies transformation:
 - ~22 teams organized by function/technology
@@ -126,7 +126,7 @@ To replace with your own data:
 
 1. **Backup the examples**: Copy `data/` folder elsewhere if you want to reference it later
 2. **Start with templates**: Use files in `templates/` directory
-3. **Document your baseline**: Create team files in `data/current-teams/`
+3. **Document your baseline**: Create team files in `data/baseline-teams/`
 4. **Design your TT structure**: Create team files in `data/tt-teams/`
 5. **Iterate**: Use snapshots to track your design evolution
 

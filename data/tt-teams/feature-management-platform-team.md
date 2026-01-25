@@ -61,4 +61,4 @@ Yes – Cloud Infrastructure Platform Grouping
 - % of deployments using feature flags: Target 70%
 - Mean time to rollback (flag-based): < 30 seconds
 - Active experiments per month: 15+
-- Teams using experimentation: All stream-aligned teams
+- Teams using experimentation: Stream-aligned teams
