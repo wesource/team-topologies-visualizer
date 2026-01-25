@@ -90,7 +90,7 @@ docker run -p 8000:8000 -e TT_TEAMS_VARIANT=tt-teams-initial team-topologies-viz
 
 To switch back to mid-stage, unset the variable or set it to `tt-teams`.
 
-## Baseline View (Pre-TT)
+## Baseline View
 
 **Location**: `data/current-teams/`
 
@@ -110,7 +110,7 @@ Three visualization perspectives:
 
 | Stage | Teams | Key Pattern | Purpose |
 |-------|-------|-------------|---------|
-| **Baseline (Pre-TT)** | ~22 | Component teams by technology | Show typical scaling pain |
+| **Baseline** | ~22 | Component teams by technology | Show typical scaling pain |
 | **First-Step** | ~20 | Split biggest bottleneck, basic platform | Start small, learn patterns |
 | **Mid-Stage** | ~34 | Full value streams, mature platform | Show evolved TT design |
 

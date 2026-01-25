@@ -285,7 +285,7 @@ Before committing code:
 
 The `data/` directory has two subdirectories for different visualization purposes:
 
-### Pre-TT Data (`data/current-teams/`)
+### Baseline Data (`data/current-teams/`)
 
 **Purpose**: Document your **current organizational reality** BEFORE Team Topologies transformation.
 
@@ -320,7 +320,7 @@ metadata:
 ---
 ```
 
-**Template**: Use `templates/pre-tt-team-template.md` as starting point
+**Template**: Use `templates/baseline-team-template.md` as starting point
 
 ### TT Design Data (`data/tt-teams/`)
 
@@ -362,7 +362,7 @@ metadata:
 - `templates/tt-design-team-api-template-base.md` - Minimal Team API
 - `templates/tt-design-team-api-template-extended.md` - Comprehensive with platform product metrics
 
-**Key difference**: Pre-TT uses `dependencies` (organic), TT Design uses `interaction_modes` (designed).
+**Key difference**: Baseline uses `dependencies` (organic), TT Design uses `interaction_modes` (designed).
 
 ## Running the Application
 
@@ -394,13 +394,13 @@ If the container is already running (see setup above), just open:
 ### Switching Between Views
 
 Use the radio buttons in the header to switch between:
-- **Pre-TT** - Shows the current organizational state with three perspectives:
+- **Baseline** - Shows the current organizational state with three perspectives:
   - **Hierarchy**: Traditional org chart (line managers, departments)
   - **Product Lines**: Vertical product lanes + horizontal shared teams row
   - **Value Streams**: Swimlane layout showing teams grouped by customer journey
 - **TT Design** - Shows the target Team Topologies patterns
 
-**Perspective Selector** (Pre-TT only):
+**Perspective Selector** (Baseline only):
 - Located below the main view toggle
 - Radio buttons switch between Hierarchy / Product Lines / Value Streams
 - Same teams, different visual groupings
@@ -415,7 +415,7 @@ Use the radio buttons in the header to switch between:
 - **Zoom** using mouse wheel
 - **Connections** between teams show interaction modes with different line styles
 - **Auto-align Teams** (Current State view only) - Click the "Auto-align Teams" button to automatically position teams vertically under their line managers in an org-chart layout. Positions are automatically saved to each team's markdown file.
-- **Show Communication Lines** checkbox (Pre-TT view) - Toggle to show dependencies and coordination lines between teams. Hidden by default to provide a cleaner org-chart visualization. When enabled, shows organic dependencies that exist today (not designed interaction modes).
+- **Show Communication Lines** checkbox (Baseline view) - Toggle to show dependencies and coordination lines between teams. Hidden by default to provide a cleaner org-chart visualization. When enabled, shows organic dependencies that exist today (not designed interaction modes).
 - **Show Interaction Modes** checkbox (TT Design view) - Toggle interaction mode lines (collaboration, X-as-a-Service, facilitating) on/off to reduce visual clutter when focusing on team structure. These are designed patterns, not organic dependencies.
 - **Refresh** button - Reload all team markdown files and configuration from disk. Useful when editing files externally. Preserves your current zoom/pan position on the canvas.
 
@@ -439,7 +439,7 @@ After manually editing team markdown files, use the validation feature to catch 
 4. **Re-validate** to confirm all issues are resolved
 
 **Validation checks both views:**
-- Pre-TT view: `GET /api/validate?view=current`
+- Baseline view: `GET /api/validate?view=current`
 - TT Design view: `GET /api/validate?view=tt`
 
 This helps maintain data quality when editing files directly, catching issues before they cause rendering problems or API failures.
@@ -449,7 +449,7 @@ This helps maintain data quality when editing files directly, catching issues be
 The `templates/` directory contains ready-to-use markdown templates to help you create new teams quickly:
 
 **Available templates:**
-- `templates/pre-tt-team-template.md` - Starting point for baseline (Pre-TT) teams
+- `templates/baseline-team-template.md` - Starting point for baseline teams
 - `templates/tt-design-team-api-template-base.md` - Minimal Team API for TT Design teams
 - `templates/tt-design-team-api-template-extended.md` - Extended Team API with optional platform product metrics
 
@@ -467,8 +467,8 @@ The `templates/` directory contains ready-to-use markdown templates to help you 
   # PowerShell (Windows)
   Copy-Item templates/tt-design-team-api-template-base.md data/tt-teams/my-new-team.md
 
-  # For Pre-TT teams, start from:
-  # templates/pre-tt-team-template.md
+  # For Baseline teams, start from:
+  # templates/baseline-team-template.md
    ```
 
 3. **Edit the YAML front matter:**

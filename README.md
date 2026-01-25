@@ -17,7 +17,7 @@ This tool is inspired by **Team Topologies** by Matthew Skelton and Manuel Pais 
 What I wanted from a tool like this was something that helps when adopting Team Topologies:
 
 - **Consolidate scattered information**: unify team data from slides, docs, and spreadsheets into a structured, git-friendly Markdown format
-- **Visualize the baseline**: capture the “before” (pre-TT) from multiple perspectives
+- **Visualize the baseline**: capture the "before" from multiple perspectives
 - **Design the future state**: model team types, interaction modes, and groupings
 - **Communicate (and keep evolving) the transition**: make the “before vs after” easy to discuss and iterate on continuously over time (snapshots + git history)
 

@@ -69,7 +69,7 @@ The test configuration includes:
 - Application loads correctly
 - Canvas element is rendered
 - API endpoints return valid data (organization hierarchy, teams, team types)
-- View switching (Pre-TT and TT Design)
+- View switching (Baseline and TT Design)
 - Team sidebar displays teams
 - Organization hierarchy structure (departments, regions, line managers)
 - Legend displays team types

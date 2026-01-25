@@ -1,5 +1,5 @@
 ---
-# Pre-TT (Baseline) Team Template
+# Baseline Team Template
 # Captures your current organization structure before Team Topologies transformation
 
 # REQUIRED

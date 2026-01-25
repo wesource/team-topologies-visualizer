@@ -76,7 +76,7 @@ Based on [Team Topologies Shape Templates](https://github.com/TeamTopologies/Tea
 Teams are stored as markdown files with YAML front matter.
 
 **Templates**: See [`templates/`](../templates/) directory for annotated examples:
-- [`pre-tt-team-template.md`](../templates/pre-tt-team-template.md) - Baseline teams
+- [`baseline-team-template.md`](../templates/baseline-team-template.md) - Baseline teams
 - [`tt-design-team-api-template-base.md`](../templates/tt-design-team-api-template-base.md) - TT teams (minimal)
 - [`tt-design-team-api-template-extended.md`](../templates/tt-design-team-api-template-extended.md) - TT teams (full)
 
