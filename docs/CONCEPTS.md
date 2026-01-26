@@ -37,18 +37,6 @@ Your intentional Team Topologies design showing:
 - Value stream groupings
 - Platform groupings
 
-## Communication Lines vs. Interaction Modes
-
-**Baseline uses "Communication Lines":**
-- Source: `dependencies` list in YAML
-- Meaning: "We coordinate with this team"
-- Descriptive (shows current reality)
-
-**TT Design uses "Interaction Modes":**
-- Source: `interaction_modes` in YAML
-- Meaning: Prescribed interaction pattern
-- Prescriptive (shows intended design)
-
 ## The 4 Team Types
 
 Colors are configurable in `tt-team-types.json`:
@@ -57,13 +45,6 @@ Colors are configurable in `tt-team-types.json`:
 - **Platform**: Provides internal services to reduce cognitive load
 - **Enabling**: Time-boxed coaching and capability building
 - **Complicated Subsystem**: Specialist knowledge for complex domains
-
-### Team Shapes in TT Design
-
-Based on [Team Topologies Shape Templates](https://github.com/TeamTopologies/Team-Shape-Templates):
-
-- **Wide teams** (Stream-aligned, Platform): Span ~80% of grouping width
-- **Narrow teams** (Enabling, Complicated Subsystem): Standard width in grids
 
 ## The 3 Interaction Modes
 
@@ -97,6 +78,18 @@ value_stream: E-Commerce
 # Team description...
 ```
 
+## Communication Lines vs. Interaction Modes
+
+**Baseline uses "Communication Lines":**
+- Source: `dependencies` list in YAML (if omitted, the tool can infer connections from an interaction table in the Markdown)
+- Meaning: "We coordinate with this team"
+- Descriptive (shows current reality)
+
+**TT Design uses "Interaction Modes":**
+- Source: either an interaction table in the Markdown (recommended) or `interaction_modes` / `interactions` in YAML
+- Meaning: Prescribed interaction pattern
+- Prescriptive (shows intended design)
+
 ### Interaction Tables
 
 TT Design teams can include tables like:
@@ -108,6 +101,19 @@ TT Design teams can include tables like:
 ```
 
 The tool parses these and renders them as interaction lines.
+
+#### YAML vs Markdown: which should you use?
+
+Both formats are supported:
+
+- **Markdown interaction table (recommended)**: Keeps the interaction context close to the Team API narrative (purpose/duration/etc.) and matches the Team API template style.
+- **YAML (`interaction_modes` map or `interactions` array)**: More machine-friendly (easy to diff/edit), but can feel disconnected from the Team API narrative.
+
+Precedence rules (when both exist):
+
+- If `interaction_modes` exists in YAML, the tool uses it (it will not override it from the table).
+- Otherwise, if an `interactions` array exists, it’s converted into `interaction_modes`.
+- Otherwise, the tool falls back to parsing the Markdown interaction table.
 
 ## Optional UI Features
 

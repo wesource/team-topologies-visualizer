@@ -10,7 +10,7 @@ Quick reference for developing, testing, and contributing to the Team Topologies
 
 ## Architecture
 
-See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for technical design details and module structure.
+See [ARCHITECTURE.md](ARCHITECTURE.md) for technical design details and module structure.
 
 **Quick Overview**:
 - **Backend**: Python 3.10+ with FastAPI (modular: models, services, routes)
@@ -19,7 +19,7 @@ See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for technical design details an
 
 ## Testing
 
-See [docs/TESTING.md](docs/TESTING.md) for the test strategy (unit vs E2E) and the hidden DOM pattern used for canvas testing.
+See [TESTING.md](TESTING.md) for the test strategy (unit vs E2E) and the hidden DOM pattern used for canvas testing.
 
 **Quick Commands**:
 ```powershell

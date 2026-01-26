@@ -4,13 +4,13 @@ A web app for visualizing team structures using **Team Topologies (TT)** concept
 
 Two complementary views:
 - **Baseline**: your current/reference structure before Team Topologies transformation
-- **TT Design**: your target Team Topologies design (team types, interaction modes, groupings)
+- **TT Design**: your evolving Team Topologies design — a living design you keep refining (team types, interaction modes, groupings)
 
 See [docs/CONCEPTS.md](docs/CONCEPTS.md#the-tools-two-views) for view details and why these names.
 
 This tool is inspired by **Team Topologies** by Matthew Skelton and Manuel Pais — especially the concepts summarized at https://teamtopologies.com/key-concepts (more references at the end of this README).
 
-> **Note**: This project was built with extensive AI assistance (GitHub Copilot + Claude). As a non-native Python and JavaScript developer, this AI-driven co-creation approach enabled me to use tools and techniques — including FastAPI, Canvas rendering, and comprehensive test automation — in ways that would have taken much longer solo.
+> **Note**: This project was built with extensive AI assistance (GitHub Copilot + Claude). As a non-native Python and JavaScript developer, this AI-driven co-creation approach enabled me to use tools and techniques — including Python tooling/libraries, Canvas rendering, and comprehensive test automation — in ways that would have taken much longer solo.
 
 ## Why This Tool?
 
@@ -24,14 +24,25 @@ What I wanted from a tool like this was something that helps when adopting Team 
 ## Screenshots
 
 <div align="center">
-  <a href="tests/screenshots/current-state-view.png">
-    <img src="tests/screenshots/current-state-view.png" alt="Baseline View" width="45%" />
-  </a>
-  <a href="tests/screenshots/tt-vision-view.png">
-    <img src="tests/screenshots/tt-vision-view.png" alt="TT Design View" width="45%" />
-  </a>
-  <br/>
-  <em>Baseline (org hierarchy) and TT Design (value streams & platform groupings)</em>
+  <table>
+    <tr>
+      <td width="62%" valign="top">
+        <a href="docs/screenshots/tt-visualizer-tt-design.png">
+          <img src="docs/screenshots/tt-visualizer-tt-design.png" alt="TT Design View" width="100%" />
+        </a>
+      </td>
+      <td width="38%" valign="top">
+        <a href="docs/screenshots/tt-visualizer-baseline-hierarchy.png">
+          <img src="docs/screenshots/tt-visualizer-baseline-hierarchy.png" alt="Baseline View" width="100%" />
+        </a>
+        <br/>
+        <a href="docs/screenshots/tt-visualizer-tt-comparison.png">
+          <img src="docs/screenshots/tt-visualizer-tt-comparison.png" alt="TT Comparison View" width="100%" />
+        </a>
+      </td>
+    </tr>
+  </table>
+  <em>Click any screenshot to view full size</em>
 </div>
 
 ## Quick Start
@@ -102,6 +113,7 @@ Open http://localhost:8000/static/index.html
 | Document | Description |
 |----------|-------------|
 | [docs/SETUP.md](docs/SETUP.md) | Installation, configuration, Docker/Podman, demo mode, TT variants |
+| [docs/USAGE.md](docs/USAGE.md) | UI walkthrough (views, dragging/zooming, filters, validation) |
 | [docs/CONCEPTS.md](docs/CONCEPTS.md) | Team Topologies concepts and how they map to the tool |
 | [docs/EXAMPLE_DATA.md](docs/EXAMPLE_DATA.md) | Example organization, transformation story, dataset variants |
 | [docs/AUTO-ALIGN.md](docs/AUTO-ALIGN.md) | Auto-align feature, alignment hints, 3×2 grid layout |
