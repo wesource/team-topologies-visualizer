@@ -4,19 +4,17 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 // Mock dependencies that canvas-interactions.js needs
-vi.mock('./renderer-common.js', () => ({
+vi.mock('../rendering/renderer-common.js', () => ({
     getTeamAtPosition: vi.fn()
 }));
-vi.mock('./api.js', () => ({
+vi.mock('../api/api.js', () => ({
     updateTeamPosition: vi.fn()
 }));
-vi.mock('./notifications.js', () => ({
-    showInfo: vi.fn()
+vi.mock('../core/state-management.js', () => ({
+    pushPositionSnapshot: vi.fn(),
+    updateZoomDisplay: vi.fn()
 }));
-vi.mock('./state-management.js', () => ({
-    pushPositionSnapshot: vi.fn()
-}));
-vi.mock('./ui-handlers.js', () => ({
+vi.mock('../ui/ui-handlers.js', () => ({
     updateUndoButtonState: vi.fn()
 }));
 

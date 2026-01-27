@@ -427,19 +427,20 @@ test.describe('Team Topologies Visualizer', () => {
       await page.waitForResponse(response => response.url().includes('/api/tt/teams'), { timeout: 5000 });
       await page.waitForTimeout(500);
       
-      const checkbox = page.locator('#showInteractionModes');
-      await expect(checkbox).toBeVisible();
-      await expect(checkbox).toBeChecked();
+      // Test the X-as-a-Service interaction filter (granular control replaced old showInteractionModes)
+      const xasCheckbox = page.locator('#showXasService');
+      await expect(xasCheckbox).toBeVisible();
+      await expect(xasCheckbox).toBeChecked();
       
       // Uncheck
-      await checkbox.uncheck();
+      await xasCheckbox.uncheck();
       await page.waitForTimeout(200);
-      await expect(checkbox).not.toBeChecked();
+      await expect(xasCheckbox).not.toBeChecked();
       
       // Check again
-      await checkbox.check();
+      await xasCheckbox.check();
       await page.waitForTimeout(200);
-      await expect(checkbox).toBeChecked();
+      await expect(xasCheckbox).toBeChecked();
     });
 
     test('should toggle cognitive load indicators', async ({ page }) => {
