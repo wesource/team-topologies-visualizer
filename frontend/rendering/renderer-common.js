@@ -175,7 +175,14 @@ export function drawTeam(ctx, team, options = {}) {
     // Use shape-specific drawing in TT Design view
     if (currentView === 'tt') {
         if (team.team_type === 'enabling') {
-            drawEnablingTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData, showTeamTypeBadges, platformMetrics, showFlowMetrics);
+            drawEnablingTeam(ctx, team, x, y, width, height, {
+                selectedTeam,
+                teamColorMap,
+                wrapText,
+                showCognitiveLoad,
+                comparisonData,
+                showTeamTypeBadges
+            });
             ctx.globalAlpha = 1.0; // Reset opacity
             return;
         }
@@ -192,14 +199,49 @@ export function drawTeam(ctx, team, options = {}) {
     }
 
     // Default: draw as rounded rectangle
-    drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, showTeamTypeBadges, platformMetrics, currentView, showFlowMetrics);
+    drawDefaultTeamBox(ctx, team, x, y, width, height, {
+        selectedTeam,
+        teamColorMap,
+        wrapText,
+        showCognitiveLoad,
+        showTeamTypeBadges,
+        platformMetrics,
+        currentView,
+        showFlowMetrics
+    });
     ctx.globalAlpha = 1.0; // Reset opacity
 }
 
 /**
  * Draw team as default box (rounded corners in TT Design, sharp corners in Baseline view)
+ * 
+ * @param {CanvasRenderingContext2D} ctx - Canvas context
+ * @param {Object} team - Team object
+ * @param {number} x - X coordinate
+ * @param {number} y - Y coordinate
+ * @param {number} width - Box width
+ * @param {number} height - Box height
+ * @param {Object} options - Drawing options
+ * @param {Object} options.selectedTeam - Currently selected team
+ * @param {Map} options.teamColorMap - Team color mapping
+ * @param {Function} options.wrapText - Text wrapping function
+ * @param {boolean} options.showCognitiveLoad - Show cognitive load indicator
+ * @param {boolean} options.showTeamTypeBadges - Show team type badges
+ * @param {Object} options.platformMetrics - Platform consumer metrics
+ * @param {string} options.currentView - Current view ('current' or 'tt')
+ * @param {boolean} options.showFlowMetrics - Show flow metrics box
  */
-function drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, showTeamTypeBadges = false, platformMetrics = null, currentView = 'current', showFlowMetrics = false) {
+function drawDefaultTeamBox(ctx, team, x, y, width, height, options = {}) {
+    const {
+        selectedTeam,
+        teamColorMap,
+        wrapText,
+        showCognitiveLoad,
+        showTeamTypeBadges = false,
+        platformMetrics = null,
+        currentView = 'current',
+        showFlowMetrics = false
+    } = options;
 
     // Rounded corners for stream-aligned and platform teams in TT Design view
     // Sharp corners in Baseline view (hierarchy, product lines, value streams)
@@ -261,8 +303,31 @@ function drawDefaultTeamBox(ctx, team, x, y, width, height, selectedTeam, teamCo
 /**
  * Draw enabling team as vertical rounded rectangle
  * Shape: 80×120 vertical orientation (tall and narrow)
+ * 
+ * @param {CanvasRenderingContext2D} ctx - Canvas context
+ * @param {Object} team - Team object
+ * @param {number} x - X coordinate
+ * @param {number} y - Y coordinate
+ * @param {number} width - Box width
+ * @param {number} height - Box height
+ * @param {Object} options - Drawing options
+ * @param {Object} options.selectedTeam - Currently selected team
+ * @param {Map} options.teamColorMap - Team color mapping
+ * @param {Function} options.wrapText - Text wrapping function
+ * @param {boolean} options.showCognitiveLoad - Show cognitive load indicator
+ * @param {Object} options.comparisonData - Comparison data for badges
+ * @param {boolean} options.showTeamTypeBadges - Show team type badges
  */
-function drawEnablingTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData, showTeamTypeBadges = false, _platformMetrics = null, _showFlowMetrics = false) {
+function drawEnablingTeam(ctx, team, x, y, width, height, options = {}) {
+    const {
+        selectedTeam,
+        teamColorMap,
+        wrapText,
+        showCognitiveLoad,
+        comparisonData,
+        showTeamTypeBadges = false
+    } = options;
+
     // Check if this team has a comparison badge
     let comparisonBadge = null;
     if (comparisonData) {
