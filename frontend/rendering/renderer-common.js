@@ -768,14 +768,42 @@ export function drawConnections(ctx, teams, currentView = 'current', showInterac
 
                     const target = teams.find(t => t.name === targetName);
                     if (target) {
-                        drawConnection(ctx, team, target, mode, currentView, currentPerspective, customTeamPositions, focusedTeam, focusedConnections);
+                        drawInteractionMode(ctx, team, target, mode, {
+                            currentView,
+                            currentPerspective,
+                            customTeamPositions,
+                            focusedTeam,
+                            focusedConnections
+                        });
                     }
                 });
             }
         });
     }
 }
-function drawConnection(ctx, from, to, mode, currentView = 'current', currentPerspective = 'hierarchy', customTeamPositions = null, focusedTeam = null, focusedConnections = null) {
+
+/**
+ * Draw an interaction mode connection between two teams (TT Design view)
+ * @param {CanvasRenderingContext2D} ctx - Canvas context
+ * @param {Object} from - Source team
+ * @param {Object} to - Target team  
+ * @param {string} mode - Interaction mode ('x-as-a-service', 'collaboration', 'facilitating')
+ * @param {Object} options - Drawing options
+ * @param {string} options.currentView - Current view ('current' or 'tt')
+ * @param {string} options.currentPerspective - Current perspective ('hierarchy', 'product-lines', etc.)
+ * @param {Map} options.customTeamPositions - Custom team positions for product-lines/business-streams views
+ * @param {Object} options.focusedTeam - Team in focus mode (if any)
+ * @param {Set} options.focusedConnections - Set of focused team names (if in focus mode)
+ */
+function drawInteractionMode(ctx, from, to, mode, options = {}) {
+    const {
+        currentView = 'current',
+        currentPerspective = 'hierarchy',
+        customTeamPositions = null,
+        focusedTeam = null,
+        focusedConnections = null
+    } = options;
+
     const style = INTERACTION_STYLES[mode] || INTERACTION_STYLES['collaboration'];
 
     // Debug: drawConnection (TT interaction)
