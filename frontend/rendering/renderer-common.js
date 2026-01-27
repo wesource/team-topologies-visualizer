@@ -1221,13 +1221,13 @@ function drawActualCommsConnection(ctx, from, to, options = {}) {
     debugLog(`  🎯 Centers: from (${fromCenterX.toFixed(1)}, ${fromCenterY.toFixed(1)}) -> to (${toCenterX.toFixed(1)}, ${toCenterY.toFixed(1)})`);
     debugLog(`  📍 Line edges: from (${fromEdge.x.toFixed(1)}, ${fromEdge.y.toFixed(1)}) -> to (${toEdge.x.toFixed(1)}, ${toEdge.y.toFixed(1)})`);
     debugLog(`  📍 Final line: (${lineFromX.toFixed(1)}, ${lineFromY.toFixed(1)}) -> (${lineToX.toFixed(1)}, ${lineToY.toFixed(1)})`);
-    debugLog(`  🎨 Style: #666666, width: ${4 + lineWidthBoost}px, opacity: ${opacity}`);
+    debugLog(`  🎨 Style: #000000, width: ${2 + lineWidthBoost}px, opacity: ${opacity}`);
 
     ctx.save(); // Save context state
 
-    // Fat gray line (realistic, not TT-designed)
-    ctx.strokeStyle = '#666666';
-    ctx.lineWidth = 4 + lineWidthBoost;
+    // Black line for baseline communication (actual dependencies) - distinct from org hierarchy
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 2 + lineWidthBoost;
     ctx.setLineDash([]);
     ctx.beginPath();
     ctx.moveTo(lineFromX, lineFromY);
@@ -1235,8 +1235,8 @@ function drawActualCommsConnection(ctx, from, to, options = {}) {
     ctx.stroke();
 
     // Draw arrows ON TOP of line for visibility
-    ctx.fillStyle = '#666666';
-    ctx.strokeStyle = '#666666';
+    ctx.fillStyle = '#000000';
+    ctx.strokeStyle = '#000000';
     ctx.lineWidth = 1;
 
     // Filled arrow triangle at 'to' end (unidirectional - only arrow at dependency target)
