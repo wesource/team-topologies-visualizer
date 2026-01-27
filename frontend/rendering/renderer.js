@@ -69,7 +69,15 @@ export function draw(state) {
             const positionMap = state.currentPerspective === 'business-streams'
                 ? state.businessStreamsTeamPositions
                 : state.productLinesTeamPositions;
-            drawConnections(state.ctx, teamsToRender, state.currentView, true, state.currentPerspective, positionMap, state.focusedTeam, state.focusedConnections, state.interactionModeFilters);
+            drawConnections(state.ctx, teamsToRender, {
+                currentView: state.currentView,
+                showInteractionModes: true,
+                currentPerspective: state.currentPerspective,
+                customTeamPositions: positionMap,
+                focusedTeam: state.focusedTeam,
+                focusedConnections: state.focusedConnections,
+                interactionModeFilters: state.interactionModeFilters
+            });
         }
         // Product lines and business streams views handle team rendering - skip standard team drawing
     } else {
@@ -77,7 +85,15 @@ export function draw(state) {
         if (!(state.currentView === 'current' && !state.showConnections)) {
             // Use null for hierarchy view (teams use standard positions)
             const customPositions = state.currentPerspective === 'hierarchy' ? null : state.productLinesTeamPositions;
-            drawConnections(state.ctx, teamsToRender, state.currentView, true, state.currentPerspective, customPositions, state.focusedTeam, state.focusedConnections, state.interactionModeFilters);
+            drawConnections(state.ctx, teamsToRender, {
+                currentView: state.currentView,
+                showInteractionModes: true,
+                currentPerspective: state.currentPerspective,
+                customTeamPositions: customPositions,
+                focusedTeam: state.focusedTeam,
+                focusedConnections: state.focusedConnections,
+                interactionModeFilters: state.interactionModeFilters
+            });
         }
 
         // Draw teams
@@ -95,17 +111,19 @@ export function draw(state) {
             drawTeam(
                 state.ctx,
                 team,
-                state.selectedTeam,
-                state.teamColorMap,
-                (text, maxWidth) => wrapText(state.ctx, text, maxWidth),
-                state.currentView,
-                state.showCognitiveLoad,
-                state.comparisonData, // Pass comparison data for highlighting
-                state.showTeamTypeBadges, // Pass team type badges flag
-                platformMetrics, // Pass platform consumer metrics
-                state.showFlowMetrics, // Pass flow metrics flag
-                state.focusedTeam, // Pass focused team
-                state.focusedConnections // Pass focused connections set
+                {
+                    selectedTeam: state.selectedTeam,
+                    teamColorMap: state.teamColorMap,
+                    wrapText: (text, maxWidth) => wrapText(state.ctx, text, maxWidth),
+                    currentView: state.currentView,
+                    showCognitiveLoad: state.showCognitiveLoad,
+                    comparisonData: state.comparisonData, // Pass comparison data for highlighting
+                    showTeamTypeBadges: state.showTeamTypeBadges, // Pass team type badges flag
+                    platformMetrics, // Pass platform consumer metrics
+                    showFlowMetrics: state.showFlowMetrics, // Pass flow metrics flag
+                    focusedTeam: state.focusedTeam, // Pass focused team
+                    focusedConnections: state.focusedConnections // Pass focused connections set
+                }
             );
         });
     }

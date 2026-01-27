@@ -3,7 +3,7 @@ team_id: driver-experience-team
 name: Driver Experience Team
 team_type: stream-aligned
 position:
-  x: 2130.0
+  x: 1730.0
   y: 413.0
 metadata:
   size: 8

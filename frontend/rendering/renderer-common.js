@@ -129,7 +129,38 @@ export function getTeamBoxHeight(team, currentView = 'current') {
  * @description Renders team with type-specific shapes: rounded rectangles for stream-aligned/platform,
  * vertical boxes for enabling teams, octagons for complicated-subsystem teams
  */
-export function drawTeam(ctx, team, selectedTeam, teamColorMap, wrapText, currentView = 'current', showCognitiveLoad = false, comparisonData = null, showTeamTypeBadges = false, platformMetrics = null, showFlowMetrics = false, focusedTeam = null, focusedConnections = null) {
+/**
+ * Draw a team box on the canvas
+ * @param {CanvasRenderingContext2D} ctx - Canvas context
+ * @param {Object} team - Team object to draw
+ * @param {Object} options - Drawing options
+ * @param {Object} options.selectedTeam - Currently selected team (for highlighting)
+ * @param {Map} options.teamColorMap - Map of team names to colors
+ * @param {Function} options.wrapText - Text wrapping function
+ * @param {string} options.currentView - Current view ('current' or 'tt')
+ * @param {boolean} options.showCognitiveLoad - Show cognitive load indicators
+ * @param {Object} options.comparisonData - Comparison data for highlighting changes
+ * @param {boolean} options.showTeamTypeBadges - Show team type badges
+ * @param {Object} options.platformMetrics - Platform consumer metrics
+ * @param {boolean} options.showFlowMetrics - Show flow metrics
+ * @param {Object} options.focusedTeam - Team in focus mode
+ * @param {Set} options.focusedConnections - Set of team names in focus
+ */
+export function drawTeam(ctx, team, options = {}) {
+    const {
+        selectedTeam = null,
+        teamColorMap,
+        wrapText,
+        currentView = 'current',
+        showCognitiveLoad = false,
+        comparisonData = null,
+        showTeamTypeBadges = false,
+        platformMetrics = null,
+        showFlowMetrics = false,
+        focusedTeam = null,
+        focusedConnections = null
+    } = options;
+
     // Apply focus mode opacity if active
     if (focusedTeam && focusedConnections) {
         const isInFocus = focusedConnections.has(team.name);
@@ -728,7 +759,33 @@ export function getBoxEdgePoint(centerX, centerY, width, height, angle) {
  * @description In 'current' view, shows simple dependency connections.
  * In 'tt' view, shows styled lines representing interaction modes (collaboration, x-as-a-service, facilitating)
  */
-export function drawConnections(ctx, teams, currentView = 'current', showInteractionModes = true, currentPerspective = 'hierarchy', customTeamPositions = null, focusedTeam = null, focusedConnections = null, interactionModeFilters = null) {
+/**
+ * Draw connections between teams based on current view
+ * - Baseline view: Draws "Actual Communications" from dependencies
+ * - TT Design view: Draws "Interaction Modes" (X-as-a-Service, Collaboration, Facilitating)
+ * 
+ * @param {CanvasRenderingContext2D} ctx - Canvas context
+ * @param {Array} teams - Array of team objects
+ * @param {Object} options - Drawing options
+ * @param {string} options.currentView - Current view ('current' for baseline, 'tt' for TT Design)
+ * @param {boolean} options.showInteractionModes - Show interaction modes (TT view only)
+ * @param {string} options.currentPerspective - Current perspective ('hierarchy', 'product-lines', etc.)
+ * @param {Map} options.customTeamPositions - Custom positions for product-lines/business-streams
+ * @param {Object} options.focusedTeam - Team in focus mode
+ * @param {Set} options.focusedConnections - Set of team names in focus
+ * @param {Object} options.interactionModeFilters - Filters for interaction modes
+ */
+export function drawConnections(ctx, teams, options = {}) {
+    const {
+        currentView = 'current',
+        showInteractionModes = true,
+        currentPerspective = 'hierarchy',
+        customTeamPositions = null,
+        focusedTeam = null,
+        focusedConnections = null,
+        interactionModeFilters = null
+    } = options;
+
     // Debug: drawConnections called
 
     if (currentView === 'current') {
@@ -742,7 +799,13 @@ export function drawConnections(ctx, teams, currentView = 'current', showInterac
                 team.dependencies.forEach(targetName => {
                     const target = teams.find(t => t.name === targetName);
                     if (target) {
-                        drawActualCommsConnection(ctx, team, target, currentView, currentPerspective, customTeamPositions, focusedTeam, focusedConnections);
+                        drawActualCommsConnection(ctx, team, target, {
+                            currentView,
+                            currentPerspective,
+                            customTeamPositions,
+                            focusedTeam,
+                            focusedConnections
+                        });
                     } else {
                         // Only show each unique warning once to avoid console spam
                         const warningKey = `${team.name}:${targetName}`;
@@ -915,7 +978,28 @@ function drawInteractionMode(ctx, from, to, mode, options = {}) {
     ctx.globalAlpha = 1.0; // Reset opacity
 }
 
-function drawActualCommsConnection(ctx, from, to, currentView = 'current', currentPerspective = 'hierarchy', customTeamPositions = null, focusedTeam = null, focusedConnections = null) {
+/**
+ * Draw "Actual Communications" connection in baseline view (from dependencies)
+ * 
+ * @param {CanvasRenderingContext2D} ctx - Canvas context
+ * @param {Object} from - Source team object
+ * @param {Object} to - Target team object
+ * @param {Object} options - Drawing options
+ * @param {string} options.currentView - Current view ('current' for baseline)
+ * @param {string} options.currentPerspective - Current perspective ('hierarchy', 'product-lines', etc.)
+ * @param {Map} options.customTeamPositions - Custom positions for product-lines/business-streams
+ * @param {Object} options.focusedTeam - Team in focus mode
+ * @param {Set} options.focusedConnections - Set of team names in focus
+ */
+function drawActualCommsConnection(ctx, from, to, options = {}) {
+    const {
+        currentView = 'current',
+        currentPerspective = 'hierarchy',
+        customTeamPositions = null,
+        focusedTeam = null,
+        focusedConnections = null
+    } = options;
+
     // Debug: drawActualCommsConnection
 
     // Apply opacity and line width based on focus mode

@@ -3,7 +3,7 @@ team_id: data-storage-platform-team
 name: Data Storage Platform Team
 team_type: platform
 position:
-  x: 1280.0
+  x: 1080.0
   y: 1574.0
 metadata:
   size: 6

@@ -555,7 +555,10 @@ class ComparisonView {
 
         // Draw connections/interactions if enabled (behind teams)
         if (this.showInteractions) {
-            drawConnections(ctx, snapshot.teams, null, 'tt');
+            drawConnections(ctx, snapshot.teams, {
+                currentView: 'tt',
+                showInteractionModes: true
+            });
         }
 
         // Draw teams (on top of interactions) - without badges first
@@ -564,12 +567,14 @@ class ComparisonView {
             drawTeam(
                 ctx,
                 team,
-                null, // selectedTeam
-                teamColorMap, // Team colors
-                (text, maxWidth) => this.wrapText(ctx, text, maxWidth), // wrapText function
-                'tt', // currentView - snapshots are TT Design
-                false, // showCognitiveLoad
-                null // No comparison data for first pass (no badges)
+                {
+                    selectedTeam: null, // selectedTeam
+                    teamColorMap, // Team colors
+                    wrapText: (text, maxWidth) => this.wrapText(ctx, text, maxWidth), // wrapText function
+                    currentView: 'tt', // currentView - snapshots are TT Design
+                    showCognitiveLoad: false, // showCognitiveLoad
+                    comparisonData: null // No comparison data for first pass (no badges)
+                }
             );
         });
 

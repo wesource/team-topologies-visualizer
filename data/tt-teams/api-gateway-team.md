@@ -3,7 +3,7 @@ team_id: api-gateway-team
 name: API Gateway Team
 team_type: stream-aligned
 position:
-  x: 1280.0
+  x: 1080.0
   y: 1030.0
 metadata:
   size: 6

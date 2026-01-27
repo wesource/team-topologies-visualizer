@@ -3,7 +3,7 @@ team_id: delivery-notifications-team
 name: Delivery Notifications Team
 team_type: stream-aligned
 position:
-  x: 2130.0
+  x: 1730.0
   y: 289.0
 metadata:
   size: 5

@@ -3,7 +3,7 @@ team_id: ci-cd-platform-team
 name: CI/CD Platform Team
 team_type: platform
 position:
-  x: 1280.0
+  x: 1080.0
   y: 1154.0
 metadata:
   size: 7

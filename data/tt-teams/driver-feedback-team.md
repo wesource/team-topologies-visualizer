@@ -3,7 +3,7 @@ team_id: driver-feedback-team
 name: Driver Feedback Team
 team_type: stream-aligned
 position:
-  x: 2130.0
+  x: 1730.0
   y: 537.0
 metadata:
   size: 5

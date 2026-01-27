@@ -172,10 +172,19 @@ function drawProductSection(ctx, x, y, width, height, productName, teams, allTea
             });
         }
 
-        drawTeam(ctx, team, state.selectedTeam, state.teamColorMap,
-            (text, maxWidth) => wrapText(ctx, text, maxWidth),
-            'current', state.showCognitiveLoad, null, state.showTeamTypeBadges,
-            null, null, state.focusedTeam, state.focusedConnections);
+        drawTeam(ctx, team, {
+            selectedTeam: state.selectedTeam,
+            teamColorMap: state.teamColorMap,
+            wrapText: (text, maxWidth) => wrapText(ctx, text, maxWidth),
+            currentView: 'current',
+            showCognitiveLoad: state.showCognitiveLoad,
+            comparisonData: null,
+            showTeamTypeBadges: state.showTeamTypeBadges,
+            platformMetrics: null,
+            showFlowMetrics: null,
+            focusedTeam: state.focusedTeam,
+            focusedConnections: state.focusedConnections
+        });
 
         // Restore original position
         if (originalX !== undefined && originalY !== undefined) {
@@ -256,10 +265,19 @@ function drawUngroupedTeams(ctx, x, y, teams, allTeams) {
             });
         }
 
-        drawTeam(ctx, team, state.selectedTeam, state.teamColorMap,
-            (text, maxWidth) => wrapText(ctx, text, maxWidth),
-            'current', state.showCognitiveLoad, null, state.showTeamTypeBadges,
-            null, null, state.focusedTeam, state.focusedConnections);
+        drawTeam(ctx, team, {
+            selectedTeam: state.selectedTeam,
+            teamColorMap: state.teamColorMap,
+            wrapText: (text, maxWidth) => wrapText(ctx, text, maxWidth),
+            currentView: 'current',
+            showCognitiveLoad: state.showCognitiveLoad,
+            comparisonData: null,
+            showTeamTypeBadges: state.showTeamTypeBadges,
+            platformMetrics: null,
+            showFlowMetrics: null,
+            focusedTeam: state.focusedTeam,
+            focusedConnections: state.focusedConnections
+        });
 
         // Restore original position
         if (originalX !== undefined && originalY !== undefined) {
