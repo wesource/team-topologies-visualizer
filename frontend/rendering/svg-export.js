@@ -471,7 +471,30 @@ function generateTTVisionSVG(teams, teamColorMap, showInteractionModes) {
                         const fromEdge = getSVGBoxEdgePoint(fromCenterX, fromCenterY, fromWidth, fromHeight, angle);
                         const toEdge = getSVGBoxEdgePoint(toCenterX, toCenterY, toWidth, toHeight, angle + Math.PI);
 
-                        elements += `<line x1="${fromEdge.x}" y1="${fromEdge.y}" x2="${toEdge.x}" y2="${toEdge.y}" class="connection-line" stroke="${color}" stroke-dasharray="${dashArray}" stroke-width="${strokeWidth}" marker-end="url(#${markerId})"/>`;
+                        // Draw line
+                        if (mode === 'x-as-a-service') {
+                            // X-as-a-Service: line without arrow marker (triangle will be drawn separately)
+                            elements += `<line x1="${fromEdge.x}" y1="${fromEdge.y}" x2="${toEdge.x}" y2="${toEdge.y}" class="connection-line" stroke="${color}" stroke-dasharray="${dashArray}" stroke-width="${strokeWidth}"/>`;
+                            
+                            // Draw triangle at midpoint (official Team Topologies shape)
+                            const midX = (fromEdge.x + toEdge.x) / 2;
+                            const midY = (fromEdge.y + toEdge.y) / 2;
+                            const triangleSize = 16;
+                            const angleDeg = angle * (180 / Math.PI);
+                            
+                            // Triangle pointing toward consumer (direction of service)
+                            const tipX = midX + triangleSize * Math.cos(angle);
+                            const tipY = midY + triangleSize * Math.sin(angle);
+                            const base1X = midX - triangleSize / 2 * Math.cos(angle) + triangleSize / 2 * Math.cos(angle + Math.PI / 2);
+                            const base1Y = midY - triangleSize / 2 * Math.sin(angle) + triangleSize / 2 * Math.sin(angle + Math.PI / 2);
+                            const base2X = midX - triangleSize / 2 * Math.cos(angle) - triangleSize / 2 * Math.cos(angle + Math.PI / 2);
+                            const base2Y = midY - triangleSize / 2 * Math.sin(angle) - triangleSize / 2 * Math.sin(angle + Math.PI / 2);
+                            
+                            elements += `<polygon points="${tipX},${tipY} ${base1X},${base1Y} ${base2X},${base2Y}" fill="${color}" opacity="0.5"/>`;
+                        } else {
+                            // Other modes: line with arrow marker
+                            elements += `<line x1="${fromEdge.x}" y1="${fromEdge.y}" x2="${toEdge.x}" y2="${toEdge.y}" class="connection-line" stroke="${color}" stroke-dasharray="${dashArray}" stroke-width="${strokeWidth}" marker-end="url(#${markerId})"/>`;
+                        }
                     }
                 });
             }
@@ -691,29 +714,29 @@ function drawSVGLine(x1, y1, x2, y2) {
 // Helper functions for interaction mode styling in SVG
 function getInteractionColorForSVG(mode) {
     const colors = {
-        'collaboration': '#7a5fa6',      // Purple
-        'x-as-a-service': '#222222',     // Near-black
-        'facilitating': '#6fa98c'        // Green
+        'collaboration': '#BC1B8D',      // Official magenta
+        'x-as-a-service': '#FBB040',     // Official orange
+        'facilitating': '#00A88F'        // Official teal
     };
     return colors[mode] || '#95a5a6';
 }
 
 function getInteractionDashForSVG(mode) {
     const dashArrays = {
-        'collaboration': 'none',
-        'x-as-a-service': '10,5',
-        'facilitating': '5,5'
+        'collaboration': '5,5',          // Dashed
+        'x-as-a-service': 'none',        // Solid
+        'facilitating': '2,4'            // Dotted
     };
     return dashArrays[mode] || 'none';
 }
 
 function getInteractionWidthForSVG(mode) {
     const widths = {
-        'collaboration': '2',         // Thick line for high-touch interaction
-        'x-as-a-service': '1',        // Medium line for standard operational
-        'facilitating': '0.5'         // Thin line for lightweight coaching
+        'collaboration': '2',
+        'x-as-a-service': '2',
+        'facilitating': '2'
     };
-    return widths[mode] || '1';
+    return widths[mode] || '2';
 }
 function escapeXml(text) {
     return text
