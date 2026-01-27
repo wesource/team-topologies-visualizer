@@ -255,7 +255,7 @@ metadata:
 - Thinnest Viable Platform (TVP) definitions
 
 **Configuration files:**
-- `tt-team-types.json` - Four TT team types (stream-aligned, platform, enabling, complicated-subsystem)
+- `tt-team-types.json` - TT team types (stream-aligned, platform, enabling, complicated-subsystem, undefined)
 
 **Team file fields:**
 ```yaml
@@ -279,8 +279,9 @@ metadata:
 Interaction modes are usually documented in the markdown section (see the templates). The app also supports providing designed interaction modes in YAML via `interaction_modes:` (or an `interactions:` array).
 
 **Templates**:
-- `templates/tt-design-team-api-template-base.md` - Minimal Team API
-- `templates/tt-design-team-api-template-extended.md` - Comprehensive with platform product metrics
+- `templates/tt-team-api-template-minimal.md` - Minimal starter (mission + how to work with us + interactions)
+- `templates/tt-team-api-template-base.md` - Base Team API
+- `templates/tt-team-api-template-extended.md` - Extended template with platform product metrics
 
 **Key difference**: Baseline uses `dependencies` (organic), TT Design uses `interaction_modes` (designed).
 
@@ -289,8 +290,9 @@ Interaction modes are usually documented in the markdown section (see the templa
 The [templates/](../templates/) directory contains ready-to-use markdown templates:
 
 - `templates/baseline-team-template.md` (Baseline)
-- `templates/tt-design-team-api-template-base.md` (TT Design, minimal)
-- `templates/tt-design-team-api-template-extended.md` (TT Design, extended)
+- `templates/tt-team-api-template-minimal.md` (TT, minimal)
+- `templates/tt-team-api-template-base.md` (TT, base)
+- `templates/tt-team-api-template-extended.md` (TT, extended)
 
 Recommended workflow:
 
@@ -304,13 +306,13 @@ Examples:
 ```powershell
 # Windows PowerShell
 Copy-Item templates/baseline-team-template.md data/baseline-teams/my-new-team.md
-Copy-Item templates/tt-design-team-api-template-base.md data/tt-teams/my-new-team.md
+Copy-Item templates/tt-team-api-template-base.md data/tt-teams/my-new-team.md
 ```
 
 ```bash
 # Linux/Mac
 cp templates/baseline-team-template.md data/baseline-teams/my-new-team.md
-cp templates/tt-design-team-api-template-base.md data/tt-teams/my-new-team.md
+cp templates/tt-team-api-template-base.md data/tt-teams/my-new-team.md
 ```
 
 ## Running the Application

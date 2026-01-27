@@ -2,13 +2,13 @@
 
 Contributions are welcome! This tool is designed to be extended and customized.
 
-If you're looking for ideas, see [BACKLOG.md](docs/BACKLOG.md). It's a curated, changeable list of priorities and future ideas (not a promise).
+If you're looking for ideas, see [backlog.md](docs/backlog.md). It's a curated, changeable list of priorities and future ideas (not a promise).
 
 A good way to start is to pick something from **Now** or **Next**, or propose a small, well-scoped improvement from **Later / Maybe**.
 
 ## Getting Started
 
-**First time?** See [docs/SETUP.md](docs/SETUP.md) for detailed environment setup instructions.
+**First time?** See [docs/setup.md](docs/setup.md) for detailed environment setup instructions.
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)

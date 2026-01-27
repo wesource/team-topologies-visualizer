@@ -27,7 +27,7 @@
     {
       "id": "undefined",
       "name": "Undefined",
-      "description": "Teams not yet designed into one of the 4 fundamental team types (stream-aligned, platform, enabling, complicated-subsystem). Used during Team Topologies transformation planning.",
+      "description": "Teams not yet classified into one of the 4 fundamental types. Use for in-transition states (splitting, merging, reorganizing), initial assessment, or gradual migration from component teams.",
       "color": "#EBEBEF"
     }
   ]

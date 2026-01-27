@@ -756,34 +756,44 @@ export function drawFlowMetricsBox(ctx, team, x, y, width, height) {
     const health = calculateFlowMetricsHealth(team.flow_metrics);
     if (!health) return;
 
-    // Position metrics box below team name
-    const boxHeight = 24;
-    const boxPadding = 8;
-    const boxY = y + height - boxHeight - boxPadding;
-    const boxX = x + boxPadding;
-    const boxWidth = width - (boxPadding * 2);
-
-    // Background with health color
-    ctx.fillStyle = health.color;
-    ctx.globalAlpha = 0.15; // Subtle background
-    ctx.fillRect(boxX, boxY, boxWidth, boxHeight);
-    ctx.globalAlpha = 1.0;
-
-    // Border
-    ctx.strokeStyle = health.color;
-    ctx.lineWidth = 2;
-    ctx.strokeRect(boxX, boxY, boxWidth, boxHeight);
-
-    // Compact text: "📊 14d 🟢" (lead time + health indicator)
+    // Badge dimensions (similar to platform consumer badge)
+    const badgePadding = 8;
+    const badgeHeight = 36;
+    const emoji = '📊';
+    
+    // Format lead time
     const leadTime = team.flow_metrics.lead_time_days !== undefined ?
         `${Math.round(team.flow_metrics.lead_time_days)}d` : '?';
-    const text = `📊 ${leadTime} ${health.emoji}`;
+    const text = `${leadTime} ${health.emoji}`;
 
-    ctx.fillStyle = '#333';
-    ctx.font = 'bold 12px sans-serif';
-    ctx.textAlign = 'center';
+    // Measure text to calculate badge width
+    ctx.font = 'bold 22px sans-serif';
+    const textWidth = ctx.measureText(text).width;
+    const emojiWidth = 24;
+    const badgeWidth = emojiWidth + textWidth + badgePadding * 3;
+
+    // Position in bottom-right corner
+    const badgeX = x + width - badgeWidth - 6;
+    const badgeY = y + height - badgeHeight - 6;
+
+    // Draw badge background with health color
+    ctx.fillStyle = health.color;
+    ctx.beginPath();
+    ctx.roundRect(badgeX, badgeY, badgeWidth, badgeHeight, 8);
+    ctx.fill();
+
+    // Draw emoji
+    ctx.font = '22px sans-serif';
+    ctx.textAlign = 'left';
     ctx.textBaseline = 'middle';
-    ctx.fillText(text, boxX + boxWidth / 2, boxY + boxHeight / 2);
+    ctx.fillStyle = '#fff';
+    ctx.fillText(emoji, badgeX + badgePadding, badgeY + badgeHeight / 2);
+
+    // Draw text (lead time + health emoji)
+    ctx.font = 'bold 22px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#fff';
+    ctx.fillText(text, badgeX + emojiWidth + badgePadding * 1.5, badgeY + badgeHeight / 2);
 }
 
 /**

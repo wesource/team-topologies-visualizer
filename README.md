@@ -6,7 +6,7 @@ Two complementary views:
 - **Baseline**: your current/reference structure before Team Topologies transformation
 - **TT Design**: your evolving Team Topologies design — a living design you keep refining (team types, interaction modes, groupings)
 
-See [docs/CONCEPTS.md](docs/CONCEPTS.md#the-tools-two-views) for view details and why these names.
+See [docs/concepts.md](docs/concepts.md#the-tools-two-views) for view details and why these names.
 
 This tool is inspired by **Team Topologies** by Matthew Skelton and Manuel Pais — especially the concepts summarized at https://teamtopologies.com/key-concepts (more references at the end of this README).
 
@@ -75,7 +75,7 @@ docker run -p 8000:8000 -v ./data:/app/data team-topologies-viz
 
 Open http://localhost:8000/static/index.html
 
-**Full setup instructions**: See [docs/SETUP.md](docs/SETUP.md) for detailed installation, configuration, Docker/Podman options, demo mode, and TT design variants.
+**Full setup instructions**: See [docs/setup.md](docs/setup.md) for detailed installation, configuration, Docker/Podman options, demo mode, and TT design variants.
 
 ## Key Features
 
@@ -112,17 +112,16 @@ Open http://localhost:8000/static/index.html
 
 | Document | Description |
 |----------|-------------|
-| [docs/SETUP.md](docs/SETUP.md) | Installation, configuration, Docker/Podman, demo mode, TT variants |
-| [docs/USAGE.md](docs/USAGE.md) | UI walkthrough (views, dragging/zooming, filters, validation) |
-| [docs/CONCEPTS.md](docs/CONCEPTS.md) | Team Topologies concepts and how they map to the tool |
-| [docs/EXAMPLE_DATA.md](docs/EXAMPLE_DATA.md) | Example organization, transformation story, dataset variants |
-| [docs/AUTO-ALIGN.md](docs/AUTO-ALIGN.md) | Auto-align feature, alignment hints, 3×2 grid layout |
-| [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) | Developer workflow, testing, linting |
-| [docs/TESTING.md](docs/TESTING.md) | Testing guide (pytest, Vitest, Playwright) |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Technical architecture and code structure |
-| [docs/DEPENDENCIES.md](docs/DEPENDENCIES.md) | Full dependency list and rationale |
-| [docs/BACKLOG.md](docs/BACKLOG.md) | Feature ideas and priorities |
-| [docs/CHANGELOG.md](docs/CHANGELOG.md) | Design decisions and implementation notes |
+| [docs/setup.md](docs/setup.md) | Installation, configuration, Docker/Podman, demo mode, TT variants |
+| [docs/usage.md](docs/usage.md) | UI walkthrough (views, dragging/zooming, filters, validation) |
+| [docs/concepts.md](docs/concepts.md) | Team Topologies concepts and how they map to the tool |
+| [docs/example_data.md](docs/example_data.md) | Example organization, transformation story, dataset variants |
+| [docs/auto-align.md](docs/auto-align.md) | Auto-align feature, alignment hints, 3×2 grid layout |
+| [docs/development.md](docs/development.md) | Developer workflow, testing, linting |
+| [docs/testing.md](docs/testing.md) | Testing guide (pytest, Vitest, Playwright) |
+| [docs/architecture.md](docs/architecture.md) | Technical architecture and code structure |
+| [docs/dependencies.md](docs/dependencies.md) | Full dependency list and rationale |
+| [docs/backlog.md](docs/backlog.md) | Feature ideas and priorities |
 
 ## Quick Customization
 
@@ -136,7 +135,7 @@ data/baseline-teams/baseline-team-types.json
 data/tt-teams/tt-team-types.json
 ```
 
-Want to understand the team Markdown/YAML structure (or create your own starting from [templates/](templates/))? See [docs/SETUP.md](docs/SETUP.md#data-organization).
+Want to understand the team Markdown/YAML structure (or create your own starting from [templates/](templates/))? See [docs/setup.md](docs/setup.md#data-organization).
 
 ## Example Data
 
@@ -144,7 +143,7 @@ Includes a fictitious organization (**LogiCore Systems**) to illustrate typical 
 
 **Two TT design variants**: Mid-stage transformation (default, ~34 teams) and first-step transformation (optional, ~20 teams) showing realistic progression.
 
-See **[docs/EXAMPLE_DATA.md](docs/EXAMPLE_DATA.md)** for the complete story, how to switch variants, and detailed comparison.
+See **[docs/example_data.md](docs/example_data.md)** for the complete story, how to switch variants, and detailed comparison.
 
 **Data Management**: All team data is stored as markdown files in `data/`. Use git for version control and backup - commit regularly to preserve your team topology designs.
 
@@ -159,7 +158,7 @@ pwsh ./scripts/run-all-tests.ps1
 
 The test suite includes backend (pytest), frontend (Vitest), and E2E (Playwright) tests.
 
-**Detailed test instructions**: See [DEVELOPMENT.md](docs/DEVELOPMENT.md#testing) for individual test commands, coverage options, and Windows-specific notes.
+**Detailed test instructions**: See [development.md](docs/development.md#testing) for individual test commands, coverage options, and Windows-specific notes.
 
 ## Linting
 
@@ -178,7 +177,7 @@ cd frontend && npm run lint -- --fix
 - **Testing**: pytest, Vitest, Playwright
 - **Data**: Markdown with YAML front matter
 
-**Full dependency list and rationale**: See [DEPENDENCIES.md](docs/DEPENDENCIES.md)
+**Full dependency list and rationale**: See [dependencies.md](docs/dependencies.md)
 
 ## Contributing
 

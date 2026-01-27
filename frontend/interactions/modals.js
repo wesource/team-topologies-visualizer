@@ -10,6 +10,8 @@ import { calculatePlatformConsumers } from '../tt-concepts/platform-metrics.js';
 // marked.js v14.1.3 - Markdown parser for team detail modals
 // Loaded from jsDelivr CDN (pinned version for stability)
 import { marked } from 'https://cdn.jsdelivr.net/npm/marked@14.1.3/+esm';
+// DOMPurify v3.1.7 - HTML sanitizer to prevent XSS attacks
+import DOMPurify from 'https://cdn.jsdelivr.net/npm/dompurify@3.1.7/+esm';
 
 // Configure marked with safe defaults
 marked.setOptions({
@@ -413,8 +415,14 @@ export async function showTeamDetails(team, currentView, allTeams = []) {
             // Use marked.js to parse markdown
             const renderedHtml = marked.parse(description);
 
+            // Sanitize HTML to prevent XSS attacks
+            const sanitizedHtml = DOMPurify.sanitize(renderedHtml, {
+                ALLOWED_TAGS: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'br', 'strong', 'em', 'u', 'ul', 'ol', 'li', 'a', 'code', 'pre', 'table', 'thead', 'tbody', 'tr', 'th', 'td', 'blockquote', 'hr'],
+                ALLOWED_ATTR: ['href', 'title', 'class']
+            });
+
             // Apply Team API specific styling
-            detailDescription.innerHTML = `<div class="team-api-content">${renderedHtml}</div>`;
+            detailDescription.innerHTML = `<div class="team-api-content">${sanitizedHtml}</div>`;
 
             // Add team-api-table class to tables for styling
             detailDescription.querySelectorAll('table').forEach(table => {

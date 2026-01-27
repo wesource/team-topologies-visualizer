@@ -210,7 +210,9 @@ interactions:
 
 This base template follows the official GitHub Team API structure. However, you may want additional sections for your context:
 
-- **Extended template available**: See `templates/team-api-template-extended.md` for additional well-thought-out sections like:
+- **Minimal template available**: See `templates/tt-team-api-template-minimal.md` for a lightweight starting point.
+
+- **Extended template available**: See `templates/tt-team-api-template-extended.md` for additional well-thought-out sections like:
   - Code & Artifacts
   - Testing Approach
   - Practices & Principles

@@ -32,12 +32,12 @@ These perspectives reveal misalignments without changing underlying team data.
 ### TT Design View
 
 Your intentional Team Topologies design showing:
-- Team types (4 types)
+- Team types (4 fundamental + 1 transitional)
 - Interaction modes (3 modes)
 - Value stream groupings
 - Platform groupings
 
-## The 4 Team Types
+## The 4 Fundamental Team Types
 
 Colors are configurable in `tt-team-types.json`:
 
@@ -45,6 +45,10 @@ Colors are configurable in `tt-team-types.json`:
 - **Platform**: Provides internal services to reduce cognitive load
 - **Enabling**: Time-boxed coaching and capability building
 - **Complicated Subsystem**: Specialist knowledge for complex domains
+
+## The Transitional Team Type
+
+- **Undefined**: Teams not yet classified into one of the 4 fundamental types. Use for in-transition states (splitting, merging, reorganizing), initial assessment, or gradual migration from component teams. Visual: Light gray with dashed border.
 
 ## The 3 Interaction Modes
 
@@ -58,8 +62,9 @@ Teams are stored as markdown files with YAML front matter.
 
 **Templates**: See [`templates/`](../templates/) directory for annotated examples:
 - [`baseline-team-template.md`](../templates/baseline-team-template.md) - Baseline teams
-- [`tt-design-team-api-template-base.md`](../templates/tt-design-team-api-template-base.md) - TT teams (minimal)
-- [`tt-design-team-api-template-extended.md`](../templates/tt-design-team-api-template-extended.md) - TT teams (full)
+- [`tt-team-api-template-minimal.md`](../templates/tt-team-api-template-minimal.md) - TT teams (minimal)
+- [`tt-team-api-template-base.md`](../templates/tt-team-api-template-base.md) - TT teams (base)
+- [`tt-team-api-template-extended.md`](../templates/tt-team-api-template-extended.md) - TT teams (extended)
 
 If you haven’t run into it before: **YAML front matter** is a small YAML “metadata header” at the top of a Markdown file, wrapped between `---` lines. It’s commonly used by static site generators and tools to store structured fields (like `name`, `team_type`, and `position`) separately from the human-readable Markdown content below.
 
