@@ -17,7 +17,7 @@ const VALUE_STREAM_STYLE = {
     fillColor: 'rgba(255, 245, 215, 0.4)', // Very light yellow/orange background
     strokeColor: 'rgba(255, 200, 130, 0.5)', // Light orange border
     strokeWidth: 2,
-    borderRadius: 10,
+    borderRadius: 0,
     labelFont: 'bold 16px sans-serif',
     labelColor: '#666',
     labelPadding: 10
@@ -28,7 +28,7 @@ const PLATFORM_GROUPING_STYLE = {
     fillColor: 'rgba(126, 200, 227, 0.15)', // Very light blue background (lighter than platform teams)
     strokeColor: 'rgba(74, 159, 216, 0.4)', // Light blue border
     strokeWidth: 2,
-    borderRadius: 10,
+    borderRadius: 0,
     labelFont: 'bold 16px sans-serif',
     labelColor: '#666',
     labelPadding: 10
@@ -255,9 +255,9 @@ function drawDefaultTeamBox(ctx, team, x, y, width, height, options = {}) {
         showFlowMetrics = false
     } = options;
 
-    // Rounded corners for stream-aligned and platform teams in TT Design view
-    // Sharp corners in Baseline view (hierarchy, product lines, value streams)
-    const radius = currentView === 'tt' ? 15 : 0;
+    // TT shapes: stream-aligned is rounded; platform is sharp (per Team Shape Templates)
+    // Baseline view (hierarchy, product lines, value streams): sharp corners
+    const radius = currentView === 'tt' && team.team_type === 'stream-aligned' ? 15 : 0;
     const fillColor = getTeamColor(team, teamColorMap);
     const borderColor = darkenColor(fillColor, LAYOUT.BORDER_COLOR_DARKEN_FACTOR);
 
@@ -352,7 +352,7 @@ function drawEnablingTeam(ctx, team, x, y, width, height, options = {}) {
         }
     }
 
-    const radius = 0; // Sharp corners for enabling teams
+    const radius = 14; // Rounded corners for enabling teams
     const fillColor = getTeamColor(team, teamColorMap);
     const borderColor = darkenColor(fillColor, LAYOUT.BORDER_COLOR_DARKEN_FACTOR);
 
@@ -366,7 +366,7 @@ function drawEnablingTeam(ctx, team, x, y, width, height, options = {}) {
     // Background
     ctx.fillStyle = fillColor;
     ctx.beginPath();
-    ctx.roundRect(x, y, width, height, radius); // Sharp corners
+    ctx.roundRect(x, y, width, height, radius);
     ctx.fill();
     ctx.shadowColor = 'transparent';
     // Border
@@ -504,7 +504,7 @@ function drawComplicatedSubsystemTeam(ctx, team, x, y, width, height, options = 
 }
 
 /**
- * Draw undefined team with dashed border (TT Design view only)
+ * Draw undefined team with dotted border (TT Design view only)
  * 
  * @param {CanvasRenderingContext2D} ctx - Canvas context
  * @param {Object} team - Team object
@@ -558,9 +558,10 @@ function drawUndefinedTeam(ctx, team, x, y, width, height, options = {}) {
     ctx.closePath();
     ctx.fill();
 
-    // Dashed border for undefined teams (always gray to indicate neutral/uncertain state)
+    // Dotted border for undefined teams (always gray to indicate neutral/uncertain state)
     ctx.save();
-    ctx.setLineDash([8, 4]); // 8px dash, 4px gap
+    ctx.setLineDash([1, 4]);
+    ctx.lineCap = 'round';
     ctx.strokeStyle = selectedTeam === team ? '#333333' : '#666666'; // Darker gray when selected
     ctx.lineWidth = selectedTeam === team ? 3 : 2;
     ctx.beginPath();
@@ -1412,7 +1413,16 @@ export function drawValueStreamGroupings(ctx, groupings) {
         ctx.beginPath();
         ctx.roundRect(x, y, width, height, VALUE_STREAM_STYLE.borderRadius);
         ctx.fill();
+
+        const canSave = typeof ctx.save === 'function' && typeof ctx.restore === 'function';
+        const previousLineCap = ctx.lineCap;
+        if (canSave) ctx.save();
+        if (typeof ctx.setLineDash === 'function') ctx.setLineDash([1, 4]);
+        ctx.lineCap = 'round';
         ctx.stroke();
+        if (typeof ctx.setLineDash === 'function') ctx.setLineDash([]);
+        ctx.lineCap = previousLineCap;
+        if (canSave) ctx.restore();
 
         // Draw label at top-center (banner style)
         ctx.fillStyle = VALUE_STREAM_STYLE.labelColor;
@@ -1460,7 +1470,16 @@ export function drawPlatformGroupings(ctx, groupings) {
         ctx.beginPath();
         ctx.roundRect(x, y, width, height, PLATFORM_GROUPING_STYLE.borderRadius);
         ctx.fill();
+
+        const canSave = typeof ctx.save === 'function' && typeof ctx.restore === 'function';
+        const previousLineCap = ctx.lineCap;
+        if (canSave) ctx.save();
+        if (typeof ctx.setLineDash === 'function') ctx.setLineDash([1, 4]);
+        ctx.lineCap = 'round';
         ctx.stroke();
+        if (typeof ctx.setLineDash === 'function') ctx.setLineDash([]);
+        ctx.lineCap = previousLineCap;
+        if (canSave) ctx.restore();
 
         // Draw label at top-center (banner style)
         ctx.fillStyle = PLATFORM_GROUPING_STYLE.labelColor;

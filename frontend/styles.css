@@ -663,19 +663,18 @@ header .controls-row .interaction-mode-panel .inline-checkbox:focus-within {
 .legend-grouping-box {
     width: 20px;
     height: 20px;
-    border-radius: 3px;
+    border-radius: 0;
     flex-shrink: 0;
 }
 
 .legend-grouping-box.value-stream {
-    border: 2px solid rgba(255, 200, 130, 0.5);
+    border: 2px dotted rgba(255, 200, 130, 0.5);
     background: rgba(255, 245, 215, 0.4);
 }
 
 .legend-grouping-box.platform {
-    border: 2px solid rgba(74, 159, 216, 0.4);
+    border: 2px dotted rgba(74, 159, 216, 0.4);
     background: rgba(126, 200, 227, 0.15);
-    border-radius: 3px;
     margin-right: 0.5rem;
     flex-shrink: 0;
 }

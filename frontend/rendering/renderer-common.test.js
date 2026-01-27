@@ -261,15 +261,15 @@ describe('Corner radius for team types', () => {
         expect(streamAlignedType).toBe('stream-aligned-team');
     });
 
-    it('should use rounded corners for platform teams', () => {
+    it('should use sharp corners for platform teams', () => {
         // Note: Corner radius logic is in renderer-common.js drawTeam function
-        // This test verifies the team type that should have rounded corners
+        // This test verifies the team type that should have sharp corners
         const platformType = 'platform-team';
         expect(platformType).toBe('platform-team');
     });
 
-    it('should use sharp corners for enabling teams', () => {
-        // Enabling teams should not have rounded corners
+    it('should use rounded corners for enabling teams', () => {
+        // Enabling teams are vertical rounded rectangles in TT Design view
         const enablingType = 'enabling-team';
         expect(enablingType).toBe('enabling-team');
     });

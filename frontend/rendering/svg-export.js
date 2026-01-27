@@ -489,13 +489,13 @@ function generateTTVisionSVG(teams, teamColorMap, showInteractionModes) {
 }
 
 function drawSVGGrouping(label, x, y, width, height, fillColor, borderColor) {
-    const rx = 15; // Rounded corners
+    const rx = 0; // Square corners (official grouping style)
     const labelHeight = 30;
     const labelY = y + labelHeight / 2;
 
     return `
   <rect x="${x}" y="${y}" width="${width}" height="${height}" 
-        fill="${fillColor}" stroke="${borderColor}" stroke-width="2" rx="${rx}" ry="${rx}"/>
+      fill="${fillColor}" stroke="${borderColor}" stroke-width="2" stroke-dasharray="1,4" stroke-linecap="round" rx="${rx}" ry="${rx}"/>
   <text x="${x + width / 2}" y="${labelY}" 
         font-family="Arial, sans-serif" font-size="16" font-weight="bold" 
         fill="${borderColor}" text-anchor="middle" dominant-baseline="middle">${label}</text>
@@ -519,14 +519,14 @@ function drawSVGBox(text, x, y, width, height, bgColor, textColor, isBold, teamT
         }
     }
 
-    // Default: rounded rectangle
-    return drawSVGDefaultBox(text, x, y, width, height, bgColor, textColor, fontSize, fontWeight, borderColor, currentView);
+    // Default: rectangle (rounded for TT stream-aligned, sharp for TT platform)
+    return drawSVGDefaultBox(text, x, y, width, height, bgColor, textColor, fontSize, fontWeight, borderColor, currentView, teamType);
 }
 
 /**
  * Draw default team box (rounded corners in TT Design, sharp corners in Baseline view)
  */
-function drawSVGDefaultBox(text, x, y, width, height, bgColor, textColor, fontSize, fontWeight, borderColor, currentView = 'current') {
+function drawSVGDefaultBox(text, x, y, width, height, bgColor, textColor, fontSize, fontWeight, borderColor, currentView = 'current', teamType = null) {
     // Wrap text
     const words = text.split(' ');
     const lines = [];
@@ -544,9 +544,9 @@ function drawSVGDefaultBox(text, x, y, width, height, bgColor, textColor, fontSi
     if (currentLine)
         lines.push(currentLine);
 
-    // Rounded corners for TT Design view (stream-aligned, platform teams)
-    // Sharp corners for Baseline view
-    const rx = currentView === 'tt' ? '8' : '0';
+    // TT shapes: stream-aligned is rounded; platform is sharp
+    // Baseline view: sharp corners
+    const rx = currentView === 'tt' && teamType === 'stream-aligned' ? '8' : '0';
 
     let box = `<g>
     <rect x="${x}" y="${y}" width="${width}" height="${height}" rx="${rx}" fill="${bgColor}" stroke="${borderColor}" stroke-width="2" class="team-box"/>`;
@@ -562,7 +562,7 @@ function drawSVGDefaultBox(text, x, y, width, height, bgColor, textColor, fontSi
 }
 
 /**
- * Draw undefined team with dashed border
+ * Draw undefined team with dotted border
  */
 function drawSVGUndefinedTeam(text, x, y, width, height, bgColor, textColor, fontSize, fontWeight) {
     // Wrap text
@@ -583,7 +583,7 @@ function drawSVGUndefinedTeam(text, x, y, width, height, bgColor, textColor, fon
 
     let box = `
   <g>
-    <rect x="${x}" y="${y}" width="${width}" height="${height}" rx="8" fill="${bgColor}" stroke="#666666" stroke-width="2" stroke-dasharray="8,4" />`;
+    <rect x="${x}" y="${y}" width="${width}" height="${height}" rx="8" fill="${bgColor}" stroke="#666666" stroke-width="2" stroke-dasharray="1,4" stroke-linecap="round" />`;
 
     // Render text lines
     const lineHeight = 14;

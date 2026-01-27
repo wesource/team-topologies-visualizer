@@ -60,7 +60,7 @@ describe('drawValueStreamGroupings', () => {
 
         // Should draw rectangle
         expect(mockCtx.beginPath).toHaveBeenCalled();
-        expect(mockCtx.roundRect).toHaveBeenCalledWith(100, 100, 400, 300, 10);
+        expect(mockCtx.roundRect).toHaveBeenCalledWith(100, 100, 400, 300, 0);
         expect(mockCtx.fill).toHaveBeenCalled();
         expect(mockCtx.stroke).toHaveBeenCalled();
 
