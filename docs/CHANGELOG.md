@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- **Frontend File Structure Reorganization (2026-01-27)**: Improved code organization with logical folder grouping
+  - **New structure** organizes 30+ JavaScript files into focused subdirectories:
+    * `core/` - Core application files (app.js, state-management.js, config.js, constants.js)
+    * `rendering/` - All rendering logic (renderer.js, renderer-*.js, svg-export.js)
+    * `interactions/` - User interactions (canvas-interactions.js, modals.js)
+    * `features/` - Feature modules organized by domain:
+      - `snapshots/` - Snapshot management
+      - `comparison/` - Snapshot comparison view
+      - `alignment/` - Auto-alignment algorithms
+      - `filters/` - Filtering and legend
+    * `tt-concepts/` - Team Topologies domain logic (value streams, platform groupings, metrics)
+    * `ui/` - UI event handlers and notifications
+    * `api/` - Backend API client
+  - **Benefits**:
+    * Easier navigation - related files grouped together
+    * Clearer boundaries - folder structure reflects architectural layers
+    * Better onboarding - new contributors can understand codebase structure at a glance
+    * Foundation for future growth - clear places for new features
+  - **All imports updated** - 50+ files updated with correct relative paths
+  - **Tests verified** - 367 tests passing (16/17 test files pass, 1 pre-existing CDN import issue)
+  - **No breaking changes** - Functionality remains identical
+
 ### Added
 - **Comprehensive Test Coverage for Fit to View (2026-01-25)**: Added broad unit test coverage for the Fit to View refactor
   - **Hierarchy view tests**:

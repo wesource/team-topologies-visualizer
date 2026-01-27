@@ -1,11 +1,11 @@
 // UI event handlers - manages button clicks and control interactions
-import { state, zoomIn, zoomOut, fitToView, getFilteredTeams, pushPositionSnapshot, popPositionSnapshot, canUndo, clearPositionHistory } from './state-management.js';
-import { updateTeamPosition } from './api.js';
-import { autoAlignTeamsByManager } from './baseline-hierarchy-alignment.js';
-import { autoAlignTTDesign } from './tt-design-alignment.js';
-import { exportToSVG } from './svg-export.js';
+import { state, zoomIn, zoomOut, fitToView, getFilteredTeams, pushPositionSnapshot, popPositionSnapshot, canUndo, clearPositionHistory } from '../core/state-management.js';
+import { updateTeamPosition } from '../api/api.js';
+import { autoAlignTeamsByManager } from '../features/alignment/baseline-hierarchy-alignment.js';
+import { autoAlignTTDesign } from '../features/alignment/tt-design-alignment.js';
+import { exportToSVG } from '../rendering/svg-export.js';
 import { showWarning, showInfo, showSuccess, showError } from './notifications.js';
-import { showValidationReport } from './modals.js';
+import { showValidationReport } from '../interactions/modals.js';
 
 export function handleViewChange(e, loadAllTeams, _draw) {
     const target = e.target;
@@ -170,7 +170,7 @@ export async function handlePerspectiveChange(e, draw) {
     // Load product lines data if switching to that perspective
     if (state.currentPerspective === 'product-lines' && !state.productLinesData) {
         try {
-            const { loadProductLines } = await import('./api.js');
+            const { loadProductLines } = await import('../api/api.js');
             state.productLinesData = await loadProductLines();
         } catch (error) {
             console.error('Failed to load product lines data:', error);
@@ -185,7 +185,7 @@ export async function handlePerspectiveChange(e, draw) {
     // Load business streams data if switching to that perspective
     if (state.currentPerspective === 'business-streams' && !state.businessStreamsData) {
         try {
-            const { loadBusinessStreams } = await import('./api.js');
+            const { loadBusinessStreams } = await import('../api/api.js');
             state.businessStreamsData = await loadBusinessStreams();
         } catch (error) {
             console.error('Failed to load business streams data:', error);

@@ -3,8 +3,8 @@
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { getFilteredTeams } from './filters.js';
-import * as valueStreamGrouping from './tt-value-stream-grouping.js';
-import * as platformGrouping from './tt-platform-grouping.js';
+import * as valueStreamGrouping from '../../tt-concepts/tt-value-stream-grouping.js';
+import * as platformGrouping from '../../tt-concepts/tt-platform-grouping.js';
 
 describe('filters.js', () => {
     describe('getFilteredTeams', () => {

@@ -3,10 +3,10 @@ import { drawCurrentStateView } from './renderer-current.js';
 import { drawProductLinesView } from './renderer-product-lines.js';
 import { renderBusinessStreamsView } from './renderer-business-streams.js';
 import { drawTeam, drawConnections, wrapText, drawValueStreamGroupings, drawPlatformGroupings } from './renderer-common.js';
-import { getValueStreamGroupings } from './tt-value-stream-grouping.js';
-import { getPlatformGroupings } from './tt-platform-grouping.js';
-import { getFilteredTeams } from './state-management.js';
-import { calculatePlatformConsumers } from './platform-metrics.js';
+import { getValueStreamGroupings } from '../tt-concepts/tt-value-stream-grouping.js';
+import { getPlatformGroupings } from '../tt-concepts/tt-platform-grouping.js';
+import { getFilteredTeams } from '../core/state-management.js';
+import { calculatePlatformConsumers } from '../tt-concepts/platform-metrics.js';
 
 /**
  * Main draw function - renders entire canvas

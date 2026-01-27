@@ -1,14 +1,14 @@
 // Main application - refactored with modular structure
-import { loadTeamTypes, loadOrganizationHierarchy, loadTeams } from './api.js';
-import { initCanvasPolyfills } from './renderer-common.js';
-import { CanvasInteractionHandler } from './canvas-interactions.js';
+import { loadTeamTypes, loadOrganizationHierarchy, loadTeams } from '../api/api.js';
+import { initCanvasPolyfills } from '../rendering/renderer-common.js';
+import { CanvasInteractionHandler } from '../interactions/canvas-interactions.js';
 import { state } from './state-management.js';
-import { openAddTeamModal, closeModal, closeDetailModal, closeInteractionModeModal, showTeamDetails, handleTeamSubmit } from './modals.js';
-import { updateLegend, updateGroupingFilter } from './legend.js';
-import { setupUIEventListeners } from './ui-handlers.js';
-import { draw, selectTeam } from './renderer.js';
-import { initSnapshotHandlers } from './snapshot-handlers.js';
-import { comparisonView } from './tt-comparison-view.js';
+import { openAddTeamModal, closeModal, closeDetailModal, closeInteractionModeModal, showTeamDetails, handleTeamSubmit } from '../interactions/modals.js';
+import { updateLegend, updateGroupingFilter } from '../features/filters/legend.js';
+import { setupUIEventListeners } from '../ui/ui-handlers.js';
+import { draw, selectTeam } from '../rendering/renderer.js';
+import { initSnapshotHandlers } from '../features/snapshots/snapshot-handlers.js';
+import { comparisonView } from '../features/comparison/tt-comparison-view.js';
 
 let _interactionHandler = null;
 // Initialize

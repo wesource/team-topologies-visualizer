@@ -1,30 +1,33 @@
-// Value Stream Grouping Utilities
-// Handles grouping teams by value stream and calculating bounding boxes
+// Platform Grouping Utilities
+// Handles grouping platform teams by platform_grouping metadata
 
-import { LAYOUT } from './constants.js';
-import { getTeamBoxWidth, getTeamBoxHeight } from './renderer-common.js';
+import { LAYOUT } from '../core/constants.js';
+import { getTeamBoxWidth, getTeamBoxHeight } from '../rendering/renderer-common.js';
 
 /**
- * Groups teams by their value stream
+ * Groups platform teams by their platform grouping
  * @param {Array} teams - Array of team objects
  * @returns {Array} Array of grouping objects with name, teams, and bounds
  */
-export function getValueStreamGroupings(teams) {
+export function getPlatformGroupings(teams) {
     if (!teams || teams.length === 0) {
         return [];
     }
 
-    // Group teams by value stream
+    // Group teams by platform grouping
     const groupMap = new Map();
 
     teams.forEach(team => {
         // Check top-level first (from YAML root), then metadata (for backwards compatibility)
-        const valueStream = team.value_stream || team.metadata?.value_stream || '(Ungrouped)';
+        const platformGrouping = team.platform_grouping || team.metadata?.platform_grouping;
 
-        if (!groupMap.has(valueStream)) {
-            groupMap.set(valueStream, []);
+        // Only group teams that have a platform_grouping value
+        if (platformGrouping) {
+            if (!groupMap.has(platformGrouping)) {
+                groupMap.set(platformGrouping, []);
+            }
+            groupMap.get(platformGrouping).push(team);
         }
-        groupMap.get(valueStream).push(team);
     });
 
     // Convert to array and calculate bounding boxes
@@ -50,42 +53,42 @@ export function getValueStreamGroupings(teams) {
 }
 
 /**
- * Gets unique value stream names from teams
+ * Gets unique platform grouping names from teams
  * @param {Array} teams - Array of team objects
- * @returns {Array} Sorted array of unique value stream names (excluding ungrouped)
+ * @returns {Array} Sorted array of unique platform grouping names
  */
-export function getValueStreamNames(teams) {
+export function getPlatformGroupingNames(teams) {
     if (!teams || teams.length === 0) {
         return [];
     }
 
-    const valueStreams = new Set();
+    const platformGroupings = new Set();
 
     teams.forEach(team => {
         // Check top-level first (from YAML root), then metadata (for backwards compatibility)
-        const valueStream = team.value_stream || team.metadata?.value_stream;
-        if (valueStream) {
-            valueStreams.add(valueStream);
+        const platformGrouping = team.platform_grouping || team.metadata?.platform_grouping;
+        if (platformGrouping) {
+            platformGroupings.add(platformGrouping);
         }
     });
 
-    return Array.from(valueStreams).sort();
+    return Array.from(platformGroupings).sort();
 }
 
 /**
- * Filters teams by selected value stream
+ * Filters teams by selected platform grouping
  * @param {Array} teams - Array of team objects
- * @param {string} selectedValueStream - Value stream to filter by, or "all"
+ * @param {string} selectedPlatformGrouping - Platform grouping to filter by, or "all"
  * @returns {Array} Filtered teams array
  */
-export function filterTeamsByValueStream(teams, selectedValueStream) {
-    if (!teams || teams.length === 0 || !selectedValueStream || selectedValueStream === 'all') {
+export function filterTeamsByPlatformGrouping(teams, selectedPlatformGrouping) {
+    if (!teams || teams.length === 0 || !selectedPlatformGrouping || selectedPlatformGrouping === 'all') {
         return teams;
     }
 
     return teams.filter(team => {
-        const valueStream = team.value_stream || team.metadata?.value_stream;
-        return valueStream === selectedValueStream;
+        const platformGrouping = team.platform_grouping || team.metadata?.platform_grouping;
+        return platformGrouping === selectedPlatformGrouping;
     });
 }
 
@@ -111,21 +114,37 @@ export function calculateGroupingBoundingBox(teams, teamBoxHeight, padding, curr
     let maxX = -Infinity;
     let maxY = -Infinity;
 
+    const teamDetails = []; // For debugging
+
     teams.forEach(team => {
-        const { x, y } = team.position;
+        const x = team.position?.x || 0;
+        const y = team.position?.y || 0;
         const teamWidth = getTeamBoxWidth(team, currentView);
-        const teamHeight = getTeamBoxHeight(team, currentView);
+        const teamHeight = getTeamBoxHeight(team, currentView); // Use actual team height
 
         minX = Math.min(minX, x);
         minY = Math.min(minY, y);
         maxX = Math.max(maxX, x + teamWidth);
-        maxY = Math.max(maxY, y + teamHeight);
+        maxY = Math.max(maxY, y + teamHeight); // Use actual height
+
+        // Collect details for debugging
+        teamDetails.push({
+            name: team.name,
+            x, y,
+            teamWidth,
+            teamHeight,
+            rightEdge: x + teamWidth,
+            bottomEdge: y + teamHeight
+        });
     });
 
-    return {
+    // Always render grouping boxes, even if teams are spread out after manual dragging
+    const result = {
         x: minX - padding,
         y: minY - padding - labelAreaHeight, // Extra space for label at top
         width: (maxX - minX) + (padding * 2),
         height: (maxY - minY) + (padding * 2) + labelAreaHeight // Include label area in height
     };
+
+    return result;
 }

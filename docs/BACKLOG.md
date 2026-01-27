@@ -41,7 +41,7 @@ Edit this list as your priorities change:
 	- What it means: if a Baseline team’s `product_line` is not present in `data/baseline-teams/products.json`, or its `business_stream` is not present in `data/baseline-teams/business-streams.json`, flag it as a validation warning.
 	- Why: prevents “silent” typos that create missing lanes / mis-grouped teams in the Baseline views.
 	- Acceptance criteria: warning appears in the validation report (and ideally the UI warnings modal) with file + field + bad value; matching should be case/whitespace-normalized.
-- Refactor frontend file structure into subfolders (DX improvement)
+
 
 ## Later / Maybe
 - TT Design Overview document (per dataset)

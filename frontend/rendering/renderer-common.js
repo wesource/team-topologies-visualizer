@@ -1,5 +1,5 @@
-import { LAYOUT } from './constants.js';
-import { debugLog } from './config.js';
+import { LAYOUT } from '../core/constants.js';
+import { debugLog } from '../core/config.js';
 
 // Track warnings to avoid console spam (only show each unique warning once)
 const shownWarnings = new Set();

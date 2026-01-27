@@ -5,8 +5,8 @@
  */
 
 import { drawTeam, wrapText, getTeamBoxWidth, getTeamBoxHeight } from './renderer-common.js';
-import { state } from './state-management.js';
-import { debugLog } from './config.js';
+import { state } from '../core/state-management.js';
+import { debugLog } from '../core/config.js';
 
 const LAYOUT = {
     businessStreamWidth: 600,

@@ -3,7 +3,7 @@
  * Vertical product lanes + horizontal shared teams row
  */
 import { darkenColor, getCognitiveLoadIndicator } from './renderer-common.js';
-import { debugLog } from './config.js';
+import { debugLog } from '../core/config.js';
 
 const PRODUCT_LANE_WIDTH = 300;
 const PRODUCT_LANE_PADDING = 20;

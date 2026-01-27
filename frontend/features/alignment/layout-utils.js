@@ -1,7 +1,7 @@
 // Shared layout calculation utilities
 // Used by both canvas renderer and SVG export to ensure consistency
 
-import { LAYOUT } from './constants.js';
+import { LAYOUT } from '../../core/constants.js';
 
 /**
  * Calculate department position

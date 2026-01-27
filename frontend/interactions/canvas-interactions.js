@@ -1,8 +1,8 @@
 // Canvas mouse and interaction handling
-import { getTeamAtPosition } from './renderer-common.js';
-import { updateTeamPosition } from './api.js';
-import { pushPositionSnapshot, updateZoomDisplay } from './state-management.js';
-import { updateUndoButtonState } from './ui-handlers.js';
+import { getTeamAtPosition } from '../rendering/renderer-common.js';
+import { updateTeamPosition } from '../api/api.js';
+import { pushPositionSnapshot, updateZoomDisplay } from '../core/state-management.js';
+import { updateUndoButtonState } from '../ui/ui-handlers.js';
 
 /**
  * Get direct relationships for a team (dependencies and consumers)

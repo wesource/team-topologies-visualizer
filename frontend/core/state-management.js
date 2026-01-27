@@ -2,7 +2,7 @@
  * Application State Management
  * Centralized state for the Team Topologies Visualizer
  */
-import { getTeamBoxWidth, getTeamBoxHeight } from './renderer-common.js';
+import { getTeamBoxWidth, getTeamBoxHeight } from '../rendering/renderer-common.js';
 import { LAYOUT } from './constants.js';
 
 // Application state object

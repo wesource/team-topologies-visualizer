@@ -1,6 +1,6 @@
-import { getValueStreamGroupings } from './tt-value-stream-grouping.js';
-import { getPlatformGroupings } from './tt-platform-grouping.js';
-import { getTeamBoxHeight } from './renderer-common.js';
+import { getValueStreamGroupings } from '../../tt-concepts/tt-value-stream-grouping.js';
+import { getPlatformGroupings } from '../../tt-concepts/tt-platform-grouping.js';
+import { getTeamBoxHeight } from '../../rendering/renderer-common.js';
 
 // TT Design view alignment utilities for auto-organizing teams within groupings
 

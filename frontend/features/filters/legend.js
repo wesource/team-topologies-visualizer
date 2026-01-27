@@ -1,9 +1,9 @@
 // Legend rendering and interaction - manages visual legend UI
-import { state } from './state-management.js';
-import { showInfoModal } from './modals.js';
-import { darkenColor } from './renderer-common.js';
-import { getValueStreamNames } from './tt-value-stream-grouping.js';
-import { getPlatformGroupingNames } from './tt-platform-grouping.js';
+import { state } from '../../core/state-management.js';
+import { showInfoModal } from '../../interactions/modals.js';
+import { darkenColor } from '../../rendering/renderer-common.js';
+import { getValueStreamNames } from '../../tt-concepts/tt-value-stream-grouping.js';
+import { getPlatformGroupingNames } from '../../tt-concepts/tt-platform-grouping.js';
 
 export function updateLegend() {
     const legendDiv = document.querySelector('.legend');

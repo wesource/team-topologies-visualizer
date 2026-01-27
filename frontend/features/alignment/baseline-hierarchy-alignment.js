@@ -1,4 +1,4 @@
-import { LAYOUT } from './constants.js';
+import { LAYOUT } from '../../core/constants.js';
 
 // Team alignment utilities for auto-organizing teams by line manager
 

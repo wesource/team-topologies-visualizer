@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { autoAlignTTDesign } from './tt-design-alignment.js';
-import { calculateGroupingBoundingBox } from './tt-value-stream-grouping.js';
-import { LAYOUT } from './constants.js';
+import { calculateGroupingBoundingBox } from '../../tt-concepts/tt-value-stream-grouping.js';
+import { LAYOUT } from '../../core/constants.js';
 
 describe('autoAlignTTDesign', () => {
     it('should return empty array for empty team list', () => {

@@ -1,5 +1,5 @@
 // API communication module
-import { getApiUrl } from './config.js';
+import { getApiUrl } from '../core/config.js';
 
 /**
  * Get the API prefix based on view (Baseline or TT-Design)
