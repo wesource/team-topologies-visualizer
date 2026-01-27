@@ -187,12 +187,24 @@ export function drawTeam(ctx, team, options = {}) {
             return;
         }
         if (team.team_type === 'complicated-subsystem') {
-            drawComplicatedSubsystemTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData, platformMetrics, showFlowMetrics);
+            drawComplicatedSubsystemTeam(ctx, team, x, y, width, height, {
+                selectedTeam,
+                teamColorMap,
+                wrapText,
+                showCognitiveLoad,
+                comparisonData
+            });
             ctx.globalAlpha = 1.0; // Reset opacity
             return;
         }
         if (team.team_type === 'undefined') {
-            drawUndefinedTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData, platformMetrics, showFlowMetrics);
+            drawUndefinedTeam(ctx, team, x, y, width, height, {
+                selectedTeam,
+                teamColorMap,
+                wrapText,
+                showCognitiveLoad,
+                comparisonData
+            });
             ctx.globalAlpha = 1.0; // Reset opacity
             return;
         }
@@ -409,8 +421,29 @@ function drawEnablingTeam(ctx, team, x, y, width, height, options = {}) {
 /**
  * Draw complicated-subsystem team as octagon
  * Shape: 8-sided polygon representing internal complexity
+ * 
+ * @param {CanvasRenderingContext2D} ctx - Canvas context
+ * @param {Object} team - Team object
+ * @param {number} x - X coordinate
+ * @param {number} y - Y coordinate
+ * @param {number} width - Box width
+ * @param {number} height - Box height
+ * @param {Object} options - Drawing options
+ * @param {Object} options.selectedTeam - Currently selected team
+ * @param {Map} options.teamColorMap - Team color mapping
+ * @param {Function} options.wrapText - Text wrapping function
+ * @param {boolean} options.showCognitiveLoad - Show cognitive load indicator
+ * @param {Object} options.comparisonData - Comparison data for badges
  */
-function drawComplicatedSubsystemTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData, _platformMetrics = null, _showFlowMetrics = false) {
+function drawComplicatedSubsystemTeam(ctx, team, x, y, width, height, options = {}) {
+    const {
+        selectedTeam,
+        teamColorMap,
+        wrapText,
+        showCognitiveLoad,
+        comparisonData
+    } = options;
+
     // Check if this team has a comparison badge
     let comparisonBadge = null;
     if (comparisonData) {
@@ -472,8 +505,29 @@ function drawComplicatedSubsystemTeam(ctx, team, x, y, width, height, selectedTe
 
 /**
  * Draw undefined team with dashed border (TT Design view only)
+ * 
+ * @param {CanvasRenderingContext2D} ctx - Canvas context
+ * @param {Object} team - Team object
+ * @param {number} x - X coordinate
+ * @param {number} y - Y coordinate
+ * @param {number} width - Box width
+ * @param {number} height - Box height
+ * @param {Object} options - Drawing options
+ * @param {Object} options.selectedTeam - Currently selected team
+ * @param {Map} options.teamColorMap - Team color mapping
+ * @param {Function} options.wrapText - Text wrapping function
+ * @param {boolean} options.showCognitiveLoad - Show cognitive load indicator
+ * @param {Object} options.comparisonData - Comparison data for badges
  */
-function drawUndefinedTeam(ctx, team, x, y, width, height, selectedTeam, teamColorMap, wrapText, showCognitiveLoad, comparisonData, _platformMetrics = null, _showFlowMetrics = false) {
+function drawUndefinedTeam(ctx, team, x, y, width, height, options = {}) {
+    const {
+        selectedTeam,
+        teamColorMap,
+        wrapText,
+        showCognitiveLoad,
+        comparisonData
+    } = options;
+
     // Check if this team has a comparison badge
     let comparisonBadge = null;
     if (comparisonData) {
