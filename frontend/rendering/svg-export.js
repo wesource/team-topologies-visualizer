@@ -692,7 +692,7 @@ function drawSVGLine(x1, y1, x2, y2) {
 // Helper functions for interaction mode styling in SVG
 function getInteractionColorForSVG(mode) {
     const colors = {
-        'collaboration': '#967EE2',      // Official purple (Team-Shape-Templates)
+        'collaboration': '#BC1B8D',      // Official magenta (Team-Shape-Templates)
         'x-as-a-service': '#222222',     // Black
         'facilitating': '#00A88F'        // Official teal
     };
@@ -701,9 +701,9 @@ function getInteractionColorForSVG(mode) {
 
 function getInteractionDashForSVG(mode) {
     const dashArrays = {
-        'collaboration': 'none',         // Solid
+        'collaboration': '8,4',          // Dashed
         'x-as-a-service': '2,4',         // Dotted
-        'facilitating': '5,5'            // Dashed
+        'facilitating': '5,5'            // Dotted
     };
     return dashArrays[mode] || 'none';
 }

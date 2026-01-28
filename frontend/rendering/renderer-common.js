@@ -9,24 +9,24 @@ const shownWarnings = new Set();
 export const INTERACTION_STYLES = {
     'collaboration': { 
         shape: 'parallelogram',  // Solid line
-        color: '#967EE2',        // Official purple (Team-Shape-Templates)
-        opacity: 0.5,            // 50% transparency
+        color: '#BC1B8D',        // Official magenta (Team-Shape-Templates)
+        opacity: 1.0,            // Solid
         width: 2,                // Line width
-        dash: []                 // Solid stroke
+        dash: [8, 4]             // Dashed stroke
     },
     'x-as-a-service': { 
         shape: 'line',           // Simple line with triangle marker
-        color: '#FBB040',        // Official orange (Team-Shape-Templates)
+        color: '#222222',        // Black
         opacity: 1.0,            // Solid
         width: 2,                // Line width
-        dash: []                 // Solid stroke
+        dash: [2, 4]             // Dotted stroke
     },
     'facilitating': { 
         shape: 'circle',         // Dashed circle
         color: '#00A88F',        // Official teal
-        opacity: 0.5,            // 50% transparency
+        opacity: 1.0,            // Solid
         width: 2,                // Line width
-        dash: [5, 5]             // Dashed stroke
+        dash: [5, 5]             // Dotted stroke
     }
 };
 

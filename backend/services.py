@@ -62,138 +62,166 @@ def get_data_dir(view: str = "tt") -> Path:
     return TT_TEAMS_DIR if view == "tt" else BASELINE_TEAMS_DIR
 
 
-def parse_team_file(file_path: Path) -> TeamData:
-    """Parse a markdown file with YAML front matter and extract Team API interactions from markdown tables"""
+def _read_and_split_front_matter(file_path: Path) -> tuple[dict, str]:
+    """Read file and split YAML front matter from markdown content"""
     with open(file_path, encoding='utf-8') as f:
         content = f.read()
 
-    # Split YAML front matter and markdown content
-    if content.startswith('---'):
-        parts = content.split('---', 2)
-        if len(parts) >= 3:
-            yaml_content = parts[1]
-            markdown_content = parts[2].strip()
-            # Parse YAML
-            data = yaml.safe_load(yaml_content) or {}
+    if not content.startswith('---'):
+        raise ValueError(f"Missing team_id in {file_path.name}. All teams must have a unique team_id.")
 
-            # Validate team_id format (required field)
-            if 'team_id' in data:
-                validate_team_id(data['team_id'], file_path)
-            else:
-                raise ValueError(f"Missing team_id in {file_path.name}. All teams must have a unique team_id.")
+    parts = content.split('---', 2)
+    if len(parts) < 3:
+        raise ValueError(f"Missing team_id in {file_path.name}. All teams must have a unique team_id.")
 
-            # Always set description from markdown body
-            data['description'] = markdown_content
+    yaml_content = parts[1]
+    markdown_content = parts[2].strip()
+    data = yaml.safe_load(yaml_content) or {}
 
-            # Flatten metadata fields for convenience
-            metadata = data.get('metadata', {}) or {}
-            if 'established' in metadata:
-                data['established'] = metadata['established']
-            if 'cognitive_load' in metadata:
-                data['cognitive_load'] = metadata['cognitive_load']
-            if 'size' in metadata:
-                data['size'] = metadata['size']
+    return data, markdown_content
 
-            # Parse and validate flow metrics
-            if 'flow_metrics' in metadata:
-                flow_metrics = metadata['flow_metrics']
-                if isinstance(flow_metrics, dict):
-                    # Validate lead_time_days
-                    if 'lead_time_days' in flow_metrics:
-                        if not isinstance(flow_metrics['lead_time_days'], int | float) or flow_metrics['lead_time_days'] < 0:
-                            raise ValueError(f"Invalid lead_time_days in {file_path.name}: must be non-negative number")
 
-                    # Validate change_fail_rate
-                    if 'change_fail_rate' in flow_metrics:
-                        if not isinstance(flow_metrics['change_fail_rate'], int | float) or not (0 <= flow_metrics['change_fail_rate'] <= 1.0):
-                            raise ValueError(f"Invalid change_fail_rate in {file_path.name}: must be between 0.0 and 1.0")
+def _validate_and_flatten_metadata(data: dict, file_path: Path) -> dict:
+    """Validate team_id and flatten metadata fields to top-level"""
+    # Validate team_id format (required field)
+    if 'team_id' in data:
+        validate_team_id(data['team_id'], file_path)
+    else:
+        raise ValueError(f"Missing team_id in {file_path.name}. All teams must have a unique team_id.")
 
-                    # Validate mttr_hours
-                    if 'mttr_hours' in flow_metrics:
-                        if not isinstance(flow_metrics['mttr_hours'], int | float) or flow_metrics['mttr_hours'] < 0:
-                            raise ValueError(f"Invalid mttr_hours in {file_path.name}: must be non-negative number")
+    # Flatten metadata fields for convenience
+    metadata = data.get('metadata', {}) or {}
 
-                    # Validate deployment_frequency
-                    if 'deployment_frequency' in flow_metrics:
-                        valid_frequencies = ['daily', 'weekly', 'monthly', 'quarterly']
-                        if flow_metrics['deployment_frequency'].lower() not in valid_frequencies:
-                            raise ValueError(f"Invalid deployment_frequency in {file_path.name}: must be one of {valid_frequencies}")
+    # Simple fields
+    for field in ['established', 'cognitive_load', 'size']:
+        if field in metadata:
+            data[field] = metadata[field]
 
-                    data['flow_metrics'] = flow_metrics
+    # Flow metrics with validation
+    if 'flow_metrics' in metadata and isinstance(metadata['flow_metrics'], dict):
+        _validate_flow_metrics(metadata['flow_metrics'], file_path)
+        data['flow_metrics'] = metadata['flow_metrics']
 
-            # Support top-level purpose for quick access
-            if 'purpose' not in data:
-                # Try to extract from team_api or metadata
-                if 'team_api' in data and isinstance(data['team_api'], dict):
-                    data['purpose'] = data['team_api'].get('purpose')
-                elif 'purpose' in metadata:
-                    data['purpose'] = metadata['purpose']
+    # Stream/grouping fields
+    for field in ['business_stream', 'value_stream', 'platform_grouping', 'line_manager']:
+        if field not in data and field in metadata:
+            data[field] = metadata[field]
 
-            # Support business_stream (Baseline) and value_stream (TT Design) at top-level or in metadata
-            if 'business_stream' not in data and 'business_stream' in metadata:
-                data['business_stream'] = metadata['business_stream']
-            if 'value_stream' not in data and 'value_stream' in metadata:
-                data['value_stream'] = metadata['value_stream']
-            if 'platform_grouping' not in data and 'platform_grouping' in metadata:
-                data['platform_grouping'] = metadata['platform_grouping']
+    return data
 
-            # Support line_manager at top-level or in metadata (prefer metadata)
-            if 'line_manager' not in data and 'line_manager' in metadata:
-                data['line_manager'] = metadata['line_manager']
 
-            # Support new Team API fields at top-level or in team_api
-            if 'team_api' in data and isinstance(data['team_api'], dict):
-                # Optionally flatten some fields for easier access
-                for key in ['services_provided', 'contact', 'sla', 'consumers', 'working_hours']:
-                    if key in data['team_api']:
-                        data[key] = data['team_api'][key]
+def _validate_flow_metrics(flow_metrics: dict, file_path: Path) -> None:
+    """Validate flow metrics values"""
+    if 'lead_time_days' in flow_metrics:
+        if not isinstance(flow_metrics['lead_time_days'], int | float) or flow_metrics['lead_time_days'] < 0:
+            raise ValueError(f"Invalid lead_time_days in {file_path.name}: must be non-negative number")
 
-            # Parse dependencies: Prefer YAML 'dependencies' field, fallback to markdown parsing
-            if 'dependencies' not in data or not data['dependencies']:
-                # Parse interaction tables from markdown content (for visualization connections)
-                dependencies, interaction_modes = _parse_interaction_tables(markdown_content)
+    if 'change_fail_rate' in flow_metrics:
+        if not isinstance(flow_metrics['change_fail_rate'], int | float) or not (0 <= flow_metrics['change_fail_rate'] <= 1.0):
+            raise ValueError(f"Invalid change_fail_rate in {file_path.name}: must be between 0.0 and 1.0")
 
-                # Also parse Baseline style dependencies from bullet lists
-                if not dependencies:
-                    dependencies, dependency_notes = _parse_dependency_bullets(markdown_content)
-                    if dependency_notes and 'dependency_notes' not in data:
-                        data['dependency_notes'] = dependency_notes
-                else:
-                    # If we got dependencies from interaction tables, try bullet parsing for notes
-                    _, dependency_notes = _parse_dependency_bullets(markdown_content)
-                    if dependency_notes and 'dependency_notes' not in data:
-                        data['dependency_notes'] = dependency_notes
+    if 'mttr_hours' in flow_metrics:
+        if not isinstance(flow_metrics['mttr_hours'], int | float) or flow_metrics['mttr_hours'] < 0:
+            raise ValueError(f"Invalid mttr_hours in {file_path.name}: must be non-negative number")
 
-                if dependencies:
-                    data['dependencies'] = dependencies
-            else:
-                # Even if dependencies are in YAML, parse notes from markdown
-                if 'dependency_notes' not in data:
-                    _, dependency_notes = _parse_dependency_bullets(markdown_content)
-                    if dependency_notes:
-                        data['dependency_notes'] = dependency_notes
+    if 'deployment_frequency' in flow_metrics:
+        valid_frequencies = ['daily', 'weekly', 'monthly', 'quarterly']
+        if flow_metrics['deployment_frequency'].lower() not in valid_frequencies:
+            raise ValueError(f"Invalid deployment_frequency in {file_path.name}: must be one of {valid_frequencies}")
 
-            # Parse interaction modes: Support YAML 'interactions' array or fallback to markdown parsing
-            if 'interaction_modes' not in data:
-                # First, check if we have interactions array in YAML
-                if 'interactions' in data and isinstance(data['interactions'], list):
-                    # Convert interactions array to interaction_modes dict
-                    interaction_modes = {}
-                    for interaction in data['interactions']:
-                        if isinstance(interaction, dict) and 'team' in interaction and 'mode' in interaction:
-                            interaction_modes[interaction['team']] = interaction['mode']
-                    if interaction_modes:
-                        data['interaction_modes'] = interaction_modes
-                else:
-                    # Fallback to markdown table parsing
-                    _, interaction_modes = _parse_interaction_tables(markdown_content)
-                    if interaction_modes:
-                        data['interaction_modes'] = interaction_modes
 
-            return TeamData(**data)
+def _extract_team_api_fields(data: dict) -> dict:
+    """Extract fields from team_api structure to top-level"""
+    metadata = data.get('metadata', {}) or {}
 
-    # If no front matter, raise error since team_id is required
-    raise ValueError(f"Missing team_id in {file_path.name}. All teams must have a unique team_id.")
+    # Extract purpose from multiple possible locations
+    if 'purpose' not in data:
+        if 'team_api' in data and isinstance(data['team_api'], dict):
+            data['purpose'] = data['team_api'].get('purpose')
+        elif 'purpose' in metadata:
+            data['purpose'] = metadata['purpose']
+
+    # Flatten Team API fields for easier access
+    if 'team_api' in data and isinstance(data['team_api'], dict):
+        for key in ['services_provided', 'contact', 'sla', 'consumers', 'working_hours']:
+            if key in data['team_api']:
+                data[key] = data['team_api'][key]
+
+    return data
+
+
+def _enrich_dependencies(data: dict, markdown_content: str) -> dict:
+    """Parse and enrich dependencies from markdown content"""
+    if 'dependencies' in data and data['dependencies']:
+        # Dependencies already in YAML, just parse notes from markdown
+        if 'dependency_notes' not in data:
+            _, dependency_notes = _parse_dependency_bullets(markdown_content)
+            if dependency_notes:
+                data['dependency_notes'] = dependency_notes
+    else:
+        # Parse dependencies from markdown
+        dependencies, _ = _parse_interaction_tables(markdown_content)
+
+        if not dependencies:
+            dependencies, dependency_notes = _parse_dependency_bullets(markdown_content)
+            if dependency_notes and 'dependency_notes' not in data:
+                data['dependency_notes'] = dependency_notes
+        else:
+            # Got dependencies from tables, try parsing notes from bullets
+            _, dependency_notes = _parse_dependency_bullets(markdown_content)
+            if dependency_notes and 'dependency_notes' not in data:
+                data['dependency_notes'] = dependency_notes
+
+        if dependencies:
+            data['dependencies'] = dependencies
+
+    return data
+
+
+def _enrich_interaction_modes(data: dict, markdown_content: str) -> dict:
+    """Parse and enrich interaction modes from YAML or markdown"""
+    if 'interaction_modes' in data:
+        return data  # Already present
+
+    # Check YAML interactions array
+    if 'interactions' in data and isinstance(data['interactions'], list):
+        interaction_modes = {}
+        for interaction in data['interactions']:
+            if isinstance(interaction, dict) and 'team' in interaction and 'mode' in interaction:
+                interaction_modes[interaction['team']] = interaction['mode']
+        if interaction_modes:
+            data['interaction_modes'] = interaction_modes
+            return data
+
+    # Fallback to markdown table parsing (if YAML didn't produce results)
+    _, interaction_modes = _parse_interaction_tables(markdown_content)
+    if interaction_modes:
+        data['interaction_modes'] = interaction_modes
+
+    return data
+
+
+def parse_team_file(file_path: Path) -> TeamData:
+    """Parse a markdown file with YAML front matter and extract Team API interactions from markdown tables"""
+    # Read file and split YAML from markdown
+    data, markdown_content = _read_and_split_front_matter(file_path)
+
+    # Always set description from markdown body
+    data['description'] = markdown_content
+
+    # Validate and flatten metadata
+    data = _validate_and_flatten_metadata(data, file_path)
+
+    # Extract Team API fields
+    data = _extract_team_api_fields(data)
+
+    # Enrich with dependencies from markdown
+    data = _enrich_dependencies(data, markdown_content)
+
+    # Enrich with interaction modes
+    data = _enrich_interaction_modes(data, markdown_content)
+
+    return TeamData(**data)
 
 
 def _parse_interaction_tables(markdown_content: str) -> tuple[list[str], dict[str, str]]:

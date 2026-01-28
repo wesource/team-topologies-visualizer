@@ -101,8 +101,8 @@ export function updateLegend() {
                         <!-- Light grey triangle -->
                         <polygon points="100,20 140,80 60,80" fill="#E0E0E0" stroke="#999" stroke-width="1"/>
                         <!-- Bracket glyph ][ in center -->
-                        <path d="M85,45 L95,45 L95,65 L85,65" fill="none" stroke="#666" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M115,45 L105,45 L105,65 L115,65" fill="none" stroke="#666" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M85,50 L95,50 L95,70 L85,70" fill="none" stroke="#666" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M115,50 L105,50 L105,70 L115,70" fill="none" stroke="#666" stroke-width="2" stroke-linecap="round"/>
                         <!-- Dotted outline around triangle -->
                         <polygon points="100,20 140,80 60,80" fill="none" stroke="#222" stroke-width="2" stroke-dasharray="4,4"/>
                     </svg>

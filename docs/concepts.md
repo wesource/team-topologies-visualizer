@@ -50,8 +50,8 @@ Colors are configurable in `tt-team-types.json`:
 
 ## The 3 Interaction Modes
 
-- **Collaboration**: High-touch, time-boxed joint delivery (magenta line)
-- **X-as-a-Service**: Low-touch self-service consumption (orange line with `][` triangle)
+- **Collaboration**: High-touch, time-boxed joint delivery (magenta dashed line)
+- **X-as-a-Service**: Low-touch self-service consumption (black dotted line with `][` triangle)
 - **Facilitating**: Temporary coaching/enablement (teal dotted line)
 
 ## Team Files (Markdown + YAML)
@@ -112,11 +112,13 @@ Both formats are supported:
 - **Markdown interaction table (recommended)**: Keeps the interaction context close to the Team API narrative (purpose/duration/etc.) and matches the Team API template style.
 - **YAML (`interaction_modes` map or `interactions` array)**: More machine-friendly (easy to diff/edit), but can feel disconnected from the Team API narrative.
 
-Precedence rules (when both exist):
+Precedence rules:
 
-- If `interaction_modes` exists in YAML, the tool uses it (it will not override it from the table).
-- Otherwise, if an `interactions` array exists, it’s converted into `interaction_modes`.
-- Otherwise, the tool falls back to parsing the Markdown interaction table.
+1. If `interaction_modes` exists in YAML, the tool uses it (no fallback to other sources)
+2. Otherwise, if `interactions` array exists in YAML and produces valid interaction modes, those are used
+3. Otherwise (including when `interactions` array is empty or invalid), the tool parses the Markdown interaction table as fallback
+
+**This means you can always use Markdown tables** - even if you have an empty `interactions: []` in YAML, the tool will still parse the table.
 
 ## Optional UI Features
 
