@@ -60,7 +60,7 @@ describe('INTERACTION_STYLES', () => {
     });
     it('should have x-as-a-service style', () => {
         expect(INTERACTION_STYLES).toHaveProperty('x-as-a-service');
-        expect(INTERACTION_STYLES['x-as-a-service'].dash).toEqual([]);
+        expect(INTERACTION_STYLES['x-as-a-service'].dash).toEqual([2, 4]);
     });
     it('should have facilitating style', () => {
         expect(INTERACTION_STYLES).toHaveProperty('facilitating');
@@ -222,8 +222,8 @@ describe('INTERACTION_STYLES - Line thickness by interaction mode', () => {
         expect(facilitating).toBe(2);
     });
 
-    it('should have solid line (no dash) for x-as-a-service mode', () => {
-        expect(INTERACTION_STYLES['x-as-a-service'].dash).toEqual([]);
+    it('should have dotted line for x-as-a-service mode', () => {
+        expect(INTERACTION_STYLES['x-as-a-service'].dash).toEqual([2, 4]);
     });
 
     it('should have dotted pattern for facilitating mode', () => {

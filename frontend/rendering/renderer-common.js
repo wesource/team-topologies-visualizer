@@ -164,6 +164,80 @@ export function getTeamBoxHeight(team, currentView = 'current') {
  * @param {Object} options.focusedTeam - Team in focus mode
  * @param {Set} options.focusedConnections - Set of team names in focus
  */
+/**
+ * Apply focus mode opacity to canvas context
+ * 
+ * @param {CanvasRenderingContext2D} ctx - Canvas context
+ * @param {Object} team - Team object
+ * @param {Object|null} focusedTeam - Currently focused team
+ * @param {Set|null} focusedConnections - Set of team names in focus
+ */
+function _applyFocusModeOpacity(ctx, team, focusedTeam, focusedConnections) {
+    if (focusedTeam && focusedConnections) {
+        const isInFocus = focusedConnections.has(team.name);
+        ctx.globalAlpha = isInFocus ? 1.0 : 0.2;
+    }
+}
+
+/**
+ * Draw team with type-specific shape in TT Design view
+ * 
+ * @param {CanvasRenderingContext2D} ctx - Canvas context
+ * @param {Object} team - Team object
+ * @param {number} x - X coordinate
+ * @param {number} y - Y coordinate
+ * @param {number} width - Box width
+ * @param {number} height - Box height
+ * @param {Object} options - Drawing options
+ * @returns {boolean} True if team was drawn with specific shape, false otherwise
+ */
+function _drawTeamTypeSpecificShape(ctx, team, x, y, width, height, options) {
+    const {
+        selectedTeam,
+        teamColorMap,
+        wrapText,
+        showCognitiveLoad,
+        comparisonData,
+        showTeamTypeBadges
+    } = options;
+
+    if (team.team_type === 'enabling') {
+        drawEnablingTeam(ctx, team, x, y, width, height, {
+            selectedTeam,
+            teamColorMap,
+            wrapText,
+            showCognitiveLoad,
+            comparisonData,
+            showTeamTypeBadges
+        });
+        return true;
+    }
+
+    if (team.team_type === 'complicated-subsystem') {
+        drawComplicatedSubsystemTeam(ctx, team, x, y, width, height, {
+            selectedTeam,
+            teamColorMap,
+            wrapText,
+            showCognitiveLoad,
+            comparisonData
+        });
+        return true;
+    }
+
+    if (team.team_type === 'undefined') {
+        drawUndefinedTeam(ctx, team, x, y, width, height, {
+            selectedTeam,
+            teamColorMap,
+            wrapText,
+            showCognitiveLoad,
+            comparisonData
+        });
+        return true;
+    }
+
+    return false;
+}
+
 export function drawTeam(ctx, team, options = {}) {
     const {
         selectedTeam = null,
@@ -179,11 +253,7 @@ export function drawTeam(ctx, team, options = {}) {
         focusedConnections = null
     } = options;
 
-    // Apply focus mode opacity if active
-    if (focusedTeam && focusedConnections) {
-        const isInFocus = focusedConnections.has(team.name);
-        ctx.globalAlpha = isInFocus ? 1.0 : 0.2;
-    }
+    _applyFocusModeOpacity(ctx, team, focusedTeam, focusedConnections);
 
     const x = team.position.x;
     const y = team.position.y;
@@ -192,37 +262,16 @@ export function drawTeam(ctx, team, options = {}) {
 
     // Use shape-specific drawing in TT Design view
     if (currentView === 'tt') {
-        if (team.team_type === 'enabling') {
-            drawEnablingTeam(ctx, team, x, y, width, height, {
-                selectedTeam,
-                teamColorMap,
-                wrapText,
-                showCognitiveLoad,
-                comparisonData,
-                showTeamTypeBadges
-            });
-            ctx.globalAlpha = 1.0; // Reset opacity
-            return;
-        }
-        if (team.team_type === 'complicated-subsystem') {
-            drawComplicatedSubsystemTeam(ctx, team, x, y, width, height, {
-                selectedTeam,
-                teamColorMap,
-                wrapText,
-                showCognitiveLoad,
-                comparisonData
-            });
-            ctx.globalAlpha = 1.0; // Reset opacity
-            return;
-        }
-        if (team.team_type === 'undefined') {
-            drawUndefinedTeam(ctx, team, x, y, width, height, {
-                selectedTeam,
-                teamColorMap,
-                wrapText,
-                showCognitiveLoad,
-                comparisonData
-            });
+        const drawnWithSpecificShape = _drawTeamTypeSpecificShape(ctx, team, x, y, width, height, {
+            selectedTeam,
+            teamColorMap,
+            wrapText,
+            showCognitiveLoad,
+            comparisonData,
+            showTeamTypeBadges
+        });
+
+        if (drawnWithSpecificShape) {
             ctx.globalAlpha = 1.0; // Reset opacity
             return;
         }
