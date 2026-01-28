@@ -218,6 +218,17 @@ The `data/` directory has two subdirectories for different visualization purpose
 **Configuration files:**
 - `baseline-team-types.json` - Your organization's baseline team classifications (e.g., "feature-team", "platform-team", "support-team")
 
+**Organizational Structure Types:**
+
+In addition to team types, the baseline view supports **organizational structure types** for hierarchy visualization:
+- `department` - Department containers (e.g., Engineering Dept, Sales Dept)
+- `executive` - Leadership/executive layer (e.g., C-suite, VP level)
+- `leadership` - Management/leadership roles
+- `region` - Regional organizational divisions
+- `division` - Corporate divisions
+
+**Design note**: These org structure types are kept separate from `baseline-team-types.json` because they represent organizational **containers** (hierarchy nodes), not actual **working teams**. They're validated in `backend/validation.py` to keep the semantic distinction clear. You can use these types in your baseline team markdown files for hierarchy visualization, but they won't appear in the team types configuration.
+
 **Team file fields:**
 ```yaml
 ---

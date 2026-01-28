@@ -68,6 +68,10 @@ def validate_all_team_files(view: str = "tt") -> dict[str, Any]:
         "baseline": []  # Will load from config
     }
 
+    # Organizational structure types (not actual teams, but valid in baseline view)
+    # These represent hierarchy containers like departments, leadership, regions, etc.
+    org_structure_types = ["department", "executive", "leadership", "region", "division"]
+
     # Load valid team types for baseline view
     if view == "baseline":
         config_file = data_dir / "baseline-team-types.json"
@@ -76,6 +80,8 @@ def validate_all_team_files(view: str = "tt") -> dict[str, Any]:
                 config = json.load(f)
                 # team_types is now an array like TT config
                 valid_types["baseline"] = [t["id"] for t in config.get("team_types", [])]
+                # Add organizational structure types as valid (but conceptually separate)
+                valid_types["baseline"].extend(org_structure_types)
 
     # Check all markdown files
     for file_path in data_dir.rglob("*.md"):
