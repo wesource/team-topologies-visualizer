@@ -8,25 +8,25 @@ const shownWarnings = new Set();
 // Using official shapes with 50% transparency as per Team-Shape-Templates repo
 export const INTERACTION_STYLES = {
     'collaboration': { 
-        shape: 'parallelogram',  // Dashed parallelogram
-        color: '#BC1B8D',        // Official magenta
-        opacity: 0.5,            // 50% transparency
-        width: 2,                // Line width
-        dash: [5, 5]             // Dashed stroke
-    },
-    'x-as-a-service': { 
-        shape: 'triangle',       // Triangle pointing to consumer
-        color: '#FBB040',        // Official orange
+        shape: 'parallelogram',  // Solid line
+        color: '#967EE2',        // Official purple (Team-Shape-Templates)
         opacity: 0.5,            // 50% transparency
         width: 2,                // Line width
         dash: []                 // Solid stroke
     },
+    'x-as-a-service': { 
+        shape: 'line',           // Simple line
+        color: '#222222',        // Black
+        opacity: 1.0,            // Solid
+        width: 2,                // Line width
+        dash: [2, 4]             // Dotted stroke (same as facilitating)
+    },
     'facilitating': { 
-        shape: 'circle',         // Dotted circle
+        shape: 'circle',         // Dashed circle
         color: '#00A88F',        // Official teal
         opacity: 0.5,            // 50% transparency
         width: 2,                // Line width
-        dash: [2, 4]             // Dotted stroke
+        dash: [5, 5]             // Dashed stroke
     }
 };
 
@@ -1115,48 +1115,14 @@ function drawInteractionMode(ctx, from, to, mode, options = {}) {
     ctx.lineTo(toEdge.x, toEdge.y);
     ctx.stroke();
     
-    // Draw X-as-a-Service triangle at midpoint (official Team Topologies shape)
-    if (mode === 'x-as-a-service') {
-        const midX = (fromEdge.x + toEdge.x) / 2;
-        const midY = (fromEdge.y + toEdge.y) / 2;
-        const triangleSize = 16;
-        
-        // Save current state and apply transparency
-        ctx.save();
-        ctx.globalAlpha = style.opacity * opacity;
-        ctx.setLineDash([]);
-        
-        // Draw filled triangle pointing toward consumer (direction of service)
-        ctx.fillStyle = style.color;
-        ctx.beginPath();
-        // Tip of triangle (pointing toward consumer)
-        ctx.moveTo(
-            midX + triangleSize * Math.cos(angle),
-            midY + triangleSize * Math.sin(angle)
-        );
-        // Base corners of triangle (perpendicular to line)
-        ctx.lineTo(
-            midX - triangleSize / 2 * Math.cos(angle) + triangleSize / 2 * Math.cos(angle + Math.PI / 2),
-            midY - triangleSize / 2 * Math.sin(angle) + triangleSize / 2 * Math.sin(angle + Math.PI / 2)
-        );
-        ctx.lineTo(
-            midX - triangleSize / 2 * Math.cos(angle) - triangleSize / 2 * Math.cos(angle + Math.PI / 2),
-            midY - triangleSize / 2 * Math.sin(angle) - triangleSize / 2 * Math.sin(angle + Math.PI / 2)
-        );
-        ctx.closePath();
-        ctx.fill();
-        
-        ctx.restore();
-    } else {
-        // Arrow at edge point for other interaction modes
-        const arrowLength = 10;
-        ctx.beginPath();
-        ctx.moveTo(toEdge.x, toEdge.y);
-        ctx.lineTo(toEdge.x - arrowLength * Math.cos(angle - Math.PI / 6), toEdge.y - arrowLength * Math.sin(angle - Math.PI / 6));
-        ctx.moveTo(toEdge.x, toEdge.y);
-        ctx.lineTo(toEdge.x - arrowLength * Math.cos(angle + Math.PI / 6), toEdge.y - arrowLength * Math.sin(angle + Math.PI / 6));
-        ctx.stroke();
-    }
+    // Arrow at edge point for all interaction modes
+    const arrowLength = 10;
+    ctx.beginPath();
+    ctx.moveTo(toEdge.x, toEdge.y);
+    ctx.lineTo(toEdge.x - arrowLength * Math.cos(angle - Math.PI / 6), toEdge.y - arrowLength * Math.sin(angle - Math.PI / 6));
+    ctx.moveTo(toEdge.x, toEdge.y);
+    ctx.lineTo(toEdge.x - arrowLength * Math.cos(angle + Math.PI / 6), toEdge.y - arrowLength * Math.sin(angle + Math.PI / 6));
+    ctx.stroke();
     
     ctx.setLineDash([]);
     ctx.globalAlpha = 1.0; // Reset opacity

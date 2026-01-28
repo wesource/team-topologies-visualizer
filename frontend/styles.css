@@ -280,8 +280,8 @@ header .controls-row .interaction-mode-panel .inline-checkbox:focus-within {
 /* Interaction Mode Filters Panel */
 .interaction-mode-panel {
     display: flex;
-    align-items: center;
-    gap: 0.75rem;
+    flex-direction: column;
+    gap: 0.35rem;
     padding: 0.5rem 1rem;
     background: #f8f9fa;
     border: 1px solid #ddd;
@@ -292,7 +292,13 @@ header .controls-row .interaction-mode-panel .inline-checkbox:focus-within {
 .interaction-mode-panel .panel-label {
     font-weight: 500;
     color: #555;
-    margin-right: 0.25rem;
+    font-size: 0.6rem;
+}
+
+.interaction-mode-panel .interaction-checkboxes {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
 }
 
 .interaction-mode-panel .inline-checkbox {
@@ -301,6 +307,7 @@ header .controls-row .interaction-mode-panel .inline-checkbox:focus-within {
     gap: 0.35rem;
     cursor: pointer;
     user-select: none;
+    font-size: 0.9rem;
 }
 
 .interaction-mode-panel .inline-checkbox input[type="checkbox"] {
@@ -312,10 +319,6 @@ header .controls-row .interaction-mode-panel .inline-checkbox:focus-within {
 .interaction-mode-panel .inline-checkbox span {
     color: #333;
     white-space: nowrap;
-}
-
-.interaction-mode-panel .inline-checkbox input[type="checkbox"]:checked + span {
-    font-weight: 600;
 }
 
 #valueStreamFilterContainer {

@@ -137,7 +137,7 @@ function generateCurrentStateSVG(organizationHierarchy, teams, teamColorMap) {
 
     // Draw company leadership
     const company = organizationHierarchy.company;
-    elements += drawSVGBox(company.name, startX + 400, startY, boxWidth + 100, boxHeight, '#5D6D7E', 'white', true);
+    elements += drawSVGBox(company.name, startX + 400, startY, boxWidth + 100, boxHeight, '#E8E8E8', 'black', true);
     // Draw departments
     const deptSpacing = LAYOUT.DEPT_SPACING;
     const deptStartX = LAYOUT.DEPT_START_X; // Use constant to match renderer
@@ -149,7 +149,7 @@ function generateCurrentStateSVG(organizationHierarchy, teams, teamColorMap) {
         // Line from company to department
         elements += drawSVGLine(startX + 400 + (boxWidth + 100) / 2, startY + boxHeight, deptX + boxWidth / 2, deptY);
         // Department box
-        elements += drawSVGBox(dept.name, deptX, deptY, boxWidth, boxHeight, '#566573', 'white', false);
+        elements += drawSVGBox(dept.name, deptX, deptY, boxWidth, boxHeight, '#E8E8E8', 'black', false);
         // Engineering department with line managers
         if (dept.id === 'engineering-dept' && dept.line_managers) {
             const lmCount = dept.line_managers.length;
@@ -161,7 +161,7 @@ function generateCurrentStateSVG(organizationHierarchy, teams, teamColorMap) {
                 // Line to line manager
                 elements += drawSVGLine(deptX + boxWidth / 2, deptY + boxHeight, lmX + boxWidth / 2, lmY);
                 // Line manager box
-                elements += drawSVGBox(lm.name, lmX, lmY, boxWidth, boxHeight - 10, '#27ae60', 'white', false);
+                elements += drawSVGBox(lm.name, lmX, lmY, boxWidth, boxHeight - 10, '#A0A0A0', 'white', false);
                 // Teams under line manager with org-chart style
                 const teamsUnderManager = lm.teams
                     .map(teamName => teams.find(t => t.name === teamName))
@@ -197,7 +197,7 @@ function generateCurrentStateSVG(organizationHierarchy, teams, teamColorMap) {
             dept.regions.forEach((region, regionIndex) => {
                 const regionX = regionStartX + regionIndex * regionSpacing;
                 elements += drawSVGLine(deptX + boxWidth / 2, deptY + boxHeight, regionX + boxWidth / 2, regionY);
-                elements += drawSVGBox(region.name, regionX, regionY, boxWidth, boxHeight - 10, '#3498db', 'white', false);
+                elements += drawSVGBox(region.name, regionX, regionY, boxWidth, boxHeight - 10, '#A0A0A0', 'white', false);
                 // Teams under region with org-chart style
                 if (region.teams && region.teams.length > 0) {
                     const teamsUnderRegion = region.teams
@@ -471,30 +471,8 @@ function generateTTVisionSVG(teams, teamColorMap, showInteractionModes) {
                         const fromEdge = getSVGBoxEdgePoint(fromCenterX, fromCenterY, fromWidth, fromHeight, angle);
                         const toEdge = getSVGBoxEdgePoint(toCenterX, toCenterY, toWidth, toHeight, angle + Math.PI);
 
-                        // Draw line
-                        if (mode === 'x-as-a-service') {
-                            // X-as-a-Service: line without arrow marker (triangle will be drawn separately)
-                            elements += `<line x1="${fromEdge.x}" y1="${fromEdge.y}" x2="${toEdge.x}" y2="${toEdge.y}" class="connection-line" stroke="${color}" stroke-dasharray="${dashArray}" stroke-width="${strokeWidth}"/>`;
-                            
-                            // Draw triangle at midpoint (official Team Topologies shape)
-                            const midX = (fromEdge.x + toEdge.x) / 2;
-                            const midY = (fromEdge.y + toEdge.y) / 2;
-                            const triangleSize = 16;
-                            const angleDeg = angle * (180 / Math.PI);
-                            
-                            // Triangle pointing toward consumer (direction of service)
-                            const tipX = midX + triangleSize * Math.cos(angle);
-                            const tipY = midY + triangleSize * Math.sin(angle);
-                            const base1X = midX - triangleSize / 2 * Math.cos(angle) + triangleSize / 2 * Math.cos(angle + Math.PI / 2);
-                            const base1Y = midY - triangleSize / 2 * Math.sin(angle) + triangleSize / 2 * Math.sin(angle + Math.PI / 2);
-                            const base2X = midX - triangleSize / 2 * Math.cos(angle) - triangleSize / 2 * Math.cos(angle + Math.PI / 2);
-                            const base2Y = midY - triangleSize / 2 * Math.sin(angle) - triangleSize / 2 * Math.sin(angle + Math.PI / 2);
-                            
-                            elements += `<polygon points="${tipX},${tipY} ${base1X},${base1Y} ${base2X},${base2Y}" fill="${color}" opacity="0.5"/>`;
-                        } else {
-                            // Other modes: line with arrow marker
-                            elements += `<line x1="${fromEdge.x}" y1="${fromEdge.y}" x2="${toEdge.x}" y2="${toEdge.y}" class="connection-line" stroke="${color}" stroke-dasharray="${dashArray}" stroke-width="${strokeWidth}" marker-end="url(#${markerId})"/>`;
-                        }
+                        // Draw line with arrow marker for all interaction modes
+                        elements += `<line x1="${fromEdge.x}" y1="${fromEdge.y}" x2="${toEdge.x}" y2="${toEdge.y}" class="connection-line" stroke="${color}" stroke-dasharray="${dashArray}" stroke-width="${strokeWidth}" marker-end="url(#${markerId})"/>`;
                     }
                 });
             }
@@ -714,8 +692,8 @@ function drawSVGLine(x1, y1, x2, y2) {
 // Helper functions for interaction mode styling in SVG
 function getInteractionColorForSVG(mode) {
     const colors = {
-        'collaboration': '#BC1B8D',      // Official magenta
-        'x-as-a-service': '#FBB040',     // Official orange
+        'collaboration': '#967EE2',      // Official purple (Team-Shape-Templates)
+        'x-as-a-service': '#222222',     // Black
         'facilitating': '#00A88F'        // Official teal
     };
     return colors[mode] || '#95a5a6';
@@ -723,9 +701,9 @@ function getInteractionColorForSVG(mode) {
 
 function getInteractionDashForSVG(mode) {
     const dashArrays = {
-        'collaboration': '5,5',          // Dashed
-        'x-as-a-service': 'none',        // Solid
-        'facilitating': '2,4'            // Dotted
+        'collaboration': 'none',         // Solid
+        'x-as-a-service': '2,4',         // Dotted
+        'facilitating': '5,5'            // Dashed
     };
     return dashArrays[mode] || 'none';
 }

@@ -63,17 +63,17 @@
                         <span class="inline-divider" id="connectionsCognitiveLoadDivider" style="display: none;"></span>
                         <label class="radio-label has-tooltip" title="Toggle cognitive load indicators on team cards.">
                             <input type="checkbox" id="showCognitiveLoad">
-                            <span>Cognitive Load</span>
+                            <span>Cognitive<br>Load</span>
                         </label>
-                        <span class="inline-divider" id="cognitiveLoadConsumersDivider" style="display: none;"></span>
+                        <span class="pipe-separator" id="cognitiveLoadConsumersDivider" style="display: none;">|</span>
                         <label class="radio-label has-tooltip" id="showPlatformConsumersLabel" style="display: none;" title="Toggle platform consumer indicators (who consumes which platform teams).">
                             <input type="checkbox" id="showPlatformConsumers">
-                            <span>Platform Consumers</span>
+                            <span>Platform<br>Consumers</span>
                         </label>
-                        <span class="inline-divider" id="consumersMetricsDivider" style="display: none;"></span>
+                        <span class="pipe-separator" id="consumersMetricsDivider" style="display: none;">|</span>
                         <label class="radio-label has-tooltip" id="showFlowMetricsLabel" style="display: none;" title="Toggle flow metrics indicators (where available in the data).">
                             <input type="checkbox" id="showFlowMetrics">
-                            <span>Flow Metrics</span>
+                            <span>Flow<br>Metrics</span>
                         </label>
                         <span class="inline-divider" id="metricsBadgesDivider" style="display: none;"></span>
                         <label class="radio-label has-tooltip" id="teamTypeBadgesLabel" style="display: none;" title="Toggle compact team-type badges on team cards.">
@@ -82,21 +82,23 @@
                         </label>
                     </div>
                     <div id="interactionModeFilters" class="interaction-mode-panel" style="display: none;">
-                        <span class="panel-label">Show interactions:</span>
-                        <label class="inline-checkbox">
-                            <input type="checkbox" id="showXasService" checked>
-                            <span>X-as-a-Service</span>
-                        </label>
-                        <span class="pipe-separator">|</span>
-                        <label class="inline-checkbox">
-                            <input type="checkbox" id="showCollaboration" checked>
-                            <span>Collaboration</span>
-                        </label>
-                        <span class="pipe-separator">|</span>
+                        <div class="panel-label">Interaction modes:</div>
+                        <div class="interaction-checkboxes">
+                            <label class="inline-checkbox">
+                                <input type="checkbox" id="showXasService" checked>
+                                <span>X-as-a-Service</span>
+                            </label>
+                            <span class="pipe-separator">|</span>
+                            <label class="inline-checkbox">
+                                <input type="checkbox" id="showCollaboration" checked>
+                                <span>Collaboration</span>
+                            </label>
+                            <span class="pipe-separator">|</span>
                             <label class="inline-checkbox">
                                 <input type="checkbox" id="showFacilitating" checked>
                                 <span>Facilitating</span>
                             </label>
+                        </div>
                     </div>
                     <div id="groupingFilterContainer" class="filter-panel" style="display: none;">
                         <button id="filterToggleBtn" class="btn filter-toggle-btn">
@@ -135,8 +137,8 @@
                             </div>
                         </div>
                     </div>
-                    <button id="autoAlignBtn" class="btn" style="display: none;">⚡ Auto-align</button>
-                    <button id="autoAlignTTBtn" class="btn" style="display: none;">⚡ Auto-align</button>
+                    <button id="autoAlignBtn" class="btn" style="display: none;">Auto-align</button>
+                    <button id="autoAlignTTBtn" class="btn" style="display: none;">Auto-align</button>
                     <button id="undoBtn" class="btn" style="display: none;" disabled title="Undo last position change (Ctrl+Z)">↶ Undo</button>
                 </div>
                 <div class="zoom-controls">

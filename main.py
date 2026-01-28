@@ -20,14 +20,14 @@ async def lifespan(_app: FastAPI):
     baseline_dir = Path("data/baseline-teams")
 
     print("\n" + "=" * 80)
-    print("🚀 Team Topologies Visualizer Starting Up")
+    print("Team Topologies Visualizer Starting Up")
     print("=" * 80)
-    print(f"📂 TT Design Teams Directory: {tt_dir.absolute()}")
+    print(f"TT Design Teams Directory: {tt_dir.absolute()}")
     print(f"   Files found: {len(list(tt_dir.glob('*.md')))}")
-    print(f"📂 Baseline Teams Directory: {baseline_dir.absolute()}")
+    print(f"Baseline Teams Directory: {baseline_dir.absolute()}")
     print(f"   Files found: {len(list(baseline_dir.rglob('*.md')))}")
     print(
-        "🔧 Environment: TT_TEAMS_VARIANT="
+        "Environment: TT_TEAMS_VARIANT="
         f"{os.getenv('TT_TEAMS_VARIANT', 'NOT SET (using default: tt-teams)')}"
     )
     print("=" * 80 + "\n")
