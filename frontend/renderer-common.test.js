@@ -60,7 +60,7 @@ describe('INTERACTION_STYLES', () => {
     });
     it('should have x-as-a-service style', () => {
         expect(INTERACTION_STYLES).toHaveProperty('x-as-a-service');
-        expect(INTERACTION_STYLES['x-as-a-service'].dash).toEqual([10, 5]);
+        expect(INTERACTION_STYLES['x-as-a-service'].dash).toEqual([]);
     });
     it('should have facilitating style', () => {
         expect(INTERACTION_STYLES).toHaveProperty('facilitating');
@@ -201,31 +201,32 @@ describe('INTERACTION_STYLES - Line thickness by interaction mode', () => {
         expect(INTERACTION_STYLES['collaboration'].width).toBe(2);
     });
 
-    it('should use 0.5px line width for facilitating mode', () => {
+    it('should use 2px line width for facilitating mode', () => {
         expect(INTERACTION_STYLES['facilitating']).toBeDefined();
-        expect(INTERACTION_STYLES['facilitating'].width).toBe(0.5);
+        expect(INTERACTION_STYLES['facilitating'].width).toBe(2);
     });
 
-    it('should use 1px line width for x-as-a-service mode', () => {
+    it('should use 2px line width for x-as-a-service mode', () => {
         expect(INTERACTION_STYLES['x-as-a-service']).toBeDefined();
-        expect(INTERACTION_STYLES['x-as-a-service'].width).toBe(1);
+        expect(INTERACTION_STYLES['x-as-a-service'].width).toBe(2);
     });
 
-    it('should have thickest line for collaboration (high-touch interaction)', () => {
+    it('should use uniform line width for all interaction modes', () => {
         const collaboration = INTERACTION_STYLES['collaboration'].width;
         const xAsService = INTERACTION_STYLES['x-as-a-service'].width;
         const facilitating = INTERACTION_STYLES['facilitating'].width;
 
-        // Collaboration should be thickest, then x-as-service, then facilitating
-        expect(collaboration).toBeGreaterThan(xAsService);
-        expect(xAsService).toBeGreaterThan(facilitating);
+        // All modes should have same width (2px)
+        expect(collaboration).toBe(2);
+        expect(xAsService).toBe(2);
+        expect(facilitating).toBe(2);
     });
 
-    it('should have dash pattern for x-as-a-service mode', () => {
-        expect(INTERACTION_STYLES['x-as-a-service'].dash).toEqual([10, 5]);
+    it('should have solid line (no dash) for x-as-a-service mode', () => {
+        expect(INTERACTION_STYLES['x-as-a-service'].dash).toEqual([]);
     });
 
-    it('should have dashed pattern for facilitating mode', () => {
+    it('should have dotted pattern for facilitating mode', () => {
         expect(INTERACTION_STYLES['facilitating'].dash).toEqual([5, 5]);
     });
 

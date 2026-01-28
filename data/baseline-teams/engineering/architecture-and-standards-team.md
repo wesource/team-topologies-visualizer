@@ -56,7 +56,7 @@ Defines architectural governance, technical strategy, and standards for LogiCore
 - 1 Solutions Architect
 - 1 Technical Architect
 
-## Current Challenges (Pre-TT Dysfunction)
+## Current Challenges
 
 **Limited Enabling, Too Much Governance**:
 - Architecture Review Board (ARB) required for "any significant technical decision"

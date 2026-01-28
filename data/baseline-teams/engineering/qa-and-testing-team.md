@@ -46,7 +46,7 @@ Verifies system integration and quality across all development teams in LogiCore
 - 1 Mobile QA Engineer (iOS and Android devices)
 - 1 Test Automation Engineer (framework maintenance)
 
-## Current Challenges (Pre-TT Dysfunction)
+## Current Challenges
 
 **Handoff Bottleneck Anti-Pattern**:
 - Development teams "throw code over the wall" to QA

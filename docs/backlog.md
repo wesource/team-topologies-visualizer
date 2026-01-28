@@ -16,8 +16,6 @@ This is the public backlog for ideas, priorities, and possible improvements.
 
 Edit this list as your priorities change:
 
-- UX/visual clarity improvements (reduce clutter, better defaults, better affordances)
-
 - Release readiness: 1.0 housekeeping
 	- Bump version to `1.0.0` (wherever the canonical version lives) and create a git tag/release.
 	- Sanity-check demo mode end-to-end (read-only behavior + banners + snapshot compare) against the current example dataset.
@@ -28,15 +26,6 @@ Edit this list as your priorities change:
 	- Implementation: checkbox option (default off) in TT Design view to show directional arrows indicating flow between teams
 	- Export: include flow arrows in SVG export when enabled
 	- **Note**: Build on top of flow-aware auto-align (teams already positioned by flow direction)
-- Review Team Shape Templates alignment
-	- Review https://github.com/TeamTopologies/Team-Shape-Templates to ensure visual consistency
-	- Check: should platform boxes have rounded corners in TT Design view, or should they follow the standard rectangular style from the official templates?
-	- Goal: align visual representation with canonical Team Topologies design patterns
-- X-as-a-Service interaction visualization options
-	- Support different visual styles for X-as-a-Service connections, including the triangle shape from Team Shape Templates
-	- Triangle benefits: (1) shows direction - points towards the "customer" team, (2) easier to recreate in other diagramming tools
-	- Implementation: add option to toggle between current style (two white bars) and triangle style; default could follow Team Shape Templates convention
-	- Note: Team Shape Templates uses grey triangle pointing toward customer instead of the two-bar connector shown in the book
 - Validation: Baseline config mismatch warnings (product lines + business streams)
 	- What it means: if a Baseline team’s `product_line` is not present in `data/baseline-teams/products.json`, or its `business_stream` is not present in `data/baseline-teams/business-streams.json`, flag it as a validation warning.
 	- Why: prevents “silent” typos that create missing lanes / mis-grouped teams in the Baseline views.

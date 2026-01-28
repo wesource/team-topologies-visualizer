@@ -227,7 +227,7 @@ describe('INTERACTION_STYLES - Line thickness by interaction mode', () => {
     });
 
     it('should have dotted pattern for facilitating mode', () => {
-        expect(INTERACTION_STYLES['facilitating'].dash).toEqual([2, 4]);
+        expect(INTERACTION_STYLES['facilitating'].dash).toEqual([5, 5]);
     });
 
     it('should have unique colors for each interaction mode', () => {

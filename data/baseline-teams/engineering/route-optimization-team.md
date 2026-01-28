@@ -47,7 +47,7 @@ Develops vehicle routing and delivery optimization algorithms for LogiCore's log
 - 3 Algorithm Engineers (Python, OR-Tools, optimization)
 - 1 Data Scientist (traffic patterns, ETA prediction)
 
-## Current Challenges (Pre-TT Dysfunction)
+## Current Challenges
 
 **Complicated Subsystem Candidate**:
 - Highly specialized - routing optimization requires operations research expertise

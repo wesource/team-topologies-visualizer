@@ -22,7 +22,7 @@ Modular architecture with clear separation of concerns:
 - **backend/services.py** - File operations and core business logic (team parsing, CRUD)
 - **backend/snapshot_services.py** - Snapshot read/write helpers
 - **backend/validation.py** - Data validation helpers and endpoints
-- **backend/routes_baseline.py** - Baseline (Pre-TT) API routes
+- **backend/routes_baseline.py** - Baseline API routes
 - **backend/routes_tt.py** - TT Design API routes
 - **backend/routes_schemas.py** - Schema/config routes used by the frontend
 - **backend/comparison.py** - Snapshot comparison helpers

@@ -52,7 +52,7 @@ Manages CI/CD pipelines, AWS infrastructure, and deployment processes for LogiCo
 - 2 DevOps Engineers (AWS, Kubernetes)
 - 1 Build Engineer (CI/CD pipelines)
 
-## Current Challenges (Pre-TT Dysfunction)
+## Current Challenges
 
 **Deployment Bottleneck Anti-Pattern**:
 - ALL production deployments go through DevOps Team (manual, ticket-based)

@@ -51,7 +51,7 @@ Develops native mobile applications for drivers and end-customers in LogiCore's 
 - 3 Android Developers (Kotlin)
 - 1 UX Designer (shared 50% with Web Frontend Team)
 
-## Current Challenges (Pre-TT Dysfunction)
+## Current Challenges
 
 **Technology Silo Anti-Pattern**:
 - Separate iOS and Android sub-teams (3 iOS devs, 3 Android devs)

@@ -66,7 +66,7 @@ npx playwright test
 A webapp for visualizing Team Topologies concepts using HTML5 Canvas and Python FastAPI backend.
 
 **Views**:
-- **Pre-TT (Current State)**: Organization hierarchy, product lines, value streams
+- **Baseline (Current State)**: Organization hierarchy, product lines, value streams
 - **TT Design**: Team topologies design with 4 team types and 3 interaction modes
 - **Comparison**: Side-by-side comparison of snapshots
 
@@ -99,7 +99,7 @@ A webapp for visualizing Team Topologies concepts using HTML5 Canvas and Python 
 - Keep markdown files simple and follow Team API template structure
 - Parse YAML front matter for team metadata
 - Use RESTful API design for team CRUD operations
-- API routes split: `/api/pre-tt/*` (current state) and `/api/tt/*` (TT design)
+- API routes split: `/api/baseline/*` (current state) and `/api/tt/*` (TT design)
 
 ### Frontend
 - Canvas should support drag-and-drop team positioning

@@ -6,9 +6,9 @@ Two complementary views:
 - **Baseline**: your current/reference structure before Team Topologies transformation
 - **TT Design**: your evolving Team Topologies design — a living design you keep refining (team types, interaction modes, groupings)
 
-See [docs/concepts.md](docs/concepts.md#the-tools-two-views) for view details and why these names.
+See [docs/concepts.md](docs/concepts.md#the-tools-two-views) for view details and the Rubik's cube metaphor.
 
-This tool is inspired by **Team Topologies** by Matthew Skelton and Manuel Pais — especially the concepts summarized at https://teamtopologies.com/key-concepts (more references at the end of this README).
+This tool is inspired by **Team Topologies** by Matthew Skelton and Manuel Pais — see https://teamtopologies.com/key-concepts for a summary of key concepts, and more references at the end of this README.
 
 > **Note**: This project was built with extensive AI assistance (GitHub Copilot + Claude). As a non-native Python and JavaScript developer, this AI-driven co-creation approach enabled me to use tools and techniques — including Python tooling/libraries, Canvas rendering, and comprehensive test automation — in ways that would have taken much longer solo.
 
@@ -82,28 +82,30 @@ Open http://localhost:8000/static/index.html
 ### Two Complementary Views
 - **Baseline**: Visualize your current organization structure from three perspectives:
   - **Hierarchy**: classic org chart with reporting lines
-  - **Product lines**: product lanes with shared teams
-  - **Business streams**: swimlanes grouped by business value streams (e.g., SAFe "trains")
+  - **Product lines**: product lanes + shared/platform teams
+  - **Business streams**: swimlanes grouped by business value streams, or what SAFe refers to as ARTs or "trains"
 - **TT Design**: Model your target Team Topologies structure with:
   - Four team types (Stream-aligned, Platform, Enabling, Complicated Subsystem)
   - Three interaction modes (Collaboration, X-as-a-Service, Facilitating)
-  - Value stream groupings and platform groupings (TT 2nd ed.)
+  - Value stream groupings and platform groupings
 
-### Visualization & Interaction
-- **Interactive canvas**: drag-and-drop teams, zoom, pan, fit-to-view
-- **Auto-align**: intelligent positioning based on flow of change with optional alignment hints
-- **Team details**: open full team information with rendered Markdown
-- **SVG export**: export views for documentation and presentations
+**Interactive Visualization:**
+- Drag-and-drop teams, zoom, pan, fit-to-view
+- Auto-align with intelligent positioning based on flow of change
+- Open full team information with rendered Markdown
+- Export views as SVG for documentation and presentations
 
-### Team Topologies Evolution
-- **Snapshots**: save versions of your TT design to track progress over time
-- **Comparison view**: side-by-side comparison of snapshots showing changes
-- **Team API compatible**: Markdown + YAML front matter, aligned to the [Team API template](https://github.com/TeamTopologies/Team-API-template)
+**Git as Source of Truth:**
+- All team data stored as [Markdown](https://commonmark.org/help/) files with [YAML front matter](docs/concepts.md#team-files-markdown--yaml)
+- Version control your team topology evolution with git
+- Snapshots capture point-in-time states for comparison
+- Side-by-side snapshot comparison shows changes over time
+- Team API compatible - aligned to [Team API template](https://github.com/TeamTopologies/Team-API-template)
 
-### Customization & Quality
-- **Flexible configuration**: adapt team types, colors, and org structures to your context
-- **Validation**: YAML error checking and basic consistency checks
-- **Optional metrics**: cognitive load indicators and DORA-style flow metrics
+**Flexible & Validated:**
+- Adapt team types, colors, and org structures to your context
+- YAML error checking and consistency validation
+- Optional cognitive load indicators and DORA-style flow metrics
 
 ## Documentation
 

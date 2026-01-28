@@ -50,7 +50,7 @@ Provides database administration, schema management, and data infrastructure for
 - 1 NoSQL Engineer (MongoDB, Redis)
 - 1 Database Engineer (migrations, optimization)
 
-## Current Challenges (Pre-TT Dysfunction)
+## Current Challenges
 
 **Shared Service Bottleneck Anti-Pattern**:
 - ALL database changes must go through Database Team (single point of failure)

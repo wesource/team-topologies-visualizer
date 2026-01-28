@@ -72,6 +72,10 @@ def validate_all_team_files(view: str = "tt") -> dict[str, Any]:
     # These represent hierarchy containers like departments, leadership, regions, etc.
     org_structure_types = ["department", "executive", "leadership", "region", "division"]
 
+    # Valid product lines and business streams (for baseline view)
+    valid_product_lines = []
+    valid_business_streams = []
+
     # Load valid team types for baseline view
     if view == "baseline":
         config_file = data_dir / "baseline-team-types.json"
@@ -82,6 +86,26 @@ def validate_all_team_files(view: str = "tt") -> dict[str, Any]:
                 valid_types["baseline"] = [t["id"] for t in config.get("team_types", [])]
                 # Add organizational structure types as valid (but conceptually separate)
                 valid_types["baseline"].extend(org_structure_types)
+
+        # Load valid product lines
+        products_file = data_dir / "products.json"
+        if products_file.exists():
+            with open(products_file, encoding='utf-8') as f:
+                products_config = json.load(f)
+                valid_product_lines = [p["name"] for p in products_config.get("products", [])]
+
+        # Load valid business streams
+        streams_file = data_dir / "business-streams.json"
+        if streams_file.exists():
+            with open(streams_file, encoding='utf-8') as f:
+                streams_config = json.load(f)
+                valid_business_streams = [s["name"] for s in streams_config.get("business_streams", [])]
+
+    def normalize_string(s):
+        """Normalize string for comparison (lowercase, strip whitespace)"""
+        if not s:
+            return ""
+        return str(s).strip().lower()
 
     # Check all markdown files
     for file_path in data_dir.rglob("*.md"):
@@ -161,6 +185,30 @@ def validate_all_team_files(view: str = "tt") -> dict[str, Any]:
                                             file_issues["warnings"].append(
                                                 f"Team size {size} outside recommended range (5-9 people)"
                                             )
+
+                            # Check 7: Product line validation (Baseline view only)
+                            if view == "baseline" and 'product_line' in data and data['product_line']:
+                                product_line = data['product_line']
+                                normalized_product = normalize_string(product_line)
+                                valid_normalized = [normalize_string(p) for p in valid_product_lines]
+
+                                if normalized_product and normalized_product not in valid_normalized:
+                                    file_issues["warnings"].append(
+                                        f"Product line '{product_line}' not found in products.json. "
+                                        f"Valid options: {', '.join(valid_product_lines)}"
+                                    )
+
+                            # Check 7b: Business stream validation (Baseline view only)
+                            if view == "baseline" and 'business_stream' in data and data['business_stream']:
+                                business_stream = data['business_stream']
+                                normalized_stream = normalize_string(business_stream)
+                                valid_normalized = [normalize_string(s) for s in valid_business_streams]
+
+                                if normalized_stream and normalized_stream not in valid_normalized:
+                                    file_issues["warnings"].append(
+                                        f"Business stream '{business_stream}' not found in business-streams.json. "
+                                        f"Valid options: {', '.join(valid_business_streams)}"
+                                    )
 
                             # Check 8: Dependencies reference existing teams (Baseline view)
                             if view == "baseline" and 'dependencies' in data:

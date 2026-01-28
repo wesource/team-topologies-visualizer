@@ -15,11 +15,11 @@ export const INTERACTION_STYLES = {
         dash: []                 // Solid stroke
     },
     'x-as-a-service': { 
-        shape: 'line',           // Simple line
-        color: '#222222',        // Black
+        shape: 'line',           // Simple line with triangle marker
+        color: '#FBB040',        // Official orange (Team-Shape-Templates)
         opacity: 1.0,            // Solid
         width: 2,                // Line width
-        dash: [2, 4]             // Dotted stroke (same as facilitating)
+        dash: []                 // Solid stroke
     },
     'facilitating': { 
         shape: 'circle',         // Dashed circle

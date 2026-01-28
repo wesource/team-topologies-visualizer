@@ -18,9 +18,7 @@ Your current organization visualized from multiple perspectives:
 - **Product Lines**: Teams grouped by product/project
 - **Business Streams**: Teams grouped by customer-facing value streams
 
-> **"The Rubik's Cube Principle"**: The same teams look different from different angles, but they're still the same teams.
-
-These perspectives reveal misalignments without changing underlying team data.
+**The Rubik's Cube metaphor** (hence the logo): Your organization looks different from different angles — same teams, different perspectives. These views reveal misalignments without changing underlying team data.
 
 **Framework mapping**: If you're using scaled agile frameworks, these perspectives roughly map to:
 - **Business Streams** ≈ SAFe "Agile Release Trains" (ARTs) or value streams
@@ -52,9 +50,9 @@ Colors are configurable in `tt-team-types.json`:
 
 ## The 3 Interaction Modes
 
-- **Collaboration**: High-touch, time-boxed joint delivery (solid purple line)
-- **X-as-a-Service**: Low-touch self-service consumption (dashed black line)
-- **Facilitating**: Temporary coaching/enablement (dotted green line)
+- **Collaboration**: High-touch, time-boxed joint delivery (magenta line)
+- **X-as-a-Service**: Low-touch self-service consumption (orange line with `][` triangle)
+- **Facilitating**: Temporary coaching/enablement (teal dotted line)
 
 ## Team Files (Markdown + YAML)
 

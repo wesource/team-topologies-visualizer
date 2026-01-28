@@ -47,7 +47,7 @@ Develops web-based user interfaces for both B2B dispatchers and B2C customers in
 - 4 Frontend Developers (React/TypeScript)
 - 1 UX Designer (shared 50% with Mobile App Team)
 
-## Current Challenges (Pre-TT Dysfunction)
+## Current Challenges
 
 **Handoff Anti-Pattern**:
 - Must wait for Backend Services Team to implement APIs (2-3 sprint delays typical)
