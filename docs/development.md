@@ -207,6 +207,15 @@ git commit -m "docs: Update CONCEPTS.md with references"
 3. Create git tag: `git tag -a v1.0.0 -m "Release 1.0.0"`
 4. Push with tags: `git push --follow-tags`
 
+## Dependency Management
+
+**Dependabot** automatically monitors and updates dependencies:
+- Python packages (`requirements.txt`) - weekly
+- JavaScript packages (`frontend/package.json`, `tests/package.json`) - weekly
+- GitHub Actions workflows - weekly
+
+Dependabot PRs are grouped (patch/minor updates together) to reduce noise. Review and merge after CI passes. Major version updates get separate PRs for careful review of breaking changes.
+
 ## Performance Considerations
 
 This app is optimized for local use and workshops (not massive scale). If you ever need to scale it up (many users / 100+ teams), these are the main levers:
