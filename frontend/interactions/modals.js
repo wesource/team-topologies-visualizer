@@ -793,6 +793,44 @@ export function closeValidationModal() {
     }
 }
 
+/**
+ * Run validation check silently (without showing modal)
+ * Returns validation results or null if validation fails
+ * @param {string} view - Current view ('current' or 'tt')
+ * @returns {Promise<Object|null>} Validation results with error/warning counts
+ */
+export async function runValidationCheck(view) {
+    try {
+        const prefix = view === 'current' ? '/baseline' : '/tt';
+        const response = await fetch(`/api${prefix}/validate`);
+        const data = await response.json();
+
+        // Extract error and warning counts
+        const report = data.teams || data;
+        const configReport = data.config_files;
+        
+        const teamErrors = report.files_with_errors || 0;
+        const teamWarnings = report.files_with_warnings || 0;
+        const configErrors = configReport ? (configReport.total_errors || 0) : 0;
+        
+        const totalErrors = teamErrors + configErrors;
+        const totalWarnings = teamWarnings;
+
+        return {
+            hasErrors: totalErrors > 0,
+            hasWarnings: totalWarnings > 0,
+            teamErrors,
+            teamWarnings,
+            configErrors,
+            totalErrors,
+            totalWarnings
+        };
+    } catch (error) {
+        console.error('Validation check failed:', error);
+        return null;
+    }
+}
+
 // Setup validation modal close handlers
 const validationModalClose = document.getElementById('validationModalClose');
 if (validationModalClose) {

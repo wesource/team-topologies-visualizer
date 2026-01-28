@@ -5,7 +5,7 @@ import { autoAlignTeamsByManager } from '../features/alignment/baseline-hierarch
 import { autoAlignTTDesign } from '../features/alignment/tt-design-alignment.js';
 import { exportToSVG } from '../rendering/svg-export.js';
 import { showWarning, showInfo, showSuccess, showError } from './notifications.js';
-import { showValidationReport } from '../interactions/modals.js';
+import { showValidationReport, runValidationCheck } from '../interactions/modals.js';
 
 export function handleViewChange(e, loadAllTeams, _draw) {
     const target = e.target;
@@ -389,11 +389,14 @@ export function setupUIEventListeners(loadAllTeams, draw, openAddTeamModal, clos
 
     const refreshBtn = document.getElementById('refreshBtn');
     if (refreshBtn) {
-        refreshBtn.addEventListener('click', () => {
+        refreshBtn.addEventListener('click', async () => {
             // Clear position history on refresh (data reload means positions might be stale)
             clearPositionHistory();
             updateUndoButtonState();
-            loadAllTeams();
+            await loadAllTeams();
+            
+            // Run validation check after refresh
+            await checkValidationAfterRefresh();
         });
     }
 
@@ -688,5 +691,32 @@ export function setupUIEventListeners(loadAllTeams, draw, openAddTeamModal, clos
         validateBtn.addEventListener('click', async () => {
             await showValidationReport(state.currentView);
         });
+    }
+}
+
+/**
+ * Check validation after refresh
+ * Shows error notification if validation issues are found
+ */
+async function checkValidationAfterRefresh() {
+    const results = await runValidationCheck(state.currentView);
+    
+    if (!results) {
+        // Validation check failed - don't show error as this might be a network issue
+        return;
+    }
+    
+    if (results.hasErrors) {
+        // Show error notification with details
+        let errorMsg = `Data validation found ${results.totalErrors} error(s)`;
+        if (results.hasWarnings) {
+            errorMsg += ` and ${results.totalWarnings} warning(s)`;
+        }
+        errorMsg += '.\n\nPlease fix the issues in your team files and click the Refresh button (🔄) again to reload the data.';
+        
+        // Add button to view full validation report
+        errorMsg += '\n\nClick the "Validate Files" button (📋) in the toolbar to see detailed validation report.';
+        
+        showError(errorMsg);
     }
 }

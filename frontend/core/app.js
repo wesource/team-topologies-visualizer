@@ -3,12 +3,13 @@ import { loadTeamTypes, loadOrganizationHierarchy, loadTeams } from '../api/api.
 import { initCanvasPolyfills } from '../rendering/renderer-common.js';
 import { CanvasInteractionHandler } from '../interactions/canvas-interactions.js';
 import { state } from './state-management.js';
-import { openAddTeamModal, closeModal, closeDetailModal, closeInteractionModeModal, showTeamDetails, handleTeamSubmit } from '../interactions/modals.js';
+import { openAddTeamModal, closeModal, closeDetailModal, closeInteractionModeModal, showTeamDetails, handleTeamSubmit, runValidationCheck, showValidationReport } from '../interactions/modals.js';
 import { updateLegend, updateGroupingFilter } from '../features/filters/legend.js';
 import { setupUIEventListeners } from '../ui/ui-handlers.js';
 import { draw, selectTeam } from '../rendering/renderer.js';
 import { initSnapshotHandlers } from '../features/snapshots/snapshot-handlers.js';
 import { comparisonView } from '../features/comparison/tt-comparison-view.js';
+import { showError } from '../ui/notifications.js';
 
 let _interactionHandler = null;
 // Initialize
@@ -152,6 +153,9 @@ async function loadAllTeams() {
         updateLegend();
         updateGroupingFilter();
         draw(state);
+        
+        // Run validation check after loading data
+        await checkValidation();
     } catch (error) {
         console.error('Failed to load teams:', error);
     }
@@ -198,5 +202,32 @@ function showDemoBanner() {
         Changes won't be saved.
     `;
     document.body.insertBefore(banner, document.body.firstChild);
+}
+
+/**
+ * Check validation after loading data
+ * Shows error notification if validation issues are found
+ */
+async function checkValidation() {
+    const results = await runValidationCheck(state.currentView);
+    
+    if (!results) {
+        // Validation check failed - don't show error as this might be a network issue
+        return;
+    }
+    
+    if (results.hasErrors) {
+        // Show error notification with details
+        let errorMsg = `Data validation found ${results.totalErrors} error(s)`;
+        if (results.hasWarnings) {
+            errorMsg += ` and ${results.totalWarnings} warning(s)`;
+        }
+        errorMsg += '.\n\nPlease fix the issues in your team files and click the Refresh button (🔄) to reload the data.';
+        
+        // Add button to view full validation report
+        errorMsg += '\n\nClick the "Validate Files" button (📋) in the toolbar to see detailed validation report.';
+        
+        showError(errorMsg);
+    }
 }
 
