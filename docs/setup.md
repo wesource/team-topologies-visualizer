@@ -110,33 +110,33 @@ docker run -p 8000:8000 -e READ_ONLY_MODE=true team-topologies-viz
 
 Demo mode displays a banner and blocks all write operations (position updates, snapshot creation) while allowing full interaction with the visualization.
 
-## TT Design Variants
+## Example Data Set Variants
 
-The repo includes **two example TT designs** (mid-stage and first-step transformations). See **[EXAMPLE_DATA.md](EXAMPLE_DATA.md)** for detailed explanation of each variant and when to use them.
+The repo includes **two example TT design data sets** (mid-stage and first-step transformations). See **[EXAMPLE_DATA.md](EXAMPLE_DATA.md)** for detailed explanation of each example data set variant and when to use them.
 
-**To switch variants**, set the `TT_TEAMS_VARIANT` environment variable:
+**To switch example data set variants**, set the `TT_TEAMS_EXAMPLE_VARIANT` environment variable:
 
 **Local (Linux/Mac):**
 
 ```bash
-export TT_TEAMS_VARIANT=tt-teams-initial
+export TT_TEAMS_EXAMPLE_VARIANT=tt-teams-initial
 python -m uvicorn main:app --reload
 ```
 
 **Local (Windows PowerShell):**
 
 ```powershell
-$env:TT_TEAMS_VARIANT="tt-teams-initial"
+$env:TT_TEAMS_EXAMPLE_VARIANT="tt-teams-initial"
 python -m uvicorn main:app --reload
 ```
 
 **Docker/Podman:**
 
 ```bash
-docker run -p 8000:8000 -e TT_TEAMS_VARIANT=tt-teams-initial team-topologies-viz
+docker run -p 8000:8000 -e TT_TEAMS_EXAMPLE_VARIANT=tt-teams-initial team-topologies-viz
 ```
 
-If `TT_TEAMS_VARIANT` is not set, the app uses the default variant.
+If `TT_TEAMS_EXAMPLE_VARIANT` is not set, the app uses the default example data set.
 
 ## Testing
 
@@ -202,6 +202,11 @@ Before committing code:
 
 The `data/` directory has two subdirectories for different visualization purposes:
 
+Each team is stored as a **Markdown file with YAML front matter**:
+
+- **YAML front matter** = lightweight metadata the app needs for filtering, grouping, and layout (keep it minimal).
+- **Markdown body** = the main content you write (Team API, context, notes, agreements). This is where most of the meaningful documentation should live.
+
 ### Baseline Data (`data/baseline-teams/`)
 
 **Purpose**: Document your **current organizational reality** BEFORE Team Topologies transformation.
@@ -229,26 +234,43 @@ In addition to team types, the baseline view supports **organizational structure
 
 **Design note**: These org structure types are kept separate from `baseline-team-types.json` because they represent organizational **containers** (hierarchy nodes), not actual **working teams**. They're validated in `backend/validation.py` to keep the semantic distinction clear. You can use these types in your baseline team markdown files for hierarchy visualization, but they won't appear in the team types configuration.
 
-**Team file fields:**
+#### Baseline team files: required vs optional
+
+##### Required YAML fields (minimum to get started)
+
+- `team_id` (stable identifier; should be unique)
+- `name` (display name)
+- `team_type` (must match an id from `data/baseline-teams/baseline-team-types.json`)
+
+##### Common optional YAML fields (add as you need them)
+
+- `dependencies` (used for baseline communication/dependency lines)
+- `product_line`, `business_stream` (used for Baseline perspectives/lane grouping)
+- `position` (optional; you can drag teams in the UI and the app will store coordinates)
+- `metadata.*` (extra fields like `department`, `line_manager`, `cognitive_load`, `size`)
+
+##### Minimal baseline example (YAML + Markdown)
+
+YAML front matter (metadata):
+
 ```yaml
 ---
 team_id: backend-services-team
 name: Backend Services Team
 team_type: feature-team
-product_line: DispatchHub          # Product assignment
-business_stream: B2B Fleet Management  # Business stream lane (if used)
-dependencies:                      # Who we coordinate with
-  - Database Platform Team
-  - QA & Testing Team
-position:
-  x: 300
-  y: 200
-metadata:
-  size: 6
-  department: Engineering
-  line_manager: Sarah Johnson
-  cognitive_load: high             # Current reality
 ---
+```
+
+Markdown body (main content):
+
+```markdown
+# Mission
+
+Describe what this team exists to achieve.
+
+# Current dependencies and pain points
+
+Capture reality: who you coordinate with, where the friction is, and what’s driving cognitive load.
 ```
 
 **Template**: Use `templates/baseline-team-template.md` as starting point
@@ -259,58 +281,82 @@ metadata:
 
 **What to include:**
 - Proposed team structures with TT team types
-- Value stream groupings
-- Platform groupings
-- Designed interaction modes (not organic dependencies)
+- Value stream or platform groupings
+- Interaction modes
 - Team APIs (services provided, SLAs, communication channels)
-- Thinnest Viable Platform (TVP) definitions
 
 **Configuration files:**
 - `tt-team-types.json` - TT team types (stream-aligned, platform, enabling, complicated-subsystem, undefined)
 
-**Team file fields:**
+#### TT Design team files: required vs optional
+
+##### Required YAML fields (minimum to get started)
+
+- `team_id` (stable identifier; should be unique)
+- `name` (display name)
+- `team_type` (one of the TT types; must match an id from `data/tt-teams/tt-team-types.json`)
+
+##### Common optional YAML fields (add as you need them)
+
+- `value_stream` (used for value stream groupings)
+- `platform_grouping` (usually only for platform teams)
+- `interaction_modes` / `interactions` (optional; you can also document interactions in Markdown)
+- `position` (optional; you can drag teams in the UI and the app will store coordinates)
+- `metadata.*` (extra fields like `cognitive_load`, `size`)
+
+##### Minimal TT design example (YAML + Markdown)
+
+YAML front matter (metadata):
+
 ```yaml
 ---
 team_id: e-commerce-checkout-team
 name: E-commerce Checkout Team
-team_type: stream-aligned          # TT team type
-value_stream: E-commerce Experience
-platform_grouping: null            # Optional (usually only for platform teams)
-position:
-  x: 500
-  y: 300
-metadata:
-  size: 7
-  cognitive_load: medium           # Target load
+team_type: stream-aligned
 ---
+```
 
-## Team API content follows...
+Markdown body (Team API / working agreements):
+
+```markdown
+# Mission
+
+What valuable outcome does this team own?
+
+# How to work with us
+
+How to contact us, lead time expectations, and decision boundaries.
+
+# Interactions
+
+Document intended Team Topologies interactions (Collaboration, X-as-a-Service, Facilitating).
 ```
 
 Interaction modes are usually documented in the markdown section (see the templates). The app also supports providing designed interaction modes in YAML via `interaction_modes:` (or an `interactions:` array).
 
+<a id="tt-design-templates"></a>
 **Templates**:
-- `templates/tt-team-api-template-minimal.md` - Minimal starter (mission + how to work with us + interactions)
-- `templates/tt-team-api-template-base.md` - Base Team API
-- `templates/tt-team-api-template-extended.md` - Extended template with platform product metrics
 
-**Key difference**: Baseline uses `dependencies` (organic), TT Design uses `interaction_modes` (designed).
+| Template | When to use | Real example |
+|---|---|---|
+| [tt-team-api-template-minimal.md](../templates/tt-team-api-template-minimal.md) | Quick start: just a mission, how to contact the team, and a simple interactions table | [Security Compliance Team](../data/tt-teams/security-compliance-team.md) |
+| [tt-team-api-template-base.md](../templates/tt-team-api-template-base.md) | Recommended default: a full Team API (ownership, SLAs, comms, interactions) without the extra platform-product sections | [Observability Platform Team](../data/tt-teams/observability-platform-team.md) |
+| [tt-team-api-template-extended.md](../templates/tt-team-api-template-extended.md) | Best for platform teams (or mature teams) that want deeper “platform as a product” detail and metrics | [Cloud Development Platform Team](../data/tt-teams/cloud-development-platform-team.md) |
 
 ## Using Team Templates
 
 The [templates/](../templates/) directory contains ready-to-use markdown templates:
 
 - `templates/baseline-team-template.md` (Baseline)
-- `templates/tt-team-api-template-minimal.md` (TT, minimal)
-- `templates/tt-team-api-template-base.md` (TT, base)
-- `templates/tt-team-api-template-extended.md` (TT, extended)
+- TT Design templates + real examples: see [TT Design templates](#tt-design-templates)
 
 Recommended workflow:
 
 1. Copy a template into the right `data/` folder
-2. Edit YAML front matter (`team_id`, `name`, `team_type`, `position`, and optional grouping fields)
-3. Fill in the Markdown sections
-4. Validate and refresh
+2. Name the file to match `team_id` (recommended), e.g. `data/tt-teams/my-team-id.md`
+3. Edit YAML front matter (start with just `team_id`, `name`, `team_type`; add the optional fields only when they help)
+4. Fill in the Markdown sections (this is the main content)
+5. Validate and refresh
 
 Examples:
 

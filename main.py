@@ -27,8 +27,8 @@ async def lifespan(_app: FastAPI):
     print(f"Baseline Teams Directory: {baseline_dir.absolute()}")
     print(f"   Files found: {len(list(baseline_dir.rglob('*.md')))}")
     print(
-        "Environment: TT_TEAMS_VARIANT="
-        f"{os.getenv('TT_TEAMS_VARIANT', 'NOT SET (using default: tt-teams)')}"
+        "Environment: TT_TEAMS_EXAMPLE_VARIANT="
+        f"{os.getenv('TT_TEAMS_EXAMPLE_VARIANT', 'NOT SET (using default: tt-teams)')}"
     )
     print("=" * 80 + "\n")
 

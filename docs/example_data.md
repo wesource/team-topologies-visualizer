@@ -73,19 +73,19 @@ By default, the app loads the mid-stage variant. To use the first-step variant:
 
 **Local (Linux/Mac):**
 ```bash
-export TT_TEAMS_VARIANT=tt-teams-initial
+export TT_TEAMS_EXAMPLE_VARIANT=tt-teams-initial
 python -m uvicorn main:app --reload
 ```
 
 **Local (Windows PowerShell):**
 ```powershell
-$env:TT_TEAMS_VARIANT="tt-teams-initial"
+$env:TT_TEAMS_EXAMPLE_VARIANT="tt-teams-initial"
 python -m uvicorn main:app --reload
 ```
 
 **Docker/Podman:**
 ```bash
-docker run -p 8000:8000 -e TT_TEAMS_VARIANT=tt-teams-initial team-topologies-viz
+docker run -p 8000:8000 -e TT_TEAMS_EXAMPLE_VARIANT=tt-teams-initial team-topologies-viz
 ```
 
 To switch back to mid-stage, unset the variable or set it to `tt-teams`.

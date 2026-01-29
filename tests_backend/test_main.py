@@ -111,11 +111,11 @@ class TestGetDataDir:
         assert 'data' in str(data_dir)
 
     def test_get_data_dir_tt(self):
-        """Should return correct tt-teams directory based on TT_TEAMS_VARIANT env var."""
+        """Should return correct tt-teams directory based on TT_TEAMS_EXAMPLE_VARIANT env var."""
         import os
         data_dir = get_data_dir('tt')
-        # Check that it's a tt-teams variant directory (respects TT_TEAMS_VARIANT env var)
-        variant = os.getenv('TT_TEAMS_VARIANT', 'tt-teams')
+        # Check that it's a tt-teams variant directory (respects TT_TEAMS_EXAMPLE_VARIANT env var)
+        variant = os.getenv('TT_TEAMS_EXAMPLE_VARIANT', 'tt-teams')
         assert data_dir.name == variant
         assert 'data' in str(data_dir)
 

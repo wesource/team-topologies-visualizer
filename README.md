@@ -75,7 +75,7 @@ docker run -p 8000:8000 -v ./data:/app/data team-topologies-viz
 
 Open http://localhost:8000/static/index.html
 
-**Full setup instructions**: See [docs/setup.md](docs/setup.md) for detailed installation, configuration, Docker/Podman options, demo mode, and TT design variants.
+**Full setup instructions**: See [docs/setup.md](docs/setup.md) for detailed installation, configuration, Docker/Podman options, demo mode, and example data variants.
 
 ## Key Features
 
@@ -114,10 +114,10 @@ Open http://localhost:8000/static/index.html
 
 | Document | Description |
 |----------|-------------|
-| [docs/setup.md](docs/setup.md) | Installation, configuration, Docker/Podman, demo mode, TT variants |
+| [docs/setup.md](docs/setup.md) | Installation, configuration, Docker/Podman, demo mode, example data set variants |
 | [docs/usage.md](docs/usage.md) | UI walkthrough (views, dragging/zooming, filters, validation) |
 | [docs/concepts.md](docs/concepts.md) | Team Topologies concepts and how they map to the tool |
-| [docs/example_data.md](docs/example_data.md) | Example organization, transformation story, dataset variants |
+| [docs/example_data.md](docs/example_data.md) | Example organization, transformation story, example data set variants |
 | [docs/auto-align.md](docs/auto-align.md) | Auto-align feature, alignment hints, 3×2 grid layout |
 | [docs/development.md](docs/development.md) | Developer workflow, testing, linting |
 | [docs/testing.md](docs/testing.md) | Testing guide (pytest, Vitest, Playwright) |
@@ -137,15 +137,15 @@ data/baseline-teams/baseline-team-types.json
 data/tt-teams/tt-team-types.json
 ```
 
-Want to understand the team Markdown/YAML structure (or create your own starting from [templates/](templates/))? See [docs/setup.md](docs/setup.md#data-organization).
+**Replace example data with your own company**: The tool includes pre-defined templates in [templates/](templates/) that make it easy to create team files for your organization. Each template follows a simple Markdown + YAML structure. For complete documentation on the team file format and how to organize your data, see [docs/setup.md](docs/setup.md#data-organization).
 
 ## Example Data
 
 Includes a fictitious organization (**LogiCore Systems**) to illustrate typical “before vs after” patterns during a Team Topologies adoption.
 
-**Two TT design variants**: Mid-stage transformation (default, ~34 teams) and first-step transformation (optional, ~20 teams) showing realistic progression.
+**Two example TT design data sets**: Mid-stage transformation (default, ~34 teams) and first-step transformation (optional, ~20 teams) showing realistic progression.
 
-See **[docs/example_data.md](docs/example_data.md)** for the complete story, how to switch variants, and detailed comparison.
+See **[docs/example_data.md](docs/example_data.md)** for the complete story, how to switch example data set variants, and detailed comparison.
 
 **Data Management**: All team data is stored as markdown files in `data/`. Use git for version control and backup - commit regularly to preserve your team topology designs.
 
