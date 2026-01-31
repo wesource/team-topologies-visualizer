@@ -69,18 +69,8 @@
    ```bash
    podman run -p 8000:8000 -v ./data:/app/data:z team-topologies-viz
    ```
-   
-   **Windows PowerShell/Podman**: Git Bash may have path conversion issues. Use PowerShell:
-   ```powershell
-   podman run -p 8000:8000 -v ${PWD}/data:/app/data team-topologies-viz
-   ```
-   
-   **Volume mount explanation**:
-   - `-v ./data:/app/data` mounts your local `data/` directory into the container
-   - This allows you to edit team markdown files on your host machine
-   - Changes are immediately visible in the running application
-   - On Podman with SELinux, add `:z` flag for proper permissions
-   - On Windows, use `${PWD}` in PowerShell instead of `./` and omit `:z`
+
+   > **See [Docker Deployment Guide](docker-deployment.md)** for volume mounting details, environment variables, Windows-specific instructions, and production deployment patterns.
 
 3. **Stop the container**
    ```bash
@@ -107,6 +97,8 @@ For public demonstrations or workshops where you want users to explore without s
 ```bash
 docker run -p 8000:8000 -e READ_ONLY_MODE=true team-topologies-viz
 ```
+
+See [Docker Deployment Guide](docker-deployment.md) for more environment variables and deployment options.
 
 Demo mode displays a banner and blocks all write operations (position updates, snapshot creation) while allowing full interaction with the visualization.
 
@@ -142,6 +134,8 @@ python -m uvicorn main:app --reload
 ```bash
 docker run -p 8000:8000 -e TT_DESIGN_VARIANT=tt-teams-initial team-topologies-viz
 ```
+
+See [Docker Deployment Guide](docker-deployment.md) for combining environment variables and advanced deployment patterns.
 
 If `TT_DESIGN_VARIANT` is not set, the app uses the default folder (`tt-teams`).
 
