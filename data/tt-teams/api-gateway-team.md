@@ -10,6 +10,7 @@ metadata:
   cognitive_load: medium
   established: 2023-11
 platform_grouping: Cloud Infrastructure Platform Grouping
+value_stream_inner: Gateway & Service Mesh
 ---
 
 # API Gateway Team
@@ -62,7 +63,6 @@ N/A - This is a stream-aligned team delivering API gateway as a product experien
 ## Teams we currently interact with
 | Team Name | Interaction Mode | Purpose | Duration |
 |-----------|------------------|---------|----------|
-| Security Compliance Team | Collaboration | Define compliance policies | Ongoing |
 | Developer Portal Team | X-as-a-Service | Expose API metrics | Ongoing |
 ## Teams we expect to interact with soon
 | Team Name | Interaction Mode | Purpose | Expected Duration |

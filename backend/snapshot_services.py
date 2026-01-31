@@ -36,6 +36,8 @@ def condense_team_for_snapshot(team: TeamData) -> SnapshotTeamCondensed:
         position=team.position or {"x": 0, "y": 0},
         value_stream=team.value_stream,
         platform_grouping=team.platform_grouping,
+        value_stream_inner=team.value_stream_inner,
+        platform_grouping_inner=team.platform_grouping_inner,
         dependencies=team.dependencies or [],
         interaction_modes=team.interaction_modes or {},
         metadata={

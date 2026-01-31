@@ -74,7 +74,6 @@ N/A - This is a stream-aligned team that delivers customer-facing integration fe
 | Team Name | Interaction Mode | Purpose | Duration |
 |-----------|------------------|---------|----------|
 | Enterprise Fleet Portal Team | Collaboration | Shared enterprise customer context | Ongoing |
-| DevOps Enablement Team | Facilitating | Infrastructure-as-code, GitOps workflows | 10 weeks (ending Mar 2026) |
 | API Gateway Platform Team | x-as-a-service | API routing and authentication |
 | Data Pipeline Platform Team | x-as-a-service | Data synchronization |
 | Observability Platform Team | X-as-a-Service | Monitor CRM sync jobs | Ongoing |

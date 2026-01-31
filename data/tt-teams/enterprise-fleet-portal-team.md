@@ -64,7 +64,6 @@ N/A - This is a stream-aligned team delivering customer-facing portal features f
 
 | Team Name | Interaction Mode | Purpose | Duration |
 |-----------|------------------|---------|----------|
-| DevOps Enablement Team | Facilitating | Cloud-native deployment patterns, CI/CD setup | 8 weeks (ending Feb 2026) |
 | Data Storage Platform Team | X-as-a-Service | Data persistence | Ongoing |
 | CI/CD Platform Team | X-as-a-Service | Deployment pipelines | Ongoing |
 

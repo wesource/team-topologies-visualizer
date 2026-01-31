@@ -2,9 +2,9 @@
 import { drawCurrentStateView } from './renderer-current.js';
 import { drawProductLinesView } from './renderer-product-lines.js';
 import { renderBusinessStreamsView } from './renderer-business-streams.js';
-import { drawTeam, drawConnections, wrapText, drawValueStreamGroupings, drawPlatformGroupings } from './renderer-common.js';
-import { getValueStreamGroupings } from '../tt-concepts/tt-value-stream-grouping.js';
-import { getPlatformGroupings } from '../tt-concepts/tt-platform-grouping.js';
+import { drawTeam, drawConnections, wrapText, drawValueStreamGroupings, drawPlatformGroupings, drawValueStreamInnerGroupings, drawPlatformInnerGroupings } from './renderer-common.js';
+import { getValueStreamGroupings, getValueStreamInnerGroupings } from '../tt-concepts/tt-value-stream-grouping.js';
+import { getPlatformGroupings, getPlatformInnerGroupings } from '../tt-concepts/tt-platform-grouping.js';
 import { getFilteredTeams } from '../core/state-management.js';
 import { calculatePlatformConsumers } from '../tt-concepts/platform-metrics.js';
 
@@ -59,6 +59,13 @@ export function draw(state) {
         // Draw platform groupings
         const platformGroupings = getPlatformGroupings(teamsToRender);
         drawPlatformGroupings(state.ctx, platformGroupings);
+
+        // Draw inner groupings (nested boxes) after outer groupings but before teams
+        const valueStreamInnerGroupings = getValueStreamInnerGroupings(teamsToRender);
+        drawValueStreamInnerGroupings(state.ctx, valueStreamInnerGroupings);
+
+        const platformInnerGroupings = getPlatformInnerGroupings(teamsToRender);
+        drawPlatformInnerGroupings(state.ctx, platformInnerGroupings);
     }
 
     // Skip standard team drawing in product-lines and business-streams perspectives

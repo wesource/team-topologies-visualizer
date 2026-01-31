@@ -23,8 +23,11 @@ metadata:
 
 # OPTIONAL - Groupings (omit if team is standalone)
 value_stream: [Value Stream Name]  # For stream-aligned teams in organized value streams
+value_stream_inner: [Inner Value Stream Name]  # OPTIONAL: Nested grouping within a value stream (fractal pattern)
 platform_grouping: [Platform Grouping Name]  # For platform teams in shared platform groupings
+platform_inner: [Inner Platform Name]  # OPTIONAL: Nested grouping within a platform (fractal pattern)
 # Note: Omit grouping fields for standalone teams in early transformation stages
+# Note: When using *_inner fields, only use one outer grouping (either value_stream OR platform_grouping, not both)
 ---
 
 # [Your Team Name]

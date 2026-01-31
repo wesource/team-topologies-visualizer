@@ -76,6 +76,63 @@ export function getPlatformGroupingNames(teams) {
 }
 
 /**
+ * Gets inner groupings within platform groupings (nested boxes)
+ * @param {Array} teams - Array of team objects
+ * @returns {Array} Array of inner grouping objects with name, parentPlatformGrouping, teams, and bounds
+ */
+export function getPlatformInnerGroupings(teams) {
+    if (!teams || teams.length === 0) {
+        return [];
+    }
+
+    // Group teams by platform_grouping + platform_grouping_inner combination
+    const groupMap = new Map();
+
+    teams.forEach(team => {
+        const platformGrouping = team.platform_grouping || team.metadata?.platform_grouping;
+        const valueStream = team.value_stream || team.metadata?.value_stream;
+        const innerGrouping = team.platform_grouping_inner || team.metadata?.platform_grouping_inner;
+
+        // Fractal pattern: platform_grouping_inner can exist within platform_grouping OR value_stream
+        if (innerGrouping && (platformGrouping || valueStream)) {
+            const outerGrouping = platformGrouping || valueStream;
+            const key = `${outerGrouping}::${innerGrouping}`;
+            if (!groupMap.has(key)) {
+                groupMap.set(key, {
+                    parentGrouping: outerGrouping,
+                    innerName: innerGrouping,
+                    teams: []
+                });
+            }
+            groupMap.get(key).teams.push(team);
+        }
+    });
+
+    // Convert to array and calculate bounding boxes
+    const groupings = [];
+    const padding = 15; // Smaller padding for inner boxes
+
+    groupMap.forEach((groupData, key) => {
+        const bounds = calculateGroupingBoundingBox(
+            groupData.teams,
+            LAYOUT.TEAM_BOX_HEIGHT,
+            padding,
+            'tt', // View context for dynamic width calculation
+            10    // Small labelAreaHeight for inner groupings
+        );
+
+        groupings.push({
+            name: groupData.innerName,
+            parentGrouping: groupData.parentGrouping,
+            teams: groupData.teams,
+            bounds
+        });
+    });
+
+    return groupings;
+}
+
+/**
  * Filters teams by selected platform grouping
  * @param {Array} teams - Array of team objects
  * @param {string} selectedPlatformGrouping - Platform grouping to filter by, or "all"
@@ -100,13 +157,10 @@ export function filterTeamsByPlatformGrouping(teams, selectedPlatformGrouping) {
  * @param {string} currentView - Current view ('current' or 'tt') for dynamic width calculation
  * @returns {Object} Bounding box {x, y, width, height}
  */
-export function calculateGroupingBoundingBox(teams, teamBoxHeight, padding, currentView = 'tt') {
+export function calculateGroupingBoundingBox(teams, teamBoxHeight, padding, currentView = 'tt', labelAreaHeight = 35) {
     if (!teams || teams.length === 0) {
         return { x: 0, y: 0, width: 0, height: 0 };
     }
-
-    // Reserve space for label at top (labelHeight from tt-design-alignment.js)
-    const labelAreaHeight = 35; // Space for grouping label above teams
 
     // Find min/max coordinates
     let minX = Infinity;

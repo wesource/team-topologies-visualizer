@@ -181,6 +181,51 @@ In TT Design, stream-aligned teams can be grouped by value stream:
 - Contains teams delivering end-to-end customer value
 - Typically 3-8 teams per grouping
 
+## Inner Groupings (Fractal Pattern)
+
+To model "fractal" patterns (Team Topologies 2nd edition), TT Design teams can optionally define nested groupings:
+
+- `value_stream_inner: <string>` - Creates a nested box within a value stream grouping
+- `platform_inner: <string>` - Creates a nested box within a platform grouping
+
+**Example use cases:**
+- **Value stream inner groupings**: Sub-teams within a larger value stream (e.g., "Web Frontend" and "Mobile Apps" within "Customer Experience" value stream)
+- **Platform inner groupings**: Related capabilities within a larger platform (e.g., "CI/CD" and "Monitoring" within "Cloud Infrastructure Platform")
+
+**How it works:**
+- Inner groupings are rendered as lighter-colored boxes with thinner borders inside their parent grouping
+- Teams can belong to both an outer grouping (`value_stream` or `platform_grouping`) and an inner grouping (`value_stream_inner` or `platform_inner`)
+- The fractal pattern supports nesting within either value streams or platform groupings
+
+**Recommended constraint (for clear visualization):**
+
+When using an `*_inner` field, keep the team in only **one** outer grouping:
+
+- If a team uses `value_stream_inner`, it should also have `value_stream` and should not set `platform_grouping`
+- If a team uses `platform_inner`, it should also have `platform_grouping` and should not set `value_stream`
+
+This avoids ambiguous cases where a single team would need to be drawn inside multiple nested boxes at once.
+
+**Visual representation:**
+- Inner groupings use lighter colors than outer groupings: `rgba(255, 210, 120, 0.4)` fill, `rgba(240, 180, 90, 0.6)` stroke
+- Thinner borders (1.5px vs 2px for outer groupings)
+- Rendered after outer groupings but before teams in both canvas and SVG export
+- Labels positioned at top-left of inner grouping boxes
+
+**YAML format example:**
+
+```yaml
+---
+name: Web Development Team
+team_type: stream-aligned
+value_stream: Customer Experience
+value_stream_inner: Web Frontend
+position:
+  x: 100
+  y: 200
+---
+```
+
 ## Auto-Align Positioning Hints
 
 The TT Design view includes an auto-align feature that positions teams based on Team Topologies patterns. Optional metadata fields let you override defaults:

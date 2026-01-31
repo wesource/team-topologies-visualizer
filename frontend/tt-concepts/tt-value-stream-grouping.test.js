@@ -1,6 +1,6 @@
 // Tests for value stream grouping utilities
 import { describe, it, expect } from 'vitest';
-import { getValueStreamGroupings, calculateGroupingBoundingBox, getValueStreamNames, filterTeamsByValueStream } from './tt-value-stream-grouping.js';
+import { getValueStreamGroupings, calculateGroupingBoundingBox, getValueStreamNames, filterTeamsByValueStream, getValueStreamInnerGroupings } from './tt-value-stream-grouping.js';
 
 describe('Value Stream Grouping', () => {
     describe('getValueStreamGroupings', () => {
@@ -189,6 +189,163 @@ describe('Value Stream Grouping', () => {
         it('should handle empty teams array', () => {
             expect(filterTeamsByValueStream([], 'E-commerce Experience')).toEqual([]);
             expect(filterTeamsByValueStream(null, 'E-commerce Experience')).toBeNull();
+        });
+    });
+
+    describe('getValueStreamInnerGroupings', () => {
+        it('should group teams by value_stream + value_stream_inner combination', () => {
+            const teams = [
+                { 
+                    name: 'Team A', 
+                    value_stream: 'Customer Experience', 
+                    value_stream_inner: 'Web Frontend',
+                    position: { x: 100, y: 100 },
+                    team_type: 'stream-aligned'
+                },
+                { 
+                    name: 'Team B', 
+                    value_stream: 'Customer Experience', 
+                    value_stream_inner: 'Web Frontend',
+                    position: { x: 200, y: 100 },
+                    team_type: 'stream-aligned'
+                },
+                { 
+                    name: 'Team C', 
+                    value_stream: 'Customer Experience', 
+                    value_stream_inner: 'Mobile Apps',
+                    position: { x: 400, y: 100 },
+                    team_type: 'stream-aligned'
+                }
+            ];
+
+            const groupings = getValueStreamInnerGroupings(teams);
+
+            expect(groupings).toHaveLength(2);
+            expect(groupings[0].name).toBe('Web Frontend');
+            expect(groupings[0].parentGrouping).toBe('Customer Experience');
+            expect(groupings[0].teams).toHaveLength(2);
+            expect(groupings[1].name).toBe('Mobile Apps');
+            expect(groupings[1].teams).toHaveLength(1);
+        });
+
+        it('should support inner groupings within platform_grouping (fractal pattern)', () => {
+            const teams = [
+                { 
+                    name: 'Team A', 
+                    platform_grouping: 'Cloud Platform', 
+                    value_stream_inner: 'Compute',
+                    position: { x: 100, y: 100 },
+                    team_type: 'platform'
+                },
+                { 
+                    name: 'Team B', 
+                    platform_grouping: 'Cloud Platform', 
+                    value_stream_inner: 'Storage',
+                    position: { x: 200, y: 100 },
+                    team_type: 'platform'
+                }
+            ];
+
+            const groupings = getValueStreamInnerGroupings(teams);
+
+            expect(groupings).toHaveLength(2);
+            expect(groupings[0].parentGrouping).toBe('Cloud Platform');
+            expect(groupings[1].parentGrouping).toBe('Cloud Platform');
+        });
+
+        it('should read from metadata if top-level fields missing', () => {
+            const teams = [
+                { 
+                    name: 'Team A', 
+                    metadata: { 
+                        value_stream: 'Financial Services', 
+                        value_stream_inner: 'Payments'
+                    },
+                    position: { x: 100, y: 100 },
+                    team_type: 'stream-aligned'
+                }
+            ];
+
+            const groupings = getValueStreamInnerGroupings(teams);
+
+            expect(groupings).toHaveLength(1);
+            expect(groupings[0].name).toBe('Payments');
+            expect(groupings[0].parentGrouping).toBe('Financial Services');
+        });
+
+        it('should calculate bounding boxes for inner groupings', () => {
+            const teams = [
+                { 
+                    name: 'Team A', 
+                    value_stream: 'Customer Experience', 
+                    value_stream_inner: 'Web Frontend',
+                    position: { x: 100, y: 100 },
+                    team_type: 'stream-aligned'
+                },
+                { 
+                    name: 'Team B', 
+                    value_stream: 'Customer Experience', 
+                    value_stream_inner: 'Web Frontend',
+                    position: { x: 300, y: 200 },
+                    team_type: 'stream-aligned'
+                }
+            ];
+
+            const groupings = getValueStreamInnerGroupings(teams);
+
+            expect(groupings).toHaveLength(1);
+            expect(groupings[0].bounds).toBeDefined();
+            expect(groupings[0].bounds.x).toBeLessThan(100);  // Includes padding
+            expect(groupings[0].bounds.width).toBeGreaterThan(200);  // Spans both teams plus padding
+        });
+
+        it('should ignore teams without value_stream_inner', () => {
+            const teams = [
+                { 
+                    name: 'Team A', 
+                    value_stream: 'Customer Experience', 
+                    value_stream_inner: 'Web Frontend',
+                    position: { x: 100, y: 100 },
+                    team_type: 'stream-aligned'
+                },
+                { 
+                    name: 'Team B', 
+                    value_stream: 'Customer Experience', 
+                    // No value_stream_inner
+                    position: { x: 200, y: 100 },
+                    team_type: 'stream-aligned'
+                }
+            ];
+
+            const groupings = getValueStreamInnerGroupings(teams);
+
+            expect(groupings).toHaveLength(1);
+            expect(groupings[0].teams).toHaveLength(1);  // Only Team A
+        });
+
+        it('should return empty array for teams without outer grouping', () => {
+            const teams = [
+                { 
+                    name: 'Team A', 
+                    value_stream_inner: 'Web Frontend',  // Has inner but no outer
+                    position: { x: 100, y: 100 },
+                    team_type: 'stream-aligned'
+                }
+            ];
+
+            const groupings = getValueStreamInnerGroupings(teams);
+
+            expect(groupings).toHaveLength(0);
+        });
+
+        it('should return empty array for empty teams', () => {
+            const groupings = getValueStreamInnerGroupings([]);
+            expect(groupings).toEqual([]);
+        });
+
+        it('should handle null or undefined teams', () => {
+            expect(getValueStreamInnerGroupings(null)).toEqual([]);
+            expect(getValueStreamInnerGroupings(undefined)).toEqual([]);
         });
     });
 });

@@ -77,5 +77,4 @@ N/A - This is a stream-aligned team that delivers customer-facing notification f
 | Customer Delivery Tracking Team | Collaboration | In-app notification integration | Ongoing |
 | Driver Experience Team | Collaboration | Driver status triggers notifications | Ongoing |
 | Mobile Platform Team | X-as-a-Service | Push infrastructure (FCM, APNs) | Ongoing |
-| Route Optimization Platform Team | X-as-a-Service | ETA updates for notifications | Ongoing |
 | Feature Management Platform Team | X-as-a-Service | Progressive rollout of notification types | Ongoing |

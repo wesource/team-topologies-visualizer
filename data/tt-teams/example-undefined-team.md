@@ -3,8 +3,8 @@ team_id: example-undefined-team
 name: Example Undefined Team
 team_type: undefined
 position:
-  x: 89.37426210153481
-  y: 909.2798110979928
+  x: 104.57247370827619
+  y: 911.0013717421124
 metadata:
   size: 0
   cognitive_load: undefined

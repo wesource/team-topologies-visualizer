@@ -42,6 +42,8 @@ class TeamData(BaseModel):
     purpose: str | None = None  # One-liner mission statement (for quick access)
     value_stream: str | None = None  # For Value Stream Groupings in TT Design
     platform_grouping: str | None = None
+    value_stream_inner: str | None = None  # Nested grouping inside value stream
+    platform_grouping_inner: str | None = None  # Nested grouping inside platform grouping
     established: str | None = None  # YYYY-MM
     cognitive_load: str | None = None  # low | medium | high | very-high
     flow_metrics: FlowMetrics | None = None  # DORA metrics for team performance
@@ -75,6 +77,8 @@ class SnapshotTeamCondensed(BaseModel):
     position: dict[str, float]
     value_stream: str | None = None
     platform_grouping: str | None = None
+    value_stream_inner: str | None = None
+    platform_grouping_inner: str | None = None
     dependencies: list[str] | None = []
     dependency_notes: list[str] | None = []
     interaction_modes: dict[str, str] | None = {}

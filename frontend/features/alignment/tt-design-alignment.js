@@ -68,9 +68,20 @@ export function autoAlignTTDesign(teams) {
 
     // Helper function to position teams within a grouping
     function positionTeamsInGrouping(groupingTeams, groupingStartX, groupingStartY) {
+        // Sort teams so those with the same inner grouping are adjacent (clustered)
+        const sortedTeams = [...groupingTeams].sort((a, b) => {
+            const innerA = a.value_stream_inner || a.platform_grouping_inner || a.metadata?.value_stream_inner || a.metadata?.platform_grouping_inner || '';
+            const innerB = b.value_stream_inner || b.platform_grouping_inner || b.metadata?.value_stream_inner || b.metadata?.platform_grouping_inner || '';
+            
+            // Sort by inner grouping name (teams with no inner grouping come last)
+            if (innerA && !innerB) return -1;
+            if (!innerA && innerB) return 1;
+            return innerA.localeCompare(innerB);
+        });
+
         // Separate wide teams (stream-aligned, platform) from narrow teams (enabling, complicated subsystem)
-        const wideTeams = groupingTeams.filter(team => isWideTeamType(team.team_type));
-        const narrowTeams = groupingTeams.filter(team => !isWideTeamType(team.team_type));
+        const wideTeams = sortedTeams.filter(team => isWideTeamType(team.team_type));
+        const narrowTeams = sortedTeams.filter(team => !isWideTeamType(team.team_type));
 
         let currentYPos = groupingStartY + paddingInGrouping + labelHeight;
 

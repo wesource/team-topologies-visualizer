@@ -4,7 +4,7 @@ name: Observability Platform Team
 team_type: platform
 position:
   x: 1080.0
-  y: 1978.0
+  y: 1854.0
 metadata:
   size: 5
   cognitive_load: medium

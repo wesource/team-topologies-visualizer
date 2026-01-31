@@ -65,5 +65,6 @@ Yes – Cloud Infrastructure Platform Grouping
 | Team Name | Interaction Mode | Purpose | Duration |
 |-----------|------------------|---------|----------|
 | Data Engineering Enablement Team | Facilitating | Coaching on pipeline best practices | Occasional |
+| Machine Learning & AI Specialists Team | X-as-a-Service | Provide ML training data pipelines | Ongoing |
 | Delivery Analytics Team | X-as-a-Service | Provide feature data pipelines | Ongoing |
 | Financial Reporting Team | X-as-a-Service | ETL for financial data | Ongoing |

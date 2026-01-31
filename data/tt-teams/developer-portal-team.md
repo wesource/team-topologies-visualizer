@@ -3,13 +3,17 @@ team_id: developer-portal-team
 name: Developer Portal Team
 team_type: stream-aligned
 position:
-  x: 1080.0
-  y: 1714.0
+  x: 1739.8765432098764
+  y: 1400.8148148148148
 metadata:
   size: 6
   cognitive_load: medium
   established: 2023-09
-platform_grouping: Cloud Infrastructure Platform Grouping
+value_stream: Mobile Experience
+interactions:
+- team_id: driver-experience-team
+  interaction_mode: x-as-a-service
+  purpose: Provides developer portal, service catalog, and deployment workflows
 ---
 
 # Developer Portal Team
@@ -110,15 +114,6 @@ Yes – Cloud Infrastructure Platform Grouping (stream-aligned team delivering i
 **Ongoing:**
 - **Documentation improvements** - Expand getting started guides, video tutorials
 - **Portal performance optimization** - Reduce load times, optimize database queries
-
-## Teams we currently interact with
-
-| Team Name | Interaction Mode | Purpose | Duration |
-|-----------|------------------|---------|----------|
-| Cloud Development Platform Team | X-as-a-Service | Portal runs on their AWS infrastructure, integrates their cost APIs | Ongoing |
-| Observability Platform Team | X-as-a-Service | Display Grafana dashboards and PagerDuty on-call schedules in portal | Ongoing |
-| CI/CD Platform Team | X-as-a-Service | Show deployment status from GitHub Actions + ArgoCD | Ongoing |
-| API Gateway Platform Team | X-as-a-Service | Display API Gateway metrics and service mesh topology | Ongoing |
 
 ## Teams we expect to interact with soon
 

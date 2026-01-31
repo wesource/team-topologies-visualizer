@@ -3,8 +3,8 @@ team_id: machine-learning-and-ai-specialists-team
 name: Machine Learning & AI Specialists Team
 team_type: complicated-subsystem
 position:
-  x: 100.0
-  y: 400.0
+  x: 77.0
+  y: 87.2018209408194
 metadata:
   size: 6
   cognitive_load: high
@@ -82,7 +82,6 @@ This team provides specialized ML/AI capabilities across multiple value streams:
 | Team Name | Interaction Mode | Purpose | Duration |
 |-----------|------------------|---------|----------|
 | Data Engineering Enablement Team | Collaboration | Feature engineering, data pipelines | Ongoing |
-| Data Pipeline Platform Team | X-as-a-Service | Model deployment infrastructure | Ongoing |
 | Fleet Monitor Team | Collaboration | Integrate recommendations | 3 months |
 
 ## Teams we expect to interact with soon

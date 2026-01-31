@@ -79,7 +79,6 @@ N/A - This is a stream-aligned team delivering customer-facing features for driv
 |-----------|------------------|---------|----------|
 | Mobile Platform Team | X-as-a-Service | CI/CD, push notifications, app analytics | Ongoing |
 | Fleet Operations Team | Collaboration | Driver-dispatcher communication | Ongoing |
-| Route Optimization Platform Team | X-as-a-Service | Route data and turn-by-turn directions | Ongoing |
 | Driver Feedback Team | Collaboration | Driver ratings and feedback visibility | Ongoing |
 | Observability Platform Team | X-as-a-Service | Mobile app monitoring and crash reporting | Ongoing |
 

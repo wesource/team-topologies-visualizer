@@ -3,13 +3,14 @@ team_id: mobile-inner-platform-team
 name: Mobile Inner Platform Team
 team_type: platform
 position:
-  x: 1820.0
-  y: 906.0
+  x: 1739.8765432098764
+  y: 1103.5308641975307
 metadata:
   size: 6
   cognitive_load: medium
   established: 2023-10
 value_stream: Mobile Experience
+platform_grouping_inner: Mobile Infrastructure
 ---
 
 # Mobile Inner Platform Team

@@ -187,8 +187,12 @@ def _enrich_interaction_modes(data: dict, markdown_content: str) -> dict:
     if 'interactions' in data and isinstance(data['interactions'], list):
         interaction_modes = {}
         for interaction in data['interactions']:
-            if isinstance(interaction, dict) and 'team' in interaction and 'mode' in interaction:
-                interaction_modes[interaction['team']] = interaction['mode']
+            if isinstance(interaction, dict):
+                # Support both naming conventions: team/team_id and mode/interaction_mode
+                team_key = interaction.get('team_id') or interaction.get('team')
+                mode_key = interaction.get('interaction_mode') or interaction.get('mode')
+                if team_key and mode_key:
+                    interaction_modes[team_key] = mode_key
         if interaction_modes:
             data['interaction_modes'] = interaction_modes
             return data
@@ -392,6 +396,10 @@ def write_team_file_to_path(team: TeamData, file_path: Path) -> Path:
         yaml_data['value_stream'] = team.value_stream
     if team.platform_grouping:
         yaml_data['platform_grouping'] = team.platform_grouping
+    if team.value_stream_inner:
+        yaml_data['value_stream_inner'] = team.value_stream_inner
+    if team.platform_grouping_inner:
+        yaml_data['platform_grouping_inner'] = team.platform_grouping_inner
 
     # CRITICAL: Preserve interactions array if present
     if team.interactions:

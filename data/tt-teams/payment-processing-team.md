@@ -62,16 +62,16 @@ Yes - Financial Services
 - Q1 2026: Improve fraud detection pipeline
 - Q1 2026: Automate PCI compliance reporting
 ## Teams we currently interact with
-| Team Name | Interaction Mode | Purpose | Duration |
-|-----------|------------------|---------|----------|
-| Billing Team | X-as-a-Service | Payment processing | Ongoing |
-| Driver Experience Team | X-as-a-Service | Payment processing | Ongoing |
-| Security Compliance Team | Facilitation | PCI compliance | 3 months |
-## Teams we expect to interact with soon
-| Team Name | Interaction Mode | Purpose | Expected Duration |
-|-----------|------------------|---------|-------------------|
-| Enterprise Fleet Portal Team | X-as-a-Service | Subscription billing | Ongoing |
-| Fraud Detection and Risk Modeling Team | Collaboration | Improve fraud scoring | 2 months |
+
+This team **consumes** services from:
+- **Fraud Detection and Risk Modeling Team** (X-as-a-Service) - Real-time fraud scoring for transaction validation
+
+This team **provides** services to:
+- **Billing Team** - Payment processing capabilities
+- **Driver Experience Team** - Payment processing capabilities
+
+Previous interactions:
+- Security Compliance Team (Facilitation, PCI compliance - completed)
 
 ## Why This is a Platform Team (Not Complicated Subsystem)
 While this domain has high complexity, it's a **platform** because:

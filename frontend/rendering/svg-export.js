@@ -1,7 +1,7 @@
 import { LAYOUT } from '../core/constants.js';
 import { darkenColor, getTeamBoxWidth, getTeamBoxHeight } from './renderer-common.js';
-import { getValueStreamGroupings } from '../tt-concepts/tt-value-stream-grouping.js';
-import { getPlatformGroupings } from '../tt-concepts/tt-platform-grouping.js';
+import { getValueStreamGroupings, getValueStreamInnerGroupings } from '../tt-concepts/tt-value-stream-grouping.js';
+import { getPlatformGroupings, getPlatformInnerGroupings } from '../tt-concepts/tt-platform-grouping.js';
 
 // SVG Export Module - Separated from runtime rendering
 // Converts current visualization state to downloadable SVG
@@ -440,6 +440,37 @@ function generateTTVisionSVG(teams, teamColorMap, showInteractionModes) {
         );
     });
 
+    // Draw inner groupings (after outer groupings, before teams)
+    const valueStreamInnerGroupings = getValueStreamInnerGroupings(teams);
+    valueStreamInnerGroupings.forEach(grouping => {
+        const bounds = grouping.bounds;
+        elements += drawSVGInnerGrouping(
+            grouping.name,
+            bounds.x,
+            bounds.y,
+            bounds.width,
+            bounds.height,
+            'rgba(255, 210, 120, 0.4)', // Lighter orange/yellow
+            'rgba(240, 180, 90, 0.6)', // Lighter orange border
+            1.5 // Stroke width
+        );
+    });
+
+    const platformInnerGroupings = getPlatformInnerGroupings(teams);
+    platformInnerGroupings.forEach(grouping => {
+        const bounds = grouping.bounds;
+        elements += drawSVGInnerGrouping(
+            grouping.name,
+            bounds.x,
+            bounds.y,
+            bounds.width,
+            bounds.height,
+            'rgba(90, 170, 210, 0.3)', // Lighter blue
+            'rgba(70, 150, 200, 0.5)', // Lighter blue border
+            1.5 // Stroke width
+        );
+    });
+
     // Draw interaction modes (if enabled)
     if (showInteractionModes) {
         teams.forEach(team => {
@@ -499,9 +530,24 @@ function drawSVGGrouping(label, x, y, width, height, fillColor, borderColor) {
       fill="${fillColor}" stroke="${borderColor}" stroke-width="2" stroke-dasharray="1,4" stroke-linecap="round" rx="${rx}" ry="${rx}"/>
   <text x="${x + width / 2}" y="${labelY}" 
         font-family="Arial, sans-serif" font-size="16" font-weight="bold" 
-        fill="${borderColor}" text-anchor="middle" dominant-baseline="middle">${label}</text>
+        fill="${borderColor}" text-anchor="middle" dominant-baseline="middle">${escapeXml(label)}</text>
 `;
 }
+
+function drawSVGInnerGrouping(label, x, y, width, height, fillColor, borderColor, strokeWidth) {
+    const rx = 0; // Square corners to match outer groupings
+    const labelPadding = 3; // Small gap between label and first team
+    const labelY = y + labelPadding + 8; // Position label at top with minimal padding
+
+    return `
+  <rect x="${x}" y="${y}" width="${width}" height="${height}" 
+      fill="${fillColor}" stroke="${borderColor}" stroke-width="${strokeWidth}" rx="${rx}" ry="${rx}"/>
+  <text x="${x + width / 2}" y="${labelY}" 
+        font-family="Arial, sans-serif" font-size="13" font-weight="normal" 
+        fill="#666" text-anchor="middle" dominant-baseline="middle">${escapeXml(label)}</text>
+`;
+}
+
 function drawSVGBox(text, x, y, width, height, bgColor, textColor, isBold, teamType = null, currentView = 'current') {
     const fontSize = isBold ? 18 : 16; // Font sizes to match grouping label proportions (16px grouping labels)
     const fontWeight = isBold ? 'bold' : 'normal';

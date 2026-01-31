@@ -73,6 +73,63 @@ export function getValueStreamNames(teams) {
 }
 
 /**
+ * Gets inner groupings within value streams (nested boxes)
+ * @param {Array} teams - Array of team objects
+ * @returns {Array} Array of inner grouping objects with name, parentValueStream, teams, and bounds
+ */
+export function getValueStreamInnerGroupings(teams) {
+    if (!teams || teams.length === 0) {
+        return [];
+    }
+
+    // Group teams by value_stream + value_stream_inner combination
+    const groupMap = new Map();
+
+    teams.forEach(team => {
+        const valueStream = team.value_stream || team.metadata?.value_stream;
+        const innerGrouping = team.value_stream_inner || team.metadata?.value_stream_inner;
+        const platformGrouping = team.platform_grouping || team.metadata?.platform_grouping;
+
+        // Fractal pattern: value_stream_inner can exist within value_stream OR platform_grouping
+        if (innerGrouping && (valueStream || platformGrouping)) {
+            const outerGrouping = valueStream || platformGrouping;
+            const key = `${outerGrouping}::${innerGrouping}`;
+            if (!groupMap.has(key)) {
+                groupMap.set(key, {
+                    parentGrouping: outerGrouping,
+                    innerName: innerGrouping,
+                    teams: []
+                });
+            }
+            groupMap.get(key).teams.push(team);
+        }
+    });
+
+    // Convert to array and calculate bounding boxes
+    const groupings = [];
+    const padding = 15; // Smaller padding for inner boxes
+
+    groupMap.forEach((groupData, key) => {
+        const bounds = calculateGroupingBoundingBox(
+            groupData.teams,
+            LAYOUT.TEAM_BOX_HEIGHT,
+            padding,
+            'tt', // View context for dynamic width calculation
+            10    // Small labelAreaHeight for inner groupings
+        );
+
+        groupings.push({
+            name: groupData.innerName,
+            parentGrouping: groupData.parentGrouping,
+            teams: groupData.teams,
+            bounds
+        });
+    });
+
+    return groupings;
+}
+
+/**
  * Filters teams by selected value stream
  * @param {Array} teams - Array of team objects
  * @param {string} selectedValueStream - Value stream to filter by, or "all"
@@ -97,13 +154,10 @@ export function filterTeamsByValueStream(teams, selectedValueStream) {
  * @param {string} currentView - Current view ('current' or 'tt') for dynamic width calculation
  * @returns {Object} Bounding box {x, y, width, height}
  */
-export function calculateGroupingBoundingBox(teams, teamBoxHeight, padding, currentView = 'tt') {
+export function calculateGroupingBoundingBox(teams, teamBoxHeight, padding, currentView = 'tt', labelAreaHeight = 35) {
     if (!teams || teams.length === 0) {
         return { x: 0, y: 0, width: 0, height: 0 };
     }
-
-    // Reserve space for label at top (labelHeight from tt-design-alignment.js)
-    const labelAreaHeight = 35; // Space for grouping label above teams
 
     // Find min/max coordinates
     let minX = Infinity;
@@ -128,4 +182,5 @@ export function calculateGroupingBoundingBox(teams, teamBoxHeight, padding, curr
         width: (maxX - minX) + (padding * 2),
         height: (maxY - minY) + (padding * 2) + labelAreaHeight // Include label area in height
     };
+
 }

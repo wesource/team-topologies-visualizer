@@ -74,6 +74,5 @@ N/A - This is a stream-aligned team that delivers customer-facing features for f
 
 | Team Name | Interaction Mode | Purpose | Duration |
 |-----------|------------------|---------|----------|
-| Route Optimization Platform Team | X-as-a-Service | Route optimization algorithms | Ongoing |
 | Driver Experience Team | Collaboration | Driver-dispatcher communication | Ongoing |
 | Data Storage Platform Team | X-as-a-Service | Fleet data persistence | Ongoing |

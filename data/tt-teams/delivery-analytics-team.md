@@ -3,8 +3,8 @@ team_id: delivery-analytics-team
 name: Delivery Analytics Team
 team_type: complicated-subsystem
 position:
-  x: 430.0
-  y: 869.0
+  x: 321.7847889041305
+  y: 943.6837372351775
 metadata:
   size: 5
   cognitive_load: high
@@ -81,5 +81,4 @@ Also serves some B2C teams as a shared complicated-subsystem capability.
 |-----------|------------------|---------|----------|
 | Route Optimization Platform Team | Collaboration | Integrate demand forecasts into routing | Ongoing |
 | Fleet Monitor Team | X-as-a-Service | Provide prediction data for dashboards | Ongoing |
-| Data Storage Platform Team | X-as-a-Service | Training data access | Ongoing |
 | Observability Platform Team | X-as-a-Service | Model performance monitoring | Ongoing |

@@ -3,8 +3,8 @@ team_id: data-engineering-enablement-team
 name: Data Engineering Enablement Team
 team_type: enabling
 position:
-  x: 100.0
-  y: 100.0
+  x: 98.0
+  y: 264.0
 metadata:
   size: 4
   cognitive_load: medium

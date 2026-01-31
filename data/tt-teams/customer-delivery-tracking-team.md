@@ -78,5 +78,4 @@ N/A - This is a stream-aligned team delivering customer-facing features.
 | Driver Experience Team | Collaboration | Driver-customer communication | Ongoing |
 | Delivery Notifications Team | Collaboration | Push notifications for delivery updates | Ongoing |
 | Mobile Platform Team | X-as-a-Service | CI/CD, analytics, crash reporting | Ongoing |
-| Route Optimization Platform Team | X-as-a-Service | ETA predictions | Ongoing |
 | Feature Management Platform Team | X-as-a-Service | Gradual rollout of map features | Ongoing |

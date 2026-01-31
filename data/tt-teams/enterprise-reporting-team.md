@@ -67,6 +67,5 @@ N/A - This is a stream-aligned team that delivers customer-facing reporting feat
 | Team Name | Interaction Mode | Purpose | Duration |
 |-----------|------------------|---------|----------|
 | Enterprise Fleet Portal Team | Collaboration | Embedded analytics integration | Ongoing |
-| DevOps Enablement Team | Facilitating | Containerization, Kubernetes deployment | 8 weeks (ending Mar 2026) |
 | Data Pipeline Platform Team | X-as-a-Service | ETL pipelines and real-time data | Ongoing |
 | Observability Platform Team | X-as-a-Service | Dashboard and query performance monitoring | Ongoing |

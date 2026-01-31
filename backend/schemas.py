@@ -456,25 +456,45 @@ class TTTeamFrontmatter(BaseModel):
         None,
         description="Value stream the team belongs to (optional)"
     )
+    value_stream_inner: str | None = Field(
+        None,
+        description="Inner grouping within a value stream (planned/experimental)"
+    )
+    platform_grouping_inner: str | None = Field(
+        None,
+        description="Inner grouping within a platform grouping (planned/experimental)"
+    )
+    interactions: list[dict[str, str]] | None = Field(
+        None,
+        description="Team interactions in YAML format. Each interaction should have 'team_id' (kebab-case, e.g., 'payment-processing-team' - recommended for readability) or 'team' (exact team name) and 'interaction_mode' (collaboration|x-as-a-service|facilitating). Both formats are supported for user convenience."
+    )
 
     model_config = ConfigDict(
         json_schema_extra={
             "title": "TT Design Team File",
             "description": """YAML frontmatter for TT Design team markdown files.
 
-            📝 Markdown Section Requirements:
-            After the YAML frontmatter (---), the markdown content should include a 'Teams we currently interact with' section with a table listing interactions with other teams:
+            📝 Interactions YAML Format (in frontmatter):
+            interactions:
+              - team_id: payment-processing-team
+                interaction_mode: x-as-a-service
+                purpose: Provides real-time fraud scoring API
+              - team_id: security-team
+                interaction_mode: collaboration
+                purpose: Co-developing security patterns
+
+            Required fields: 'team_id' (target team identifier), 'interaction_mode' (collaboration|x-as-a-service|facilitating)
+            Optional fields: 'purpose' (description of the interaction)
+
+            📝 Markdown Section (Legacy - for documentation purposes):
+            After the YAML frontmatter (---), the markdown content can include a 'Teams we currently interact with' section with a table:
 
             ## Teams we currently interact with
             | Team Name | Interaction Mode | Purpose | Duration |
             |-----------|------------------|---------|----------|
             | E-commerce Checkout | X-as-a-Service | Provide authentication for checkout flow | Ongoing |
-            | Mobile App Team | Collaboration | Build mobile-specific auth features | 3 months |
-            | DevOps Enablement | Facilitating | Learn Kubernetes deployment patterns | 2 months |
 
-            Columns: Team Name (string), Interaction Mode (Collaboration|X-as-a-Service|Facilitating), Purpose (string describing the interaction), Duration (optional; currently ignored by the app)
-
-            ℹ️ This section is included in both base and extended Team API templates and is important for documenting team interactions.""",
+            ℹ️ The YAML 'interactions' field is the recommended approach. Markdown tables are parsed as fallback but YAML is preferred for programmatic processing.""",
         }
     )
 

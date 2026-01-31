@@ -3,8 +3,8 @@ team_id: mobile-platform-team
 name: Mobile Platform Team
 team_type: platform
 position:
-  x: 1816.9633237744551
-  y: 1046.0
+  x: 1739.8765432098764
+  y: 1227.4814814814815
 metadata:
   size: 6
   cognitive_load: medium
@@ -17,6 +17,12 @@ metadata:
     change_fail_rate: 0.05
     mttr_hours: 2
 value_stream: Mobile Experience
+platform_grouping_inner: Mobile Infrastructure
+interactions:
+- team_id: developer-portal-team
+  interaction_mode: x-as-a-service
+  purpose: Provides mobile SDK, CI/CD, and deployment infrastructure to Developer
+    Portal Team
 ---
 
 # Mobile Platform Team

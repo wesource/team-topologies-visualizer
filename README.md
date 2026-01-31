@@ -87,7 +87,7 @@ Open http://localhost:8000/static/index.html
 - **TT Design**: Model your target Team Topologies structure with:
   - Four team types (Stream-aligned, Platform, Enabling, Complicated Subsystem)
   - Three interaction modes (Collaboration, X-as-a-Service, Facilitating)
-  - Value stream groupings and platform groupings
+  - Value stream groupings and platform groupings (with optional inner groupings for fractal patterns)
 
 **Interactive Visualization:**
 - Drag-and-drop teams, zoom, pan, fit-to-view

@@ -3,8 +3,8 @@ team_id: route-optimization-platform-team
 name: Route Optimization Platform Team
 team_type: complicated-subsystem
 position:
-  x: 910.0
-  y: 869.0
+  x: 596.0234720317026
+  y: 940.6354214296601
 metadata:
   size: 6
   cognitive_load: very-high

@@ -12,7 +12,7 @@ export const INTERACTION_STYLES = {
         color: '#BC1B8D',        // Official magenta (Team-Shape-Templates)
         opacity: 1.0,            // Solid
         width: 2,                // Line width
-        dash: [8, 4]             // Dashed stroke
+        dash: []                 // Solid stroke (not dashed)
     },
     'x-as-a-service': { 
         shape: 'line',           // Simple line with triangle marker
@@ -51,6 +51,28 @@ const PLATFORM_GROUPING_STYLE = {
     labelColor: '#666',
     labelPadding: 10
 };
+
+// Inner grouping styles (darker than outer groupings, per TT book)
+const VALUE_STREAM_INNER_STYLE = {
+    fillColor: 'rgba(255, 210, 120, 0.4)', // Lighter orange/yellow (less brown, more vibrant)
+    strokeColor: 'rgba(240, 180, 90, 0.6)', // Lighter orange border
+    strokeWidth: 1.5, // Thinner stroke (reduced from 2)
+    borderRadius: 0,
+    labelFont: '13px sans-serif', // Smaller, non-bold font (reduced from bold 16px)
+    labelColor: '#666', // Medium gray
+    labelPadding: 3 // Much smaller gap between label and first team (reduced from 8)
+};
+
+const PLATFORM_GROUPING_INNER_STYLE = {
+    fillColor: 'rgba(90, 170, 210, 0.3)', // Lighter blue (less saturated)
+    strokeColor: 'rgba(70, 150, 200, 0.5)', // Lighter blue border
+    strokeWidth: 1.5, // Thinner stroke (reduced from 2)
+    borderRadius: 0,
+    labelFont: '13px sans-serif', // Smaller, non-bold font (reduced from bold 16px)
+    labelColor: '#666', // Medium gray
+    labelPadding: 3 // Much smaller gap between label and first team (reduced from 8)
+};
+
 // Utility to darken a hex color
 export function darkenColor(hex, factor = 0.7) {
     if (!hex || typeof hex !== 'string') return '#333'; // Default dark color
@@ -1018,6 +1040,10 @@ export function drawConnections(ctx, teams, options = {}) {
         // TT Design view: show interaction modes (only if checkbox is enabled)
         teams.forEach(team => {
             if (team.interaction_modes) {
+                // Note: interaction_modes keys can be either team_id (kebab-case) or team name (title case)
+                // - YAML interactions array uses team_id: "payment-processing-team" (user-friendly)
+                // - Markdown tables use Team Name: "Payment Processing Team" (legacy)
+                // Frontend supports both formats for ease of use
                 Object.entries(team.interaction_modes).forEach(([targetName, mode]) => {
                     // Filter based on interaction mode filters (if provided)
                     if (interactionModeFilters) {
@@ -1026,7 +1052,8 @@ export function drawConnections(ctx, teams, options = {}) {
                         if (mode === 'facilitating' && !interactionModeFilters.showFacilitating) return;
                     }
 
-                    const target = teams.find(t => t.name === targetName);
+                    // Support both team_id (kebab-case) and name (title case) for user convenience
+                    const target = teams.find(t => t.team_id === targetName || t.name === targetName);
                     if (target) {
                         drawInteractionMode(ctx, team, target, mode, {
                             currentView,
@@ -1164,12 +1191,12 @@ function drawInteractionMode(ctx, from, to, mode, options = {}) {
     ctx.lineTo(toEdge.x, toEdge.y);
     ctx.stroke();
     
-    // Arrow at edge point for all interaction modes
-    const arrowLength = 10;
+    // Arrow at edge point for all interaction modes (V-shaped, larger size)
+    const arrowLength = 20;
+    ctx.setLineDash([]); // Solid arrow (no dash)
     ctx.beginPath();
-    ctx.moveTo(toEdge.x, toEdge.y);
-    ctx.lineTo(toEdge.x - arrowLength * Math.cos(angle - Math.PI / 6), toEdge.y - arrowLength * Math.sin(angle - Math.PI / 6));
-    ctx.moveTo(toEdge.x, toEdge.y);
+    ctx.moveTo(toEdge.x - arrowLength * Math.cos(angle - Math.PI / 6), toEdge.y - arrowLength * Math.sin(angle - Math.PI / 6));
+    ctx.lineTo(toEdge.x, toEdge.y);
     ctx.lineTo(toEdge.x - arrowLength * Math.cos(angle + Math.PI / 6), toEdge.y - arrowLength * Math.sin(angle + Math.PI / 6));
     ctx.stroke();
     
@@ -1558,6 +1585,96 @@ export function drawPlatformGroupings(ctx, groupings) {
 
         const labelX = x + width / 2;
         const labelY = y + PLATFORM_GROUPING_STYLE.labelPadding;
+
+        ctx.fillText(grouping.name, labelX, labelY);
+    });
+}
+
+/**
+ * Draws value stream inner grouping rectangles (nested boxes)
+ * @param {CanvasRenderingContext2D} ctx - Canvas context
+ * @param {Array} groupings - Array of inner grouping objects from getValueStreamInnerGroupings
+ */
+export function drawValueStreamInnerGroupings(ctx, groupings) {
+    if (!groupings || groupings.length === 0) {
+        return;
+    }
+
+    groupings.forEach(grouping => {
+        const { x, y, width, height } = grouping.bounds;
+
+        // Draw background rectangle with inner grouping style (lighter/subtler)
+        ctx.fillStyle = VALUE_STREAM_INNER_STYLE.fillColor;
+        ctx.strokeStyle = VALUE_STREAM_INNER_STYLE.strokeColor;
+        ctx.lineWidth = VALUE_STREAM_INNER_STYLE.strokeWidth;
+
+        ctx.beginPath();
+        ctx.roundRect(x, y, width, height, VALUE_STREAM_INNER_STYLE.borderRadius);
+        ctx.fill();
+
+        const canSave = typeof ctx.save === 'function' && typeof ctx.restore === 'function';
+        const previousLineCap = ctx.lineCap;
+        if (canSave) ctx.save();
+        if (typeof ctx.setLineDash === 'function') ctx.setLineDash([1, 4]);
+        ctx.lineCap = 'round';
+        ctx.stroke();
+        if (typeof ctx.setLineDash === 'function') ctx.setLineDash([]);
+        ctx.lineCap = previousLineCap;
+        if (canSave) ctx.restore();
+
+        // Draw label at top-center (smaller font, lighter)
+        ctx.fillStyle = VALUE_STREAM_INNER_STYLE.labelColor;
+        ctx.font = VALUE_STREAM_INNER_STYLE.labelFont;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+
+        const labelX = x + width / 2;
+        const labelY = y + VALUE_STREAM_INNER_STYLE.labelPadding;
+
+        ctx.fillText(grouping.name, labelX, labelY);
+    });
+}
+
+/**
+ * Draws platform inner grouping rectangles (nested boxes)
+ * @param {CanvasRenderingContext2D} ctx - Canvas context
+ * @param {Array} groupings - Array of inner grouping objects from getPlatformInnerGroupings
+ */
+export function drawPlatformInnerGroupings(ctx, groupings) {
+    if (!groupings || groupings.length === 0) {
+        return;
+    }
+
+    groupings.forEach(grouping => {
+        const { x, y, width, height } = grouping.bounds;
+
+        // Draw background rectangle with inner grouping style (lighter/subtler)
+        ctx.fillStyle = PLATFORM_GROUPING_INNER_STYLE.fillColor;
+        ctx.strokeStyle = PLATFORM_GROUPING_INNER_STYLE.strokeColor;
+        ctx.lineWidth = PLATFORM_GROUPING_INNER_STYLE.strokeWidth;
+
+        ctx.beginPath();
+        ctx.roundRect(x, y, width, height, PLATFORM_GROUPING_INNER_STYLE.borderRadius);
+        ctx.fill();
+
+        const canSave = typeof ctx.save === 'function' && typeof ctx.restore === 'function';
+        const previousLineCap = ctx.lineCap;
+        if (canSave) ctx.save();
+        if (typeof ctx.setLineDash === 'function') ctx.setLineDash([1, 4]);
+        ctx.lineCap = 'round';
+        ctx.stroke();
+        if (typeof ctx.setLineDash === 'function') ctx.setLineDash([]);
+        ctx.lineCap = previousLineCap;
+        if (canSave) ctx.restore();
+
+        // Draw label at top-center (smaller font, lighter)
+        ctx.fillStyle = PLATFORM_GROUPING_INNER_STYLE.labelColor;
+        ctx.font = PLATFORM_GROUPING_INNER_STYLE.labelFont;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+
+        const labelX = x + width / 2;
+        const labelY = y + PLATFORM_GROUPING_INNER_STYLE.labelPadding;
 
         ctx.fillText(grouping.name, labelX, labelY);
     });

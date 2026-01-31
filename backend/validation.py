@@ -185,7 +185,32 @@ def validate_all_team_files(view: str = "tt") -> dict[str, Any]:
                                             file_issues["warnings"].append(
                                                 f"Team size {size} outside recommended range (5-9 people)"
                                             )
+                            # Check 6b: Inner grouping constraints (TT view only)
+                            if view == "tt":
+                                has_value_stream_inner = 'value_stream_inner' in data and data['value_stream_inner']
+                                has_platform_grouping_inner = 'platform_grouping_inner' in data and data['platform_grouping_inner']
+                                has_value_stream = 'value_stream' in data and data['value_stream']
+                                has_platform_grouping = 'platform_grouping' in data and data['platform_grouping']
 
+                                # C1: Inner requires at least one outer (fractal pattern allows any outer)
+                                if has_value_stream_inner:
+                                    if not has_value_stream and not has_platform_grouping:
+                                        file_issues["errors"].append(
+                                            "value_stream_inner requires either value_stream or platform_grouping to be set"
+                                        )
+
+                                if has_platform_grouping_inner:
+                                    if not has_platform_grouping and not has_value_stream:
+                                        file_issues["errors"].append(
+                                            "platform_grouping_inner requires either platform_grouping or value_stream to be set"
+                                        )
+
+                                # C2: Only one inner field supported
+                                if has_value_stream_inner and has_platform_grouping_inner:
+                                    file_issues["errors"].append(
+                                        "Cannot use both value_stream_inner and platform_grouping_inner. "
+                                        "Choose one inner grouping type."
+                                    )
                             # Check 7: Product line validation (Baseline view only)
                             if view == "baseline" and 'product_line' in data and data['product_line']:
                                 product_line = data['product_line']
@@ -236,23 +261,40 @@ def validate_all_team_files(view: str = "tt") -> dict[str, Any]:
                             if 'interactions' in data:
                                 interactions = data['interactions']
                                 if isinstance(interactions, list):
-                                    for interaction in interactions:
+                                    for idx, interaction in enumerate(interactions):
                                         if isinstance(interaction, dict):
-                                            if 'team' in interaction:
-                                                team_name = interaction['team']
-                                                if team_name not in all_team_names:
-                                                    file_issues["warnings"].append(
-                                                        f"Interaction references unknown team: '{team_name}'"
-                                                    )
-                                            if 'mode' in interaction:
+                                            # Check for correct field names
+                                            team_key = interaction.get('team_id') or interaction.get('team')
+                                            mode_key = interaction.get('interaction_mode') or interaction.get('mode')
+
+                                            # Validate field names are present
+                                            if not team_key:
+                                                file_issues["errors"].append(
+                                                    f"Interaction #{idx+1}: Missing 'team_id' or 'team' field. "
+                                                    f"Use 'team_id' (recommended) or 'team' to specify target team."
+                                                )
+                                            if not mode_key:
+                                                file_issues["errors"].append(
+                                                    f"Interaction #{idx+1}: Missing 'interaction_mode' or 'mode' field. "
+                                                    f"Use 'interaction_mode' (recommended) or 'mode' to specify interaction type."
+                                                )
+
+                                            # Validate team exists
+                                            if team_key and team_key not in all_team_names:
+                                                file_issues["warnings"].append(
+                                                    f"Interaction references unknown team: '{team_key}'"
+                                                )
+
+                                            # Validate mode is correct
+                                            if mode_key:
                                                 valid_modes = ['collaboration', 'x-as-a-service', 'facilitating']
-                                                if interaction['mode'] not in valid_modes:
+                                                if mode_key not in valid_modes:
                                                     file_issues["errors"].append(
-                                                        f"Invalid interaction mode: '{interaction['mode']}' (valid: {', '.join(valid_modes)})"
+                                                        f"Invalid interaction mode: '{mode_key}' (valid: {', '.join(valid_modes)})"
                                                     )
                                         else:
                                             file_issues["errors"].append(
-                                                "Interactions array must contain dict objects with 'team' and 'mode' keys"
+                                                f"Interaction #{idx+1}: Must be a dict with 'team_id' and 'interaction_mode' fields"
                                             )
 
                         # Check 7: Interaction table format (TT view only)

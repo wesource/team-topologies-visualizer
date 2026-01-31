@@ -300,9 +300,18 @@ Capture reality: who you coordinate with, where the friction is, and what’s dr
 
 - `value_stream` (used for value stream groupings)
 - `platform_grouping` (usually only for platform teams)
+- `value_stream_inner` (nested grouping inside a value stream - for fractal patterns)
+- `platform_grouping_inner` (nested grouping inside a platform grouping - for fractal patterns)
 - `interaction_modes` / `interactions` (optional; you can also document interactions in Markdown)
 - `position` (optional; you can drag teams in the UI and the app will store coordinates)
 - `metadata.*` (extra fields like `cognitive_load`, `size`)
+
+**Inner grouping guidance** (for fractal patterns):
+
+When using an `*_inner` field, it’s recommended to only use **one** “outer” grouping on that team:
+
+- If `value_stream_inner` is set, set `value_stream` and leave `platform_grouping` empty.
+- If `platform_grouping_inner` is set, set `platform_grouping` and leave `value_stream` empty.
 
 ##### Minimal TT design example (YAML + Markdown)
 
