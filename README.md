@@ -100,6 +100,7 @@ Open http://localhost:8000/static/index.html
 **Git as Source of Truth:**
 - All team data stored as [Markdown](https://commonmark.org/help/) files with [YAML front matter](docs/concepts.md#team-files-markdown--yaml)
 - Version control your team topology evolution with git
+- Non-developers can edit team files directly in GitHub/GitLab web interface - no local setup needed
 - Snapshots capture point-in-time states for comparison
 - Side-by-side snapshot comparison shows changes over time
 - Team API compatible - aligned to [Team API template](https://github.com/TeamTopologies/Team-API-template)

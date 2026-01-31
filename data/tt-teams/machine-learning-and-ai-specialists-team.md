@@ -3,8 +3,8 @@ team_id: machine-learning-and-ai-specialists-team
 name: Machine Learning & AI Specialists Team
 team_type: complicated-subsystem
 position:
-  x: 77.0
-  y: 87.2018209408194
+  x: 100.0
+  y: 400.0
 metadata:
   size: 6
   cognitive_load: high

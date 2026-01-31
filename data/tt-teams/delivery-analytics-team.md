@@ -3,8 +3,8 @@ team_id: delivery-analytics-team
 name: Delivery Analytics Team
 team_type: complicated-subsystem
 position:
-  x: 321.7847889041305
-  y: 943.6837372351775
+  x: 430.0
+  y: 869.0
 metadata:
   size: 5
   cognitive_load: high

@@ -3,8 +3,8 @@ team_id: mobile-platform-team
 name: Mobile Platform Team
 team_type: platform
 position:
-  x: 1739.8765432098764
-  y: 1227.4814814814815
+  x: 1730.0
+  y: 1046.0
 metadata:
   size: 6
   cognitive_load: medium
