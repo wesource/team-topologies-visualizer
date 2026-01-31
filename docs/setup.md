@@ -198,6 +198,58 @@ Before committing code:
 
 **Tip**: The CI pipeline runs linters and tests automatically, but catching issues locally saves time.
 
+## Handling Dependabot PRs
+
+Dependabot automatically creates PRs to update dependencies. **Never merge PRs with failing CI checks** - test failures indicate breaking changes that need attention.
+
+### Workflow for Dependabot PRs
+
+**✅ Safe to merge:**
+- All CI checks pass (green checkmarks)
+- Tests pass locally when you test the changes
+
+**⚠️ Requires investigation:**
+- Any CI check fails (red X)
+- Linting errors
+- Test failures
+
+**❌ Never merge:**
+- Failing tests
+- Breaking changes without understanding impact
+- Major version bumps without reviewing changelog
+
+### When Tests Fail in a Dependabot PR
+
+1. **Check the dependency being updated**
+   - Look at the PR title (e.g., "Bump vitest from 4.0.16 to 5.0.0")
+   - Note if it's a major, minor, or patch version change
+
+2. **Review the changelog**
+   - Check the dependency's GitHub releases or CHANGELOG
+   - Look for breaking changes, especially for major version bumps
+
+3. **Reproduce locally**
+   ```powershell
+   # Check out the PR branch
+   git fetch origin pull/<PR-NUMBER>/head:dependabot-test
+   git checkout dependabot-test
+   
+   # Install dependencies
+   cd frontend
+   npm ci
+   
+   # Run tests
+   npm test
+   ```
+
+4. **Fix or close:**
+   - **Fix**: Update code/tests to match new API, push to PR branch
+   - **Close**: If it's a bug in the dependency, close PR and wait for upstream fix
+
+### Dependabot Configuration
+
+See [.github/dependabot.yml](.github/dependabot.yml) for update schedule and grouping rules.
+
 ## Data Organization
 
 The `data/` directory has two subdirectories for different visualization purposes:
