@@ -153,9 +153,9 @@ def test_parse_real_team_file_api_gateway():
 
     team = parse_team_file(team_file)
 
-    # Should have parsed dependencies
+    # Should have parsed dependencies (Developer Portal Team provides API metrics)
     assert len(team.dependencies) > 0
-    assert "Security Compliance Team" in team.dependencies
+    assert "Developer Portal Team" in team.dependencies
 
     # Should have interaction modes
     assert len(team.interaction_modes) > 0
