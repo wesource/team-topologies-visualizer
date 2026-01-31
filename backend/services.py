@@ -8,11 +8,12 @@ import yaml
 from backend.models import TeamData
 
 # Data directories
-# TT_TEAMS_VARIANT environment variable allows switching between TT design variants:
+# TT_DESIGN_VARIANT environment variable allows switching between TT design variants:
 # - "tt-teams" (default) - Mid-stage transformation with multiple platforms and value streams
 # - "tt-teams-initial" - Simplified first-step transformation (3-6 months)
-TT_TEAMS_VARIANT = os.getenv("TT_TEAMS_VARIANT", "tt-teams")
-TT_TEAMS_DIR = Path(f"data/{TT_TEAMS_VARIANT}")
+# - Or use custom folder names for your own design variants (e.g., "tt-design-proposal-a")
+TT_DESIGN_VARIANT = os.getenv("TT_DESIGN_VARIANT", "tt-teams")
+TT_TEAMS_DIR = Path(f"data/{TT_DESIGN_VARIANT}")
 BASELINE_TEAMS_DIR = Path("data/baseline-teams")
 TT_TEAMS_DIR.mkdir(parents=True, exist_ok=True)
 BASELINE_TEAMS_DIR.mkdir(parents=True, exist_ok=True)

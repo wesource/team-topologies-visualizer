@@ -110,37 +110,44 @@ docker run -p 8000:8000 -e READ_ONLY_MODE=true team-topologies-viz
 
 Demo mode displays a banner and blocks all write operations (position updates, snapshot creation) while allowing full interaction with the visualization.
 
-## Example Data Set Variants
+## TT Design Data Variants
 
-The repo includes **two example TT design data sets** (mid-stage and first-step transformations). See **[EXAMPLE_DATA.md](EXAMPLE_DATA.md)** for detailed explanation of each example data set variant and when to use them.
+You can maintain multiple TT design variants in parallel folders and switch between them using the `TT_DESIGN_VARIANT` environment variable.
 
-**To switch example data set variants**, set the `TT_TEAMS_EXAMPLE_VARIANT` environment variable:
+**Example use cases:**
+- Comparing different design proposals (e.g., `tt-design-proposal-a` vs `tt-design-proposal-b`)
+- Tracking evolution over time (e.g., `tt-design-2024-q1`, `tt-design-2024-q2`)
+- This repo includes two example variants: mid-stage (`tt-teams`, default) and first-step (`tt-teams-initial`) transformations
+
+See **[example_data.md](example_data.md)** for details on the included example variants.
+
+**To switch between TT design variants**, set the `TT_DESIGN_VARIANT` environment variable:
 
 **Local (Linux/Mac):**
 
 ```bash
-export TT_TEAMS_EXAMPLE_VARIANT=tt-teams-initial
+export TT_DESIGN_VARIANT=tt-teams-initial
 python -m uvicorn main:app --reload
 ```
 
 **Local (Windows PowerShell):**
 
 ```powershell
-$env:TT_TEAMS_EXAMPLE_VARIANT="tt-teams-initial"
+$env:TT_DESIGN_VARIANT="tt-teams-initial"
 python -m uvicorn main:app --reload
 ```
 
 **Docker/Podman:**
 
 ```bash
-docker run -p 8000:8000 -e TT_TEAMS_EXAMPLE_VARIANT=tt-teams-initial team-topologies-viz
+docker run -p 8000:8000 -e TT_DESIGN_VARIANT=tt-teams-initial team-topologies-viz
 ```
 
-If `TT_TEAMS_EXAMPLE_VARIANT` is not set, the app uses the default example data set.
+If `TT_DESIGN_VARIANT` is not set, the app uses the default folder (`tt-teams`).
 
 ## Testing
 
-See [TESTING.md](TESTING.md) for the full testing guide (pytest + Vitest + Playwright), including debugging tips.
+See [testing.md](testing.md) for the full testing guide (pytest + Vitest + Playwright), including debugging tips.
 
 Quick start:
 
@@ -461,7 +468,7 @@ If the container is already running (see setup above), just open:
 
 ## Usage
 
-See [USAGE.md](USAGE.md) for a UI walkthrough (switching views, dragging/zooming, validation).
+See [usage.md](usage.md) for a UI walkthrough (switching views, dragging/zooming, validation).
 
 ## Team Files
 

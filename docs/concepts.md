@@ -274,7 +274,7 @@ Two dataset variants are available:
 - **First-step transformation** (~20 teams) - Initial 3-6 months
 - **Mid-stage transformation** (~34 teams, default) - More mature design
 
-For the complete story, transformation details, and how to switch between variants, see **[EXAMPLE_DATA.md](EXAMPLE_DATA.md)**.
+For the complete story, transformation details, and how to switch between variants, see **[example_data.md](example_data.md)**.
 
 ## References
 

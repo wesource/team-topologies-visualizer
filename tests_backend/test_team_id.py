@@ -192,7 +192,7 @@ Second team.
 
 def test_find_team_by_id_success():
     """find_team_by_id should find team with matching team_id"""
-    # Get the first team from the data directory (works with any TT_TEAMS_EXAMPLE_VARIANT)
+    # Get the first team from the data directory (works with any TT_DESIGN_VARIANT)
     from backend.services import find_all_teams
     teams = find_all_teams("tt")
 

@@ -10,6 +10,8 @@ See [docs/concepts.md](docs/concepts.md#the-tools-two-views) for view details an
 
 This tool is inspired by **Team Topologies** by Matthew Skelton and Manuel Pais — see https://teamtopologies.com/key-concepts for a summary of key concepts, and more references at the end of this README.
 
+It’s meant to support the journey (making structures visible and discussable), not replace the real organizational work — you’ll still want to learn and apply the principles from the book and other resources.
+
 > **Note**: This project was built with extensive AI assistance (GitHub Copilot + Claude). As a non-native Python and JavaScript developer, this AI-driven co-creation approach enabled me to use tools and techniques — including Python tooling/libraries, Canvas rendering, and comprehensive test automation — in ways that would have taken much longer solo.
 
 ## Why This Tool?
@@ -75,7 +77,7 @@ docker run -p 8000:8000 -v ./data:/app/data team-topologies-viz
 
 Open http://localhost:8000/static/index.html
 
-**Full setup instructions**: See [docs/setup.md](docs/setup.md) for detailed installation, configuration, Docker/Podman options, demo mode, and example data variants.
+**Full setup instructions**: See [docs/setup.md](docs/setup.md) for detailed installation, configuration, Docker/Podman options, demo mode, and TT design data variants.
 
 ## Key Features
 
@@ -114,10 +116,10 @@ Open http://localhost:8000/static/index.html
 
 | Document | Description |
 |----------|-------------|
-| [docs/setup.md](docs/setup.md) | Installation, configuration, Docker/Podman, demo mode, example data set variants |
+| [docs/setup.md](docs/setup.md) | Installation, configuration, Docker/Podman, demo mode, TT design data variants |
 | [docs/usage.md](docs/usage.md) | UI walkthrough (views, dragging/zooming, filters, validation) |
 | [docs/concepts.md](docs/concepts.md) | Team Topologies concepts and how they map to the tool |
-| [docs/example_data.md](docs/example_data.md) | Example organization, transformation story, example data set variants |
+| [docs/example_data.md](docs/example_data.md) | Example organization, transformation story, TT design data set variants |
 | [docs/auto-align.md](docs/auto-align.md) | Auto-align feature, alignment hints, 3×2 grid layout |
 | [docs/development.md](docs/development.md) | Developer workflow, testing, linting |
 | [docs/testing.md](docs/testing.md) | Testing guide (pytest, Vitest, Playwright) |
@@ -145,11 +147,11 @@ Includes a fictitious organization (**LogiCore Systems**) to illustrate typical 
 
 **Two example TT design data sets**: Mid-stage transformation (default, ~34 teams) and first-step transformation (optional, ~20 teams) showing realistic progression.
 
-See **[docs/example_data.md](docs/example_data.md)** for the complete story, how to switch example data set variants, and detailed comparison.
+See **[docs/example_data.md](docs/example_data.md)** for the complete story, how to switch TT design data set variants, and detailed comparison.
 
 **Data Management**: All team data is stored as markdown files in `data/`. Use git for version control and backup - commit regularly to preserve your team topology designs.
 
-**Disclaimer**: All example data (company/team/product names, technical details) is entirely fictitious for demonstration purposes.
+**Disclaimer**: All example data (company/team/product names, technical details) is entirely fictitious for demonstration purposes. The example TT design data sets are not intended as "perfect" or prescriptive implementations of Team Topologies — they serve primarily to demonstrate the tool's visualization capabilities and show how concepts could be represented. And as usual, real organizational transformations require deep context and expert guidance — a tool can never replace that.
 
 ## Testing
 

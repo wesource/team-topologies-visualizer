@@ -69,4 +69,4 @@ Validation endpoints:
 
 See [SETUP.md](SETUP.md#using-team-templates) for the available templates and the recommended copy → edit → validate workflow.
 
-For a deeper overview of the team file format, see [CONCEPTS.md](CONCEPTS.md).
+For a deeper overview of the team file format, see [concepts.md](concepts.md).
