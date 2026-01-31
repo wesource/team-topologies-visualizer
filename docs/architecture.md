@@ -56,6 +56,22 @@ Additional renderers (e.g. product lines, value streams) live under `frontend/re
 - Lower learning curve for contributors
 - TypeScript was evaluated but added more complexity than value for single-maintainer learning project
 
+**State Management Approach**
+
+The app uses a single centralized state object (`state-management.js`) rather than split modules per view (Baseline vs TT Design). This is a deliberate trade-off:
+
+*Why single state object:*
+- Avoids synchronization issues that arise in vanilla JS when multiple state modules need to share properties (canvas, teams, scale)
+- Without a reactive framework (React/Vue/Svelte), split state can lead to subtle bugs where one module updates but another doesn't
+- Only ~10 files import from state - coupling is manageable
+
+*How we maintain readability:*
+- State is organized into logical groups with clear visual separators (canvas, view selection, team data, baseline-specific, TT-specific, UI state, interaction state)
+- JSDoc types document every property with expected types
+- Group comments explain which properties belong to which view
+
+*If complexity grows:* Consider a reactive state library (like Zustand or custom pub/sub) rather than splitting into modules without coordination.
+
 ## Data Storage
 
 - **Markdown files with YAML front matter** - Human-readable, git-friendly team data
@@ -84,4 +100,4 @@ Some power-user features already exist (e.g., undo/redo and keyboard shortcuts).
 - Consider adding integration tests for API endpoints
 - Improve error handling in frontend (more specific error messages)
 - Add input validation for manual JSON/YAML editing
-- Consider adding a proper state management solution if complexity grows
+- ~~Consider adding a proper state management solution if complexity grows~~ → Addressed via JSDoc types and logical groupings (see State Management Approach above)

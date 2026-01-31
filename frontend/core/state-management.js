@@ -1,58 +1,172 @@
 /**
  * Application State Management
  * Centralized state for the Team Topologies Visualizer
+ * 
+ * State is organized into logical groups:
+ * - CANVAS: Rendering context shared across all views
+ * - VIEW SELECTION: Which view/perspective is active
+ * - TEAM DATA: Teams and type configuration (shared, content differs per view)
+ * - BASELINE-SPECIFIC: Organization hierarchy, product lines, business streams
+ * - TT DESIGN-SPECIFIC: Filters, interaction modes, snapshots, comparison
+ * - UI STATE: Display toggles and overlays
+ * - INTERACTION: Focus mode, undo history
+ * 
+ * Design decision: Single state object with logical groupings rather than
+ * split modules. This avoids synchronization complexity in vanilla JS while
+ * maintaining readability through JSDoc types and visual organization.
+ * See docs/architecture.md for rationale.
  */
 import { getTeamBoxWidth, getTeamBoxHeight } from '../rendering/renderer-common.js';
 import { LAYOUT } from './constants.js';
 
+/**
+ * @typedef {Object} Position
+ * @property {number} x - X coordinate
+ * @property {number} y - Y coordinate
+ */
+
+/**
+ * @typedef {Object} Team
+ * @property {string} team_id - Unique identifier
+ * @property {string} name - Display name
+ * @property {string} team_type - Team type ID
+ * @property {Position} [position] - Canvas position
+ * @property {string} [value_stream] - Value stream grouping (TT Design)
+ * @property {string} [platform_grouping] - Platform grouping (TT Design)
+ * @property {string} [product_line] - Product line (Baseline)
+ * @property {string} [business_stream] - Business stream (Baseline)
+ * @property {Object} [metadata] - Additional metadata
+ */
+
+/**
+ * @typedef {Object} TeamTypeConfig
+ * @property {Array<{id: string, name: string, color: string, description: string}>} team_types
+ */
+
+/**
+ * @typedef {Object} SelectedFilters
+ * @property {string[]} valueStreams - Selected value stream names
+ * @property {string[]} platformGroupings - Selected platform grouping names
+ * @property {boolean} showUngrouped - Show only ungrouped teams
+ */
+
+/**
+ * @typedef {Object} InteractionModeFilters
+ * @property {boolean} showXasService - Show X-as-a-Service interactions
+ * @property {boolean} showCollaboration - Show Collaboration interactions
+ * @property {boolean} showFacilitating - Show Facilitating interactions
+ */
+
+/**
+ * @typedef {Object} PositionSnapshot
+ * @property {number} timestamp - When snapshot was taken
+ * @property {string} view - Which view ('tt' or 'current')
+ * @property {Array<{name: string, x: number, y: number}>} teams - Team positions
+ */
+
 // Application state object
 export const state = {
+    // ═══════════════════════════════════════════════════════════════════════
+    // CANVAS - Rendering context (shared across all views)
+    // ═══════════════════════════════════════════════════════════════════════
+    /** @type {HTMLCanvasElement|null} */
     canvas: null,
+    /** @type {CanvasRenderingContext2D|null} */
     ctx: null,
-    teams: [],
-    organizationHierarchy: null,
-    productLinesData: null, // Product lines view data
-    businessStreamsData: null, // Business streams view data (Baseline only)
-    productLinesTeamPositions: new Map(), // Track team positions in product lines view for click detection
-    businessStreamsTeamPositions: new Map(), // Track team positions in business streams view for click detection
-    currentPerspective: 'hierarchy', // 'hierarchy', 'product-lines', or 'business-streams' (Baseline only)
-    selectedTeam: null,
-    viewOffset: { x: 0, y: 0 },
+    /** @type {number} Zoom level (1 = 100%) */
     scale: 1,
+    /** @type {Position} Pan offset for canvas viewport */
+    viewOffset: { x: 0, y: 0 },
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // VIEW SELECTION - Which view/perspective is currently active
+    // ═══════════════════════════════════════════════════════════════════════
+    /** @type {'tt'|'current'} Main view: 'tt' = TT Design, 'current' = Baseline */
     currentView: 'tt',
+    /** @type {'hierarchy'|'product-lines'|'business-streams'} Baseline perspective */
+    currentPerspective: 'hierarchy',
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // TEAM DATA - Shared structure, content differs per view
+    // ═══════════════════════════════════════════════════════════════════════
+    /** @type {Team[]} Currently loaded teams */
+    teams: [],
+    /** @type {Team|null} Currently selected team (for details panel) */
+    selectedTeam: null,
+    /** @type {TeamTypeConfig} Team type definitions with colors */
     teamTypeConfig: { team_types: [] },
+    /** @type {Object<string, string>} Map of team type ID to color */
     teamColorMap: {},
+    /** @type {Function|null} Callback for team double-click */
     onTeamDoubleClick: null,
-    showConnections: false,
-    showCognitiveLoad: false, // Cognitive load indicators disabled by default
-    showPlatformConsumers: false, // Platform consumer dashboard disabled by default (TT Design view only)
-    showFlowMetrics: false, // Flow metrics overlay disabled by default (optional canvas visualization)
-    showTeamTypeBadges: false, // Team type badges (Feature/Platform/etc) in product lines view, disabled by default
-    selectedGrouping: 'all', // Legacy format: 'all', 'vs:ValueStreamName', 'pg:PlatformGroupingName'
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // BASELINE-SPECIFIC - Organization hierarchy, product lines, business streams
+    // ═══════════════════════════════════════════════════════════════════════
+    /** @type {Object|null} Organization hierarchy data (company → depts → managers) */
+    organizationHierarchy: null,
+    /** @type {Object|null} Product lines perspective data */
+    productLinesData: null,
+    /** @type {Object|null} Business streams perspective data */
+    businessStreamsData: null,
+    /** @type {Map<string, {x: number, y: number, width: number, height: number}>} Team positions in product lines view */
+    productLinesTeamPositions: new Map(),
+    /** @type {Map<string, {x: number, y: number, width: number, height: number}>} Team positions in business streams view */
+    businessStreamsTeamPositions: new Map(),
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // TT DESIGN-SPECIFIC - Filters, snapshots, comparison
+    // ═══════════════════════════════════════════════════════════════════════
+    /** @type {string} Legacy grouping format: 'all', 'vs:Name', 'pg:Name' */
+    selectedGrouping: 'all',
+    /** @type {SelectedFilters} Active value stream and platform grouping filters */
     selectedFilters: {
-        valueStreams: [], // Array of selected value stream names
-        platformGroupings: [], // Array of selected platform grouping names
-        showUngrouped: false // Show only ungrouped teams (teams without value_stream or platform_grouping)
+        valueStreams: [],
+        platformGroupings: [],
+        showUngrouped: false
     },
-    // Interaction mode filters (TT Design view only)
+    /** @type {InteractionModeFilters} Which interaction types to show */
     interactionModeFilters: {
-        showXasService: true, // Show X-as-a-Service interactions
-        showCollaboration: true, // Show Collaboration interactions
-        showFacilitating: true // Show Facilitating interactions
+        showXasService: true,
+        showCollaboration: true,
+        showFacilitating: true
     },
-    // Snapshot state
+    /** @type {boolean} Whether viewing a historical snapshot */
     isViewingSnapshot: false,
+    /** @type {Object|null} Currently loaded snapshot data */
     currentSnapshot: null,
+    /** @type {Object|null} Metadata for current snapshot */
     snapshotMetadata: null,
-    // Comparison state
+    /** @type {boolean} Whether comparing two snapshots */
     isComparingSnapshots: false,
+    /** @type {Object|null} Comparison data (before/after snapshots + diff) */
     comparisonData: null,
-    // Position history for undo functionality
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // UI STATE - Display toggles and overlays
+    // ═══════════════════════════════════════════════════════════════════════
+    /** @type {boolean} Show dependency/interaction lines */
+    showConnections: false,
+    /** @type {boolean} Show cognitive load indicators */
+    showCognitiveLoad: false,
+    /** @type {boolean} Show platform consumer dashboard (TT Design only) */
+    showPlatformConsumers: false,
+    /** @type {boolean} Show flow metrics overlay */
+    showFlowMetrics: false,
+    /** @type {boolean} Show team type badges in product lines view (Baseline) */
+    showTeamTypeBadges: false,
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // INTERACTION STATE - Focus mode, undo history
+    // ═══════════════════════════════════════════════════════════════════════
+    /** @type {Team|null} Team in focus mode (dims other teams) */
+    focusedTeam: null,
+    /** @type {Set<string>} Team names connected to focused team */
+    focusedConnections: new Set(),
+    /** @type {PositionSnapshot[]} Position history for undo */
     positionHistory: [],
-    maxHistorySize: 10, // Keep last 10 position changes
-    // Focus mode state
-    focusedTeam: null, // Team object or null
-    focusedConnections: new Set() // Set of team names in focus network
+    /** @type {number} Maximum undo history size */
+    maxHistorySize: 10
 };
 
 // Interaction handler (initialized in app.js)
