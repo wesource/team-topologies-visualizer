@@ -4,7 +4,7 @@ name: Driver Feedback Team
 team_type: stream-aligned
 position:
   x: 1730.0
-  y: 539.771196186834
+  y: 540.0
 metadata:
   size: 5
   cognitive_load: low

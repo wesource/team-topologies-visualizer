@@ -70,8 +70,8 @@ async def update_team_position(team_id: str, position: PositionUpdate):
 
     team, file_path = result
 
-    # Update only the position
-    team.position = {"x": position.x, "y": position.y}
+    # Update only the position (rounded to integers for clean coordinates)
+    team.position = {"x": round(position.x), "y": round(position.y)}
 
     # Write back to the same file location
     write_team_file_to_path(team, file_path)

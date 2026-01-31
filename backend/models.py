@@ -35,7 +35,7 @@ class TeamData(BaseModel):
     line_manager: str | None = None  # For current org structure
     product_line: str | None = None  # For Product Lines view (Baseline only)
     business_stream: str | None = None  # For Business Streams view (Baseline only)
-    position: dict[str, float] | None = {"x": 0, "y": 0}
+    position: dict[str, int] | None = {"x": 0, "y": 0}
     metadata: dict[str, Any] | None = {}  # Can include align_hint_x ('left'/'center'/'right') and align_hint_y ('top'/'bottom') - optional positioning hints for auto-align
     # Team API fields (optional, for TT Design teams)
     team_api: TeamAPI | None = None
@@ -65,8 +65,8 @@ class TeamData(BaseModel):
 
 class PositionUpdate(BaseModel):
     """Model for updating team position on canvas"""
-    x: float
-    y: float
+    x: int
+    y: int
 
 
 # Snapshot models
