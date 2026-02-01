@@ -8,6 +8,9 @@ import { getPlatformGroupings, getPlatformInnerGroupings } from '../tt-concepts/
 import { getFilteredTeams } from '../core/state-management.js';
 import { calculatePlatformConsumers } from '../tt-concepts/platform-metrics.js';
 
+// Organizational structure team types that should only appear in hierarchy, not as separate boxes
+const ORGANIZATION_STRUCTURE_TYPES = ['executive', 'leadership', 'department', 'region', 'division'];
+
 /**
  * Main draw function - renders entire canvas
  * @param {Object} state - Application state
@@ -103,8 +106,12 @@ export function draw(state) {
             });
         }
 
-        // Draw teams
-        teamsToRender.forEach(team => {
+        // Draw teams (exclude organizational structure teams in hierarchy view)
+        const teamsToDrawAsBoxes = (state.currentView === 'current' && state.currentPerspective === 'hierarchy')
+            ? teamsToRender.filter(team => !ORGANIZATION_STRUCTURE_TYPES.includes(team.team_type))
+            : teamsToRender;
+
+        teamsToDrawAsBoxes.forEach(team => {
             // Calculate platform metrics ONLY when:
             // 1. In TT Design view
             // 2. Checkbox is enabled

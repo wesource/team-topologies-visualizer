@@ -1009,6 +1009,9 @@ export function drawConnections(ctx, teams, options = {}) {
 
     if (currentView === 'current') {
         // Current State view: show simple "Actual Comms" from dependencies
+        // Track drawn connections to avoid duplicates (bidirectional)
+        const drawnConnections = new Set();
+        
         teams.forEach(team => {
             if (team.dependencies && Array.isArray(team.dependencies)) {
                 // Debug logging for specific team
@@ -1018,13 +1021,20 @@ export function drawConnections(ctx, teams, options = {}) {
                 team.dependencies.forEach(targetName => {
                     const target = teams.find(t => t.name === targetName);
                     if (target) {
-                        drawActualCommsConnection(ctx, team, target, {
-                            currentView,
-                            currentPerspective,
-                            customTeamPositions,
-                            focusedTeam,
-                            focusedConnections
-                        });
+                        // Create normalized connection key (alphabetically sorted to avoid duplicates)
+                        const connectionKey = [team.name, target.name].sort().join('<=>');
+                        
+                        // Only draw if we haven't drawn this connection yet
+                        if (!drawnConnections.has(connectionKey)) {
+                            drawnConnections.add(connectionKey);
+                            drawActualCommsConnection(ctx, team, target, {
+                                currentView,
+                                currentPerspective,
+                                customTeamPositions,
+                                focusedTeam,
+                                focusedConnections
+                            });
+                        }
                     } else {
                         // Only show each unique warning once to avoid console spam
                         const warningKey = `${team.name}:${targetName}`;
@@ -1330,16 +1340,25 @@ function drawActualCommsConnection(ctx, from, to, options = {}) {
     ctx.lineTo(lineToX, lineToY);
     ctx.stroke();
 
-    // Draw arrows ON TOP of line for visibility
+    // Draw arrows ON TOP of line for visibility (bidirectional - arrows at both ends)
     ctx.fillStyle = '#000000';
     ctx.strokeStyle = '#000000';
     ctx.lineWidth = 1;
 
-    // Filled arrow triangle at 'to' end (unidirectional - only arrow at dependency target)
+    // Filled arrow triangle at 'to' end
     ctx.beginPath();
     ctx.moveTo(toEdge.x, toEdge.y);
     ctx.lineTo(toEdge.x - arrowLength * Math.cos(angle - Math.PI / 6), toEdge.y - arrowLength * Math.sin(angle - Math.PI / 6));
     ctx.lineTo(toEdge.x - arrowLength * Math.cos(angle + Math.PI / 6), toEdge.y - arrowLength * Math.sin(angle + Math.PI / 6));
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Filled arrow triangle at 'from' end (bidirectional)
+    ctx.beginPath();
+    ctx.moveTo(fromEdge.x, fromEdge.y);
+    ctx.lineTo(fromEdge.x + arrowLength * Math.cos(angle - Math.PI / 6), fromEdge.y + arrowLength * Math.sin(angle - Math.PI / 6));
+    ctx.lineTo(fromEdge.x + arrowLength * Math.cos(angle + Math.PI / 6), fromEdge.y + arrowLength * Math.sin(angle + Math.PI / 6));
     ctx.closePath();
     ctx.fill();
     ctx.stroke();

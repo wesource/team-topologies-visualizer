@@ -6,6 +6,12 @@ import { getPlatformGroupings, getPlatformInnerGroupings } from '../tt-concepts/
 // SVG Export Module - Separated from runtime rendering
 // Converts current visualization state to downloadable SVG
 export function exportToSVG(state, organizationHierarchy, teams, teamColorMap, currentView, showInteractionModes = true, showConnections = false) {
+    // Extract interaction mode filters from state (respects UI toggles)
+    const interactionModeFilters = state.interactionModeFilters || {
+        showXasService: true,
+        showCollaboration: true,
+        showFacilitating: true
+    };
     // Handle product-lines and business-streams perspectives
     const isBaselineView = currentView === 'current';
     const isProductLines = isBaselineView && state.currentPerspective === 'product-lines';
@@ -97,7 +103,7 @@ export function exportToSVG(state, organizationHierarchy, teams, teamColorMap, c
     } else if (currentView === 'current' && isBusinessStreams && state.businessStreamsData) {
         svg += generateBusinessStreamsSVG(state.businessStreamsData, teamColorMap, showConnections);
     } else if (currentView === 'current' && organizationHierarchy) {
-        svg += generateCurrentStateSVG(organizationHierarchy, teams, teamColorMap);
+        svg += generateCurrentStateSVG(organizationHierarchy, teams, teamColorMap, showConnections);
     } else {
         svg += generateTTVisionSVG(teams, teamColorMap, showInteractionModes);
     }
@@ -124,7 +130,7 @@ export function exportToSVG(state, organizationHierarchy, teams, teamColorMap, c
 
     downloadSVG(svg, filename);
 }
-function generateCurrentStateSVG(organizationHierarchy, teams, teamColorMap) {
+function generateCurrentStateSVG(organizationHierarchy, teams, teamColorMap, showConnections = false) {
     let elements = '';
     const startX = 150; // Match renderer-current.js
     const startY = LAYOUT.COMPANY_Y;
@@ -227,6 +233,61 @@ function generateCurrentStateSVG(organizationHierarchy, teams, teamColorMap) {
             });
         }
     });
+    
+    // Draw baseline connections (dependencies) if enabled
+    if (showConnections) {
+        const drawnConnections = new Set();
+        teams.forEach(team => {
+            if (team.dependencies && Array.isArray(team.dependencies)) {
+                team.dependencies.forEach(targetName => {
+                    const target = teams.find(t => t.name === targetName);
+                    if (target) {
+                        // Create normalized connection key to avoid duplicates
+                        const connectionKey = [team.name, target.name].sort().join('<=>');
+                        if (!drawnConnections.has(connectionKey)) {
+                            drawnConnections.add(connectionKey);
+                            
+                            const fromWidth = 144;  // LAYOUT.TEAM_BOX_WIDTH
+                            const fromHeight = 80;  // LAYOUT.TEAM_BOX_HEIGHT
+                            const toWidth = 144;
+                            const toHeight = 80;
+                            
+                            const fromCenterX = team.position.x + fromWidth / 2;
+                            const fromCenterY = team.position.y + fromHeight / 2;
+                            const toCenterX = target.position.x + toWidth / 2;
+                            const toCenterY = target.position.y + toHeight / 2;
+                            
+                            const angle = Math.atan2(toCenterY - fromCenterY, toCenterX - fromCenterX);
+                            
+                            // Calculate edge points instead of using centers
+                            const fromEdge = getSVGBoxEdgePoint(fromCenterX, fromCenterY, fromWidth, fromHeight, angle);
+                            const toEdge = getSVGBoxEdgePoint(toCenterX, toCenterY, toWidth, toHeight, angle + Math.PI);
+                            
+                            // Draw line
+                            elements += `<line x1="${fromEdge.x}" y1="${fromEdge.y}" x2="${toEdge.x}" y2="${toEdge.y}" stroke="#000000" stroke-width="2" />`;
+                            
+                            // Draw bidirectional arrows at edge points
+                            const arrowSize = 20;
+                            // Arrow at 'to' edge
+                            const toArrowX1 = toEdge.x - arrowSize * Math.cos(angle - Math.PI / 6);
+                            const toArrowY1 = toEdge.y - arrowSize * Math.sin(angle - Math.PI / 6);
+                            const toArrowX2 = toEdge.x - arrowSize * Math.cos(angle + Math.PI / 6);
+                            const toArrowY2 = toEdge.y - arrowSize * Math.sin(angle + Math.PI / 6);
+                            elements += `<polygon points="${toEdge.x},${toEdge.y} ${toArrowX1},${toArrowY1} ${toArrowX2},${toArrowY2}" fill="#000000" stroke="#000000" stroke-width="1" />`;
+                            
+                            // Arrow at 'from' edge
+                            const fromArrowX1 = fromEdge.x + arrowSize * Math.cos(angle - Math.PI / 6);
+                            const fromArrowY1 = fromEdge.y + arrowSize * Math.sin(angle - Math.PI / 6);
+                            const fromArrowX2 = fromEdge.x + arrowSize * Math.cos(angle + Math.PI / 6);
+                            const fromArrowY2 = fromEdge.y + arrowSize * Math.sin(angle + Math.PI / 6);
+                            elements += `<polygon points="${fromEdge.x},${fromEdge.y} ${fromArrowX1},${fromArrowY1} ${fromArrowX2},${fromArrowY2}" fill="#000000" stroke="#000000" stroke-width="1" />`;
+                        }
+                    }
+                });
+            }
+        });
+    }
+    
     return elements;
 }
 
@@ -260,7 +321,10 @@ function generateProductLinesSVG(productLinesData, teamColorMap, showConnections
             const teamY = startY + PRODUCT_HEADER_HEIGHT + 20 + teamIndex * (TEAM_CARD_HEIGHT + TEAM_CARD_SPACING);
             teamPositions.set(team.name, {
                 x: teamX + (PRODUCT_LANE_WIDTH - 40) / 2,
-                y: teamY + TEAM_CARD_HEIGHT / 2
+                y: teamY + TEAM_CARD_HEIGHT / 2,
+                width: PRODUCT_LANE_WIDTH - 40,
+                height: TEAM_CARD_HEIGHT,
+                team: team
             });
         });
     });
@@ -278,7 +342,10 @@ function generateProductLinesSVG(productLinesData, teamColorMap, showConnections
         const teamX = teamStartX + index * (SHARED_TEAM_WIDTH + SHARED_TEAM_SPACING);
         teamPositions.set(team.name, {
             x: teamX + SHARED_TEAM_WIDTH / 2,
-            y: teamY + 30
+            y: teamY + 30,
+            width: SHARED_TEAM_WIDTH,
+            height: 60,
+            team: team
         });
     });
 
@@ -311,26 +378,7 @@ function generateProductLinesSVG(productLinesData, teamColorMap, showConnections
     elements += `<rect x="${startX}" y="${sharedRowY + headerHeight}" width="${totalWidth}" height="${SHARED_ROW_HEIGHT}" fill="#f8f9fa" rx="0" ry="0"/>`;
     elements += `<rect x="${startX}" y="${sharedRowY}" width="${totalWidth}" height="${headerHeight + SHARED_ROW_HEIGHT}" fill="none" stroke="#7f8c8d" stroke-width="2" rx="0" ry="0"/>`;
 
-    // Draw communication lines (above product/shared boxes, below teams) - only if enabled
-    if (showConnections) {
-        const allTeams = [...products.flatMap(p => p.teams), ...sharedTeams];
-        allTeams.forEach(team => {
-            if (team.dependencies && team.dependencies.length > 0) {
-                const fromPos = teamPositions.get(team.name);
-                if (!fromPos) return;
-
-                team.dependencies.forEach(targetName => {
-                    const toPos = teamPositions.get(targetName);
-                    if (!toPos) return;
-
-                    // Draw line
-                    elements += `<line x1="${fromPos.x}" y1="${fromPos.y}" x2="${toPos.x}" y2="${toPos.y}" stroke="#95a5a6" stroke-width="2" opacity="0.6"/>`;
-                });
-            }
-        });
-    }
-
-    // Now draw teams on top of everything
+    // Draw teams first
     products.forEach((product, index) => {
         const laneX = startX + index * (PRODUCT_LANE_WIDTH + PRODUCT_LANE_PADDING);
 
@@ -356,6 +404,61 @@ function generateProductLinesSVG(productLinesData, teamColorMap, showConnections
         elements += `<rect x="${teamX}" y="${teamY}" width="${SHARED_TEAM_WIDTH}" height="60" fill="none" stroke="${darkenColor(teamColor, 0.7)}" stroke-width="2" rx="0" ry="0"/>\n`;
         elements += `<text x="${teamX + SHARED_TEAM_WIDTH / 2}" y="${teamY + 35}" class="team-text" font-size="11" fill="#000">${escapeXml(team.name)}</text>\n`;
     });
+
+    // NOW draw communication lines ON TOP of teams so arrows are visible
+    if (showConnections) {
+        const allTeams = [...products.flatMap(p => p.teams), ...sharedTeams];
+        const drawnConnections = new Set();
+        
+        allTeams.forEach(team => {
+            if (team.dependencies && team.dependencies.length > 0) {
+                const fromPos = teamPositions.get(team.name);
+                if (!fromPos) return;
+
+                team.dependencies.forEach(targetName => {
+                    const toPos = teamPositions.get(targetName);
+                    if (!toPos) return;
+                    
+                    // Prevent duplicate lines (normalize connection key)
+                    const connectionKey = [team.name, targetName].sort().join('|');
+                    if (drawnConnections.has(connectionKey)) return;
+                    drawnConnections.add(connectionKey);
+
+                    // Use stored center points (already calculated)
+                    const fromCenterX = fromPos.x;
+                    const fromCenterY = fromPos.y;
+                    const toCenterX = toPos.x;
+                    const toCenterY = toPos.y;
+
+                    // Calculate angle for edge points
+                    const angle = Math.atan2(toCenterY - fromCenterY, toCenterX - fromCenterX);
+
+                    // Calculate edge points
+                    const fromEdge = getSVGBoxEdgePoint(fromCenterX, fromCenterY, fromPos.width, fromPos.height, angle);
+                    const toEdge = getSVGBoxEdgePoint(toCenterX, toCenterY, toPos.width, toPos.height, angle + Math.PI);
+
+                    // Draw line from edge to edge
+                    elements += `<line x1="${fromEdge.x}" y1="${fromEdge.y}" x2="${toEdge.x}" y2="${toEdge.y}" stroke="#95a5a6" stroke-width="2" opacity="0.6"/>`;
+                    
+                    // Draw arrows at BOTH ends - wings point back toward line for outward appearance
+                    const arrowSize = 8;
+                    // Arrow at 'from' end (tip at edge, wings point back along line)
+                    const fromWing1X = fromEdge.x + arrowSize * Math.cos(angle - Math.PI / 6);
+                    const fromWing1Y = fromEdge.y + arrowSize * Math.sin(angle - Math.PI / 6);
+                    const fromWing2X = fromEdge.x + arrowSize * Math.cos(angle + Math.PI / 6);
+                    const fromWing2Y = fromEdge.y + arrowSize * Math.sin(angle + Math.PI / 6);
+                    elements += `<polygon points="${fromEdge.x},${fromEdge.y} ${fromWing1X},${fromWing1Y} ${fromWing2X},${fromWing2Y}" fill="#95a5a6"/>`;
+
+                    // Arrow at 'to' end (tip at edge, wings point back along line)
+                    const toWing1X = toEdge.x + arrowSize * Math.cos(angle + Math.PI - Math.PI / 6);
+                    const toWing1Y = toEdge.y + arrowSize * Math.sin(angle + Math.PI - Math.PI / 6);
+                    const toWing2X = toEdge.x + arrowSize * Math.cos(angle + Math.PI + Math.PI / 6);
+                    const toWing2Y = toEdge.y + arrowSize * Math.sin(angle + Math.PI + Math.PI / 6);
+                    elements += `<polygon points="${toEdge.x},${toEdge.y} ${toWing1X},${toWing1Y} ${toWing2X},${toWing2Y}" fill="#95a5a6"/>`;
+                });
+            }
+        });
+    }
 
     return elements;
 }
@@ -471,11 +574,16 @@ function generateTTVisionSVG(teams, teamColorMap, showInteractionModes) {
         );
     });
 
-    // Draw interaction modes (if enabled)
+    // Draw interaction modes (if enabled and filtered)
     if (showInteractionModes) {
         teams.forEach(team => {
             if (team.interaction_modes) {
                 Object.entries(team.interaction_modes).forEach(([targetName, mode]) => {
+                    // Filter interactions based on UI toggles
+                    if (mode === 'x-as-a-service' && !interactionModeFilters.showXasService) return;
+                    if (mode === 'collaboration' && !interactionModeFilters.showCollaboration) return;
+                    if (mode === 'facilitating' && !interactionModeFilters.showFacilitating) return;
+
                     const targetTeam = teams.find(t => t.name === targetName);
                     if (targetTeam) {
                         const color = getInteractionColorForSVG(mode);
@@ -1010,30 +1118,53 @@ function generateBusinessStreamsSVG(businessStreamsData, teamColorMap, showConne
 
     // Draw connection lines between teams (based on dependencies) - only if enabled
     if (showConnections) {
-        const connectionLines = [];
+        const drawnConnections = new Set();
+        
         teamPositions.forEach(({ team, x: fromX, y: fromY, width, height }) => {
             if (team.dependencies && Array.isArray(team.dependencies)) {
                 team.dependencies.forEach(depName => {
                     const toPos = teamPositions.get(depName);
                     if (toPos) {
+                        // Prevent duplicate lines (normalize connection key)
+                        const connectionKey = [team.name, depName].sort().join('|');
+                        if (drawnConnections.has(connectionKey)) return;
+                        drawnConnections.add(connectionKey);
+
                         // Calculate center points
                         const fromCenterX = fromX + width / 2;
                         const fromCenterY = fromY + height / 2;
                         const toCenterX = toPos.x + toPos.width / 2;
                         const toCenterY = toPos.y + toPos.height / 2;
 
-                        // Draw line with arrow
-                        connectionLines.push(`<line x1="${fromCenterX}" y1="${fromCenterY}" x2="${toCenterX}" y2="${toCenterY}" stroke="#666666" stroke-width="2" opacity="0.5" marker-end="url(#arrowhead)"/>\n`);
+                        // Calculate angle for edge points
+                        const angle = Math.atan2(toCenterY - fromCenterY, toCenterX - fromCenterX);
+
+                        // Calculate edge points
+                        const fromEdge = getSVGBoxEdgePoint(fromCenterX, fromCenterY, width, height, angle);
+                        const toEdge = getSVGBoxEdgePoint(toCenterX, toCenterY, toPos.width, toPos.height, angle + Math.PI);
+
+                        // Draw line from edge to edge
+                        elements += `<line x1="${fromEdge.x}" y1="${fromEdge.y}" x2="${toEdge.x}" y2="${toEdge.y}" stroke="#666666" stroke-width="2" opacity="0.5"/>`;
+                        
+                        // Draw arrows at BOTH ends - wings point back toward line for outward appearance
+                        const arrowSize = 8;
+                        // Arrow at 'from' end (tip at edge, wings point back along line)
+                        const fromWing1X = fromEdge.x + arrowSize * Math.cos(angle - Math.PI / 6);
+                        const fromWing1Y = fromEdge.y + arrowSize * Math.sin(angle - Math.PI / 6);
+                        const fromWing2X = fromEdge.x + arrowSize * Math.cos(angle + Math.PI / 6);
+                        const fromWing2Y = fromEdge.y + arrowSize * Math.sin(angle + Math.PI / 6);
+                        elements += `<polygon points="${fromEdge.x},${fromEdge.y} ${fromWing1X},${fromWing1Y} ${fromWing2X},${fromWing2Y}" fill="#666666"/>`;
+
+                        // Arrow at 'to' end (tip at edge, wings point back along line)
+                        const toWing1X = toEdge.x + arrowSize * Math.cos(angle + Math.PI - Math.PI / 6);
+                        const toWing1Y = toEdge.y + arrowSize * Math.sin(angle + Math.PI - Math.PI / 6);
+                        const toWing2X = toEdge.x + arrowSize * Math.cos(angle + Math.PI + Math.PI / 6);
+                        const toWing2Y = toEdge.y + arrowSize * Math.sin(angle + Math.PI + Math.PI / 6);
+                        elements += `<polygon points="${toEdge.x},${toEdge.y} ${toWing1X},${toWing1Y} ${toWing2X},${toWing2Y}" fill="#666666"/>`;
                     }
                 });
             }
         });
-
-        // Add arrow marker definition if we have connections
-        if (connectionLines.length > 0) {
-            elements = '<defs><marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><polygon points="0 0, 10 3, 0 6" fill="#666666" /></marker></defs>\n' + elements;
-            elements += connectionLines.join('');
-        }
     }
 
     return elements;

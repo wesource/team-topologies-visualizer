@@ -15,7 +15,11 @@ from backend.services import (
     find_team_by_id,
     write_team_file_to_path,
 )
-from backend.validation import validate_all_config_files, validate_all_team_files
+from backend.validation import (
+    ORGANIZATION_STRUCTURE_TYPES,
+    validate_all_config_files,
+    validate_all_team_files,
+)
 
 router = APIRouter(prefix="/api/baseline", tags=["baseline"])
 
@@ -63,8 +67,11 @@ async def get_product_lines():
     products_list = products_config["products"]
     products_list.sort(key=lambda p: p.get("display-order", p.get("display_order", float('inf'))))
 
-    # Get all teams from baseline view
-    all_teams = find_all_teams("baseline")
+    # Get all teams from baseline view (exclude organizational structure teams)
+    all_teams = [
+        team for team in find_all_teams("baseline")
+        if team.team_type not in ORGANIZATION_STRUCTURE_TYPES
+    ]
 
     # Group teams by product_line
     products_with_teams = {}
@@ -111,8 +118,11 @@ async def get_business_streams():
     with open(business_streams_file, encoding='utf-8') as f:
         business_streams_config = json.load(f)
 
-    # Get all teams from baseline view
-    all_teams = find_all_teams("baseline")
+    # Get all teams from baseline view (exclude organizational structure teams)
+    all_teams = [
+        team for team in find_all_teams("baseline")
+        if team.team_type not in ORGANIZATION_STRUCTURE_TYPES
+    ]
 
     # Build nested structure: business_stream -> product -> teams
     business_streams_with_teams = {}

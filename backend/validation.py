@@ -15,6 +15,12 @@ from backend.schemas import (
 )
 from backend.services import get_data_dir, team_name_to_slug
 
+# Organizational structure types (not actual teams, but valid in baseline view)
+# These represent hierarchy containers like departments, leadership, regions, etc.
+# These teams should only appear in the organizational hierarchy view,
+# NOT in product lines or business streams views.
+ORGANIZATION_STRUCTURE_TYPES = ["department", "executive", "leadership", "region", "division"]
+
 
 def validate_all_team_files(view: str = "tt") -> dict[str, Any]:
     """Validate all team files and return a report of issues
@@ -70,7 +76,7 @@ def validate_all_team_files(view: str = "tt") -> dict[str, Any]:
 
     # Organizational structure types (not actual teams, but valid in baseline view)
     # These represent hierarchy containers like departments, leadership, regions, etc.
-    org_structure_types = ["department", "executive", "leadership", "region", "division"]
+    org_structure_types = ORGANIZATION_STRUCTURE_TYPES
 
     # Valid product lines and business streams (for baseline view)
     valid_product_lines = []
