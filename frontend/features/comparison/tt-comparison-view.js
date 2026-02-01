@@ -3,9 +3,9 @@
  * Displays two snapshots side-by-side with visual comparison
  */
 
-import { drawTeam, drawConnections, drawValueStreamGroupings, drawPlatformGroupings } from '../../rendering/renderer-common.js';
-import { getValueStreamGroupings } from '../../tt-concepts/tt-value-stream-grouping.js';
-import { getPlatformGroupings } from '../../tt-concepts/tt-platform-grouping.js';
+import { drawTeam, drawConnections, drawValueStreamGroupings, drawPlatformGroupings, drawValueStreamInnerGroupings, drawPlatformInnerGroupings } from '../../rendering/renderer-common.js';
+import { getValueStreamGroupings, getValueStreamInnerGroupings } from '../../tt-concepts/tt-value-stream-grouping.js';
+import { getPlatformGroupings, getPlatformInnerGroupings } from '../../tt-concepts/tt-platform-grouping.js';
 
 class ComparisonView {
     constructor() {
@@ -527,13 +527,13 @@ class ComparisonView {
             });
         }
 
-        // If no color map from snapshot stats, use hardcoded TT Design defaults
+        // If no color map from snapshot stats, use hardcoded TT Design defaults (from tt-team-types.json)
         if (Object.keys(teamColorMap).length === 0) {
-            teamColorMap['stream-aligned'] = '#95C8D8';
-            teamColorMap['platform'] = '#F4B183';
-            teamColorMap['enabling'] = '#B7A6D9';
-            teamColorMap['complicated-subsystem'] = '#F4B183';
-            teamColorMap['undefined'] = '#E8E8E8';
+            teamColorMap['stream-aligned'] = '#FFEDB8';
+            teamColorMap['platform'] = '#B7CDF1';
+            teamColorMap['enabling'] = '#DFBDCF';
+            teamColorMap['complicated-subsystem'] = '#FFC08B';
+            teamColorMap['undefined'] = '#EBEBEF';
         }
 
         // Draw groupings if enabled
@@ -541,6 +541,8 @@ class ComparisonView {
             // Calculate groupings from snapshot data
             const valueStreamGroupings = getValueStreamGroupings(snapshot.teams);
             const platformGroupings = getPlatformGroupings(snapshot.teams);
+            const valueStreamInnerGroupings = getValueStreamInnerGroupings(snapshot.teams);
+            const platformInnerGroupings = getPlatformInnerGroupings(snapshot.teams);
 
             // Draw value stream groupings (behind teams)
             if (valueStreamGroupings.length > 0) {
@@ -550,6 +552,14 @@ class ComparisonView {
             // Draw platform groupings (behind teams)
             if (platformGroupings.length > 0) {
                 drawPlatformGroupings(ctx, platformGroupings);
+            }
+
+            // Draw inner groupings (on top of outer groupings, behind teams)
+            if (valueStreamInnerGroupings.length > 0) {
+                drawValueStreamInnerGroupings(ctx, valueStreamInnerGroupings);
+            }
+            if (platformInnerGroupings.length > 0) {
+                drawPlatformInnerGroupings(ctx, platformInnerGroupings);
             }
         }
 

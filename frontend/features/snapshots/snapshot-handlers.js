@@ -366,7 +366,7 @@ async function returnToLiveView() {
         hideSnapshotBanner();
 
         // Reload teams from API
-        const { loadTeams } = await import('./api.js');
+        const { loadTeams } = await import('../../api/api.js');
         state.teams = await loadTeams(state.currentView);
 
         // Update UI
