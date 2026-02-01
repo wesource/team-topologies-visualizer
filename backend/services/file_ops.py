@@ -52,10 +52,10 @@ def read_team_file(file_path: Path) -> tuple[dict, str]:
 
 def update_position_in_file(file_path: Path, x: int, y: int) -> None:
     """Update ONLY the position field in a team file's YAML frontmatter.
-    
+
     This does a surgical update without re-serializing the entire file,
     preserving all other content exactly as-is.
-    
+
     Args:
         file_path: Path to the team markdown file
         x: New x coordinate
@@ -63,24 +63,24 @@ def update_position_in_file(file_path: Path, x: int, y: int) -> None:
     """
     with open(file_path, encoding='utf-8') as f:
         content = f.read()
-    
+
     if not content.startswith('---'):
         raise ValueError(f"Invalid file format: {file_path.name}")
-    
+
     parts = content.split('---', 2)
     if len(parts) < 3:
         raise ValueError(f"Invalid YAML frontmatter: {file_path.name}")
-    
+
     yaml_content = parts[1]
     markdown_content = parts[2]
-    
+
     # Parse YAML to update position
     data = yaml.safe_load(yaml_content) or {}
     data['position'] = {'x': x, 'y': y}
-    
+
     # Re-serialize ONLY the YAML frontmatter (not the entire file)
     new_yaml = yaml.dump(data, default_flow_style=False, allow_unicode=True, sort_keys=False)
-    
+
     # Write back with updated YAML but original markdown content
     with open(file_path, 'w', encoding='utf-8') as f:
         f.write('---\n')
