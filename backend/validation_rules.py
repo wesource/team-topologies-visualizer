@@ -13,6 +13,13 @@ import re
 from dataclasses import dataclass
 from typing import Any
 
+from backend.constants import (
+    InteractionFields,
+    InteractionModes,
+    MarkdownSections,
+    TeamSize,
+)
+
 
 @dataclass
 class ValidationContext:
@@ -45,7 +52,7 @@ def validate_team_type(data: dict, ctx: ValidationContext) -> tuple[list[str], l
     """Check that team_type is one of the allowed values."""
     errors = []
 
-    if 'team_type' in data and data['team_type'] not in ctx.valid_types:
+    if ctx.valid_types and 'team_type' in data and data['team_type'] not in ctx.valid_types:
         errors.append(
             f"Invalid team_type: '{data['team_type']}' (valid: {', '.join(ctx.valid_types)})"
         )
@@ -87,6 +94,7 @@ def validate_position(data: dict, _ctx: ValidationContext) -> tuple[list[str], l
 
 def validate_metadata_size(data: dict, _ctx: ValidationContext) -> tuple[list[str], list[str]]:
     """Validate team size in metadata if present."""
+    errors = []
     warnings = []
 
     if 'metadata' not in data:
@@ -98,12 +106,15 @@ def validate_metadata_size(data: dict, _ctx: ValidationContext) -> tuple[list[st
 
     if 'size' in metadata:
         size = metadata['size']
-        if not isinstance(size, int) or size < 1:
+        if not isinstance(size, int) or size < TeamSize.MIN_VALID:
             warnings.append(f"Invalid team size: {size}")
-        elif size < 5 or size > 9:
-            warnings.append(f"Team size {size} outside recommended range (5-9 people)")
+        elif size < TeamSize.MIN_RECOMMENDED or size > TeamSize.MAX_RECOMMENDED:
+            warnings.append(
+                f"Team size {size} outside recommended range "
+                f"({TeamSize.MIN_RECOMMENDED}-{TeamSize.MAX_RECOMMENDED} people)"
+            )
 
-    return [], warnings
+    return errors, warnings
 
 
 def validate_inner_groupings(data: dict, ctx: ValidationContext) -> tuple[list[str], list[str]]:
@@ -112,7 +123,6 @@ def validate_inner_groupings(data: dict, ctx: ValidationContext) -> tuple[list[s
         return [], []
 
     errors = []
-
     has_value_stream_inner = bool(data.get('value_stream_inner'))
     has_platform_grouping_inner = bool(data.get('platform_grouping_inner'))
     has_value_stream = bool(data.get('value_stream'))
@@ -227,29 +237,28 @@ def validate_interactions_array(data: dict, ctx: ValidationContext) -> tuple[lis
     if not isinstance(interactions, list):
         return [], []
 
-    valid_modes = ['collaboration', 'x-as-a-service', 'facilitating']
-
     for idx, interaction in enumerate(interactions):
         if not isinstance(interaction, dict):
             errors.append(
-                f"Interaction #{idx+1}: Must be a dict with 'team_id' and 'interaction_mode' fields"
+                f"Interaction #{idx+1}: Must be a dict with '{InteractionFields.TEAM_ID}' "
+                f"and '{InteractionFields.INTERACTION_MODE}' fields"
             )
             continue
 
         # Check for correct field names
-        team_key = interaction.get('team_id') or interaction.get('team')
-        mode_key = interaction.get('interaction_mode') or interaction.get('mode')
+        team_key = interaction.get(InteractionFields.TEAM_ID) or interaction.get(InteractionFields.TEAM)
+        mode_key = interaction.get(InteractionFields.INTERACTION_MODE) or interaction.get(InteractionFields.MODE)
 
         # Validate field names are present
         if not team_key:
             errors.append(
-                f"Interaction #{idx+1}: Missing 'team_id' or 'team' field. "
-                f"Use 'team_id' (recommended) or 'team' to specify target team."
+                f"Interaction #{idx+1}: Missing '{InteractionFields.TEAM_ID}' or '{InteractionFields.TEAM}' field. "
+                f"Use '{InteractionFields.TEAM_ID}' (recommended) or '{InteractionFields.TEAM}' to specify target team."
             )
         if not mode_key:
             errors.append(
-                f"Interaction #{idx+1}: Missing 'interaction_mode' or 'mode' field. "
-                f"Use 'interaction_mode' (recommended) or 'mode' to specify interaction type."
+                f"Interaction #{idx+1}: Missing '{InteractionFields.INTERACTION_MODE}' or '{InteractionFields.MODE}' field. "
+                f"Use '{InteractionFields.INTERACTION_MODE}' (recommended) or '{InteractionFields.MODE}' to specify interaction type."
             )
 
         # Validate team exists
@@ -257,9 +266,9 @@ def validate_interactions_array(data: dict, ctx: ValidationContext) -> tuple[lis
             warnings.append(f"Interaction references unknown team: '{team_key}'")
 
         # Validate mode is correct
-        if mode_key and mode_key not in valid_modes:
+        if mode_key and mode_key not in InteractionModes.ALL:
             errors.append(
-                f"Invalid interaction mode: '{mode_key}' (valid: {', '.join(valid_modes)})"
+                f"Invalid interaction mode: '{mode_key}' (valid: {', '.join(InteractionModes.ALL)})"
             )
 
     return errors, warnings
@@ -272,14 +281,13 @@ def validate_interaction_table(
     if ctx.view != "tt":
         return [], []
 
-    section_header = "## Teams we currently interact with"
-    if section_header not in markdown_content:
+    if MarkdownSections.INTERACTIONS_HEADER not in markdown_content:
         return [], []
 
     warnings = []
 
     # Extract table section
-    table_start = markdown_content.find(section_header)
+    table_start = markdown_content.find(MarkdownSections.INTERACTIONS_HEADER)
     section = markdown_content[table_start:table_start + 3000]
 
     # Check if table is present
@@ -287,15 +295,15 @@ def validate_interaction_table(
         warnings.append("Team interaction section found but no table present")
         return [], warnings
 
-    if not re.search(r'\|.*Team Name.*\|', section, re.IGNORECASE):
-        warnings.append("Interaction table missing 'Team Name' column header")
+    if not re.search(rf'\|.*{MarkdownSections.TEAM_NAME_COLUMN}.*\|', section, re.IGNORECASE):
+        warnings.append(f"Interaction table missing '{MarkdownSections.TEAM_NAME_COLUMN}' column header")
         return [], warnings
 
     # Parse table and validate team references
     lines = section.split('\n')
     for line in lines:
         # Skip header and separator rows
-        if '|' in line and 'Team Name' not in line and '---' not in line:
+        if '|' in line and MarkdownSections.TEAM_NAME_COLUMN not in line and '---' not in line:
             parts_row = [p.strip() for p in line.split('|')]
             if len(parts_row) >= 2:
                 team_name = parts_row[1]

@@ -12,6 +12,7 @@ from typing import Any
 import yaml
 from pydantic import ValidationError
 
+from backend.constants import SKIP_FILES, ConfigFiles, OrganizationTypes
 from backend.schemas import (
     BaselineTeamTypesConfig,
     BusinessStreamsConfig,
@@ -26,14 +27,8 @@ from backend.validation_rules import (
     validate_filename_matches_name,
 )
 
-# Organizational structure types (not actual teams, but valid in baseline view)
-# These represent hierarchy containers like departments, leadership, regions, etc.
-# These teams should only appear in the organizational hierarchy view,
-# NOT in product lines or business streams views.
-ORGANIZATION_STRUCTURE_TYPES = ["department", "executive", "leadership", "region", "division"]
-
-# Files to skip during validation
-SKIP_FILES = {'README.md', 'example-undefined-team.md'}
+# Backward compatibility alias
+ORGANIZATION_STRUCTURE_TYPES = OrganizationTypes.ALL
 
 
 def _collect_all_team_names(data_dir: Path) -> set[str]:
@@ -60,11 +55,13 @@ def _collect_all_team_names(data_dir: Path) -> set[str]:
 
 def _load_valid_types(view: str, data_dir: Path) -> list[str]:
     """Load valid team types for the given view."""
+    from backend.constants import TeamTypes
+
     if view == "tt":
-        return ["stream-aligned", "platform", "enabling", "complicated-subsystem", "undefined"]
+        return TeamTypes.TT_TYPES
 
     # Baseline view - load from config
-    config_file = data_dir / "baseline-team-types.json"
+    config_file = data_dir / ConfigFiles.BASELINE_TEAM_TYPES
     valid_types = []
 
     if config_file.exists():
@@ -73,13 +70,11 @@ def _load_valid_types(view: str, data_dir: Path) -> list[str]:
             valid_types = [t["id"] for t in config.get("team_types", [])]
 
     # Add organizational structure types as valid
-    valid_types.extend(ORGANIZATION_STRUCTURE_TYPES)
-    return valid_types
-
+    valid_types.extend(OrganizationTypes.ALL)
 
 def _load_valid_product_lines(data_dir: Path) -> list[str]:
     """Load valid product lines from config."""
-    products_file = data_dir / "products.json"
+    products_file = data_dir / ConfigFiles.PRODUCTS
     if not products_file.exists():
         return []
 
@@ -90,7 +85,7 @@ def _load_valid_product_lines(data_dir: Path) -> list[str]:
 
 def _load_valid_business_streams(data_dir: Path) -> list[str]:
     """Load valid business streams from config."""
-    streams_file = data_dir / "business-streams.json"
+    streams_file = data_dir / ConfigFiles.BUSINESS_STREAMS
     if not streams_file.exists():
         return []
 
@@ -123,11 +118,11 @@ def _validate_yaml_structure(content: str) -> tuple[dict | None, str, list[str]]
     try:
         data = yaml.safe_load(parts[1])
         markdown_content = parts[2].strip()
-        
+
         # Check for empty YAML (parsed as None)
         if data is None:
             errors.append("Empty YAML front matter")
-        
+
         return data, markdown_content, errors
     except yaml.YAMLError as e:
         return None, "", [f"YAML parsing error: {str(e)}"]
