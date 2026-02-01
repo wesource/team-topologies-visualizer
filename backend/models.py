@@ -65,8 +65,8 @@ class TeamData(BaseModel):
 
 class PositionUpdate(BaseModel):
     """Model for updating team position on canvas"""
-    x: int
-    y: int
+    x: float
+    y: float
 
 
 # Snapshot models

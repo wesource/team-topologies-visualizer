@@ -473,18 +473,19 @@ metadata:
         assert result["files_with_warnings"] == 1
         assert len(result["issues"]) == 2  # Only error and warning teams
 
-    def test_skips_readme_and_example_files(self, temp_data_dir, monkeypatch):
-        """Should skip README.md and example-undefined-team.md"""
+    def test_skips_readme(self, temp_data_dir, monkeypatch):
+        """Should skip README.md but not example files (those should be visible)"""
         monkeypatch.setattr('backend.validation.get_data_dir', lambda view: temp_data_dir / "tt-teams")
 
         # Create README.md
         readme_content = "# README\nThis should be skipped."
         write_team_file(temp_data_dir, "README.md", readme_content, "tt")
 
-        # Create example-undefined-team.md
+        # Create example-undefined-team.md (should NOT be skipped)
         example_content = """---
-name: Example Team
-team_type: undefined
+name: Example Undefined Team
+team_id: example-undefined-team
+team_type: stream-aligned
 ---
 # Example
 """
@@ -493,6 +494,7 @@ team_type: undefined
         # Create valid team
         valid_content = """---
 name: Valid Team
+team_id: valid-team
 team_type: stream-aligned
 ---
 # Valid Team
@@ -501,8 +503,8 @@ team_type: stream-aligned
 
         result = validate_all_team_files("tt")
 
-        assert result["total_files"] == 1  # Only counts valid-team.md
-        assert result["valid_files"] == 1
+        assert result["total_files"] == 2  # Counts both example-undefined-team.md and valid-team.md (README is skipped)
+        assert result["valid_files"] == 2
 
     def test_empty_yaml_frontmatter(self, temp_data_dir, monkeypatch):
         """Should detect empty YAML frontmatter"""

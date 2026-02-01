@@ -13,7 +13,7 @@ from backend.services import (
     BASELINE_TEAMS_DIR,
     find_all_teams,
     find_team_by_id,
-    write_team_file_to_path,
+    update_position_in_file,
 )
 from backend.validation import (
     ORGANIZATION_STRUCTURE_TYPES,
@@ -216,15 +216,14 @@ async def update_team_position(team_id: str, position: PositionUpdate):
     if result is None:
         raise HTTPException(status_code=404, detail="Team not found")
 
-    team, file_path = result
+    _, file_path = result
 
-    # Update only the position (rounded to integers for clean coordinates)
-    team.position = {"x": round(position.x), "y": round(position.y)}
+    # Update only the position field in the file (surgical update, preserves all other content)
+    x = round(position.x)
+    y = round(position.y)
+    update_position_in_file(file_path, x, y)
 
-    # Write back to the same file location
-    write_team_file_to_path(team, file_path)
-
-    return {"message": "Position updated", "position": team.position}
+    return {"message": "Position updated", "position": {"x": x, "y": y}}
 
 
 @router.get("/validate")

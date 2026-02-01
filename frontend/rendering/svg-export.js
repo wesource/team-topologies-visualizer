@@ -105,7 +105,7 @@ export function exportToSVG(state, organizationHierarchy, teams, teamColorMap, c
     } else if (currentView === 'current' && organizationHierarchy) {
         svg += generateCurrentStateSVG(organizationHierarchy, teams, teamColorMap, showConnections);
     } else {
-        svg += generateTTVisionSVG(teams, teamColorMap, showInteractionModes);
+        svg += generateTTVisionSVG(teams, teamColorMap, showInteractionModes, interactionModeFilters);
     }
     svg += '</svg>';
 
@@ -493,7 +493,7 @@ function getSVGBoxEdgePoint(centerX, centerY, width, height, angle) {
     }
 }
 
-function generateTTVisionSVG(teams, teamColorMap, showInteractionModes) {
+function generateTTVisionSVG(teams, teamColorMap, showInteractionModes, interactionModeFilters = {}) {
     let elements = '';
 
     // Add arrow marker definitions at the beginning
@@ -846,7 +846,7 @@ function drawSVGLine(x1, y1, x2, y2) {
 // Helper functions for interaction mode styling in SVG
 function getInteractionColorForSVG(mode) {
     const colors = {
-        'collaboration': '#BC1B8D',      // Official magenta (Team-Shape-Templates)
+        'collaboration': '#967EE2',      // Official purple (Team-Shape-Templates)
         'x-as-a-service': '#222222',     // Black
         'facilitating': '#00A88F'        // Official teal
     };

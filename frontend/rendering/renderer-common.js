@@ -9,7 +9,7 @@ const shownWarnings = new Set();
 export const INTERACTION_STYLES = {
     'collaboration': { 
         shape: 'parallelogram',  // Solid line
-        color: '#BC1B8D',        // Official magenta (Team-Shape-Templates)
+        color: '#967EE2',        // Official purple (Team-Shape-Templates)
         opacity: 1.0,            // Solid
         width: 2,                // Line width
         dash: []                 // Solid stroke (not dashed)
@@ -23,7 +23,7 @@ export const INTERACTION_STYLES = {
     },
     'facilitating': { 
         shape: 'circle',         // Dashed circle
-        color: '#00A88F',        // Official teal
+        color: '#6fa98c',        // Official green (Team-Shape-Templates)
         opacity: 1.0,            // Solid
         width: 2,                // Line width
         dash: [5, 5]             // Dotted stroke

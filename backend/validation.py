@@ -71,6 +71,8 @@ def _load_valid_types(view: str, data_dir: Path) -> list[str]:
 
     # Add organizational structure types as valid
     valid_types.extend(OrganizationTypes.ALL)
+    return valid_types
+
 
 def _load_valid_product_lines(data_dir: Path) -> list[str]:
     """Load valid product lines from config."""

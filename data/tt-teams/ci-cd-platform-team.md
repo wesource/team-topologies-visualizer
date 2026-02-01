@@ -1,15 +1,28 @@
 ---
-team_id: ci-cd-platform-team
 name: CI/CD Platform Team
+team_id: ci-cd-platform-team
 team_type: platform
 position:
-  x: 1080.0
-  y: 1154.0
-metadata:
-  size: 7
-  cognitive_load: medium
-  established: 2024-05
+  x: 1080
+  y: 1030
 platform_grouping: Cloud Infrastructure Platform Grouping
+metadata:
+  established: 2024-05
+  cognitive_load: medium
+dependencies:
+- Cloud Development Platform Team
+- Observability Platform Team
+- Developer Portal Team
+- API Gateway Platform Team
+interactions:
+- team_id: Cloud Development Platform Team
+  interaction_mode: x-as-a-service
+- team_id: Observability Platform Team
+  interaction_mode: x-as-a-service
+- team_id: Developer Portal Team
+  interaction_mode: x-as-a-service
+- team_id: API Gateway Platform Team
+  interaction_mode: x-as-a-service
 ---
 
 # CI/CD Platform Team

@@ -177,17 +177,17 @@ Second team.
 """)
 
     # Temporarily change TT_TEAMS_DIR
-    import backend.services as services
-    original_dir = services.TT_TEAMS_DIR
+    import backend.services.file_ops as file_ops
+    original_dir = file_ops.TT_TEAMS_DIR
     try:
-        services.TT_TEAMS_DIR = data_dir
+        file_ops.TT_TEAMS_DIR = data_dir
         duplicates = check_duplicate_team_ids("tt")
 
         # Should have one duplicate team_id with two files
         assert "duplicate-id" in duplicates
         assert len(duplicates["duplicate-id"]) == 2
     finally:
-        services.TT_TEAMS_DIR = original_dir
+        file_ops.TT_TEAMS_DIR = original_dir
 
 
 def test_find_team_by_id_success():

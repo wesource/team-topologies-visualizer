@@ -1,15 +1,25 @@
 ---
-team_id: observability-platform-team
 name: Observability Platform Team
+team_id: observability-platform-team
 team_type: platform
 position:
-  x: 1080.0
-  y: 1854.0
-metadata:
-  size: 5
-  cognitive_load: medium
-  established: 2023-09
+  x: 1080
+  y: 1730
 platform_grouping: Cloud Infrastructure Platform Grouping
+metadata:
+  established: 2023-09
+  cognitive_load: medium
+dependencies:
+- Cloud Development Platform Team
+- API Gateway Platform Team
+- CI/CD Platform Team
+interactions:
+- team_id: Cloud Development Platform Team
+  interaction_mode: x-as-a-service
+- team_id: API Gateway Platform Team
+  interaction_mode: x-as-a-service
+- team_id: CI/CD Platform Team
+  interaction_mode: x-as-a-service
 ---
 
 # Observability Platform Team

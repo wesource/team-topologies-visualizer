@@ -19,8 +19,7 @@ from backend.services.file_ops import (
     find_team_by_name,
     find_team_by_name_or_slug,
     get_data_dir,
-    write_team_file,
-    write_team_file_to_path,
+    update_position_in_file,
 )
 from backend.services.parsing import (
     _parse_dependency_bullets,
@@ -39,8 +38,7 @@ __all__ = [
     "validate_team_id",
     # File operations
     "get_data_dir",
-    "write_team_file",
-    "write_team_file_to_path",
+    "update_position_in_file",
     "find_all_teams",
     "find_team_by_name",
     "find_team_by_id",

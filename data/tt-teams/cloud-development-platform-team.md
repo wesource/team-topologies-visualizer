@@ -1,15 +1,31 @@
 ---
-team_id: cloud-development-platform-team
 name: Cloud Development Platform Team
+team_id: cloud-development-platform-team
 team_type: platform
 position:
-  x: 1080.0
-  y: 1294.0
-metadata:
-  size: 8
-  cognitive_load: medium
-  established: 2024-03
+  x: 1080
+  y: 1170
 platform_grouping: Cloud Infrastructure Platform Grouping
+metadata:
+  established: 2024-03
+  cognitive_load: medium
+dependencies:
+- Observability Platform Team
+- API Gateway Platform Team
+- CI/CD Platform Team
+- Developer Portal Team
+- Security Compliance Team
+interactions:
+- team_id: Observability Platform Team
+  interaction_mode: x-as-a-service
+- team_id: API Gateway Platform Team
+  interaction_mode: x-as-a-service
+- team_id: CI/CD Platform Team
+  interaction_mode: x-as-a-service
+- team_id: Developer Portal Team
+  interaction_mode: x-as-a-service
+- team_id: Security Compliance Team
+  interaction_mode: x-as-a-service
 ---
 
 # Cloud Development Platform Team

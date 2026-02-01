@@ -1,19 +1,17 @@
 ---
-team_id: fraud-detection-and-risk-modeling-team
 name: Fraud Detection and Risk Modeling Team
+team_id: fraud-detection-and-risk-modeling-team
 team_type: complicated-subsystem
 position:
-  x: 1080.0
-  y: 621.0
-metadata:
-  size: 5
-  cognitive_load: high
-  established: 2025-01
+  x: 1399
+  y: 619
 value_stream: Financial Services
+metadata:
+  established: 2025-01
+  cognitive_load: high
 interactions:
 - team_id: payment-processing-team
   interaction_mode: x-as-a-service
-  purpose: Provides real-time fraud scoring API for transaction validation
 ---
 
 # Fraud Detection and Risk Modeling Team

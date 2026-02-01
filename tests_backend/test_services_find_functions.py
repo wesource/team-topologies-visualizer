@@ -60,7 +60,7 @@ class TestFindTeamByName:
 
     def test_find_team_by_exact_name(self, temp_teams_dir, monkeypatch):
         """Should find team by exact name match"""
-        monkeypatch.setattr('backend.services.get_data_dir', lambda view: temp_teams_dir)
+        monkeypatch.setattr('backend.services.file_ops.get_data_dir', lambda view: temp_teams_dir)
 
         result = find_team_by_name("Platform Team", "tt")
 
@@ -71,7 +71,7 @@ class TestFindTeamByName:
 
     def test_find_team_by_name_case_insensitive(self, temp_teams_dir, monkeypatch):
         """Should demonstrate case-sensitive behavior"""
-        monkeypatch.setattr('backend.services.get_data_dir', lambda view: temp_teams_dir)
+        monkeypatch.setattr('backend.services.file_ops.get_data_dir', lambda view: temp_teams_dir)
 
         # find_team_by_name is case-sensitive
         result = find_team_by_name("platform team", "tt")
@@ -85,7 +85,7 @@ class TestFindTeamByName:
 
     def test_find_team_by_name_with_special_chars(self, temp_teams_dir, monkeypatch):
         """Should find team with special characters in name"""
-        monkeypatch.setattr('backend.services.get_data_dir', lambda view: temp_teams_dir)
+        monkeypatch.setattr('backend.services.file_ops.get_data_dir', lambda view: temp_teams_dir)
 
         result = find_team_by_name("CI/CD Platform Team", "tt")
 
@@ -95,7 +95,7 @@ class TestFindTeamByName:
 
     def test_find_team_by_name_not_found(self, temp_teams_dir, monkeypatch):
         """Should return None when team not found"""
-        monkeypatch.setattr('backend.services.get_data_dir', lambda view: temp_teams_dir)
+        monkeypatch.setattr('backend.services.file_ops.get_data_dir', lambda view: temp_teams_dir)
 
         result = find_team_by_name("Nonexistent Team", "tt")
 
@@ -105,7 +105,7 @@ class TestFindTeamByName:
         """Should handle empty directory gracefully"""
         with tempfile.TemporaryDirectory() as tmpdir:
             temp_path = Path(tmpdir)
-            monkeypatch.setattr('backend.services.get_data_dir', lambda view: temp_path)
+            monkeypatch.setattr('backend.services.file_ops.get_data_dir', lambda view: temp_path)
 
             result = find_team_by_name("Any Team", "tt")
 
@@ -117,7 +117,7 @@ class TestFindTeamById:
 
     def test_find_team_by_exact_id(self, temp_teams_dir, monkeypatch):
         """Should find team by exact ID match"""
-        monkeypatch.setattr('backend.services.get_data_dir', lambda view: temp_teams_dir)
+        monkeypatch.setattr('backend.services.file_ops.get_data_dir', lambda view: temp_teams_dir)
 
         result = find_team_by_id("platform-team", "tt")
 
@@ -128,7 +128,7 @@ class TestFindTeamById:
 
     def test_find_team_by_id_case_sensitive(self, temp_teams_dir, monkeypatch):
         """Should be case-sensitive for team_id"""
-        monkeypatch.setattr('backend.services.get_data_dir', lambda view: temp_teams_dir)
+        monkeypatch.setattr('backend.services.file_ops.get_data_dir', lambda view: temp_teams_dir)
 
         # team_ids should be lowercase, so uppercase shouldn't match
         result = find_team_by_id("PLATFORM-TEAM", "tt")
@@ -138,7 +138,7 @@ class TestFindTeamById:
 
     def test_find_team_by_id_with_hyphens(self, temp_teams_dir, monkeypatch):
         """Should find team with hyphens in ID"""
-        monkeypatch.setattr('backend.services.get_data_dir', lambda view: temp_teams_dir)
+        monkeypatch.setattr('backend.services.file_ops.get_data_dir', lambda view: temp_teams_dir)
 
         result = find_team_by_id("ci-cd-platform-team", "tt")
 
@@ -148,7 +148,7 @@ class TestFindTeamById:
 
     def test_find_team_by_id_not_found(self, temp_teams_dir, monkeypatch):
         """Should return None when team ID not found"""
-        monkeypatch.setattr('backend.services.get_data_dir', lambda view: temp_teams_dir)
+        monkeypatch.setattr('backend.services.file_ops.get_data_dir', lambda view: temp_teams_dir)
 
         result = find_team_by_id("nonexistent-team", "tt")
 
@@ -160,7 +160,7 @@ class TestFindTeamByNameOrSlug:
 
     def test_find_by_name_or_slug_with_name(self, temp_teams_dir, monkeypatch):
         """Should find team by name"""
-        monkeypatch.setattr('backend.services.get_data_dir', lambda view: temp_teams_dir)
+        monkeypatch.setattr('backend.services.file_ops.get_data_dir', lambda view: temp_teams_dir)
 
         result = find_team_by_name_or_slug("Platform Team", "tt")
 
@@ -170,7 +170,7 @@ class TestFindTeamByNameOrSlug:
 
     def test_find_by_name_or_slug_with_slug(self, temp_teams_dir, monkeypatch):
         """Should find team by slug (team_id)"""
-        monkeypatch.setattr('backend.services.get_data_dir', lambda view: temp_teams_dir)
+        monkeypatch.setattr('backend.services.file_ops.get_data_dir', lambda view: temp_teams_dir)
 
         result = find_team_by_name_or_slug("platform-team", "tt")
 
@@ -180,7 +180,7 @@ class TestFindTeamByNameOrSlug:
 
     def test_find_by_name_or_slug_prefers_id(self, temp_teams_dir, monkeypatch):
         """Should prefer team_id match over name slug match"""
-        monkeypatch.setattr('backend.services.get_data_dir', lambda view: temp_teams_dir)
+        monkeypatch.setattr('backend.services.file_ops.get_data_dir', lambda view: temp_teams_dir)
 
         # "platform-team" could match team_id directly
         result = find_team_by_name_or_slug("platform-team", "tt")
@@ -191,7 +191,7 @@ class TestFindTeamByNameOrSlug:
 
     def test_find_by_name_or_slug_not_found(self, temp_teams_dir, monkeypatch):
         """Should return None when neither name nor slug matches"""
-        monkeypatch.setattr('backend.services.get_data_dir', lambda view: temp_teams_dir)
+        monkeypatch.setattr('backend.services.file_ops.get_data_dir', lambda view: temp_teams_dir)
 
         result = find_team_by_name_or_slug("nonexistent", "tt")
 
@@ -199,7 +199,7 @@ class TestFindTeamByNameOrSlug:
 
     def test_find_by_name_or_slug_with_special_chars(self, temp_teams_dir, monkeypatch):
         """Should handle special characters in identifier"""
-        monkeypatch.setattr('backend.services.get_data_dir', lambda view: temp_teams_dir)
+        monkeypatch.setattr('backend.services.file_ops.get_data_dir', lambda view: temp_teams_dir)
 
         # Try finding "CI/CD Platform Team" by name
         result = find_team_by_name_or_slug("CI/CD Platform Team", "tt")

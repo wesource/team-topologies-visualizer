@@ -1,15 +1,31 @@
 ---
-team_id: route-optimization-platform-team
 name: Route Optimization Platform Team
+team_id: route-optimization-platform-team
 team_type: complicated-subsystem
 position:
-  x: 910.0
-  y: 869.0
-metadata:
-  size: 6
-  cognitive_load: very-high
-  established: 2023-11
+  x: 866
+  y: 886
 value_stream: B2B Services
+metadata:
+  established: 2023-11
+  cognitive_load: very-high
+dependencies:
+- Fleet Operations Team
+- Load Planning Team
+- Driver Experience Team
+- Data Storage Platform Team
+- Observability Platform Team
+interactions:
+- team_id: Fleet Operations Team
+  interaction_mode: x-as-a-service
+- team_id: Load Planning Team
+  interaction_mode: x-as-a-service
+- team_id: Driver Experience Team
+  interaction_mode: x-as-a-service
+- team_id: Data Storage Platform Team
+  interaction_mode: x-as-a-service
+- team_id: Observability Platform Team
+  interaction_mode: x-as-a-service
 ---
 
 # Route Optimization Platform Team

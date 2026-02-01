@@ -1,14 +1,13 @@
 ---
-team_id: example-undefined-team
 name: Example Undefined Team
+team_id: example-undefined-team
 team_type: undefined
 position:
-  x: 100.0
-  y: 280.0
+  x: 92
+  y: 899
 metadata:
-  size: 0
-  cognitive_load: undefined
   established: 2023-01
+  cognitive_load: undefined
 ---
 
 # Example Undefined Team

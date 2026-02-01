@@ -1,21 +1,25 @@
 ---
-team_id: api-gateway-platform-team
 name: API Gateway Platform Team
+team_id: api-gateway-platform-team
 team_type: stream-aligned
 position:
-  x: 1080
-  y: 906
+  x: 1078
+  y: 824
+platform_grouping: Cloud Infrastructure Platform Grouping
+value_stream_inner: Gateway & Service Mesh
 metadata:
-  size: 6
-  cognitive_load: medium
   established: 2023-11
+  cognitive_load: medium
   flow_metrics:
-    lead_time_days: 5
+    lead_time_days: 5.0
     deployment_frequency: daily
     change_fail_rate: 0.08
     mttr_hours: 1.5
-platform_grouping: Cloud Infrastructure Platform Grouping
-value_stream_inner: Gateway & Service Mesh
+dependencies:
+- Developer Portal Team
+interactions:
+- team_id: Developer Portal Team
+  interaction_mode: x-as-a-service
 ---
 
 # API Gateway Platform Team

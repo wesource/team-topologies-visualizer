@@ -1,7 +1,10 @@
 ---
+team_id: logicore-systems-leadership
 name: LogiCore Systems Leadership
-team_id: company-leadership
 team_type: executive
+position:
+  x: 359
+  y: 55
 metadata:
   level: C-Suite
   size: 5

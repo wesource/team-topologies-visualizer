@@ -3,8 +3,8 @@ team_id: example-undefined-team
 name: Example Undefined Team
 team_type: undefined
 position:
-  x: 512.0
-  y: 621.0
+  x: 3
+  y: 731
 metadata:
   size: 7
 ---

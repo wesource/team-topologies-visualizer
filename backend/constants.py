@@ -63,7 +63,7 @@ class OrganizationTypes:
 
 
 # File patterns to skip
-SKIP_FILES = {'README.md', 'example-undefined-team.md'}
+SKIP_FILES = {'README.md'}
 
 
 # Team size recommendations (from Team Topologies)

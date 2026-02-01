@@ -1,15 +1,28 @@
 ---
-team_id: data-pipeline-platform-team
 name: Data Pipeline Platform Team
+team_id: data-pipeline-platform-team
 team_type: platform
 position:
-  x: 1080.0
-  y: 1434.0
-metadata:
-  size: 7
-  cognitive_load: medium
-  established: 2023-09
+  x: 1080
+  y: 1310
 platform_grouping: Cloud Infrastructure Platform Grouping
+metadata:
+  established: 2023-09
+  cognitive_load: medium
+dependencies:
+- Data Engineering Enablement Team
+- Machine Learning & AI Specialists Team
+- Delivery Analytics Team
+- Financial Reporting Team
+interactions:
+- team_id: Data Engineering Enablement Team
+  interaction_mode: facilitating
+- team_id: Machine Learning & AI Specialists Team
+  interaction_mode: x-as-a-service
+- team_id: Delivery Analytics Team
+  interaction_mode: x-as-a-service
+- team_id: Financial Reporting Team
+  interaction_mode: x-as-a-service
 ---
 
 # Data Pipeline Platform Team
