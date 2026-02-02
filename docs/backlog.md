@@ -21,22 +21,8 @@ Edit this list as your priorities change:
 	- Sanity-check demo mode end-to-end (read-only behavior + banners + snapshot compare) against the current example dataset.
 
 ## Next
-- Flow of Change banner arrow (TT Design view)
-	- Add optional "Flow of Change" visualization as described in https://teamtopologies.com/key-concepts and shown in the Team Shape Templates PDF (big horizontal banner arrow)
-	- Implementation: checkbox option (default off) in TT Design view to show a large directional banner arrow at the bottom of the canvas
-	- Visual style (match PDF):
-		- Horizontal arrow (left to right), dashed outline (lightweight, conceptual feel)
-		- Straight horizontal shaft with dashed lines
-		- Asymmetric arrowhead: top edge angles upward, bottom edge angles downward, forming sharp point (also dashed)
-		- Label "Flow of Change" centered on or near the arrow
-		- Spanning canvas width or value stream grouping width
-	- Export: include flow banner arrow in SVG export when enabled
-	- **Note**: Teams are already positioned by flow direction via auto-align; this banner makes the flow direction explicit
-- Validation: Baseline config mismatch warnings (product lines + business streams)
-	- What it means: if a Baseline team’s `product_line` is not present in `data/baseline-teams/products.json`, or its `business_stream` is not present in `data/baseline-teams/business-streams.json`, flag it as a validation warning.
-	- Why: prevents “silent” typos that create missing lanes / mis-grouped teams in the Baseline views.
-	- Acceptance criteria: warning appears in the validation report (and ideally the UI warnings modal) with file + field + bad value; matching should be case/whitespace-normalized.
 
+(empty - promote items from "Later / Maybe" as needed)
 
 ## Later / Maybe
 - TT Design Overview document (per dataset)
@@ -44,7 +30,8 @@ Edit this list as your priorities change:
 	- Purpose: Let users document high-level design decisions, current state narrative, and potential next steps for their TT design
 	- Content ideas: transformation philosophy, what changed and why, what's working well, known pain points, planned next phases
 	- Could be displayed in UI (e.g., info panel, design notes modal) or kept as git-tracked documentation
-	- Benefit: Keeps context and rationale close to the data, helps teams communicate design evolution- Baseline: network-style “team coordination” view (dependencies + coordination overhead)
+	- Benefit: Keeps context and rationale close to the data, helps teams communicate design evolution
+- Baseline: network-style "team coordination" view (dependencies + coordination overhead)
 - Flow metrics: aggregated metrics at grouping level (TT Design)
 	- Show rollups for value stream groupings and platform groupings (e.g., average/median lead time, deployment frequency distribution, combined flow health indicators).
 	- Goal: make it easy to compare groupings at a glance without clicking into each individual team.
