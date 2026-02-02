@@ -4,7 +4,7 @@ team_id: ci-cd-platform-team
 team_type: platform
 position:
   x: 1080
-  y: 1030
+  y: 1154
 platform_grouping: Cloud Infrastructure Platform Grouping
 metadata:
   established: 2024-05

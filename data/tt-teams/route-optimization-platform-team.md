@@ -3,8 +3,8 @@ name: Route Optimization Platform Team
 team_id: route-optimization-platform-team
 team_type: complicated-subsystem
 position:
-  x: 866
-  y: 886
+  x: 910
+  y: 869
 value_stream: B2B Services
 metadata:
   established: 2023-11

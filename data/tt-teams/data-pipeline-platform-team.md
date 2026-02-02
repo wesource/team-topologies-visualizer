@@ -4,7 +4,7 @@ team_id: data-pipeline-platform-team
 team_type: platform
 position:
   x: 1080
-  y: 1310
+  y: 1434
 platform_grouping: Cloud Infrastructure Platform Grouping
 metadata:
   established: 2023-09

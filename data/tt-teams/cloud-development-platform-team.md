@@ -4,7 +4,7 @@ team_id: cloud-development-platform-team
 team_type: platform
 position:
   x: 1080
-  y: 1170
+  y: 1294
 platform_grouping: Cloud Infrastructure Platform Grouping
 metadata:
   established: 2024-03

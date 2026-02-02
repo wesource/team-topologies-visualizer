@@ -4,7 +4,7 @@ team_id: data-storage-platform-team
 team_type: platform
 position:
   x: 1080
-  y: 1450
+  y: 1574
 platform_grouping: Cloud Infrastructure Platform Grouping
 metadata:
   established: 2023-09

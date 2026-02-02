@@ -39,6 +39,21 @@ class FlowMetrics:
     VALID_FREQUENCIES = [DAILY, WEEKLY, MONTHLY, QUARTERLY]
 
 
+# File exclusions
+SKIP_FILES = {
+    'README.md',
+    'company-leadership.md',
+    'engineering-dept.md',
+    'customer-solutions-dept.md',
+    'product-management-dept.md',
+    'infrastructure-dept.md',
+    'support-dept.md',
+    'organization-hierarchy.json',
+    'current-team-types.json',
+    'tt-team-types.json'
+}
+
+
 # Markdown section headers
 class MarkdownSections:
     """Standard markdown section headers used in team files."""

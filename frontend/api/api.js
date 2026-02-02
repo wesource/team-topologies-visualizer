@@ -30,27 +30,42 @@ export function teamNameToSlug(teamName) {
 export async function loadTeamTypes(view) {
     const prefix = getViewPrefix(view);
     const response = await fetch(getApiUrl(`${prefix}/team-types`));
+    if (!response.ok) {
+        throw new Error(`Failed to load team types: ${response.status} ${response.statusText}`);
+    }
     return await response.json();
 }
 
 export async function loadOrganizationHierarchy() {
     const response = await fetch(getApiUrl('/baseline/organization-hierarchy'));
+    if (!response.ok) {
+        throw new Error(`Failed to load organization hierarchy: ${response.status} ${response.statusText}`);
+    }
     return await response.json();
 }
 
 export async function loadProductLines() {
     const response = await fetch(getApiUrl('/baseline/product-lines'));
+    if (!response.ok) {
+        throw new Error(`Failed to load product lines: ${response.status} ${response.statusText}`);
+    }
     return await response.json();
 }
 
 export async function loadBusinessStreams() {
     const response = await fetch(getApiUrl('/baseline/business-streams'));
+    if (!response.ok) {
+        throw new Error(`Failed to load business streams: ${response.status} ${response.statusText}`);
+    }
     return await response.json();
 }
 
 export async function loadTeams(view) {
     const prefix = getViewPrefix(view);
     const response = await fetch(getApiUrl(`${prefix}/teams`));
+    if (!response.ok) {
+        throw new Error(`Failed to load teams: ${response.status} ${response.statusText}`);
+    }
     return await response.json();
 }
 
@@ -58,6 +73,9 @@ export async function loadTeamDetails(teamId, view) {
     const prefix = getViewPrefix(view);
     // Use team_id directly (already slug-safe)
     const response = await fetch(getApiUrl(`${prefix}/teams/${teamId}`));
+    if (!response.ok) {
+        throw new Error(`Failed to load team details: ${response.status} ${response.statusText}`);
+    }
     return await response.json();
 }
 
@@ -69,6 +87,9 @@ export async function updateTeamPosition(teamId, x, y, view) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ x, y })
     });
+    if (!response.ok) {
+        throw new Error(`Failed to update team position: ${response.status} ${response.statusText}`);
+    }
     return response.ok;
 }
 
@@ -95,6 +116,9 @@ export async function createSnapshot(name, description = '', author = '', teamNa
 
 export async function loadSnapshots() {
     const response = await fetch(getApiUrl('/tt/snapshots'));
+    if (!response.ok) {
+        throw new Error(`Failed to load snapshots: ${response.status} ${response.statusText}`);
+    }
     return await response.json();
 }
 

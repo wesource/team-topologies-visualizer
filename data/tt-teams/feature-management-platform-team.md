@@ -4,7 +4,7 @@ team_id: feature-management-platform-team
 team_type: platform
 position:
   x: 1080
-  y: 1590
+  y: 1714
 platform_grouping: Cloud Infrastructure Platform Grouping
 metadata:
   established: 2024-08

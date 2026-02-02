@@ -4,7 +4,7 @@ team_id: api-gateway-team
 team_type: stream-aligned
 position:
   x: 1080
-  y: 906
+  y: 1030
 platform_grouping: Cloud Infrastructure Platform Grouping
 value_stream_inner: Gateway & Service Mesh
 metadata:

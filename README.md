@@ -1,6 +1,6 @@
 # <img src="frontend/rubiks-cube-logo.svg" alt="Rubik's cube" width="36" style="vertical-align: middle;" /> Team Topologies Visualizer
 
-A web app for visualizing team structures using **Team Topologies (TT)** concepts.
+Interactive Team Topologies visualizer for org design: baseline vs evolving TT design, snapshot compare. Markdown/YAML (Team API-style).
 
 Two complementary views:
 - **Baseline**: your current/reference structure before Team Topologies transformation
@@ -86,7 +86,7 @@ Open http://localhost:8000/static/index.html
   - **Hierarchy**: classic org chart with reporting lines
   - **Product lines**: product lanes + shared/platform teams
   - **Business streams**: swimlanes grouped by business value streams, or what SAFe refers to as ARTs or "trains"
-- **TT Design**: Model your target Team Topologies structure with:
+- **TT Design**: Model your future-state Team Topologies design with:
   - Four team types (Stream-aligned, Platform, Enabling, Complicated Subsystem)
   - Three interaction modes (Collaboration, X-as-a-Service, Facilitating)
   - Value stream groupings and platform groupings (with optional inner groupings for fractal patterns)

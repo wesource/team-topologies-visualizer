@@ -3,8 +3,8 @@ name: Example Undefined Team
 team_id: example-undefined-team
 team_type: undefined
 position:
-  x: 92
-  y: 899
+  x: 100
+  y: 280
 metadata:
   established: 2023-01
   cognitive_load: undefined

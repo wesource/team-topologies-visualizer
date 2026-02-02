@@ -4,7 +4,7 @@ team_id: observability-platform-team
 team_type: platform
 position:
   x: 1080
-  y: 1730
+  y: 1854
 platform_grouping: Cloud Infrastructure Platform Grouping
 metadata:
   established: 2023-09

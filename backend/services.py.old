@@ -5,6 +5,7 @@ from pathlib import Path
 
 import yaml
 
+from backend.constants import SKIP_FILES
 from backend.models import TeamData
 
 # Data directories
@@ -437,23 +438,10 @@ def find_all_teams(view: str = "tt") -> list[TeamData]:
     if not data_dir.exists():
         return teams
 
-    # Files to exclude (hierarchy/department files)
-    exclude_files = {
-        'company-leadership.md',
-        'engineering-dept.md',
-        'customer-solutions-dept.md',
-        'product-management-dept.md',
-        'infrastructure-dept.md',
-        'support-dept.md',
-        'organization-hierarchy.json',
-        'current-team-types.json',
-        'tt-team-types.json'
-    }
-
     # Recursively find all .md files (supports nested folder structure)
     for file_path in data_dir.rglob("*.md"):
         # Skip hierarchy/department files
-        if file_path.name in exclude_files:
+        if file_path.name in SKIP_FILES:
             continue
         # Skip hidden directories like .pytest_cache
         if any(part.startswith('.') for part in file_path.parts):
@@ -479,22 +467,10 @@ def check_duplicate_team_ids(view: str = "tt") -> dict[str, list[str]]:
         Empty dict if no duplicates found.
     """
     data_dir = get_data_dir(view)
-    exclude_files = {
-        'company-leadership.md',
-        'engineering-dept.md',
-        'customer-solutions-dept.md',
-        'product-management-dept.md',
-        'infrastructure-dept.md',
-        'support-dept.md',
-        'organization-hierarchy.json',
-        'current-team-types.json',
-        'tt-team-types.json'
-    }
-
     team_id_to_files = {}  # Maps team_id -> list of files using it
 
     for file_path in data_dir.rglob("*.md"):
-        if file_path.name in exclude_files:
+        if file_path.name in SKIP_FILES:
             continue
         if any(part.startswith('.') for part in file_path.parts):
             continue
@@ -524,23 +500,10 @@ def find_team_by_name(team_name: str, view: str = "tt") -> tuple[TeamData, Path]
     """
     data_dir = get_data_dir(view)
 
-    # Files to exclude (hierarchy/department files)
-    exclude_files = {
-        'company-leadership.md',
-        'engineering-dept.md',
-        'customer-solutions-dept.md',
-        'product-management-dept.md',
-        'infrastructure-dept.md',
-        'support-dept.md',
-        'organization-hierarchy.json',
-        'current-team-types.json',
-        'tt-team-types.json'
-    }
-
     # Search through all .md files and match by team name in content
     for file_path in data_dir.rglob("*.md"):
         # Skip excluded files
-        if file_path.name in exclude_files:
+        if file_path.name in SKIP_FILES:
             continue
 
         try:
@@ -567,20 +530,9 @@ def find_team_by_id(team_id: str, view: str = "tt") -> tuple[TeamData, Path] | N
         Tuple of (TeamData, file_path) or None if not found
     """
     data_dir = get_data_dir(view)
-    exclude_files = {
-        'company-leadership.md',
-        'engineering-dept.md',
-        'customer-solutions-dept.md',
-        'product-management-dept.md',
-        'infrastructure-dept.md',
-        'support-dept.md',
-        'organization-hierarchy.json',
-        'current-team-types.json',
-        'tt-team-types.json'
-    }
 
     for file_path in data_dir.rglob("*.md"):
-        if file_path.name in exclude_files:
+        if file_path.name in SKIP_FILES:
             continue
 
         try:
@@ -614,22 +566,10 @@ def find_team_by_name_or_slug(identifier: str, view: str = "tt") -> tuple[TeamDa
 
     # If not found, try matching by slug (handles URL-encoded names with special chars)
     data_dir = get_data_dir(view)
-    exclude_files = {
-        'company-leadership.md',
-        'engineering-dept.md',
-        'customer-solutions-dept.md',
-        'product-management-dept.md',
-        'infrastructure-dept.md',
-        'support-dept.md',
-        'organization-hierarchy.json',
-        'current-team-types.json',
-        'tt-team-types.json'
-    }
-
     identifier_slug = team_name_to_slug(identifier)
 
     for file_path in data_dir.rglob("*.md"):
-        if file_path.name in exclude_files:
+        if file_path.name in SKIP_FILES:
             continue
 
         try:
