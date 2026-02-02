@@ -5,7 +5,7 @@ import { getApiUrl } from '../core/config.js';
  * Get the API prefix based on view (Baseline or TT-Design)
  */
 function getViewPrefix(view) {
-    return view === 'current' ? '/baseline' : '/tt';
+    return view === 'baseline' ? '/baseline' : '/tt';
 }
 
 /**

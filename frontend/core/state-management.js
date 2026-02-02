@@ -60,7 +60,7 @@ import { LAYOUT } from './constants.js';
 /**
  * @typedef {Object} PositionSnapshot
  * @property {number} timestamp - When snapshot was taken
- * @property {string} view - Which view ('tt' or 'current')
+ * @property {string} view - Which view ('tt' or 'baseline')
  * @property {Array<{name: string, x: number, y: number}>} teams - Team positions
  */
 
@@ -81,7 +81,7 @@ export const state = {
     // ═══════════════════════════════════════════════════════════════════════
     // VIEW SELECTION - Which view/perspective is currently active
     // ═══════════════════════════════════════════════════════════════════════
-    /** @type {'tt'|'current'} Main view: 'tt' = TT Design, 'current' = Baseline */
+    /** @type {'tt'|'baseline'} Main view: 'tt' = TT Design, 'baseline' = Baseline */
     currentView: 'tt',
     /** @type {'hierarchy'|'product-lines'|'business-streams'} Baseline perspective */
     currentPerspective: 'hierarchy',
@@ -266,7 +266,7 @@ export function fitToView(canvas, teams, drawCallback) {
     let maxX = -Infinity, maxY = -Infinity;
 
     // For hierarchy view in baseline, account for organizational structure (company, depts, line managers)
-    if (state.currentView === 'current' && state.currentPerspective === 'hierarchy' && state.organizationHierarchy) {
+    if (state.currentView === 'baseline' && state.currentPerspective === 'hierarchy' && state.organizationHierarchy) {
         // Include header: title at y=10 (startY=50, title at startY-40)
         const headerY = 10;
         const headerX = 150 + 50; // startX + 50
@@ -329,7 +329,7 @@ export function fitToView(canvas, teams, drawCallback) {
     console.log('[FitToView] Bounds from team positions:', { minX, minY, maxX, maxY });
 
     // Handle custom team positions for product-lines and business-streams views
-    if (state.currentView === 'current' && state.currentPerspective === 'product-lines' && state.productLinesTeamPositions) {
+    if (state.currentView === 'baseline' && state.currentPerspective === 'product-lines' && state.productLinesTeamPositions) {
         // Include header: title at y=60 (startY=100, title at startY-40)
         const headerY = 60;
         const headerX = 50;
@@ -342,7 +342,7 @@ export function fitToView(canvas, teams, drawCallback) {
             maxX = Math.max(maxX, bounds.x + bounds.width);
             maxY = Math.max(maxY, bounds.y + bounds.height);
         });
-    } else if (state.currentView === 'current' && state.currentPerspective === 'business-streams' && state.businessStreamsTeamPositions) {
+    } else if (state.currentView === 'baseline' && state.currentPerspective === 'business-streams' && state.businessStreamsTeamPositions) {
 
         // Include header: title at y=20 (LAYOUT.startY=40, title at startY-20)
         const headerY = 20;

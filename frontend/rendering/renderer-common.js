@@ -9,7 +9,7 @@ import {
     drawPlatformGroupings as drawPlatformGroupingsUtil,
     drawValueStreamInnerGroupings as drawValueStreamInnerGroupingsUtil,
     drawPlatformInnerGroupings as drawPlatformInnerGroupingsUtil
-} from './grouping-rendering.js';
+} from './tt-grouping-rendering.js';
 import {
     drawTeam as drawTeamUtil,
     calculateFlowMetricsHealth as calculateFlowMetricsHealthUtil,
@@ -30,7 +30,7 @@ export {
     drawPlatformGroupings,
     drawValueStreamInnerGroupings,
     drawPlatformInnerGroupings
-} from './grouping-rendering.js';
+} from './tt-grouping-rendering.js';
 // Re-export team rendering utilities (for backward compatibility)
 export { calculateFlowMetricsHealth, drawFlowMetricsBox } from './team-rendering.js';
 
@@ -42,10 +42,10 @@ const shownWarnings = new Set();
  * In TT Design view, stream-aligned and platform teams are wide (spanning flow of change)
  * Enabling teams are vertical (narrow), complicated-subsystem teams are octagonal
  * @param {Object} team - Team object
- * @param {string} currentView - Current view ('current' or 'tt')
+ * @param {string} currentView - Current view ('baseline' or 'tt')
  * @returns {number} Width in pixels
  */
-export function getTeamBoxWidth(team, currentView = 'current') {
+export function getTeamBoxWidth(team, currentView = 'baseline') {
     // In TT Design view, use team-type-specific shapes
     if (currentView === 'tt') {
         // Enabling teams: vertical (narrow, width ~ 2× stream-aligned height)
@@ -69,10 +69,10 @@ export function getTeamBoxWidth(team, currentView = 'current') {
 /**
  * Calculate team box height based on team type
  * @param {Object} team - Team object
- * @param {string} currentView - Current view ('current' or 'tt')
+ * @param {string} currentView - Current view ('baseline' or 'tt')
  * @returns {number} Height in pixels
  */
-export function getTeamBoxHeight(team, currentView = 'current') {
+export function getTeamBoxHeight(team, currentView = 'baseline') {
     // In TT Design view, enabling teams are tall (vertical orientation)
     if (currentView === 'tt' && team.team_type === 'enabling') {
         return 140;
@@ -96,7 +96,7 @@ export function getTeamBoxHeight(team, currentView = 'current') {
  * @param {Object|null} selectedTeam - Currently selected team (for highlight styling)
  * @param {Object} teamColorMap - Map of team types to color hex codes
  * @param {Function} wrapText - Function to wrap text within a given width
- * @param {string} [currentView='current'] - Current view mode ('current' or 'tt')
+ * @param {string} [currentView='baseline'] - Current view mode ('baseline' or 'tt')
  * @param {boolean} [showCognitiveLoad=false] - Whether to display cognitive load indicator
  * @param {Object|null} [comparisonData=null] - Snapshot comparison data for highlighting changes
  * @description Renders team with type-specific shapes: rounded rectangles for stream-aligned/platform,
@@ -128,7 +128,7 @@ function getTeamColor(team, teamColorMap) {
 /**
  * Get team at given canvas position - wrapper that provides dependencies
  */
-export function getTeamAtPosition(teams, x, y, viewOffset, scale, currentView = 'current', currentPerspective = 'hierarchy', customTeamPositions = null) {
+export function getTeamAtPosition(teams, x, y, viewOffset, scale, currentView = 'baseline', currentPerspective = 'hierarchy', customTeamPositions = null) {
     return getTeamAtPositionUtil(teams, x, y, viewOffset, scale, currentView, currentPerspective, customTeamPositions, getTeamBoxWidth, getTeamBoxHeight);
 }
 

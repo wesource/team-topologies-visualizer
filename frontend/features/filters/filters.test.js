@@ -24,7 +24,7 @@ describe('filters.js', () => {
         ];
 
         it('should return all teams when currentView is "current"', () => {
-            const result = getFilteredTeams(mockTeams, 'current', 'vs:E-commerce');
+            const result = getFilteredTeams(mockTeams, 'baseline', 'vs:E-commerce');
             expect(result).toEqual(mockTeams);
             expect(result.length).toBe(5);
         });
@@ -151,7 +151,7 @@ describe('filters.js', () => {
             const vsFilter = vi.spyOn(valueStreamGrouping, 'filterTeamsByValueStream');
             const pgFilter = vi.spyOn(platformGrouping, 'filterTeamsByPlatformGrouping');
 
-            getFilteredTeams(mockTeams, 'current', 'vs:E-commerce');
+            getFilteredTeams(mockTeams, 'baseline', 'vs:E-commerce');
 
             expect(vsFilter).not.toHaveBeenCalled();
             expect(pgFilter).not.toHaveBeenCalled();

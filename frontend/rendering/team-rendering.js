@@ -300,7 +300,7 @@ export function drawTeam(ctx, team, getTeamBoxWidth, getTeamBoxHeight, options =
     const {
         selectedTeam = null,
         teamColorMap,
-        currentView = 'current',
+        currentView = 'baseline',
         showCognitiveLoad = false,
         comparisonData = null,
         showTeamTypeBadges = false,
@@ -356,7 +356,7 @@ function drawDefaultTeamBox(ctx, team, x, y, width, height, options = {}) {
         showCognitiveLoad,
         showTeamTypeBadges = false,
         platformMetrics = null,
-        currentView = 'current',
+        currentView = 'baseline',
         showFlowMetrics = false
     } = options;
 

@@ -127,7 +127,7 @@ async function loadAllTeams() {
             }
         });
         // Load organization hierarchy if in current view
-        if (state.currentView === 'current') {
+        if (state.currentView === 'baseline') {
             try {
                 state.organizationHierarchy = await loadOrganizationHierarchy();
             } catch (error) {

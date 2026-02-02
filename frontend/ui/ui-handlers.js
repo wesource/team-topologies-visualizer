@@ -18,7 +18,7 @@ export function handleViewChange(e, loadAllTeams, _draw) {
     // Show/hide perspective selector (Baseline only)
     const perspectiveSelector = document.getElementById('perspectiveSelector');
     if (perspectiveSelector) {
-        if (state.currentView === 'current') {
+        if (state.currentView === 'baseline') {
             perspectiveSelector.style.display = 'flex';
         } else {
             perspectiveSelector.style.display = 'none';
@@ -29,7 +29,7 @@ export function handleViewChange(e, loadAllTeams, _draw) {
     const showConnectionsLabel = document.getElementById('showConnectionsLabel');
     const connectionsCognitiveLoadDivider = document.getElementById('connectionsCognitiveLoadDivider');
     if (showConnectionsLabel) {
-        if (state.currentView === 'current') {
+        if (state.currentView === 'baseline') {
             showConnectionsLabel.style.display = 'flex';
             if (connectionsCognitiveLoadDivider) {
                 connectionsCognitiveLoadDivider.style.display = 'block';
@@ -46,7 +46,7 @@ export function handleViewChange(e, loadAllTeams, _draw) {
     const teamTypeBadgesLabel = document.getElementById('teamTypeBadgesLabel');
     const cognitiveLoadBadgesDivider = document.getElementById('cognitiveLoadBadgesDivider');
     if (teamTypeBadgesLabel && cognitiveLoadBadgesDivider) {
-        if (state.currentView === 'current') {
+        if (state.currentView === 'baseline') {
             teamTypeBadgesLabel.style.display = 'flex';
             cognitiveLoadBadgesDivider.style.display = 'block';
         } else {
@@ -108,7 +108,7 @@ export function handleViewChange(e, loadAllTeams, _draw) {
 
     const autoAlignBtnView = document.getElementById('autoAlignBtn');
     if (autoAlignBtnView) {
-        if (state.currentView === 'current') {
+        if (state.currentView === 'baseline') {
             autoAlignBtnView.style.display = 'inline-block';
         } else {
             autoAlignBtnView.style.display = 'none';
@@ -127,7 +127,7 @@ export function handleViewChange(e, loadAllTeams, _draw) {
     // Show/hide undo button (visible in both views that allow position changes)
     const undoBtnView = document.getElementById('undoBtn');
     if (undoBtnView) {
-        if (state.currentView === 'current' || state.currentView === 'tt') {
+        if (state.currentView === 'baseline' || state.currentView === 'tt') {
             undoBtnView.style.display = 'inline-block';
         } else {
             undoBtnView.style.display = 'none';

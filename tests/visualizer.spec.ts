@@ -19,7 +19,7 @@ test.describe('Team Topologies Visualizer', () => {
   test('should have both view radio buttons', async ({ page }) => {
     await page.goto(`${BASE_URL}/static/index.html`);
     
-    const currentStateRadio = page.locator('input[value="current"]');
+    const currentStateRadio = page.locator('input[value="baseline"]');
     const ttVisionRadio = page.locator('input[value="tt"]');
     
     await expect(currentStateRadio).toBeVisible();
@@ -35,7 +35,7 @@ test.describe('Team Topologies Visualizer', () => {
       await page.goto(`${BASE_URL}/static/index.html`);
       
       // Switch to current view (Baseline) to trigger organization hierarchy load
-      await page.locator('input[value="current"]').click();
+      await page.locator('input[value="baseline"]').click();
       
       // Wait for API calls
       const hierarchyResponse = await page.waitForResponse(
@@ -54,7 +54,7 @@ test.describe('Team Topologies Visualizer', () => {
       await page.goto(`${BASE_URL}/static/index.html`);
       
       // Switch to current view to trigger teams API call
-      await page.locator('input[value="current"]').click();
+      await page.locator('input[value="baseline"]').click();
       
       const teamsResponse = await page.waitForResponse(
         response => response.url().includes('/api/baseline/teams') && response.status() === 200
@@ -101,13 +101,13 @@ test.describe('Team Topologies Visualizer', () => {
     await page.waitForResponse(response => response.url().includes('/api/tt/teams'));
     
     // Click Baseline (current) radio button
-    await page.locator('input[value="current"]').click();
+    await page.locator('input[value="baseline"]').click();
     
     // Wait for current teams to load
     await page.waitForResponse(response => response.url().includes('/api/baseline/teams'));
     
     // Verify current is now checked
-    await expect(page.locator('input[value="current"]')).toBeChecked();
+    await expect(page.locator('input[value="baseline"]')).toBeChecked();
   });
 
   test('should have canvas with proper dimensions', async ({ page }) => {
@@ -142,7 +142,7 @@ test.describe('Team Topologies Visualizer', () => {
     await page.goto(`${BASE_URL}/static/index.html`);
     
     // Switch to Baseline view (current)
-    await page.locator('input[value="current"]').click();
+    await page.locator('input[value="baseline"]').click();
     
     // Wait for all data to load
     await page.waitForResponse(response => response.url().includes('/api/baseline/organization-hierarchy'));
@@ -221,7 +221,7 @@ test.describe('Team Topologies Visualizer', () => {
       await page.goto(`${BASE_URL}/static/index.html`);
       
       // Switch to current view to trigger organization hierarchy load
-      await page.locator('input[value="current"]').click();
+      await page.locator('input[value="baseline"]').click();
       
       const hierarchyResponse = await page.waitForResponse(
         response => response.url().includes('/api/baseline/organization-hierarchy')
@@ -248,7 +248,7 @@ test.describe('Team Topologies Visualizer', () => {
       await page.goto(`${BASE_URL}/static/index.html`);
       
       // Switch to current view to trigger organization hierarchy load
-      await page.locator('input[value="current"]').click();
+      await page.locator('input[value="baseline"]').click();
       
       const hierarchyResponse = await page.waitForResponse(
         response => response.url().includes('/api/baseline/organization-hierarchy')

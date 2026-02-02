@@ -1,9 +1,9 @@
 /**
- * Unit tests for renderer-business-streams.js
+ * Unit tests for baseline-business-streams.js
  * Tests Value Streams View rendering logic with nested layout
  */
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { renderBusinessStreamsView } from './renderer-business-streams.js';
+import { renderBusinessStreamsView } from './baseline-business-streams.js';
 
 // Mock state management
 vi.mock('./state-management.js', () => ({

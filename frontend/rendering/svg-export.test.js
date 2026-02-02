@@ -119,7 +119,7 @@ describe('SVG Export', () => {
             const teamColorMap = {};
             const state = { hideConnections: false };
 
-            exportModule.exportToSVG(state, organizationHierarchy, teams, teamColorMap, 'current');
+            exportModule.exportToSVG(state, organizationHierarchy, teams, teamColorMap, 'baseline');
 
             expect(document.createElement).toHaveBeenCalledWith('a');
             expect(global.URL.createObjectURL).toHaveBeenCalled();
@@ -138,7 +138,7 @@ describe('SVG Export', () => {
             const teamColorMap = {};
             const state = { hideConnections: false };
 
-            exportModule.exportToSVG(state, organizationHierarchy, teams, teamColorMap, 'current');
+            exportModule.exportToSVG(state, organizationHierarchy, teams, teamColorMap, 'baseline');
 
             expect(global.URL.createObjectURL).toHaveBeenCalled();
         });

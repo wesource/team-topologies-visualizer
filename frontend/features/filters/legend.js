@@ -44,7 +44,7 @@ export function updateLegend() {
     legendHTML += '</div>';
 
     // Add view-specific legend items
-    if (state.currentView === 'current') {
+    if (state.currentView === 'baseline') {
         // Current State view shows dependencies (Actual Comms)
         legendHTML += `
             <div class="legend-section">

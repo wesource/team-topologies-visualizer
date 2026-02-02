@@ -15,7 +15,7 @@ test.describe('UI Basic Features', () => {
   test('should have both view radio buttons', async ({ page }) => {
     await page.goto(`${BASE_URL}/static/index.html`);
     
-    const currentStateRadio = page.locator('input[value="current"]');
+    const currentStateRadio = page.locator('input[value="baseline"]');
     const ttVisionRadio = page.locator('input[value="tt"]');
     
     await expect(currentStateRadio).toBeVisible();
@@ -27,7 +27,7 @@ test.describe('UI Basic Features', () => {
     await page.goto(`${BASE_URL}/static/index.html`);
     await page.waitForResponse(response => response.url().includes('/api/tt/teams'), { timeout: 10000 });
     
-    const currentStateRadio = page.locator('input[value="current"]');
+    const currentStateRadio = page.locator('input[value="baseline"]');
     const ttVisionRadio = page.locator('input[value="tt"]');
     
     // Switch to Baseline view
@@ -88,7 +88,7 @@ test.describe('UI Basic Features', () => {
     await page.goto(`${BASE_URL}/static/index.html`);
     
     // Switch to Baseline view
-    const currentStateRadio = page.locator('input[value="current"]');
+    const currentStateRadio = page.locator('input[value="baseline"]');
     await currentStateRadio.click();
     await page.waitForTimeout(1000);
     

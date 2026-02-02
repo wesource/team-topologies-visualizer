@@ -1,7 +1,7 @@
 import { LAYOUT } from '../core/constants.js';
 import { darkenColor } from './color-utils.js';
 
-export function drawCurrentStateView(ctx, organizationHierarchy, teams, wrapText) {
+export function drawBaselineHierarchyView(ctx, organizationHierarchy, teams, wrapText) {
     if (!organizationHierarchy)
         return;
     const startX = 150; // Minimal left margin to maximize canvas usage

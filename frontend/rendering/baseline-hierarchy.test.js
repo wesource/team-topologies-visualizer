@@ -1,9 +1,9 @@
 /**
- * Unit tests for renderer-current.js (Hierarchy View rendering)
+ * Unit tests for baseline-hierarchy.js (Hierarchy View rendering)
  * Tests organization hierarchy rendering with line_managers and regions
  */
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { drawCurrentStateView } from './renderer-current.js';
+import { drawBaselineHierarchyView } from './baseline-hierarchy.js';
 
 // Mock canvas context
 function createMockContext() {
@@ -34,7 +34,7 @@ function mockWrapText(text, maxWidth) {
     return [text];
 }
 
-describe('drawCurrentStateView', () => {
+describe('drawBaselineHierarchyView', () => {
     let ctx;
 
     beforeEach(() => {
@@ -42,7 +42,7 @@ describe('drawCurrentStateView', () => {
     });
 
     it('should handle null organization hierarchy', () => {
-        drawCurrentStateView(ctx, null, [], mockWrapText);
+        drawBaselineHierarchyView(ctx, null, [], mockWrapText);
         // Should not crash and should not draw anything
         expect(ctx.fillText).not.toHaveBeenCalled();
     });
@@ -54,7 +54,7 @@ describe('drawCurrentStateView', () => {
                 children: []
             }
         };
-        drawCurrentStateView(ctx, orgHierarchy, [], mockWrapText);
+        drawBaselineHierarchyView(ctx, orgHierarchy, [], mockWrapText);
         
         // Should draw title and company box
         const fillTextCalls = ctx.fillText.mock.calls.map(call => call[0]);
@@ -72,7 +72,7 @@ describe('drawCurrentStateView', () => {
                 ]
             }
         };
-        drawCurrentStateView(ctx, orgHierarchy, [], mockWrapText);
+        drawBaselineHierarchyView(ctx, orgHierarchy, [], mockWrapText);
         
         const fillTextCalls = ctx.fillText.mock.calls.map(call => call[0]);
         expect(fillTextCalls).toContain('Engineering Department');
@@ -95,7 +95,7 @@ describe('drawCurrentStateView', () => {
                 ]
             }
         };
-        drawCurrentStateView(ctx, orgHierarchy, [], mockWrapText);
+        drawBaselineHierarchyView(ctx, orgHierarchy, [], mockWrapText);
         
         const fillTextCalls = ctx.fillText.mock.calls.map(call => call[0]);
         expect(fillTextCalls).toContain('Backend Team Manager');
@@ -118,7 +118,7 @@ describe('drawCurrentStateView', () => {
                 ]
             }
         };
-        drawCurrentStateView(ctx, orgHierarchy, [], mockWrapText);
+        drawBaselineHierarchyView(ctx, orgHierarchy, [], mockWrapText);
         
         const fillTextCalls = ctx.fillText.mock.calls.map(call => call[0]);
         expect(fillTextCalls).toContain('EMEA Region');
@@ -140,7 +140,7 @@ describe('drawCurrentStateView', () => {
                 ]
             }
         };
-        drawCurrentStateView(ctx, orgHierarchy, [], mockWrapText);
+        drawBaselineHierarchyView(ctx, orgHierarchy, [], mockWrapText);
         
         // Should have called lineTo multiple times (for connecting lines)
         expect(ctx.lineTo.mock.calls.length).toBeGreaterThan(0);
@@ -164,7 +164,7 @@ describe('drawCurrentStateView', () => {
                 ]
             }
         };
-        drawCurrentStateView(ctx, orgHierarchy, teams, mockWrapText);
+        drawBaselineHierarchyView(ctx, orgHierarchy, teams, mockWrapText);
         
         // Should draw vertical and horizontal connector lines
         expect(ctx.lineTo.mock.calls.length).toBeGreaterThan(4); // Multiple lines for connections
@@ -188,7 +188,7 @@ describe('drawCurrentStateView', () => {
                 ]
             }
         };
-        drawCurrentStateView(ctx, orgHierarchy, teams, mockWrapText);
+        drawBaselineHierarchyView(ctx, orgHierarchy, teams, mockWrapText);
         
         // Should draw vertical and horizontal connector lines
         expect(ctx.lineTo.mock.calls.length).toBeGreaterThan(4);
@@ -217,7 +217,7 @@ describe('drawCurrentStateView', () => {
                 ]
             }
         };
-        drawCurrentStateView(ctx, orgHierarchy, [], mockWrapText);
+        drawBaselineHierarchyView(ctx, orgHierarchy, [], mockWrapText);
         
         const fillTextCalls = ctx.fillText.mock.calls.map(call => call[0]);
         expect(fillTextCalls).toContain('Team Manager');
@@ -240,7 +240,7 @@ describe('drawCurrentStateView', () => {
                 ]
             }
         };
-        drawCurrentStateView(ctx, orgHierarchy, [], mockWrapText);
+        drawBaselineHierarchyView(ctx, orgHierarchy, [], mockWrapText);
         
         const fillTextCalls = ctx.fillText.mock.calls.map(call => call[0]);
         // This now passes after refactoring!
@@ -267,7 +267,7 @@ describe('drawCurrentStateView', () => {
                 ]
             }
         };
-        drawCurrentStateView(ctx, orgHierarchy, teams, mockWrapText);
+        drawBaselineHierarchyView(ctx, orgHierarchy, teams, mockWrapText);
         
         // Should draw main vertical line and 3 horizontal connectors
         expect(ctx.lineTo.mock.calls.length).toBeGreaterThan(10); // Many connection lines
@@ -292,7 +292,7 @@ describe('drawCurrentStateView', () => {
                 ]
             }
         };
-        drawCurrentStateView(ctx, orgHierarchy, teams, mockWrapText);
+        drawBaselineHierarchyView(ctx, orgHierarchy, teams, mockWrapText);
         
         // Should draw main vertical line and 2 horizontal connectors
         expect(ctx.lineTo.mock.calls.length).toBeGreaterThan(8);
@@ -317,7 +317,7 @@ describe('drawCurrentStateView', () => {
                 ]
             }
         };
-        drawCurrentStateView(ctx, orgHierarchy, teams, mockWrapText);
+        drawBaselineHierarchyView(ctx, orgHierarchy, teams, mockWrapText);
         
         // Should not crash, should only draw lines for the one team that exists
         expect(ctx.lineTo.mock.calls.length).toBeGreaterThan(0);
@@ -338,7 +338,7 @@ describe('drawCurrentStateView', () => {
                 ]
             }
         };
-        drawCurrentStateView(ctx, orgHierarchy, [], mockWrapText);
+        drawBaselineHierarchyView(ctx, orgHierarchy, [], mockWrapText);
         
         // Should draw line manager box but no team connections
         const fillTextCalls = ctx.fillText.mock.calls.map(call => call[0]);
@@ -360,7 +360,7 @@ describe('drawCurrentStateView', () => {
                 ]
             }
         };
-        drawCurrentStateView(ctx, orgHierarchy, [], mockWrapText);
+        drawBaselineHierarchyView(ctx, orgHierarchy, [], mockWrapText);
         
         // Should draw region box but no team connections
         const fillTextCalls = ctx.fillText.mock.calls.map(call => call[0]);

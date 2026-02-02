@@ -5,7 +5,7 @@ import { filterTeamsByPlatformGrouping } from '../../tt-concepts/tt-platform-gro
 /**
  * Get filtered teams based on current view and selected grouping
  * @param {Array} teams - All teams
- * @param {string} currentView - Current view ('current' or 'tt')
+ * @param {string} currentView - Current view ('baseline' or 'tt')
  * @param {string} selectedGrouping - Selected grouping filter
  * @returns {Array} Filtered teams
  */

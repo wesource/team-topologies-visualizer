@@ -37,11 +37,11 @@ describe('undo.js - Position History Management', () => {
         });
 
         it('should capture current view in snapshot', () => {
-            state.currentView = 'current';
+            state.currentView = 'baseline';
             pushPositionSnapshot();
 
             const snapshot = state.positionHistory[0];
-            expect(snapshot.view).toBe('current');
+            expect(snapshot.view).toBe('baseline');
         });
 
         it('should allow multiple snapshots', () => {
@@ -224,7 +224,7 @@ describe('undo.js - Position History Management', () => {
             expect(canUndo()).toBe(true);
 
             // User switches to Baseline view - history should be cleared
-            state.currentView = 'current';
+            state.currentView = 'baseline';
             clearPositionHistory();
             expect(canUndo()).toBe(false);
         });

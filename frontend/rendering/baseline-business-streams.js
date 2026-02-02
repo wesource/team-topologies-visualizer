@@ -155,8 +155,8 @@ function drawProductSection(ctx, x, y, width, height, productName, teams, allTea
         team.position = { x: teamX, y: teamY };
 
         // Get actual rendered dimensions (not layout dimensions)
-        const actualWidth = getTeamBoxWidth(team, 'current');
-        const actualHeight = getTeamBoxHeight(team, 'current');
+        const actualWidth = getTeamBoxWidth(team, 'baseline');
+        const actualHeight = getTeamBoxHeight(team, 'baseline');
 
         // Track position for click detection and selection using actual dimensions
         state.businessStreamsTeamPositions.set(team.name, { x: teamX, y: teamY, width: actualWidth, height: actualHeight });
@@ -176,7 +176,7 @@ function drawProductSection(ctx, x, y, width, height, productName, teams, allTea
             selectedTeam: state.selectedTeam,
             teamColorMap: state.teamColorMap,
             wrapText: (text, maxWidth) => wrapText(ctx, text, maxWidth),
-            currentView: 'current',
+            currentView: 'baseline',
             showCognitiveLoad: state.showCognitiveLoad,
             comparisonData: null,
             showTeamTypeBadges: state.showTeamTypeBadges,
@@ -248,8 +248,8 @@ function drawUngroupedTeams(ctx, x, y, teams, allTeams) {
         team.position = { x: teamX, y: teamY };
 
         // Get actual rendered dimensions
-        const actualWidth = getTeamBoxWidth(team, 'current');
-        const actualHeight = getTeamBoxHeight(team, 'current');
+        const actualWidth = getTeamBoxWidth(team, 'baseline');
+        const actualHeight = getTeamBoxHeight(team, 'baseline');
 
         // Track position for click detection using actual dimensions
         state.businessStreamsTeamPositions.set(team.name, { x: teamX, y: teamY, width: actualWidth, height: actualHeight });
@@ -269,7 +269,7 @@ function drawUngroupedTeams(ctx, x, y, teams, allTeams) {
             selectedTeam: state.selectedTeam,
             teamColorMap: state.teamColorMap,
             wrapText: (text, maxWidth) => wrapText(ctx, text, maxWidth),
-            currentView: 'current',
+            currentView: 'baseline',
             showCognitiveLoad: state.showCognitiveLoad,
             comparisonData: null,
             showTeamTypeBadges: state.showTeamTypeBadges,

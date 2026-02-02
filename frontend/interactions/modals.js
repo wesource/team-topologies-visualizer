@@ -257,7 +257,7 @@ export function showInfoModal(type, id) {
 /**
  * Show comprehensive team details in modal
  * @param {Object} team - Team object to show details for
- * @param {string} currentView - Current view ('current' or 'tt-design')
+ * @param {string} currentView - Current view ('baseline' or 'tt-design')
  * @param {Array} allTeams - All teams (for platform consumer calculation)
  */
 export async function showTeamDetails(team, currentView, allTeams = []) {
@@ -474,7 +474,7 @@ export async function showTeamDetails(team, currentView, allTeams = []) {
             }
 
             // Line manager (for current org view)
-            if (currentView === 'current' && teamData.line_manager) {
+            if (currentView === 'baseline' && teamData.line_manager) {
                 const managerItem = document.createElement('li');
                 managerItem.innerHTML = `<strong>Reports to:</strong> ${teamData.line_manager}`;
                 managerItem.style.background = '#e3f2fd';
@@ -672,7 +672,7 @@ export async function showValidationReport(view) {
     modal.style.display = 'block';
 
     try {
-        const prefix = view === 'current' ? '/baseline' : '/tt';
+        const prefix = view === 'baseline' ? '/baseline' : '/tt';
         const response = await fetch(`/api${prefix}/validate`);
         const data = await response.json();
 
@@ -796,12 +796,12 @@ export function closeValidationModal() {
 /**
  * Run validation check silently (without showing modal)
  * Returns validation results or null if validation fails
- * @param {string} view - Current view ('current' or 'tt')
+ * @param {string} view - Current view ('baseline' or 'tt')
  * @returns {Promise<Object|null>} Validation results with error/warning counts
  */
 export async function runValidationCheck(view) {
     try {
-        const prefix = view === 'current' ? '/baseline' : '/tt';
+        const prefix = view === 'baseline' ? '/baseline' : '/tt';
         const response = await fetch(`/api${prefix}/validate`);
         const data = await response.json();
 

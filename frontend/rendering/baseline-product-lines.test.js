@@ -1,9 +1,9 @@
 /**
- * Unit tests for renderer-product-lines.js
+ * Unit tests for baseline-product-lines.js
  * Tests Product Lines View rendering logic with hybrid layout
  */
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { drawProductLinesView } from './renderer-product-lines.js';
+import { drawProductLinesView } from './baseline-product-lines.js';
 
 // Mock canvas context
 function createMockContext() {

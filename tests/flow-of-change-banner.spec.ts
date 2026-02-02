@@ -22,7 +22,7 @@ test.describe('Flow of Change Banner', () => {
 
     test('should hide Flow of Change checkbox in Baseline view', async ({ page }) => {
         // Switch to Baseline view
-        await page.locator('input[value="current"]').click();
+        await page.locator('input[value="baseline"]').click();
         await page.waitForResponse(response => response.url().includes('/api/baseline/teams'));
         await page.waitForTimeout(300);
 
@@ -72,7 +72,7 @@ test.describe('Flow of Change Banner', () => {
         await expect(checkbox).toBeChecked();
         
         // Switch to Baseline view (checkbox hidden)
-        await page.locator('input[value="current"]').click();
+        await page.locator('input[value="baseline"]').click();
         await page.waitForResponse(response => response.url().includes('/api/baseline/teams'));
         await page.waitForTimeout(300);
         

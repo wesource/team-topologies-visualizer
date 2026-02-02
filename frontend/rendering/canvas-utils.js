@@ -34,19 +34,19 @@ export function initCanvasPolyfills() {
  * @param {number} y - Canvas y coordinate
  * @param {Object} viewOffset - View offset {x, y}
  * @param {number} scale - View scale
- * @param {string} currentView - Current view ('current' or 'tt')
+ * @param {string} currentView - Current view ('baseline' or 'tt')
  * @param {string} currentPerspective - Current perspective ('hierarchy', 'product-lines', etc.)
  * @param {Map} customTeamPositions - Custom positions for teams (for special layouts)
  * @param {Function} getTeamBoxWidth - Function to get team box width
  * @param {Function} getTeamBoxHeight - Function to get team box height
  * @returns {Object|undefined} Team object if found
  */
-export function getTeamAtPosition(teams, x, y, viewOffset, scale, currentView = 'current', currentPerspective = 'hierarchy', customTeamPositions = null, getTeamBoxWidth, getTeamBoxHeight) {
+export function getTeamAtPosition(teams, x, y, viewOffset, scale, currentView = 'baseline', currentPerspective = 'hierarchy', customTeamPositions = null, getTeamBoxWidth, getTeamBoxHeight) {
     const worldX = (x - viewOffset.x) / scale;
     const worldY = (y - viewOffset.y) / scale;
 
     // Special handling for product-lines, value-streams, and business-streams perspectives: check tracked positions
-    if (currentView === 'current' && (currentPerspective === 'product-lines' || currentPerspective === 'value-streams' || currentPerspective === 'business-streams') && customTeamPositions) {
+    if (currentView === 'baseline' && (currentPerspective === 'product-lines' || currentPerspective === 'value-streams' || currentPerspective === 'business-streams') && customTeamPositions) {
         // Check each team in the positions map
         for (const [teamName, bounds] of customTeamPositions.entries()) {
             if (worldX >= bounds.x && worldX <= bounds.x + bounds.width &&

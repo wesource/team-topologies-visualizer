@@ -154,7 +154,7 @@ export function filterTeamsByPlatformGrouping(teams, selectedPlatformGrouping) {
  * @param {Array} teams - Teams in the grouping
  * @param {number} teamBoxHeight - Height of a team box
  * @param {number} padding - Padding around the grouping
- * @param {string} currentView - Current view ('current' or 'tt') for dynamic width calculation
+ * @param {string} currentView - Current view ('baseline' or 'tt') for dynamic width calculation
  * @returns {Object} Bounding box {x, y, width, height}
  */
 export function calculateGroupingBoundingBox(teams, teamBoxHeight, padding, currentView = 'tt', labelAreaHeight = 35) {

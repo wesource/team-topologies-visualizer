@@ -10,7 +10,7 @@ test.describe('Baseline Product Lines View', () => {
         await page.waitForTimeout(500);
 
         // Switch to Baseline view
-        const baselineRadio = page.locator('input[type="radio"][value="current"]');
+        const baselineRadio = page.locator('input[type="radio"][value="baseline"]');
         await baselineRadio.check();
         // Wait for Baseline data to load
         await page.waitForResponse(response => response.url().includes('/api/baseline/'), { timeout: 10000 });

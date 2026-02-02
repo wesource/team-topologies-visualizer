@@ -93,7 +93,7 @@ export function getBoxEdgePoint(centerX, centerY, width, height, angle) {
  * @param {Function} getTeamBoxWidth - Function to calculate team box width
  * @param {Function} getTeamBoxHeight - Function to calculate team box height
  * @param {Object} options - Drawing options
- * @param {string} options.currentView - Current view ('current' for baseline, 'tt' for TT Design)
+ * @param {string} options.currentView - Current view ('baseline' for baseline, 'tt' for TT Design)
  * @param {boolean} options.showInteractionModes - Show interaction modes (TT view only)
  * @param {string} options.currentPerspective - Current perspective ('hierarchy', 'product-lines', etc.)
  * @param {Map} options.customTeamPositions - Custom positions for product-lines/business-streams
@@ -103,7 +103,7 @@ export function getBoxEdgePoint(centerX, centerY, width, height, angle) {
  */
 export function drawConnections(ctx, teams, getTeamBoxWidth, getTeamBoxHeight, options = {}) {
     const {
-        currentView = 'current',
+        currentView = 'baseline',
         showInteractionModes = true,
         currentPerspective = 'hierarchy',
         customTeamPositions = null,
@@ -114,7 +114,7 @@ export function drawConnections(ctx, teams, getTeamBoxWidth, getTeamBoxHeight, o
 
     // Debug: drawConnections called
 
-    if (currentView === 'current') {
+    if (currentView === 'baseline') {
         // Current State view: show simple "Actual Comms" from dependencies
         // Track drawn connections to avoid duplicates (bidirectional)
         const drawnConnections = new Set();
@@ -195,7 +195,7 @@ export function drawConnections(ctx, teams, getTeamBoxWidth, getTeamBoxHeight, o
  * @param {Function} getTeamBoxWidth - Function to calculate team box width
  * @param {Function} getTeamBoxHeight - Function to calculate team box height
  * @param {Object} options - Drawing options
- * @param {string} options.currentView - Current view ('current' or 'tt')
+ * @param {string} options.currentView - Current view ('baseline' or 'tt')
  * @param {string} options.currentPerspective - Current perspective ('hierarchy', 'product-lines', etc.)
  * @param {Map} options.customTeamPositions - Custom team positions for product-lines/business-streams views
  * @param {Object} options.focusedTeam - Team in focus mode (if any)
@@ -203,7 +203,7 @@ export function drawConnections(ctx, teams, getTeamBoxWidth, getTeamBoxHeight, o
  */
 function drawInteractionMode(ctx, from, to, mode, getTeamBoxWidth, getTeamBoxHeight, options = {}) {
     const {
-        currentView = 'current',
+        currentView = 'baseline',
         currentPerspective = 'hierarchy',
         customTeamPositions = null,
         focusedTeam = null,
@@ -232,7 +232,7 @@ function drawInteractionMode(ctx, from, to, mode, getTeamBoxWidth, getTeamBoxHei
     let fromWidth, fromHeight, toWidth, toHeight;
 
     // Use custom positions if in product-lines or business-streams perspective
-    if (currentView === 'current' && (currentPerspective === 'product-lines' || currentPerspective === 'business-streams') && customTeamPositions) {
+    if (currentView === 'baseline' && (currentPerspective === 'product-lines' || currentPerspective === 'business-streams') && customTeamPositions) {
         const fromBounds = customTeamPositions.get(from.name);
         const toBounds = customTeamPositions.get(to.name);
 
@@ -332,7 +332,7 @@ function drawInteractionMode(ctx, from, to, mode, getTeamBoxWidth, getTeamBoxHei
  * @param {Function} getTeamBoxWidth - Function to calculate team box width
  * @param {Function} getTeamBoxHeight - Function to calculate team box height
  * @param {Object} options - Drawing options
- * @param {string} options.currentView - Current view ('current' for baseline)
+ * @param {string} options.currentView - Current view ('baseline' for baseline)
  * @param {string} options.currentPerspective - Current perspective ('hierarchy', 'product-lines', etc.)
  * @param {Map} options.customTeamPositions - Custom positions for product-lines/business-streams
  * @param {Object} options.focusedTeam - Team in focus mode
@@ -340,7 +340,7 @@ function drawInteractionMode(ctx, from, to, mode, getTeamBoxWidth, getTeamBoxHei
  */
 function drawActualCommsConnection(ctx, from, to, getTeamBoxWidth, getTeamBoxHeight, options = {}) {
     const {
-        currentView = 'current',
+        currentView = 'baseline',
         currentPerspective = 'hierarchy',
         customTeamPositions = null,
         focusedTeam = null,
@@ -367,7 +367,7 @@ function drawActualCommsConnection(ctx, from, to, getTeamBoxWidth, getTeamBoxHei
     let fromWidth, fromHeight, toWidth, toHeight;
 
     // Use custom positions if in product-lines or business-streams perspective
-    if (currentView === 'current' && (currentPerspective === 'product-lines' || currentPerspective === 'business-streams') && customTeamPositions) {
+    if (currentView === 'baseline' && (currentPerspective === 'product-lines' || currentPerspective === 'business-streams') && customTeamPositions) {
         const fromPos = customTeamPositions.get(from.name);
         const toPos = customTeamPositions.get(to.name);
 

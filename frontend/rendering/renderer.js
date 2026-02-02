@@ -1,7 +1,7 @@
 // Canvas rendering coordination
-import { drawCurrentStateView } from './renderer-current.js';
-import { drawProductLinesView } from './renderer-product-lines.js';
-import { renderBusinessStreamsView } from './renderer-business-streams.js';
+import { drawBaselineHierarchyView } from './baseline-hierarchy.js';
+import { drawProductLinesView } from './baseline-product-lines.js';
+import { renderBusinessStreamsView } from './baseline-business-streams.js';
 import { drawTeam, drawConnections, wrapText, drawValueStreamGroupings, drawPlatformGroupings, drawValueStreamInnerGroupings, drawPlatformInnerGroupings, drawFlowOfChangeBanner } from './renderer-common.js';
 import { getValueStreamGroupings, getValueStreamInnerGroupings } from '../tt-concepts/tt-value-stream-grouping.js';
 import { getPlatformGroupings, getPlatformInnerGroupings } from '../tt-concepts/tt-platform-grouping.js';
@@ -29,7 +29,7 @@ export function draw(state) {
     const teamsToRender = getFilteredTeams();
 
     // Draw Baseline views (hierarchy, product-lines, or business-streams)
-    if (state.currentView === 'current') {
+    if (state.currentView === 'baseline') {
         if (state.currentPerspective === 'business-streams' && state.businessStreamsData) {
             // Business Streams View (nested layout)
             renderBusinessStreamsView(state.ctx, state.businessStreamsData);
@@ -50,7 +50,7 @@ export function draw(state) {
             );
         } else if (state.organizationHierarchy) {
             // Hierarchy View (org chart)
-            drawCurrentStateView(state.ctx, state.organizationHierarchy, teamsToRender, (text, maxWidth) => wrapText(state.ctx, text, maxWidth));
+            drawBaselineHierarchyView(state.ctx, state.organizationHierarchy, teamsToRender, (text, maxWidth) => wrapText(state.ctx, text, maxWidth));
         }
     }
 
@@ -73,7 +73,7 @@ export function draw(state) {
 
     // Skip standard team drawing in product-lines and business-streams perspectives
     // (teams are already rendered inside their respective containers)
-    if (state.currentView === 'current' && (state.currentPerspective === 'product-lines' || state.currentPerspective === 'business-streams')) {
+    if (state.currentView === 'baseline' && (state.currentPerspective === 'product-lines' || state.currentPerspective === 'business-streams')) {
         // Draw connections if enabled (use appropriate position map)
         if (state.showConnections) {
             const positionMap = state.currentPerspective === 'business-streams'
@@ -92,7 +92,7 @@ export function draw(state) {
         // Product lines and business streams views handle team rendering - skip standard team drawing
     } else {
         // Draw connections first (only if enabled in current view)
-        if (!(state.currentView === 'current' && !state.showConnections)) {
+        if (!(state.currentView === 'baseline' && !state.showConnections)) {
             // Use null for hierarchy view (teams use standard positions)
             const customPositions = state.currentPerspective === 'hierarchy' ? null : state.productLinesTeamPositions;
             drawConnections(state.ctx, teamsToRender, {
@@ -107,7 +107,7 @@ export function draw(state) {
         }
 
         // Draw teams (exclude organizational structure teams in hierarchy view)
-        const teamsToDrawAsBoxes = (state.currentView === 'current' && state.currentPerspective === 'hierarchy')
+        const teamsToDrawAsBoxes = (state.currentView === 'baseline' && state.currentPerspective === 'hierarchy')
             ? teamsToRender.filter(team => !ORGANIZATION_STRUCTURE_TYPES.includes(team.team_type))
             : teamsToRender;
 

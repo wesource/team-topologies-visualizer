@@ -114,7 +114,7 @@ export class CanvasInteractionHandler {
             this.state.selectedTeam = team;
 
             // Disable dragging in Product Lines, Value Streams, and Business Streams views
-            if (this.state.currentView === 'current' && (this.state.currentPerspective === 'product-lines' || this.state.currentPerspective === 'value-streams' || this.state.currentPerspective === 'business-streams')) {
+            if (this.state.currentView === 'baseline' && (this.state.currentPerspective === 'product-lines' || this.state.currentPerspective === 'value-streams' || this.state.currentPerspective === 'business-streams')) {
                 // Focus mode still works, but no dragging
                 this.dragStartPosition = null; // Prevent dragging
                 this.drawCallback();

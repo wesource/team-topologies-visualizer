@@ -505,7 +505,7 @@ describe('state-management.js', () => {
 
         describe('Hierarchy view with organizational structure', () => {
             beforeEach(() => {
-                state.currentView = 'current';
+                state.currentView = 'baseline';
                 state.currentPerspective = 'hierarchy';
                 state.organizationHierarchy = {
                     company: {
@@ -584,7 +584,7 @@ describe('state-management.js', () => {
 
         describe('Product-lines and Business-streams perspectives', () => {
             beforeEach(() => {
-                state.currentView = 'current';
+                state.currentView = 'baseline';
             });
 
             it('should use custom team positions for product-lines', () => {

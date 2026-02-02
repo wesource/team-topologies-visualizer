@@ -26,7 +26,7 @@ describe('API functions - Success cases', () => {
                 json: async () => mockData
             });
 
-            const result = await api.loadTeamTypes('current');
+            const result = await api.loadTeamTypes('baseline');
 
             expect(fetch).toHaveBeenCalledWith('http://localhost:8000/api/baseline/team-types');
             expect(result).toEqual(mockData);
@@ -111,7 +111,7 @@ describe('API functions - Success cases', () => {
                 json: async () => mockTeams
             });
 
-            const result = await api.loadTeams('current');
+            const result = await api.loadTeams('baseline');
 
             expect(fetch).toHaveBeenCalledWith('http://localhost:8000/api/baseline/teams');
             expect(result).toEqual(mockTeams);
@@ -141,7 +141,7 @@ describe('API functions - Success cases', () => {
                 json: async () => ({ x: 150, y: 250 })
             });
 
-            const result = await api.updateTeamPosition('team-a', 150, 250, 'current');
+            const result = await api.updateTeamPosition('team-a', 150, 250, 'baseline');
 
             expect(fetch).toHaveBeenCalledWith(
                 'http://localhost:8000/api/baseline/teams/team-a/position',
@@ -187,7 +187,7 @@ describe('API functions - Error handling', () => {
                 statusText: 'Not Found'
             });
 
-            await expect(api.loadTeamTypes('current'))
+            await expect(api.loadTeamTypes('baseline'))
                 .rejects.toThrow('Failed to load team types: 404 Not Found');
         });
     });
@@ -239,14 +239,14 @@ describe('API functions - Error handling', () => {
                 statusText: 'Server Error'
             });
 
-            await expect(api.loadTeams('current'))
+            await expect(api.loadTeams('baseline'))
                 .rejects.toThrow('Failed to load teams: 500 Server Error');
         });
 
         it('should handle network errors', async () => {
             vi.mocked(fetch).mockRejectedValueOnce(new Error('Network error'));
 
-            await expect(api.loadTeams('current')).rejects.toThrow('Network error');
+            await expect(api.loadTeams('baseline')).rejects.toThrow('Network error');
         });
     });
 
@@ -271,7 +271,7 @@ describe('API functions - Error handling', () => {
                 statusText: 'Bad Request'
             });
 
-            await expect(api.updateTeamPosition('team-a', 150, 250, 'current'))
+            await expect(api.updateTeamPosition('team-a', 150, 250, 'baseline'))
                 .rejects.toThrow('Failed to update team position: 400 Bad Request');
         });
     });
@@ -299,7 +299,7 @@ describe('API URL construction', () => {
     });
 
     it('should construct correct URLs with view parameter for baseline', async () => {
-        await api.loadTeamTypes('current');
+        await api.loadTeamTypes('baseline');
         expect(fetch).toHaveBeenCalledWith(expect.stringContaining('/baseline/team-types'));
     });
 
@@ -309,7 +309,7 @@ describe('API URL construction', () => {
     });
 
     it('should use correct base URL', async () => {
-        await api.loadTeams('current');
+        await api.loadTeams('baseline');
         expect(fetch).toHaveBeenCalledWith(expect.stringContaining('localhost:8000/api/baseline/teams'));
     });
 });

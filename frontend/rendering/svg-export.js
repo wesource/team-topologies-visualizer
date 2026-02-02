@@ -16,7 +16,7 @@ export function exportToSVG(state, organizationHierarchy, teams, teamColorMap, c
     // Extract Flow of Change banner flag from state
     const showFlowOfChangeBanner = state.showFlowOfChangeBanner || false;
     // Handle product-lines and business-streams perspectives
-    const isBaselineView = currentView === 'current';
+    const isBaselineView = currentView === 'baseline';
     const isProductLines = isBaselineView && state.currentPerspective === 'product-lines';
     const isBusinessStreams = isBaselineView && state.currentPerspective === 'business-streams';
     const isHierarchy = isBaselineView && state.currentPerspective === 'hierarchy';
@@ -106,11 +106,11 @@ export function exportToSVG(state, organizationHierarchy, teams, teamColorMap, c
   </defs>
   <rect x="${bgX}" y="${bgY}" width="${bgWidth}" height="${bgHeight}" fill="white"/>
 `;
-    if (currentView === 'current' && isProductLines && state.productLinesData) {
+    if (currentView === 'baseline' && isProductLines && state.productLinesData) {
         svg += generateProductLinesSVG(state.productLinesData, teamColorMap, showConnections);
-    } else if (currentView === 'current' && isBusinessStreams && state.businessStreamsData) {
+    } else if (currentView === 'baseline' && isBusinessStreams && state.businessStreamsData) {
         svg += generateBusinessStreamsSVG(state.businessStreamsData, teamColorMap, showConnections);
-    } else if (currentView === 'current' && organizationHierarchy) {
+    } else if (currentView === 'baseline' && organizationHierarchy) {
         svg += generateCurrentStateSVG(organizationHierarchy, teams, teamColorMap, showConnections);
     } else {
         svg += generateTTVisionSVG(teams, teamColorMap, showInteractionModes, interactionModeFilters, showFlowOfChangeBanner);
@@ -128,7 +128,7 @@ export function exportToSVG(state, organizationHierarchy, teams, teamColorMap, c
 
     // Build filename with perspective for baseline view
     let filename = 'team-topology';
-    if (currentView === 'current') {
+    if (currentView === 'baseline') {
         // Include perspective in baseline view
         filename += `-baseline-${state.currentPerspective}`;
     } else {
@@ -656,7 +656,7 @@ function drawSVGInnerGrouping(label, x, y, width, height, fillColor, borderColor
 `;
 }
 
-function drawSVGBox(text, x, y, width, height, bgColor, textColor, isBold, teamType = null, currentView = 'current') {
+function drawSVGBox(text, x, y, width, height, bgColor, textColor, isBold, teamType = null, currentView = 'baseline') {
     const fontSize = isBold ? 18 : 16; // Font sizes to match grouping label proportions (16px grouping labels)
     const fontWeight = isBold ? 'bold' : 'normal';
     const borderColor = darkenColor(bgColor, LAYOUT.BORDER_COLOR_DARKEN_FACTOR);
@@ -681,7 +681,7 @@ function drawSVGBox(text, x, y, width, height, bgColor, textColor, isBold, teamT
 /**
  * Draw default team box (rounded corners in TT Design, sharp corners in Baseline view)
  */
-function drawSVGDefaultBox(text, x, y, width, height, bgColor, textColor, fontSize, fontWeight, borderColor, currentView = 'current', teamType = null) {
+function drawSVGDefaultBox(text, x, y, width, height, bgColor, textColor, fontSize, fontWeight, borderColor, currentView = 'baseline', teamType = null) {
     // Wrap text
     const words = text.split(' ');
     const lines = [];

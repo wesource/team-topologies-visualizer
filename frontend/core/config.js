@@ -21,7 +21,7 @@ export const CONFIG = {
 
     // View names
     VIEWS: {
-        CURRENT: 'current',
+        CURRENT: 'baseline',
         TT: 'tt'
     },
 
