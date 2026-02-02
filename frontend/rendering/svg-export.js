@@ -12,6 +12,8 @@ export function exportToSVG(state, organizationHierarchy, teams, teamColorMap, c
         showCollaboration: true,
         showFacilitating: true
     };
+    // Extract Flow of Change banner flag from state
+    const showFlowOfChangeBanner = state.showFlowOfChangeBanner || false;
     // Handle product-lines and business-streams perspectives
     const isBaselineView = currentView === 'current';
     const isProductLines = isBaselineView && state.currentPerspective === 'product-lines';
@@ -28,6 +30,11 @@ export function exportToSVG(state, organizationHierarchy, teams, teamColorMap, c
         let minY = Math.min(...teams.map(t => t.position.y)) - padding;
         let maxX = Math.max(...teams.map(t => t.position.x + getTeamBoxWidth(t, currentView))) + padding;
         let maxY = Math.max(...teams.map(t => t.position.y + getTeamBoxHeight(t, currentView))) + padding;
+
+        // Add space for Flow of Change banner if enabled (TT view only)
+        if (currentView === 'tt' && showFlowOfChangeBanner) {
+            maxY += 300; // Space for larger arrow (80px gap + 150px height + padding)
+        }
 
         // For hierarchy view, calculate actual bounds from organizational structure
         if (isHierarchy && organizationHierarchy) {
@@ -105,7 +112,7 @@ export function exportToSVG(state, organizationHierarchy, teams, teamColorMap, c
     } else if (currentView === 'current' && organizationHierarchy) {
         svg += generateCurrentStateSVG(organizationHierarchy, teams, teamColorMap, showConnections);
     } else {
-        svg += generateTTVisionSVG(teams, teamColorMap, showInteractionModes, interactionModeFilters);
+        svg += generateTTVisionSVG(teams, teamColorMap, showInteractionModes, interactionModeFilters, showFlowOfChangeBanner);
     }
     svg += '</svg>';
 
@@ -493,7 +500,7 @@ function getSVGBoxEdgePoint(centerX, centerY, width, height, angle) {
     }
 }
 
-function generateTTVisionSVG(teams, teamColorMap, showInteractionModes, interactionModeFilters = {}) {
+function generateTTVisionSVG(teams, teamColorMap, showInteractionModes, interactionModeFilters = {}, showFlowOfChangeBanner = false) {
     let elements = '';
 
     // Add arrow marker definitions at the beginning
@@ -625,6 +632,12 @@ function generateTTVisionSVG(teams, teamColorMap, showInteractionModes, interact
         const textColor = '#222222'; // Dark gray for readability
         elements += drawSVGBox(team.name, team.position.x, team.position.y, teamWidth, teamHeight, color, textColor, false, team.team_type, 'tt');
     });
+
+    // Draw Flow of Change banner arrow if enabled
+    if (showFlowOfChangeBanner && teams.length > 0) {
+        elements += drawSVGFlowOfChangeBanner(teams);
+    }
+
     return elements;
 }
 
@@ -1170,3 +1183,67 @@ function generateBusinessStreamsSVG(businessStreamsData, teamColorMap, showConne
     return elements;
 }
 
+/**
+ * Draw Flow of Change banner arrow in SVG format
+ * @param {Array<Object>} teams - Array of team objects to calculate bounding box
+ * @returns {string} SVG elements for the Flow of Change banner
+ */
+function drawSVGFlowOfChangeBanner(teams) {
+    if (!teams || teams.length === 0) return '';
+
+    // Calculate bounding box of all teams
+    const teamBounds = teams.reduce((bounds, team) => {
+        const width = getTeamBoxWidth(team, 'tt');
+        const height = getTeamBoxHeight(team, 'tt');
+        const right = team.position.x + width;
+        const bottom = team.position.y + height;
+        
+        return {
+            minX: Math.min(bounds.minX, team.position.x),
+            maxX: Math.max(bounds.maxX, right),
+            minY: Math.min(bounds.minY, team.position.y),
+            maxY: Math.max(bounds.maxY, bottom)
+        };
+    }, { minX: Infinity, maxX: -Infinity, minY: Infinity, maxY: -Infinity });
+
+    // Arrow dimensions and positioning
+    const arrowPadding = 40;
+    const arrowY = teamBounds.maxY + 80;
+    
+    // Center arrow based on team positions with reasonable width
+    const teamCenterX = (teamBounds.minX + teamBounds.maxX) / 2;
+    const arrowWidth = Math.min(800, teamBounds.maxX - teamBounds.minX + arrowPadding * 2);
+    const arrowStartX = teamCenterX - arrowWidth / 2;
+    const arrowEndX = teamCenterX + arrowWidth / 2;
+    
+    // FlexArrow dimensions (matching canvas version - 3x shaft height, large arrowhead)
+    const shaftHeight = 81;
+    const headWidth = 75;
+    const headHeight = 150;
+
+    // Build SVG path for flexArrow (uniform shaft + simple triangular head)
+    const shaftTopY = arrowY + (headHeight - shaftHeight) / 2;
+    const shaftEndX = arrowEndX - headWidth;
+    
+    const pathData = [
+        `M ${arrowStartX} ${shaftTopY + shaftHeight}`, // Bottom-left of shaft
+        `L ${arrowStartX} ${shaftTopY}`, // Top-left of shaft
+        `L ${shaftEndX} ${shaftTopY}`, // Top edge of shaft
+        `L ${shaftEndX} ${arrowY}`, // Top of arrowhead
+        `L ${arrowEndX} ${arrowY + headHeight / 2}`, // Arrow point (center)
+        `L ${shaftEndX} ${arrowY + headHeight}`, // Bottom of arrowhead
+        `L ${shaftEndX} ${shaftTopY + shaftHeight}`, // Bottom of shaft at arrowhead
+        'Z' // Close path
+    ].join(' ');
+
+    const labelX = arrowStartX + (arrowEndX - arrowStartX) / 2;
+    const labelY = arrowY + headHeight / 2;
+
+    return `
+  <g class="flow-of-change-banner">
+    <path d="${pathData}" fill="none" stroke="#666666" stroke-width="2" stroke-dasharray="5,5"/>
+    <rect x="${labelX - 70}" y="${labelY - 12}" width="140" height="24" fill="rgba(255, 255, 255, 0.95)"/>
+    <text x="${labelX}" y="${labelY}" font-family="Inter, system-ui, sans-serif" font-size="18" fill="#333333" text-anchor="middle" dominant-baseline="middle">Flow of Change</text>
+  </g>
+`;
+}

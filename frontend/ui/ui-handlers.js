@@ -89,6 +89,23 @@ export function handleViewChange(e, loadAllTeams, _draw) {
         }
     }
 
+    // Show/hide Flow of Change banner checkbox (TT Design view only)
+    const showFlowOfChangeBannerLabel = document.getElementById('showFlowOfChangeBannerLabel');
+    const metricsFlowBannerDivider = document.getElementById('metricsFlowBannerDivider');
+    if (showFlowOfChangeBannerLabel) {
+        if (state.currentView === 'tt') {
+            showFlowOfChangeBannerLabel.style.display = 'flex';
+            if (metricsFlowBannerDivider) {
+                metricsFlowBannerDivider.style.display = 'block';
+            }
+        } else {
+            showFlowOfChangeBannerLabel.style.display = 'none';
+            if (metricsFlowBannerDivider) {
+                metricsFlowBannerDivider.style.display = 'none';
+            }
+        }
+    }
+
     const autoAlignBtnView = document.getElementById('autoAlignBtn');
     if (autoAlignBtnView) {
         if (state.currentView === 'current') {
@@ -445,6 +462,15 @@ export function setupUIEventListeners(loadAllTeams, draw, openAddTeamModal, clos
         });
     }
 
+    // Flow of Change banner checkbox
+    const showFlowOfChangeBannerCheckbox = document.getElementById('showFlowOfChangeBanner');
+    if (showFlowOfChangeBannerCheckbox) {
+        showFlowOfChangeBannerCheckbox.addEventListener('change', (e) => {
+            state.showFlowOfChangeBanner = e.target.checked;
+            draw();
+        });
+    }
+
     const showPlatformConsumersCheckbox = document.getElementById('showPlatformConsumers');
     if (showPlatformConsumersCheckbox) {
         showPlatformConsumersCheckbox.addEventListener('change', (e) => {
@@ -655,6 +681,11 @@ export function setupUIEventListeners(loadAllTeams, draw, openAddTeamModal, clos
     const showFlowMetricsLabelInit = document.getElementById('showFlowMetricsLabel');
     if (showFlowMetricsLabelInit) {
         showFlowMetricsLabelInit.style.display = 'flex'; // Shown in TT view (disabled by default)
+    }
+
+    const showFlowOfChangeBannerLabelInit = document.getElementById('showFlowOfChangeBannerLabel');
+    if (showFlowOfChangeBannerLabelInit) {
+        showFlowOfChangeBannerLabelInit.style.display = 'flex'; // Shown in TT view (disabled by default)
     }
 
     const autoAlignBtnInit = document.getElementById('autoAlignBtn');

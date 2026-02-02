@@ -1698,3 +1698,104 @@ export function drawPlatformInnerGroupings(ctx, groupings) {
         ctx.fillText(grouping.name, labelX, labelY);
     });
 }
+
+/**
+ * Draw Flow of Change banner arrow (TT Design view only)
+ * Shows horizontal left-to-right flow direction as described in Team Topologies
+ * 
+ * @param {CanvasRenderingContext2D} ctx - Canvas context
+ * @param {number} canvasWidth - Canvas width for spanning calculation
+ * @param {number} canvasHeight - Canvas height for vertical positioning
+ * @param {Array<Object>} teams - Array of team objects (to calculate bounding box)
+ * @description Draws a large horizontal banner arrow with dashed outline at bottom of canvas.
+ * Arrow features asymmetric arrowhead (top edge angled up, bottom edge angled down) and
+ * "Flow of Change" label as per Team Topologies Team Shape Templates PDF.
+ */
+export function drawFlowOfChangeBanner(ctx, canvasWidth, canvasHeight, teams) {
+    if (!teams || teams.length === 0) return;
+
+    // Calculate bounding box of all teams to determine arrow positioning
+    const teamBounds = teams.reduce((bounds, team) => {
+        const width = getTeamBoxWidth(team, 'tt');
+        const height = getTeamBoxHeight(team, 'tt');
+        const right = team.position.x + width;
+        const bottom = team.position.y + height;
+        
+        return {
+            minX: Math.min(bounds.minX, team.position.x),
+            maxX: Math.max(bounds.maxX, right),
+            minY: Math.min(bounds.minY, team.position.y),
+            maxY: Math.max(bounds.maxY, bottom)
+        };
+    }, { minX: Infinity, maxX: -Infinity, minY: Infinity, maxY: -Infinity });
+
+    // Arrow dimensions and positioning
+    const arrowPadding = 40; // Padding from sides
+    const arrowY = teamBounds.maxY + 80; // Position below all teams
+    
+    // Center arrow based on team positions with reasonable width
+    const teamCenterX = (teamBounds.minX + teamBounds.maxX) / 2;
+    const arrowWidth = Math.min(800, teamBounds.maxX - teamBounds.minX + arrowPadding * 2);
+    const arrowStartX = teamCenterX - arrowWidth / 2;
+    const arrowEndX = teamCenterX + arrowWidth / 2;
+    
+    // FlexArrow dimensions (shaft height 3x larger for text)
+    const shaftHeight = 81; // Uniform shaft height (3x original 27px)
+    const headWidth = 75; // Width of triangular head base (45-degree angle)
+    const headHeight = 150; // Full height of arrowhead (large, prominent)
+
+    // Arrow style (dashed, matching facilitating interaction mode [5, 5])
+    ctx.strokeStyle = '#666666';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([5, 5]); // Match facilitating interaction mode dash pattern
+    ctx.fillStyle = 'none'; // No fill, just dashed outline
+
+    // Draw flexArrow path (uniform-width shaft with simple triangular head)
+    ctx.beginPath();
+    
+    // Calculate shaft top edge Y position (vertically center the shaft within headHeight)
+    const shaftTopY = arrowY + (headHeight - shaftHeight) / 2;
+    const shaftEndX = arrowEndX - headWidth;
+    
+    // Start at bottom-left of shaft
+    ctx.moveTo(arrowStartX, shaftTopY + shaftHeight);
+    // Top-left of shaft
+    ctx.lineTo(arrowStartX, shaftTopY);
+    // Top edge of shaft to arrowhead connection
+    ctx.lineTo(shaftEndX, shaftTopY);
+    // Top edge of arrowhead
+    ctx.lineTo(shaftEndX, arrowY);
+    // Arrow point (center)
+    ctx.lineTo(arrowEndX, arrowY + headHeight / 2);
+    // Bottom edge of arrowhead
+    ctx.lineTo(shaftEndX, arrowY + headHeight);
+    // Bottom edge of shaft at arrowhead
+    ctx.lineTo(shaftEndX, shaftTopY + shaftHeight);
+    // Close path back to start
+    ctx.closePath();
+    ctx.stroke();
+
+    // Draw "Flow of Change" label centered in arrow
+    ctx.setLineDash([]); // Reset dash for text
+    ctx.font = '18px Inter, system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    
+    const labelX = arrowStartX + (arrowEndX - arrowStartX) / 2;
+    const labelY = arrowY + headHeight / 2;
+    
+    // Add text background for better readability
+    const textMetrics = ctx.measureText('Flow of Change');
+    const textPadding = 8;
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+    ctx.fillRect(
+        labelX - textMetrics.width / 2 - textPadding,
+        labelY - 12,
+        textMetrics.width + textPadding * 2,
+        24
+    );
+    
+    // Draw text
+    ctx.fillStyle = '#333333';
+    ctx.fillText('Flow of Change', labelX, labelY);
+}

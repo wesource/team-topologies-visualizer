@@ -266,6 +266,27 @@ header .controls-row .interaction-mode-panel .inline-checkbox:focus-within {
     user-select: none;
 }
 
+/* Compact styling for view-options checkboxes (Cognitive Load, Platform Consumers, etc.) */
+.view-options .radio-label {
+    font-size: 0.85rem;
+    gap: 0.3rem;
+    padding: 0.3rem 0.5rem;
+}
+
+.view-options .radio-label input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+}
+
+.view-options .pipe-separator {
+    font-size: 0.85rem;
+    margin: 0 0.2rem;
+}
+
+.view-options .inline-divider {
+    margin: 0 0.3rem;
+}
+
 /* Reduce spacing between emoji and text in labels */
 .radio-label span {
     word-spacing: -0.1em;
@@ -307,13 +328,13 @@ header .controls-row .interaction-mode-panel .inline-checkbox:focus-within {
     gap: 0.35rem;
     cursor: pointer;
     user-select: none;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
 }
 
 .interaction-mode-panel .inline-checkbox input[type="checkbox"] {
     cursor: pointer;
-    width: var(--checkbox-size);
-    height: var(--checkbox-size);
+    width: 14px;
+    height: 14px;
 }
 
 .interaction-mode-panel .inline-checkbox span {

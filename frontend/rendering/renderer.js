@@ -2,7 +2,7 @@
 import { drawCurrentStateView } from './renderer-current.js';
 import { drawProductLinesView } from './renderer-product-lines.js';
 import { renderBusinessStreamsView } from './renderer-business-streams.js';
-import { drawTeam, drawConnections, wrapText, drawValueStreamGroupings, drawPlatformGroupings, drawValueStreamInnerGroupings, drawPlatformInnerGroupings } from './renderer-common.js';
+import { drawTeam, drawConnections, wrapText, drawValueStreamGroupings, drawPlatformGroupings, drawValueStreamInnerGroupings, drawPlatformInnerGroupings, drawFlowOfChangeBanner } from './renderer-common.js';
 import { getValueStreamGroupings, getValueStreamInnerGroupings } from '../tt-concepts/tt-value-stream-grouping.js';
 import { getPlatformGroupings, getPlatformInnerGroupings } from '../tt-concepts/tt-platform-grouping.js';
 import { getFilteredTeams } from '../core/state-management.js';
@@ -140,6 +140,15 @@ export function draw(state) {
                 }
             );
         });
+    }
+
+    // Draw Flow of Change banner arrow (only in TT Design view when enabled)
+    if (state.currentView === 'tt' && state.showFlowOfChangeBanner) {
+        // Get canvas dimensions in world coordinates (accounting for DPR)
+        const dpr = window.devicePixelRatio || 1;
+        const canvasWidth = state.canvas.width / dpr;
+        const canvasHeight = state.canvas.height / dpr;
+        drawFlowOfChangeBanner(state.ctx, canvasWidth, canvasHeight, teamsToRender);
     }
 
     state.ctx.restore();

@@ -21,11 +21,17 @@ Edit this list as your priorities change:
 	- Sanity-check demo mode end-to-end (read-only behavior + banners + snapshot compare) against the current example dataset.
 
 ## Next
-- Flow of change arrows in TT Design view
-	- Add optional "Flow of change" visualization as described in https://teamtopologies.com/key-concepts
-	- Implementation: checkbox option (default off) in TT Design view to show directional arrows indicating flow between teams
-	- Export: include flow arrows in SVG export when enabled
-	- **Note**: Build on top of flow-aware auto-align (teams already positioned by flow direction)
+- Flow of Change banner arrow (TT Design view)
+	- Add optional "Flow of Change" visualization as described in https://teamtopologies.com/key-concepts and shown in the Team Shape Templates PDF (big horizontal banner arrow)
+	- Implementation: checkbox option (default off) in TT Design view to show a large directional banner arrow at the bottom of the canvas
+	- Visual style (match PDF):
+		- Horizontal arrow (left to right), dashed outline (lightweight, conceptual feel)
+		- Straight horizontal shaft with dashed lines
+		- Asymmetric arrowhead: top edge angles upward, bottom edge angles downward, forming sharp point (also dashed)
+		- Label "Flow of Change" centered on or near the arrow
+		- Spanning canvas width or value stream grouping width
+	- Export: include flow banner arrow in SVG export when enabled
+	- **Note**: Teams are already positioned by flow direction via auto-align; this banner makes the flow direction explicit
 - Validation: Baseline config mismatch warnings (product lines + business streams)
 	- What it means: if a Baseline team’s `product_line` is not present in `data/baseline-teams/products.json`, or its `business_stream` is not present in `data/baseline-teams/business-streams.json`, flag it as a validation warning.
 	- Why: prevents “silent” typos that create missing lanes / mis-grouped teams in the Baseline views.

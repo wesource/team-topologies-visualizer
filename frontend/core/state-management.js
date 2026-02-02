@@ -155,6 +155,8 @@ export const state = {
     showFlowMetrics: false,
     /** @type {boolean} Show team type badges in product lines view (Baseline) */
     showTeamTypeBadges: false,
+    /** @type {boolean} Show Flow of Change banner arrow (TT Design only) */
+    showFlowOfChangeBanner: false,
 
     // ═══════════════════════════════════════════════════════════════════════
     // INTERACTION STATE - Focus mode, undo history
