@@ -1,6 +1,6 @@
 // Main application - refactored with modular structure
 import { loadTeamTypes, loadOrganizationHierarchy, loadTeams } from '../api/api.js';
-import { initCanvasPolyfills } from '../rendering/renderer-common.js';
+import { initCanvasPolyfills } from '../rendering/canvas-utils.js';
 import { CanvasInteractionHandler } from '../interactions/canvas-interactions.js';
 import { state } from './state-management.js';
 import { openAddTeamModal, closeModal, closeDetailModal, closeInteractionModeModal, showTeamDetails, handleTeamSubmit, runValidationCheck, showValidationReport } from '../interactions/modals.js';

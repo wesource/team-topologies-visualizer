@@ -3,8 +3,8 @@ team_id: european-transport-solutions-team
 name: European Transport Solutions Team
 team_type: feature-team
 position:
-  x: 1535.0
-  y: 650.0
+  x: 1535
+  y: 650
 metadata:
   size: 4
   department: Customer Solutions

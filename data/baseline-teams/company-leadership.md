@@ -5,6 +5,9 @@ team_type: executive
 metadata:
   level: C-Suite
   size: 5
+position:
+  x: 600
+  y: 250
 ---
 
 # Company Leadership
