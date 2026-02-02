@@ -2,7 +2,7 @@
  * Product Lines View Renderer - Hybrid Layout
  * Vertical product lanes + horizontal shared teams row
  */
-import { darkenColor, getCognitiveLoadIndicator } from './renderer-common.js';
+import { darkenColor, getCognitiveLoadIndicator } from './color-utils.js';
 import { debugLog } from '../core/config.js';
 
 const PRODUCT_LANE_WIDTH = 300;

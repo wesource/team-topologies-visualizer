@@ -1,5 +1,6 @@
 import { LAYOUT } from '../core/constants.js';
-import { darkenColor, getTeamBoxWidth, getTeamBoxHeight } from './renderer-common.js';
+import { darkenColor } from './color-utils.js';
+import { getTeamBoxWidth, getTeamBoxHeight } from './renderer-common.js';
 import { getValueStreamGroupings, getValueStreamInnerGroupings } from '../tt-concepts/tt-value-stream-grouping.js';
 import { getPlatformGroupings, getPlatformInnerGroupings } from '../tt-concepts/tt-platform-grouping.js';
 

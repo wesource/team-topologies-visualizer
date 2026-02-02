@@ -1,5 +1,5 @@
 import { LAYOUT } from '../core/constants.js';
-import { darkenColor } from './renderer-common.js';
+import { darkenColor } from './color-utils.js';
 
 export function drawCurrentStateView(ctx, organizationHierarchy, teams, wrapText) {
     if (!organizationHierarchy)

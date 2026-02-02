@@ -1,7 +1,7 @@
 -3// Legend rendering and interaction - manages visual legend UI
 import { state } from '../../core/state-management.js';
 import { showInfoModal } from '../../interactions/modals.js';
-import { darkenColor } from '../../rendering/renderer-common.js';
+import { darkenColor } from '../../rendering/color-utils.js';
 import { getValueStreamNames } from '../../tt-concepts/tt-value-stream-grouping.js';
 import { getPlatformGroupingNames } from '../../tt-concepts/tt-platform-grouping.js';
 

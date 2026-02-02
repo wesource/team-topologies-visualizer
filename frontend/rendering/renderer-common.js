@@ -1,5 +1,8 @@
 import { LAYOUT } from '../core/constants.js';
 import { debugLog } from '../core/config.js';
+import { darkenColor, getCognitiveLoadIndicator } from './color-utils.js';
+// Re-export color utilities (for backward compatibility)
+export { darkenColor, getCognitiveLoadIndicator } from './color-utils.js';
 
 // Track warnings to avoid console spam (only show each unique warning once)
 const shownWarnings = new Set();
@@ -73,37 +76,6 @@ const PLATFORM_GROUPING_INNER_STYLE = {
     labelPadding: 3 // Much smaller gap between label and first team (reduced from 8)
 };
 
-// Utility to darken a hex color
-export function darkenColor(hex, factor = 0.7) {
-    if (!hex || typeof hex !== 'string') return '#333'; // Default dark color
-    const rgb = parseInt(hex.slice(1), 16);
-    const r = Math.floor(((rgb >> 16) & 255) * factor);
-    const g = Math.floor(((rgb >> 8) & 255) * factor);
-    const b = Math.floor((rgb & 255) * factor);
-    return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`;
-}
-
-/**
- * Get cognitive load indicator color and emoji
- * @param {string} level - Cognitive load level (low, low-medium, medium, high, very-high)
- * @returns {Object} { color, emoji } for the cognitive load level
- */
-export function getCognitiveLoadIndicator(level) {
-    if (!level) return null;
-
-    const normalized = level.toLowerCase().trim();
-
-    // Traffic light colors: green (low), yellow (medium), red (high)
-    const indicators = {
-        'low': { color: '#4CAF50', emoji: '🟢' },
-        'low-medium': { color: '#8BC34A', emoji: '🟢' },
-        'medium': { color: '#FFC107', emoji: '🟡' },
-        'high': { color: '#FF5722', emoji: '🔴' },
-        'very-high': { color: '#D32F2F', emoji: '🔴' }
-    };
-
-    return indicators[normalized] || null;
-}
 /**
  * Calculate team box width based on team type
  * In TT Design view, stream-aligned and platform teams are wide (spanning flow of change)

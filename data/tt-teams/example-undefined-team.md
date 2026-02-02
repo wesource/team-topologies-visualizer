@@ -4,7 +4,7 @@ team_id: example-undefined-team
 team_type: undefined
 position:
   x: 100
-  y: 280
+  y: 922
 metadata:
   established: 2023-01
   cognitive_load: undefined
