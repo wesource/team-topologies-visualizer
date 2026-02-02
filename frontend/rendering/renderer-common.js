@@ -2,10 +2,13 @@ import { LAYOUT } from '../core/constants.js';
 import { debugLog } from '../core/config.js';
 import { darkenColor, getCognitiveLoadIndicator } from './color-utils.js';
 import { initCanvasPolyfills, getTeamAtPosition as getTeamAtPositionUtil } from './canvas-utils.js';
+import { wrapText } from './text-rendering.js';
 // Re-export color utilities (for backward compatibility)
 export { darkenColor, getCognitiveLoadIndicator } from './color-utils.js';
 // Re-export canvas utilities (for backward compatibility)
 export { initCanvasPolyfills } from './canvas-utils.js';
+// Re-export text rendering utilities (for backward compatibility)
+export { wrapText } from './text-rendering.js';
 
 // Track warnings to avoid console spam (only show each unique warning once)
 const shownWarnings = new Set();
@@ -1348,28 +1351,6 @@ function getTeamColor(team, teamColorMap) {
     }
     // Final fallback
     return '#95a5a6';
-}
-export function wrapText(ctx, text, maxWidth) {
-    // Handle non-string text
-    if (!text || typeof text !== 'string') {
-        console.warn('wrapText called with non-string text:', text);
-        return [''];
-    }
-    const words = text.split(' ');
-    const lines = [];
-    let currentLine = words[0];
-    for (let i = 1; i < words.length; i++) {
-        const testLine = currentLine + ' ' + words[i];
-        const metrics = ctx.measureText(testLine);
-        if (metrics.width > maxWidth) {
-            lines.push(currentLine);
-            currentLine = words[i];
-        } else {
-            currentLine = testLine;
-        }
-    }
-    lines.push(currentLine);
-    return lines;
 }
 
 /**
