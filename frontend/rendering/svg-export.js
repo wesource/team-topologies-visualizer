@@ -164,36 +164,43 @@ function generateCurrentStateSVG(organizationHierarchy, teams, teamColorMap, sho
         elements += drawSVGLine(startX + 400 + (boxWidth + 100) / 2, startY + boxHeight, deptX + boxWidth / 2, deptY);
         // Department box
         elements += drawSVGBox(dept.name, deptX, deptY, boxWidth, boxHeight, '#E8E8E8', 'black', false);
-        // Engineering department with line managers
-        if (dept.id === 'engineering-dept' && dept.line_managers) {
-            const lmCount = dept.line_managers.length;
-            const lmSpacing = LAYOUT.LINE_MANAGER_SPACING;
-            const lmStartX = deptX - ((lmCount - 1) * lmSpacing) / 2;
-            const lmY = deptY + levelHeight;
-            dept.line_managers.forEach((lm, lmIndex) => {
-                const lmX = lmStartX + lmIndex * lmSpacing;
-                // Line to line manager
-                elements += drawSVGLine(deptX + boxWidth / 2, deptY + boxHeight, lmX + boxWidth / 2, lmY);
-                // Line manager box
-                elements += drawSVGBox(lm.name, lmX, lmY, boxWidth, boxHeight - 10, '#A0A0A0', 'white', false);
-                // Teams under line manager with org-chart style
-                const teamsUnderManager = lm.teams
+        
+        // Generic sub-level handling: line_managers, regions, divisions, etc.
+        const subLevels = dept.line_managers || dept.regions || [];
+        
+        if (subLevels.length > 0) {
+            const subLevelCount = subLevels.length;
+            const subLevelSpacing = LAYOUT.LINE_MANAGER_SPACING;
+            const subLevelStartX = deptX - ((subLevelCount - 1) * subLevelSpacing) / 2;
+            const subLevelY = deptY + levelHeight;
+            
+            subLevels.forEach((subLevel, subLevelIndex) => {
+                const subLevelX = subLevelStartX + subLevelIndex * subLevelSpacing;
+                
+                // Line to sub-level
+                elements += drawSVGLine(deptX + boxWidth / 2, deptY + boxHeight, subLevelX + boxWidth / 2, subLevelY);
+                
+                // Sub-level box
+                elements += drawSVGBox(subLevel.name, subLevelX, subLevelY, boxWidth, boxHeight - 10, '#A0A0A0', 'white', false);
+                
+                // Teams under sub-level with org-chart style
+                const teamsUnderSubLevel = (subLevel.teams || [])
                     .map(teamName => teams.find(t => t.name === teamName))
                     .filter(t => t !== undefined);
 
-                if (teamsUnderManager.length > 0) {
-                    // Vertical line position at 1/5 from left of line manager box
-                    const verticalLineX = lmX + (boxWidth * LAYOUT.ORG_CHART_VERTICAL_LINE_OFFSET);
-                    const verticalLineStartY = lmY + boxHeight - 10;
+                if (teamsUnderSubLevel.length > 0) {
+                    // Vertical line position at 1/5 from left of sub-level box
+                    const verticalLineX = subLevelX + (boxWidth * LAYOUT.ORG_CHART_VERTICAL_LINE_OFFSET);
+                    const verticalLineStartY = subLevelY + boxHeight - 10;
 
                     // Find the lowest team position for vertical line
-                    const lowestTeamY = Math.max(...teamsUnderManager.map(t => t.position.y + 40));
+                    const lowestTeamY = Math.max(...teamsUnderSubLevel.map(t => t.position.y + 40));
 
                     // Draw main vertical line
                     elements += drawSVGLine(verticalLineX, verticalLineStartY, verticalLineX, lowestTeamY);
 
                     // Draw horizontal connectors and team boxes
-                    teamsUnderManager.forEach(team => {
+                    teamsUnderSubLevel.forEach(team => {
                         const teamMidLeftY = team.position.y + 40;
                         elements += drawSVGLine(verticalLineX, teamMidLeftY, team.position.x, teamMidLeftY);
                         const color = teamColorMap[team.team_type] || '#95a5a6';
@@ -202,43 +209,22 @@ function generateCurrentStateSVG(organizationHierarchy, teams, teamColorMap, sho
                 }
             });
         }
-        // Other departments
-        if (dept.regions) {
-            const regionCount = dept.regions.length;
-            const regionSpacing = LAYOUT.LINE_MANAGER_SPACING;
-            const regionStartX = deptX - ((regionCount - 1) * regionSpacing) / 2;
-            const regionY = deptY + levelHeight;
-            dept.regions.forEach((region, regionIndex) => {
-                const regionX = regionStartX + regionIndex * regionSpacing;
-                elements += drawSVGLine(deptX + boxWidth / 2, deptY + boxHeight, regionX + boxWidth / 2, regionY);
-                elements += drawSVGBox(region.name, regionX, regionY, boxWidth, boxHeight - 10, '#A0A0A0', 'white', false);
-                // Teams under region with org-chart style
-                if (region.teams && region.teams.length > 0) {
-                    const teamsUnderRegion = region.teams
-                        .map(teamName => teams.find(t => t.name === teamName))
-                        .filter(t => t !== undefined);
-
-                    if (teamsUnderRegion.length > 0) {
-                        // Vertical line position at 1/5 from left of region box
-                        const verticalLineX = regionX + (boxWidth * LAYOUT.ORG_CHART_VERTICAL_LINE_OFFSET);
-                        const verticalLineStartY = regionY + boxHeight - 10;
-
-                        // Find the lowest team position for vertical line
-                        const lowestTeamY = Math.max(...teamsUnderRegion.map(t => t.position.y + 40));
-
-                        // Draw main vertical line
-                        elements += drawSVGLine(verticalLineX, verticalLineStartY, verticalLineX, lowestTeamY);
-
-                        // Draw horizontal connectors and team boxes
-                        teamsUnderRegion.forEach(team => {
-                            const teamMidLeftY = team.position.y + 40;
-                            elements += drawSVGLine(verticalLineX, teamMidLeftY, team.position.x, teamMidLeftY);
-                            const color = teamColorMap[team.team_type] || '#95a5a6';
-                            elements += drawSVGBox(team.name, team.position.x, team.position.y, LAYOUT.TEAM_BOX_WIDTH, LAYOUT.TEAM_BOX_HEIGHT, color, 'white', false);
-                        });
-                    }
-                }
-            });
+    });
+    
+    // Draw teams without organizational context (not under any line_manager/region)
+    const teamsWithOrgContext = new Set();
+    company.children.forEach(dept => {
+        const subLevels = dept.line_managers || dept.regions || [];
+        subLevels.forEach(subLevel => {
+            (subLevel.teams || []).forEach(teamName => teamsWithOrgContext.add(teamName));
+        });
+    });
+    
+    // Draw teams that aren't in the hierarchy
+    teams.forEach(team => {
+        if (!teamsWithOrgContext.has(team.name)) {
+            const color = teamColorMap[team.team_type] || '#95a5a6';
+            elements += drawSVGBox(team.name, team.position.x, team.position.y, LAYOUT.TEAM_BOX_WIDTH, LAYOUT.TEAM_BOX_HEIGHT, color, 'white', false);
         }
     });
     

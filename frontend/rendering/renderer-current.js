@@ -28,83 +28,67 @@ export function drawCurrentStateView(ctx, organizationHierarchy, teams, wrapText
         drawHierarchyLine(ctx, startX + 400 + (boxWidth + 100) / 2, startY + boxHeight, deptX + boxWidth / 2, deptY);
         // Draw department box
         drawHierarchyBox(ctx, dept.name, deptX, deptY, boxWidth, boxHeight, '#E8E8E8', 'black', false, wrapText);
-        // If it's engineering, draw line managers directly under department (no VP box)
-        if (dept.id === 'engineering-dept' && dept.line_managers) {
-            // Draw line managers directly under department
-            const lmCount = dept.line_managers.length;
-            const lmSpacing = LAYOUT.LINE_MANAGER_SPACING;
-            const lmStartX = deptX - ((lmCount - 1) * lmSpacing) / 2;
-            const lmY = deptY + levelHeight;
-            dept.line_managers.forEach((lm, lmIndex) => {
-                const lmX = lmStartX + lmIndex * lmSpacing;
-                // Draw line from department to line manager
-                drawHierarchyLine(ctx, deptX + boxWidth / 2, deptY + boxHeight, lmX + boxWidth / 2, lmY);
-                // Draw line manager box
-                drawHierarchyBox(ctx, lm.name, lmX, lmY, boxWidth, boxHeight - 10, '#A0A0A0', 'white', false, wrapText);
-                // Draw teams under line manager with org-chart style
-                const teamsUnderManager = lm.teams
+        
+        // Generic sub-level handling: line_managers, regions, divisions, etc.
+        // Find any sub-level property that exists on this department
+        const subLevels = dept.line_managers || dept.regions || [];
+        
+        if (subLevels.length > 0) {
+            // Draw sub-levels (line managers, regions, etc.) directly under department
+            const subLevelCount = subLevels.length;
+            const subLevelSpacing = LAYOUT.LINE_MANAGER_SPACING;
+            const subLevelStartX = deptX - ((subLevelCount - 1) * subLevelSpacing) / 2;
+            const subLevelY = deptY + levelHeight;
+            
+            subLevels.forEach((subLevel, subLevelIndex) => {
+                const subLevelX = subLevelStartX + subLevelIndex * subLevelSpacing;
+                
+                // Draw line from department to sub-level
+                drawHierarchyLine(ctx, deptX + boxWidth / 2, deptY + boxHeight, subLevelX + boxWidth / 2, subLevelY);
+                
+                // Draw sub-level box
+                drawHierarchyBox(ctx, subLevel.name, subLevelX, subLevelY, boxWidth, boxHeight - 10, '#A0A0A0', 'white', false, wrapText);
+                
+                // Draw teams under sub-level with org-chart style
+                const teamsUnderSubLevel = (subLevel.teams || [])
                     .map(teamName => teams.find(t => t.name === teamName))
                     .filter(t => t !== undefined);
 
-                if (teamsUnderManager.length > 0) {
-                    // Vertical line position at 1/5 from left of line manager box
-                    const verticalLineX = lmX + (boxWidth * LAYOUT.ORG_CHART_VERTICAL_LINE_OFFSET);
-                    const verticalLineStartY = lmY + boxHeight - 10;
+                if (teamsUnderSubLevel.length > 0) {
+                    // Vertical line position at 1/5 from left of sub-level box
+                    const verticalLineX = subLevelX + (boxWidth * LAYOUT.ORG_CHART_VERTICAL_LINE_OFFSET);
+                    const verticalLineStartY = subLevelY + boxHeight - 10;
 
                     // Find the lowest team position for vertical line
-                    const lowestTeamY = Math.max(...teamsUnderManager.map(t => t.position.y + 40));
+                    const lowestTeamY = Math.max(...teamsUnderSubLevel.map(t => t.position.y + 40));
 
                     // Draw main vertical line
                     drawHierarchyLine(ctx, verticalLineX, verticalLineStartY, verticalLineX, lowestTeamY);
 
                     // Draw horizontal connectors to each team
-                    teamsUnderManager.forEach(team => {
+                    teamsUnderSubLevel.forEach(team => {
                         const teamMidLeftY = team.position.y + 40;
                         drawHierarchyLine(ctx, verticalLineX, teamMidLeftY, team.position.x, teamMidLeftY);
                     });
                 }
             });
         }
-        // If it's customer solutions, draw regions directly under department as sub-levels
-        if (dept.id === 'customer-solutions-dept' && dept.regions) {
-            // Draw regions directly under department as sub-levels
-            const regionCount = dept.regions.length;
-            const regionSpacing = LAYOUT.LINE_MANAGER_SPACING;
-            const regionStartX = deptX - ((regionCount - 1) * regionSpacing) / 2;
-            const regionY = deptY + levelHeight;
-            dept.regions.forEach((region, regionIndex) => {
-                const regionX = regionStartX + regionIndex * regionSpacing;
-                // Draw line from department to region
-                drawHierarchyLine(ctx, deptX + boxWidth / 2, deptY + boxHeight, regionX + boxWidth / 2, regionY);
-                // Draw region box as sub-level
-                drawHierarchyBox(ctx, region.name, regionX, regionY, boxWidth, boxHeight - 10, '#A0A0A0', 'white', false, wrapText);
-                // Draw teams under region with org-chart style
-                if (region.teams && region.teams.length > 0) {
-                    const teamsUnderRegion = region.teams
-                        .map(teamName => teams.find(t => t.name === teamName))
-                        .filter(t => t !== undefined);
-
-                    if (teamsUnderRegion.length > 0) {
-                        // Vertical line position at 1/5 from left of region box
-                        const verticalLineX = regionX + (boxWidth * LAYOUT.ORG_CHART_VERTICAL_LINE_OFFSET);
-                        const verticalLineStartY = regionY + boxHeight - 10;
-
-                        // Find the lowest team position for vertical line
-                        const lowestTeamY = Math.max(...teamsUnderRegion.map(t => t.position.y + 40));
-
-                        // Draw main vertical line
-                        drawHierarchyLine(ctx, verticalLineX, verticalLineStartY, verticalLineX, lowestTeamY);
-
-                        // Draw horizontal connectors to each team
-                        teamsUnderRegion.forEach(team => {
-                            const teamMidLeftY = team.position.y + 40;
-                            drawHierarchyLine(ctx, verticalLineX, teamMidLeftY, team.position.x, teamMidLeftY);
-                        });
-                    }
-                }
-            });
-        }
     });
+    
+    // Draw teams without organizational context (not under any line_manager/region)
+    // These teams will be drawn at their canvas positions without connecting lines
+    if (organizationHierarchy && organizationHierarchy.company && organizationHierarchy.company.children) {
+        const teamsWithOrgContext = new Set();
+        organizationHierarchy.company.children.forEach(dept => {
+            const subLevels = dept.line_managers || dept.regions || [];
+            subLevels.forEach(subLevel => {
+                (subLevel.teams || []).forEach(teamName => teamsWithOrgContext.add(teamName));
+            });
+        });
+        
+        // Note: Teams without org context are drawn by the normal team rendering
+        // in the main canvas rendering loop, not here in the hierarchy view
+    }
 }
 function drawHierarchyBox(ctx, text, x, y, width, height, bgColor, textColor, isLeadership, wrapText) {
     // Draw box with sharp corners (non-rounded)
