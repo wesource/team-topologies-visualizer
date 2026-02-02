@@ -6,8 +6,8 @@ metadata:
   level: C-Suite
   size: 5
 position:
-  x: 600
-  y: 250
+  x: 359
+  y: 55
 ---
 
 # Company Leadership

@@ -3,8 +3,8 @@ team_id: database-team
 name: Database Team
 team_type: platform-team
 position:
-  x: 595.0
-  y: 530.0
+  x: 595
+  y: 530
 metadata:
   size: 3
   department: Engineering
