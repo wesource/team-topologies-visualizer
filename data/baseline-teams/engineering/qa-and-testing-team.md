@@ -3,8 +3,8 @@ team_id: qa-and-testing-team
 name: QA & Testing Team
 team_type: support-team
 position:
-  x: 187
-  y: 637
+  x: 175
+  y: 410
 metadata:
   size: 5
   department: Engineering

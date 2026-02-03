@@ -3,8 +3,8 @@ team_id: backend-services-team
 name: Backend Services Team
 team_type: feature-team
 position:
-  x: -244
-  y: 604
+  x: -245
+  y: 410
 metadata:
   size: 8
   department: Engineering

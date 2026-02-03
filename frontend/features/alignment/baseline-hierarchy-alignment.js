@@ -17,34 +17,42 @@ export function autoAlignTeamsByManager(teams, organizationHierarchy) {
     const realignedTeams = [];
     const company = organizationHierarchy.company;
 
-    // Process engineering department with line managers
-    const engineeringDept = company.children.find(d => d.id === 'engineering-dept');
-    if (engineeringDept && engineeringDept.line_managers) {
-        engineeringDept.line_managers.forEach((lineManager, lmIndex) => {
-            if (!lineManager.teams || lineManager.teams.length === 0) return;
+    // Process all departments - works with line_managers, regions, or any sub-structure
+    company.children.forEach((dept, deptIndex) => {
+        // Check if department has line_managers or regions (or any similar sub-structure)
+        const subManagers = dept.line_managers || dept.regions;
+        
+        if (!subManagers || subManagers.length === 0) {
+            return; // Skip departments without sub-managers
+        }
 
-            // Calculate line manager's X position (same logic as renderer)
-            const deptStartX = LAYOUT.DEPT_START_X;
-            const deptIndex = company.children.findIndex(d => d.id === 'engineering-dept');
-            const deptX = deptStartX + deptIndex * LAYOUT.DEPT_SPACING;
+        // Calculate department's X position (same logic as renderer)
+        const deptStartX = LAYOUT.DEPT_START_X;
+        const deptX = deptStartX + deptIndex * LAYOUT.DEPT_SPACING;
 
-            const lmCount = engineeringDept.line_managers.length;
-            const lmSpacing = LAYOUT.LINE_MANAGER_SPACING;
-            const lmStartX = deptX - ((lmCount - 1) * lmSpacing) / 2;
-            const lineManagerX = lmStartX + lmIndex * lmSpacing;
+        const subManagerCount = subManagers.length;
+        const subManagerSpacing = LAYOUT.LINE_MANAGER_SPACING;
+        const subManagerStartX = deptX - ((subManagerCount - 1) * subManagerSpacing) / 2;
 
-            // Get teams for this line manager
-            const managerTeams = lineManager.teams
+        // Process each line manager/region
+        subManagers.forEach((subManager, subManagerIndex) => {
+            if (!subManager.teams || subManager.teams.length === 0) return;
+
+            // Calculate sub-manager's X position
+            const subManagerX = subManagerStartX + subManagerIndex * subManagerSpacing;
+
+            // Get teams for this sub-manager
+            const managerTeams = subManager.teams
                 .map(teamName => teams.find(t => t.name === teamName))
                 .filter(t => t !== undefined);
 
-            // Align teams vertically under line manager
+            // Align teams vertically under sub-manager
             const baseY = LAYOUT.COMPANY_Y + LAYOUT.LEVEL_HEIGHT * 3; // Company level + 3 levels
             const verticalSpacing = LAYOUT.VERTICAL_SPACING;
             const boxWidth = LAYOUT.DEPT_BOX_WIDTH;
 
-            // Position teams at 2/5 offset from line manager box (org-chart style)
-            const alignedX = lineManagerX + (boxWidth * LAYOUT.ORG_CHART_TEAM_X_OFFSET);
+            // Position teams at 2/5 offset from sub-manager box (org-chart style)
+            const alignedX = subManagerX + (boxWidth * LAYOUT.ORG_CHART_TEAM_X_OFFSET);
 
             managerTeams.forEach((team, teamIndex) => {
                 const newX = alignedX;
@@ -58,50 +66,7 @@ export function autoAlignTeamsByManager(teams, organizationHierarchy) {
                 }
             });
         });
-    }
-
-    // Process customer solutions department with regions
-    const customerSolutionsDept = company.children.find(d => d.id === 'customer-solutions-dept');
-    if (customerSolutionsDept && customerSolutionsDept.regions) {
-        customerSolutionsDept.regions.forEach((region, regionIndex) => {
-            if (!region.teams || region.teams.length === 0) return;
-
-            // Calculate region's X position (same logic as renderer)
-            const deptStartX = LAYOUT.DEPT_START_X;
-            const deptIndex = company.children.findIndex(d => d.id === 'customer-solutions-dept');
-            const deptX = deptStartX + deptIndex * LAYOUT.DEPT_SPACING;
-
-            const regionCount = customerSolutionsDept.regions.length;
-            const regionSpacing = LAYOUT.LINE_MANAGER_SPACING;
-            const regionStartX = deptX - ((regionCount - 1) * regionSpacing) / 2;
-            const regionX = regionStartX + regionIndex * regionSpacing;
-
-            // Get teams for this region
-            const regionTeams = region.teams
-                .map(teamName => teams.find(t => t.name === teamName))
-                .filter(t => t !== undefined);
-
-            // Align teams vertically under region
-            const baseY = LAYOUT.COMPANY_Y + LAYOUT.LEVEL_HEIGHT * 3; // Company level + 3 levels
-            const verticalSpacing = LAYOUT.VERTICAL_SPACING;
-            const boxWidth = LAYOUT.DEPT_BOX_WIDTH;
-
-            // Position teams at 2/5 offset from region box (org-chart style)
-            const alignedX = regionX + (boxWidth * LAYOUT.ORG_CHART_TEAM_X_OFFSET);
-
-            regionTeams.forEach((team, teamIndex) => {
-                const newX = alignedX;
-                const newY = baseY + (teamIndex * verticalSpacing);
-
-                // Only update if position changed significantly (more than 5px)
-                if (Math.abs(team.position.x - newX) > 5 || Math.abs(team.position.y - newY) > 5) {
-                    team.position.x = newX;
-                    team.position.y = newY;
-                    realignedTeams.push(team);
-                }
-            });
-        });
-    }
+    });
 
     return realignedTeams;
 }

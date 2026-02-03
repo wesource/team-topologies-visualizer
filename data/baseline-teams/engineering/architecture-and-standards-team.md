@@ -3,8 +3,8 @@ team_id: architecture-and-standards-team
 name: Architecture & Standards Team
 team_type: support-team
 position:
-  x: 360
-  y: 640
+  x: 385
+  y: 410
 metadata:
   size: 3
   department: Engineering

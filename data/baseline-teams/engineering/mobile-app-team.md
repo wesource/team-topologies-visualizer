@@ -4,7 +4,7 @@ name: Mobile App Team
 team_type: feature-team
 position:
   x: -35
-  y: 508
+  y: 530
 metadata:
   size: 8
   department: Engineering
