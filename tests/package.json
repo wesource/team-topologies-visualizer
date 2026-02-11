@@ -10,6 +10,6 @@
     "test:serial": "playwright test --workers=1"
   },
   "devDependencies": {
-    "@playwright/test": "^1.40.0"
+    "@playwright/test": "^1.58.2"
   }
 }
